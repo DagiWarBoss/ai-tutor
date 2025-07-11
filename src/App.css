@@ -1,3 +1,7 @@
+/* src/App.css */
+
+/* Your existing styles... */
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -15,7 +19,7 @@
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop_shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
@@ -40,29 +44,91 @@
 .read-the-docs {
   color: #888;
 }
-/* Add these new rules to the end of your existing App.css file */
 
+
+/* --- NEW/UPDATED STYLES FOR PROBLEM GENERATOR UI --- */
+
+/* Style for the overall container of ProblemGenerator (if you're using one) */
+.container {
+    max-width: 900px; /* Adjust width as desired */
+    margin: 0 auto; /* Center it */
+    padding: 20px;
+    background-color: #242424; /* Background for the section if needed, or inherit from body */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: left; /* Keep text left-aligned in the container */
+    margin-bottom: 40px; /* Space below the section */
+}
+
+/* Style for the "Generated Problem" output box */
 .generated-problem-output {
-    background-color: #f0f0f0; /* A light grey background to contrast with text */
+    background-color: white; /* This will give you the white box as before */
     padding: 20px;
     border-radius: 8px;
-    min-height: 150px; /* Ensures the box is visible even with short content */
-    color: #333; /* Dark gray text color for readability */
-    white-space: pre-wrap; /* Preserves newlines and spaces from the AI response */
-    word-wrap: break-word; /* Prevents long words from overflowing */
-    text-align: left; /* Align text to the left within the box */
-    margin-top: 20px; /* Add some space above the box */
+    min-height: 150px; /* Ensures it has a visible height */
+    text-align: left; /* Keep problem text left-aligned */
+    margin-top: 20px; /* Space above the box */
+    /* Add a subtle border or shadow for definition if desired */
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* Style for the actual problem text inside the box */
 .generated-problem-text {
-    color: #333; /* Explicitly set text color to dark gray */
-    font-size: 1.1em; /* Slightly larger font for readability */
-    line-height: 1.6; /* Good line spacing for readability */
+    color: #000000; /* IMPORTANT: Set text color to black */
+    font-size: 1.1em;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserve newlines and formatting from AI response */
+    word-wrap: break-word; /* Ensure long words wrap correctly */
 }
 
-/* You might also want to adjust the main container for better layout */
-.container {
-    max-width: 900px; /* Wider container for content */
-    margin: 0 auto; /* Center the container */
-    padding: 20px;
+/* You might want to style your form elements too for better appearance */
+form div {
+    margin-bottom: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #e0e0e0; /* A light color for labels on a dark background */
+}
+
+form input[type="text"],
+form select,
+form textarea {
+    width: calc(100% - 20px); /* Adjust width considering padding */
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff; /* White text for input fields */
+    font-size: 1em;
+}
+
+form button {
+    background-color: #007bff; /* A nice blue for the button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+form button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+h2, h3 {
+    color: #ffffff; /* White color for headings */
+    text-align: center;
+    margin-bottom: 20px;
 }
