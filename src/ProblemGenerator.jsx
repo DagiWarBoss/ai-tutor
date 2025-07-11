@@ -1,8 +1,10 @@
-// src/ProblemGenerator.jsx (simplified example)
+// src/ProblemGenerator.jsx
+
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; // Ensure axios is installed (npm install axios)
 
 function ProblemGenerator() {
+  // State variables for form inputs and generated problem/error
   const [subject, setSubject] = useState('');
   const [grade, setGrade] = useState('');
   const [topic, setTopic] = useState('');
@@ -11,34 +13,49 @@ function ProblemGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Handler for form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setProblem(''); // Clear previous problem
-    setError('');   // Clear previous error
+    e.preventDefault(); // Prevent default form submission behavior (page reload)
+    setLoading(true);   // Set loading state to true
+    setProblem('');     // Clear any previous problem
+    setError('');       // Clear any previous error message
 
     try {
+      // Send a POST request to your FastAPI backend
       const response = await axios.post('http://localhost:8000/generate_problem', {
         subject,
         grade,
         topic,
         syllabus_text: syllabusText,
       });
+      // Set the problem with the response data
       setProblem(response.data.problem);
     } catch (err) {
+      // Log the full error object for debugging
       console.error('Error generating problem:', err);
-      setError('Error: No response from server. Is the FastAPI backend running?');
-      setProblem(''); // Clear problem on error
+
+      // Set user-friendly error message
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(`Server error: ${err.response.status} - ${err.response.data.detail || 'Unknown error'}`);
+      } else if (err.request) {
+        // The request was made but no response was received
+        setError('Error: No response from server. Is the FastAPI backend running?');
+      } else {
+        // Something else happened while setting up the request
+        setError(`An unexpected error occurred: ${err.message}`);
+      }
+      setProblem(''); // Ensure problem area is clear on error
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state
     }
   };
 
   return (
-    <div className="container"> {/* Assuming you have a container as suggested for styling */}
+    <div className="container"> {/* Main container div for styling */}
       <h2>Generate Practice Problems</h2>
       <form onSubmit={handleSubmit}>
-        {/* ... your form inputs ... */}
         <div>
           <label htmlFor="subject">Subject:</label>
           <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
@@ -82,12 +99,14 @@ function ProblemGenerator() {
         </button>
       </form>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {/* Display error messages if any */}
+      {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
 
       <h3>Generated Problem:</h3>
-      <div className="generated-problem-output" style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '8px' }}>
-        {/* ADD THIS INLINE STYLE TO THE DIV DISPLAYING THE PROBLEM TEXT */}
-        <div className="generated-problem-text" style={{ color: 'black', fontSize: '1.1em', lineHeight: '1.6', textAlign: 'left' }}>
+      {/* Container for the generated problem output */}
+      <div className="generated-problem-output">
+        {/* Div to display the problem text. Styles will come from App.css */}
+        <div className="generated-problem-text">
           {problem}
         </div>
       </div>
