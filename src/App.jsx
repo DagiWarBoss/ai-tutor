@@ -1,5 +1,6 @@
 // src/App.jsx
-
+// Add this import at the top of App.jsx if it's not already there
+import { auth } from './firebase';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext'; // Import AuthProvider and useAuth
