@@ -1,19 +1,24 @@
 import together
 import os
+from together import Together # Keep this import
 
-# --- NEW: Import the Together client class ---
-from together import Together
+# --- IMPORTANT FIX FOR API KEY HANDLING ---
 
-# --- NEW: Instantiate the client with your API key ---
-# It will automatically pick up TOGETHER_API_KEY from environment variables
-client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
+# 1. Get the API key from the environment variable first
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 
-# No need for this line anymore: together.api_key = os.getenv("TOGETHER_API_KEY")
-
-if client.api_key is None: # Changed from together.api_key to client.api_key
+# 2. Check if the API key was actually retrieved
+if TOGETHER_API_KEY is None:
     print("Error: TOGETHER_API_KEY environment variable not set.")
-    print("Please set your Together AI API key.")
-    exit()
+    print("Please set your Together AI API key before running the script.")
+    print("For Windows, in Command Prompt: setx TOGETHER_API_KEY \"YOUR_ACTUAL_KEY\" (then open a NEW Command Prompt)")
+    exit() # Exit the script if the key is not found
+
+# 3. If the key is found, then safely instantiate the Together client
+client = Together(api_key=TOGETHER_API_KEY)
+
+# --- End of API Key Handling Fix ---
+
 
 def generate_practice_problem(subject: str, grade: str, topic: str, syllabus_context: str = ""):
     """
@@ -38,7 +43,6 @@ def generate_practice_problem(subject: str, grade: str, topic: str, syllabus_con
     ]
 
     try:
-        # --- NEW: Use client.chat.completions.create ---
         response = client.chat.completions.create(
             model="mistralai/Mixtral-8x7B-Instruct-v0.1", # Or another suitable model from Together AI
             messages=messages, # Pass the messages list
@@ -46,14 +50,22 @@ def generate_practice_problem(subject: str, grade: str, topic: str, syllabus_con
             temperature=0.7 # Adjust for creativity vs. consistency
         )
         return response.choices[0].message.content
+    # It's good practice to catch specific API errors from the 'together' library
+    except together.error.TogetherAuthenticationError:
+        print("\nError: Authentication failed with Together AI. Please check your API key.")
+        return "Authentication failed. Could not generate problem."
+    except together.error.TogetherError as e: # Catch other Together AI specific errors
+        print(f"\nError from Together AI: {e}")
+        return "Together AI error. Could not generate problem."
     except Exception as e:
-        print(f"Error generating problem with Together AI: {e}")
+        print(f"\nAn unexpected error occurred: {e}")
         return "Could not generate problem at this time."
 
 # Example Usage (for testing the script directly)
 if __name__ == "__main__":
     print("AI Tutor Q&A Script")
     print("--------------------")
+
     # Example 1: Basic problem
     problem_physics = generate_practice_problem("Physics", "11th", "Newton's Laws of Motion")
     print("\n--- Physics Problem ---")
