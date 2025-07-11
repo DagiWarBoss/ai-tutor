@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-export default function Dashboard() {
+// Accept handleLogout as a prop
+export default function Dashboard({ handleLogout }) {
   const userEmail = localStorage.getItem("user");
   const storageKey = `subjects_${userEmail}`;
 
@@ -56,10 +57,11 @@ export default function Dashboard() {
     setSubjects(prev => prev.filter((_, i) => i !== index));
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/";
-  };
+  // REMOVE the local logout function. We will use the prop.
+  // const logout = () => {
+  //   localStorage.removeItem("user");
+  //   window.location.href = "/";
+  // };
 
   const hardcodedProblems = {
     Maths: [
@@ -149,7 +151,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      <button onClick={logout} style={{ marginTop: "2rem" }}>
+      {/* Use the handleLogout prop */}
+      <button onClick={handleLogout} style={{ marginTop: "2rem" }}>
         Logout
       </button>
     </div>
