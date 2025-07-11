@@ -1,3 +1,4 @@
+// src/AuthPage.jsx
 import React, { useState } from "react";
 import {
   signInWithEmailAndPassword,
@@ -5,6 +6,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "./firebase";
+import { useNavigate } from "react-router-dom"; // <--- ADD THIS IMPORT
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +15,8 @@ export default function AuthPage() {
   const [message, setMessage] = useState("");
   const [showResend, setShowResend] = useState(false);
   const [unverifiedUser, setUnverifiedUser] = useState(null);
+
+  const navigate = useNavigate(); // <--- INITIALIZE useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +32,10 @@ export default function AuthPage() {
           return;
         }
         localStorage.setItem("user", email);
-        window.location.href = "/dashboard";
+        // localStorage.setItem("userToken", userCred.user.accessToken); // Consider storing token if needed for conditional rendering in App.jsx
+
+        // *** FIX: Use navigate for redirection ***
+        navigate("/"); // Redirect to the dashboard route (which is '/')
       } else {
         const userCred = await createUserWithEmailAndPassword(auth, email, password);
         await sendEmailVerification(userCred.user);
@@ -48,7 +55,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "auto" }}>
+    <div style={{ padding: "2rem", maxWidth: "400px", margin: "auto", color: '#fff' }}> {/* Added color: #fff for text visibility */}
       <h2>{isLogin ? "Login" : "Sign Up"}</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -57,7 +64,7 @@ export default function AuthPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ display: "block", margin: "1rem 0", width: "100%" }}
+          style={{ display: "block", margin: "1rem 0", width: "100%", color: '#000' }} // Added color: #000 for input text
         />
         <input
           type="password"
@@ -65,7 +72,7 @@ export default function AuthPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ display: "block", margin: "1rem 0", width: "100%" }}
+          style={{ display: "block", margin: "1rem 0", width: "100%", color: '#000' }} // Added color: #000 for input text
         />
         <button type="submit" style={{ width: "100%", padding: "0.5rem" }}>
           {isLogin ? "Login" : "Sign Up"}
