@@ -27,3 +27,22 @@ export default function SubjectCards() {
     </div>
   );
 }
+
+function QuickTestButton({ subject }) {
+  const generateTest = () => {
+    // Read your existing syllabus file
+    const topics = require(`./${subject}.txt`).split('\n');
+    
+    // Create 3 random questions (real utility)
+    const questions = topics.slice(0, 3).map(topic => ({
+      question: `Explain ${topic} in one sentence.`,
+      options: ["Definition", "Formula", "Example", "None"],
+      answer: 0
+    }));
+    
+    localStorage.setItem(`${subject}-quiz`, JSON.stringify(questions));
+    window.location.href = `/quiz/${subject}`;
+  };
+
+  return <button onClick={generateTest}>Quick Test</button>;
+}
