@@ -1,11 +1,12 @@
 // src/App.jsx
 
-// Import your existing TestAI component
-import TestAI from "./components/TestAI";
+// Import your existing TestAI component.
+// The path is now directly "./TestAI" because TestAI.jsx is in the 'src' folder.
+import TestAI from "./TestAI"; 
 
-// Import the new ProblemGenerator component
-// Ensure ProblemGenerator.jsx is in the same 'src' directory
-import ProblemGenerator from "./ProblemGenerator";
+// Import the new ProblemGenerator component.
+// This assumes ProblemGenerator.jsx is also directly in the 'src' folder.
+import ProblemGenerator from "./ProblemGenerator"; 
 
 // Note: The createRoot and StrictMode setup belongs in main.jsx, not here.
 // This App.jsx file should only define and export the App component.
@@ -13,7 +14,7 @@ import ProblemGenerator from "./ProblemGenerator";
 function App() {
   // If you are using React Router for navigation, your routes would typically
   // be defined here or in a parent component that wraps App.
-  // For example:
+  // For example, if you want ProblemGenerator on a specific route:
   // import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
   // return (
   //   <Router>
