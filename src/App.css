@@ -187,3 +187,50 @@ h2, h3 {
 .close-button:hover {
     color: #555;
 }
+/* src/App.css */
+
+/* ... (your existing styles) ... */
+
+/* --- New Navigation Bar Styles --- */
+.main-nav {
+    background-color: #333; /* Dark background for nav */
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center the navigation links */
+    gap: 25px; /* Space between links */
+}
+
+.main-nav li a {
+    color: #ffffff; /* White text for links */
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-nav li a:hover,
+.main-nav li a.active { /* Add .active class handling if you want to highlight current page */
+    background-color: #007bff; /* Blue background on hover/active */
+    color: #ffffff;
+}
+
+/* Optional: Basic styling for the app container to give some padding */
+.app-container {
+    padding-top: 20px; /* Space below the nav bar */
+}
+
+/* Ensure body has a dark background if not already set */
+body {
+    background-color: #282c34;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
