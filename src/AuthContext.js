@@ -1,41 +1,93 @@
-// src/AuthContext.js
+// src/App.jsx
+// Add this import at the top of App.jsx if it's not already there
+import { auth } from './firebase';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthContext'; // Import AuthProvider and useAuth
+import ProtectedRoute from './ProtectedRoute'; // Import ProtectedRoute
 
-import React, { createContext, useContext, useEffect, useState } from 'react'; // <--- ADD useContext here
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase'; // Make sure your firebase.js is correctly set up
+// Import your components
+import ProblemGenerator from "./ProblemGenerator";
+import Dashboard from "./Dashboard";
+import Quiz from "./Quiz";
+import AuthPage from "./AuthPage";
+import SyllabusUpload from "./SyllabusUpload";
 
-const AuthContext = createContext(null);
+// Define AppContent component here, outside of the main App function
+function AppContent() {
+  const navigate = useNavigate();
+  const { currentUser, loading } = useAuth(); // Use the auth context here
 
-export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Console logs for debugging authentication state - keep them for now
+  console.log("AppContent - currentUser:", currentUser);
+  console.log("AppContent - loading:", loading);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setCurrentUser(user);
-      setLoading(false);
+  const handleLogout = async () => {
+    try {
+      await auth.signOut(); // Use Firebase signOut from firebase.js
+      console.log("User logged out via Firebase!");
+      navigate('/auth'); // Redirect to login page
+    } catch (error) {
+      console.error("Error logging out:", error);
+      // Handle error, e.g., display a message
+    }
+  };
 
-      // Optionally, update localStorage 'user' and 'userToken' here
-      if (user) {
-        localStorage.setItem('user', user.email);
-        // You might want to store idToken for API calls, but be mindful of expiry
-        user.getIdToken().then(token => {
-          localStorage.setItem('userToken', token);
-        });
-      } else {
-        localStorage.removeItem('user');
-        localStorage.removeItem('userToken');
-      }
-    });
-
-    return unsubscribe; // Cleanup subscription on unmount
-  }, []);
+  // Render a loading state if authentication status is not yet known
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>
+        Loading application...
+      </div>
+    );
+  }
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading }}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
-};
+    <div className="app-container">
+      {/* Simple Navigation Bar */}
+      <nav className="main-nav">
+        <ul>
+          <li><Link to="/">Dashboard</Link></li>
+          <li><Link to="/generate-problem">Generate Problem</Link></li>
+          <li><Link to="/quiz">Quiz</Link></li>
+          <li><Link to="/syllabus-upload">Syllabus Upload</Link></li>
+          {currentUser ? ( // Use currentUser from AuthContext for conditional rendering
+            <li>
+              <button onClick={handleLogout} className="nav-button">Logout</button>
+            </li>
+          ) : (
+            <li><Link to="/auth">Login / Register</Link></li>
+          )}
+        </ul>
+      </nav>
 
-export const useAuth = () => useContext(AuthContext);
+      <hr style={{ margin: '30px 0', borderColor: '#555' }} />
+
+      {/* Define your routes */}
+      <Routes>
+        {/* AuthPage is NOT protected */}
+        <Route path="/auth" element={<AuthPage />} />
+
+        {/* Wrap protected routes with ProtectedRoute */}
+        <Route path="/" element={<ProtectedRoute><Dashboard handleLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/generate-problem" element={<ProtectedRoute><ProblemGenerator /></ProtectedRoute>} />
+        <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+        <Route path="/syllabus-upload" element={<ProtectedRoute><SyllabusUpload /></ProtectedRoute>} />
+        {/* Add any other protected routes similarly */}
+      </Routes>
+    </div>
+  );
+}
+
+// The main App component wraps everything with the Router and AuthProvider
+function App() {
+  return (
+    <Router>
+      <AuthProvider> {/* Wrap AppContent with AuthProvider */}
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  );
+}
+
+export default App;
