@@ -1,6 +1,6 @@
 // src/AuthContext.js
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react'; // <--- ADD useContext here
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase'; // Make sure your firebase.js is correctly set up
 
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ currentUser, loading }}>
-      {!loading && children} {/* Only render children once loading is complete */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
