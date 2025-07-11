@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthContext'; // Import AuthProvider and useAuth
+import ProtectedRoute from './ProtectedRoute'; // Import ProtectedRoute
 
 // Import your components
 import ProblemGenerator from "./ProblemGenerator";
@@ -10,16 +12,31 @@ import Quiz from "./Quiz";
 import AuthPage from "./AuthPage";
 import SyllabusUpload from "./SyllabusUpload";
 
-// Create a functional component that uses useNavigate and renders the main app logic
+// This component now needs access to AuthContext
 function AppContent() {
-  const navigate = useNavigate(); // Now useNavigate is called within the Router's context
+  const navigate = useNavigate();
+  const { currentUser, loading } = useAuth(); // Use the auth context here
 
-  const handleLogout = () => {
-    localStorage.removeItem('userToken'); // Example: clear user token
-    localStorage.removeItem('user'); // Also clear the 'user' email if it's stored separately
-    console.log("User logged out!");
-    navigate('/auth'); // Redirect to login page
+  const handleLogout = async () => { // Make it async because Firebase signOut is async
+    try {
+      await auth.signOut(); // Use Firebase signOut
+      console.log("User logged out via Firebase!");
+      // localStorage is updated by AuthContext listener, so no need to removeItem here.
+      navigate('/auth'); // Redirect to login page
+    } catch (error) {
+      console.error("Error logging out:", error);
+      // Handle error, e.g., display a message
+    }
   };
+
+  // Render a loading state if authentication status is not yet known
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>
+        Loading application...
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -30,7 +47,7 @@ function AppContent() {
           <li><Link to="/generate-problem">Generate Problem</Link></li>
           <li><Link to="/quiz">Quiz</Link></li>
           <li><Link to="/syllabus-upload">Syllabus Upload</Link></li>
-          {localStorage.getItem('user') ? (
+          {currentUser ? ( // Use currentUser from AuthContext for conditional rendering
             <li>
               <button onClick={handleLogout} className="nav-button">Logout</button>
             </li>
@@ -44,21 +61,27 @@ function AppContent() {
 
       {/* Define your routes */}
       <Routes>
-        {/* Pass handleLogout function as a prop to Dashboard */}
-        <Route path="/" element={<Dashboard handleLogout={handleLogout} />} />
-        <Route path="/generate-problem" element={<ProblemGenerator />} />
-        <Route path="/quiz" element={<Quiz />} />
+        {/* AuthPage is NOT protected */}
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/syllabus-upload" element={<SyllabusUpload />} />
+
+        {/* Wrap protected routes with ProtectedRoute */}
+        <Route path="/" element={<ProtectedRoute><Dashboard handleLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/generate-problem" element={<ProtectedRoute><ProblemGenerator /></ProtectedRoute>} />
+        <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+        <Route path="/syllabus-upload" element={<ProtectedRoute><SyllabusUpload /></ProtectedRoute>} />
+        {/* Add any other protected routes similarly */}
       </Routes>
     </div>
   );
 }
 
+// The main App component wraps everything with the Router and AuthProvider
 function App() {
   return (
     <Router>
-      <AppContent /> {/* Render the AppContent component inside the Router */}
+      <AuthProvider> {/* Wrap AppContent with AuthProvider */}
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }
