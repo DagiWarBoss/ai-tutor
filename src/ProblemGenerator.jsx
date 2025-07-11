@@ -1,59 +1,62 @@
 // src/ProblemGenerator.jsx
 
 import React, { useState } from 'react';
-import axios from 'axios'; // Ensure axios is installed (npm install axios)
+import axios from 'axios';
 
 function ProblemGenerator() {
-  // State variables for form inputs and generated problem/error
   const [subject, setSubject] = useState('');
   const [grade, setGrade] = useState('');
   const [topic, setTopic] = useState('');
   const [syllabusText, setSyllabusText] = useState('');
   const [problem, setProblem] = useState('');
+  const [solution, setSolution] = useState(''); // New state for solution
+  const [showSolutionPopup, setShowSolutionPopup] = useState(false); // State for popup visibility
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handler for form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior (page reload)
-    setLoading(true);   // Set loading state to true
-    setProblem('');     // Clear any previous problem
-    setError('');       // Clear any previous error message
+    e.preventDefault();
+    setLoading(true);
+    setProblem('');
+    setSolution(''); // Clear previous solution
+    setError('');
+    setShowSolutionPopup(false); // Hide popup on new generation
 
     try {
-      // Send a POST request to your FastAPI backend
       const response = await axios.post('http://localhost:8000/generate_problem', {
         subject,
         grade,
         topic,
         syllabus_text: syllabusText,
       });
-      // Set the problem with the response data
       setProblem(response.data.problem);
+      setSolution(response.data.solution); // Set the solution from response
     } catch (err) {
-      // Log the full error object for debugging
       console.error('Error generating problem:', err);
-
-      // Set user-friendly error message
       if (err.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         setError(`Server error: ${err.response.status} - ${err.response.data.detail || 'Unknown error'}`);
       } else if (err.request) {
-        // The request was made but no response was received
         setError('Error: No response from server. Is the FastAPI backend running?');
       } else {
-        // Something else happened while setting up the request
         setError(`An unexpected error occurred: ${err.message}`);
       }
-      setProblem(''); // Ensure problem area is clear on error
+      setProblem('');
+      setSolution('');
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
+  const handleShowSolution = () => {
+    setShowSolutionPopup(true);
+  };
+
+  const handleCloseSolution = () => {
+    setShowSolutionPopup(false);
+  };
+
   return (
-    <div className="container"> {/* Main container div for styling */}
+    <div className="container">
       <h2>Generate Practice Problems</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -99,17 +102,33 @@ function ProblemGenerator() {
         </button>
       </form>
 
-      {/* Display error messages if any */}
       {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
 
       <h3>Generated Problem:</h3>
-      {/* Container for the generated problem output */}
       <div className="generated-problem-output">
-        {/* Div to display the problem text. Styles will come from App.css */}
         <div className="generated-problem-text">
           {problem}
         </div>
       </div>
+
+      {problem && ( // Only show the solution button if a problem exists
+        <button onClick={handleShowSolution} style={{ marginTop: '15px' }}>
+          Show Solution
+        </button>
+      )}
+
+      {/* Solution Popup Modal */}
+      {showSolutionPopup && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="close-button" onClick={handleCloseSolution}>&times;</button>
+            <h4>Solution:</h4>
+            <div className="solution-text">
+              {solution}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
