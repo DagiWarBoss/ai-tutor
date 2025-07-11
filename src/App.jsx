@@ -12,16 +12,19 @@ import Quiz from "./Quiz";
 import AuthPage from "./AuthPage";
 import SyllabusUpload from "./SyllabusUpload";
 
-// This component now needs access to AuthContext
+// Define AppContent component here, outside of the main App function
 function AppContent() {
   const navigate = useNavigate();
   const { currentUser, loading } = useAuth(); // Use the auth context here
 
-  const handleLogout = async () => { // Make it async because Firebase signOut is async
+  // Console logs for debugging authentication state - keep them for now
+  console.log("AppContent - currentUser:", currentUser);
+  console.log("AppContent - loading:", loading);
+
+  const handleLogout = async () => {
     try {
-      await auth.signOut(); // Use Firebase signOut
+      await auth.signOut(); // Use Firebase signOut from firebase.js
       console.log("User logged out via Firebase!");
-      // localStorage is updated by AuthContext listener, so no need to removeItem here.
       navigate('/auth'); // Redirect to login page
     } catch (error) {
       console.error("Error logging out:", error);
@@ -84,28 +87,6 @@ function App() {
       </AuthProvider>
     </Router>
   );
-}
-// src/App.jsx (inside AppContent function)
-// ...
-function AppContent() {
-  const navigate = useNavigate();
-  const { currentUser, loading } = useAuth(); // Use the auth context here
-
-  console.log("AppContent - currentUser:", currentUser);
-  console.log("AppContent - loading:", loading);
-
-  const handleLogout = async () => {
-    // ...
-  };
-
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>
-        Loading application...
-      </div>
-    );
-  }
-  // ... rest of your AppContent component
 }
 
 export default App;
