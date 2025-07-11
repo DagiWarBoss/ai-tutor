@@ -40,3 +40,29 @@
 .read-the-docs {
   color: #888;
 }
+/* Add these new rules to the end of your existing App.css file */
+
+.generated-problem-output {
+    background-color: #f0f0f0; /* A light grey background to contrast with text */
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 150px; /* Ensures the box is visible even with short content */
+    color: #333; /* Dark gray text color for readability */
+    white-space: pre-wrap; /* Preserves newlines and spaces from the AI response */
+    word-wrap: break-word; /* Prevents long words from overflowing */
+    text-align: left; /* Align text to the left within the box */
+    margin-top: 20px; /* Add some space above the box */
+}
+
+.generated-problem-text {
+    color: #333; /* Explicitly set text color to dark gray */
+    font-size: 1.1em; /* Slightly larger font for readability */
+    line-height: 1.6; /* Good line spacing for readability */
+}
+
+/* You might also want to adjust the main container for better layout */
+.container {
+    max-width: 900px; /* Wider container for content */
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+}
