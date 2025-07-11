@@ -234,3 +234,25 @@ body {
     color: #ffffff;
     font-family: Arial, sans-serif;
 }
+/* src/App.css */
+
+/* ... (your existing styles for .main-nav, .main-nav ul, .main-nav li a) ... */
+
+/* Style for buttons within the nav, so they look like links */
+.nav-button {
+    background: none; /* No background */
+    border: none;      /* No border */
+    color: #ffffff;    /* White text color */
+    text-decoration: none; /* No underline by default */
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #ffffff;
+}
