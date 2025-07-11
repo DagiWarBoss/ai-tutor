@@ -85,5 +85,27 @@ function App() {
     </Router>
   );
 }
+// src/App.jsx (inside AppContent function)
+// ...
+function AppContent() {
+  const navigate = useNavigate();
+  const { currentUser, loading } = useAuth(); // Use the auth context here
+
+  console.log("AppContent - currentUser:", currentUser);
+  console.log("AppContent - loading:", loading);
+
+  const handleLogout = async () => {
+    // ...
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>
+        Loading application...
+      </div>
+    );
+  }
+  // ... rest of your AppContent component
+}
 
 export default App;
