@@ -5,17 +5,20 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pypdf import PdfReader
-import uuid
-import shutil
-import io
-import together
+import uuid # For generating unique filenames
+import shutil # For saving uploaded files temporarily
+import io # For handling file in memory
 import json # Import json for parsing the response
+
+# Import for Together AI
+import together # Make sure you have installed: pip install together
 
 app = FastAPI()
 
+# --- CORS Configuration ---
 origins = [
     "http://localhost",
-    "http://localhost:5173",
+    "http://localhost:5173",  # Your frontend's URL/port
 ]
 
 app.add_middleware(
@@ -26,14 +29,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploaded_syllabi"
-EXTRACTED_TEXT_DIR = "extracted_syllabi_text"
+# --- Configuration ---
+UPLOAD_DIR = "uploaded_syllabi" # This folder is for temporary PDF storage, often cleaned up
+EXTRACTED_TEXT_DIR = "extracted_syllabi_text" # This folder stores the extracted text
 
+# Create directories if they don't exist
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(EXTRACTED_TEXT_DIR, exist_ok=True)
 
+# --- PDF Extraction Utility Function ---
 def extract_text_from_pdf(pdf_file: UploadFile) -> str:
+    """Extracts text from a single PDF file from an UploadFile object."""
     try:
+        # Read the file content into a BytesIO object
         file_content = pdf_file.file.read()
         reader = PdfReader(io.BytesIO(file_content))
         text = ""
@@ -44,6 +52,7 @@ def extract_text_from_pdf(pdf_file: UploadFile) -> str:
         print(f"Error extracting text from {pdf_file.filename}: {e}")
         raise
 
+# --- FastAPI Endpoint for Syllabus Upload ---
 @app.post("/upload-syllabus/")
 async def upload_syllabus(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
@@ -80,9 +89,8 @@ async def get_syllabus_content_by_id(syllabus_id: str) -> str:
         print(f"Error reading syllabus text for ID {syllabus_id}: {e}")
         return "" # Return empty string on error
 
-
 @app.get("/get-syllabus-text/{syllabus_id}")
-async def get_syllabus_text_endpoint(syllabus_id: str): # Renamed to avoid clash
+async def get_syllabus_text_endpoint(syllabus_id: str): # Renamed to avoid clash with helper
     """
     Retrieves the extracted text of a syllabus by its unique ID for API consumers.
     """
@@ -112,7 +120,7 @@ async def generate_llm_problem(request: Request):
             syllabus_content = "" # Ensure it's empty on error
 
     try:
-        together.api_key = "YOUR_TOGETHER_API_KEY_HERE" # Replace with your actual key
+        together.api_key = "YOUR_TOGETHER_API_KEY_HERE" # <<<--- REPLACE THIS WITH YOUR ACTUAL KEY
 
         # Construct a more specific prompt for the LLM
         system_message = "You are an AI tutor. Your task is to generate a single, concise practice problem. Do NOT provide a solution. Do NOT repeat the input prompt or syllabus content in your response."
@@ -161,6 +169,7 @@ async def generate_llm_problem(request: Request):
         print(f"Error in LLM problem generation endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate problem via LLM. Backend error: {e}")
 
+# --- Optional: Basic Root Endpoint to check if backend is running ---
 @app.get("/")
 async def read_root():
     return {"message": "FastAPI Backend for AI Tutor is running!"}
