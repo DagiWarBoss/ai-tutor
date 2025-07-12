@@ -1,12 +1,16 @@
 # backend/main.py
 
 import os
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pypdf import PdfReader
 import uuid # For generating unique filenames
 import shutil # For saving uploaded files temporarily
-from fastapi.middleware.cors import CORSMiddleware
+import io # For handling file in memory
+
+# Import for Together AI (if you're using it)
+# import together
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -26,25 +30,27 @@ app.add_middleware(
 )
 
 # --- Configuration ---
-UPLOAD_DIR = "uploaded_syllabi"
-EXTRACTED_TEXT_DIR = "extracted_syllabi_text"
+UPLOAD_DIR = "uploaded_syllabi" # This folder is for temporary PDF storage, often cleaned up
+EXTRACTED_TEXT_DIR = "extracted_syllabi_text" # This folder stores the extracted text
 
 # Create directories if they don't exist
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(EXTRACTED_TEXT_DIR, exist_ok=True)
 
 # --- PDF Extraction Utility Function ---
-def extract_text_from_pdf(pdf_path: str) -> str:
-    """Extracts text from a single PDF file."""
+# Modified to accept UploadFile directly, for cleaner handling
+def extract_text_from_pdf(pdf_file: UploadFile) -> str:
+    """Extracts text from a single PDF file from an UploadFile object."""
     try:
-        with open(pdf_path, "rb") as file:
-            reader = PdfReader(file)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text() or ""
+        # Read the file content into a BytesIO object
+        file_content = pdf_file.file.read()
+        reader = PdfReader(io.BytesIO(file_content))
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() or ""
         return text
     except Exception as e:
-        print(f"Error extracting text from {pdf_path}: {e}")
+        print(f"Error extracting text from {pdf_file.filename}: {e}")
         raise
 
 # --- FastAPI Endpoint for Syllabus Upload ---
@@ -55,16 +61,13 @@ async def upload_syllabus(file: UploadFile = File(...)):
 
     syllabus_id = str(uuid.uuid4())
     
-    pdf_save_path = os.path.join(UPLOAD_DIR, f"{syllabus_id}.pdf")
+    # We will save the extracted text directly, no need to save the PDF permanently
+    # pdf_save_path = os.path.join(UPLOAD_DIR, f"{syllabus_id}.pdf") # No longer needed for permanent storage
     text_save_path = os.path.join(EXTRACTED_TEXT_DIR, f"{syllabus_id}.txt")
 
     try:
-        # Save the uploaded PDF file temporarily
-        with open(pdf_save_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-
-        # Extract text from the saved PDF
-        extracted_text = extract_text_from_pdf(pdf_save_path)
+        # Extract text directly from the UploadFile
+        extracted_text = extract_text_from_pdf(file)
 
         # Save the extracted text to a .txt file
         with open(text_save_path, "w", encoding="utf-8") as f:
@@ -77,17 +80,11 @@ async def upload_syllabus(file: UploadFile = File(...)):
             "extracted_text_path": text_save_path # For debugging/demonstration
         }, status_code=200)
 
-    except HTTPException:
-        raise
     except Exception as e:
         print(f"An error occurred during syllabus upload or processing: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to process syllabus: {e}")
-    finally:
-        # Clean up the temporary uploaded PDF file if you don't need to keep it
-        if os.path.exists(pdf_save_path):
-            os.remove(pdf_save_path)
 
-# --- NEW FastAPI Endpoint to Get Syllabus Text by ID ---
+# --- FastAPI Endpoint to Get Syllabus Text by ID ---
 @app.get("/get-syllabus-text/{syllabus_id}")
 async def get_syllabus_text(syllabus_id: str):
     """
@@ -105,6 +102,44 @@ async def get_syllabus_text(syllabus_id: str):
     except Exception as e:
         print(f"Error reading syllabus text for ID {syllabus_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve syllabus text.")
+
+# --- NEW ENDPOINT: LLM Problem Generation ---
+@app.post("/generate-llm-problem")
+async def generate_llm_problem(request: Request):
+    data = await request.json()
+    prompt = data.get("prompt")
+
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Prompt is required for problem generation.")
+
+    try:
+        # --- YOUR TOGETHER AI INTEGRATION LOGIC GOES HERE ---
+        # 1. Ensure you have the 'together' Python library installed: pip install together
+        # 2. Set your Together AI API key as an environment variable (recommended)
+        #    e.g., export TOGETHER_API_KEY="your_api_key_here" (Linux/macOS)
+        #    or $env:TOGETHER_API_KEY="your_api_key_here" (PowerShell)
+        #    or set TOGETHER_API_KEY=your_api_key_here (CMD)
+        # 3. Replace the placeholder with your actual Together AI API call.
+
+        # Example of how you might call Together AI (adjust model and parameters as needed):
+        # response = together.Completion.create(
+        #     model="mistralai/Mixtral-8x7B-Instruct-v0.1", # Or your preferred model
+        #     prompt=prompt,
+        #     max_tokens=500,
+        #     temperature=0.7,
+        # )
+        # generated_text = response.choices[0].text # Adjust based on Together AI's response structure
+
+        # For now, return a placeholder to confirm the endpoint works
+        generated_text = f"Problem generated by backend (Together AI integration pending): {prompt}"
+
+        return JSONResponse(
+            status_code=200,
+            content={"generated_text": generated_text}
+        )
+    except Exception as e:
+        print(f"Error in LLM problem generation endpoint: {e}") # Log the error on the backend
+        raise HTTPException(status_code=500, detail=f"Failed to generate problem via LLM: {e}")
 
 # --- Optional: Basic Root Endpoint to check if backend is running ---
 @app.get("/")
