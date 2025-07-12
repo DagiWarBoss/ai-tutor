@@ -1,47 +1,57 @@
-// frontend/src/ProblemGenerator.jsx
+// frontend/src/SyllabusUpload.jsx
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from "./AuthContext";
-import { AppContentContext } from "./AppContentContext"; // NEW: Corrected path and import
-import "./index.css";
+import { AuthContext } from './AuthContext';
+import { AppContentContext } from './AppContentContext';
+// import './index.css'; // <--- THIS LINE IS REMOVED
 
-const ProblemGenerator = () => {
+const SyllabusUpload = () => {
     const { currentUser } = useContext(AuthContext);
-    // Access lastUploadedSyllabusId from AppContentContext
-    const { lastUploadedSyllabusId } = useContext(AppContentContext); 
-    const [prompt, setPrompt] = useState('');
-    const [generatedProblem, setGeneratedProblem] = useState('');
-    const [loading, setLoading] = useState(false);
+    const { setLastUploadedSyllabusId } = useContext(AppContentContext);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleGenerateProblem = async () => {
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+        setUploadMessage('');
+        setError('');
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            setError('Please select a PDF file to upload.');
+            return;
+        }
+
         setLoading(true);
-        setGeneratedProblem('');
+        setUploadMessage('');
         setError('');
 
-        try {
-            const requestBody = {
-                prompt: prompt,
-                // Pass syllabusId as a separate field if available
-                syllabusId: lastUploadedSyllabusId || null // Send null if no ID
-            };
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
+        try {
             const response = await axios.post(
-                'http://127.0.0.1:8000/generate-llm-problem',
-                requestBody,
+                'http://127.0.0.1:8000/upload-syllabus/',
+                formData,
                 {
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                        // You might need an Authorization header here if your backend requires authentication
+                        // 'Authorization': `Bearer ${currentUser?.token}`
                     },
                 }
             );
 
-            setGeneratedProblem(response.data.generated_text);
+            setUploadMessage(response.data.message + ` Syllabus ID: ${response.data.syllabus_id}`);
+            setLastUploadedSyllabusId(response.data.syllabus_id);
+            setSelectedFile(null); // Clear the selected file input
         } catch (err) {
-            console.error('Error generating problem:', err);
-            setError(err.response?.data?.detail || 'Failed to generate problem. Please try again. Check backend logs for details.');
-            setGeneratedProblem(''); // Clear any previous partial generation
+            console.error('Error uploading syllabus:', err);
+            setError(err.response?.data?.detail || 'Failed to upload syllabus. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -49,52 +59,32 @@ const ProblemGenerator = () => {
 
     return (
         <div className="container mx-auto p-4 max-w-2xl bg-white rounded-lg shadow-md mt-10">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Generate Practice Problem</h1>
-            
-            {/* Display message about syllabus context */}
-            {lastUploadedSyllabusId ? (
-                <p className="text-green-600 mb-4 text-center">
-                    Using syllabus ID: {lastUploadedSyllabusId}. Problem will be generated with context.
-                </p>
-            ) : (
-                <p className="text-red-500 mb-4 text-center">
-                    No Syllabus ID provided. Problem will be generated without specific syllabus context.
-                </p>
-            )}
-
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Syllabus Upload</h1>
             <div className="mb-4">
-                <label htmlFor="prompt" className="block text-gray-700 text-sm font-bold mb-2">
-                    Enter your problem prompt (e.g., "a difficult question on quantum physics", "a multiple choice problem about Newton's laws"):
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="syllabusFile">
+                    Upload Syllabus (PDF only)
                 </label>
-                <textarea
-                    id="prompt"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-y"
-                    rows="4"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="E.g., Generate a multiple choice question about the Doppler effect."
-                ></textarea>
+                <input
+                    id="syllabusFile"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
             </div>
-
             <button
-                onClick={handleGenerateProblem}
+                onClick={handleUpload}
                 className={`w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200 
                     ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-700 text-white font-bold'}`}
-                disabled={loading}
+                disabled={loading || !selectedFile}
             >
-                {loading ? 'Generating...' : 'Generate Problem'}
+                {loading ? 'Uploading...' : 'Upload Syllabus'}
             </button>
 
+            {uploadMessage && <p className="text-green-500 mt-4 text-center">{uploadMessage}</p>}
             {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-
-            {generatedProblem && (
-                <div className="mt-6 p-4 bg-gray-100 rounded border border-gray-300">
-                    <h2 className="text-xl font-semibold mb-2 text-gray-800">Generated Problem:</h2>
-                    <p className="text-gray-700 whitespace-pre-wrap">{generatedProblem}</p>
-                </div>
-            )}
         </div>
     );
 };
 
-export default ProblemGenerator;
+export default SyllabusUpload;
