@@ -1,41 +1,91 @@
-import React, { useState } from "react";
+// src/SyllabusUpload.jsx
+
+import React, { useState } from 'react';
+import axios from 'axios'; // Make sure you have axios installed: npm install axios
 
 export default function SyllabusUpload() {
-  const [file, setFile] = useState(null);
-  const [status, setStatus] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [extractedSyllabusId, setExtractedSyllabusId] = useState(null); // To store the ID returned by backend
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setStatus("");
+  const handleFileChange = (event) => {
+    // Only allow PDF files
+    if (event.target.files[0] && event.target.files[0].type === "application/pdf") {
+      setSelectedFile(event.target.files[0]);
+      setUploadMessage('');
+    } else {
+      setSelectedFile(null);
+      setUploadMessage('Please select a PDF file.');
+    }
   };
 
-  const handleUpload = () => {
-    if (!file) {
-      setStatus("❌ No file selected.");
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setUploadMessage('Please select a file first.');
       return;
     }
 
-    // Placeholder logic
-    const allowedTypes = ["application/pdf", "text/plain"];
-    if (!allowedTypes.includes(file.type)) {
-      setStatus("❌ Please upload a PDF or TXT file.");
-      return;
-    }
+    setIsUploading(true);
+    setUploadMessage('Uploading and processing syllabus...');
+    setExtractedSyllabusId(null);
 
-    setStatus("✅ Syllabus uploaded (mocked).");
+    const formData = new FormData();
+    formData.append('file', selectedFile); // 'file' must match the parameter name in your FastAPI endpoint (file: UploadFile = File(...))
+
+    try {
+      // Replace with your FastAPI backend URL.
+      // If running locally, it's usually http://127.0.0.1:8000
+      const response = await axios.post('http://127.0.0.1:8000/upload-syllabus/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('Upload successful:', response.data);
+      setUploadMessage(`✅ Success! Syllabus processed. ID: ${response.data.syllabus_id}`);
+      setExtractedSyllabusId(response.data.syllabus_id); // Store the ID for later use
+      setSelectedFile(null); // Clear selected file after successful upload
+
+    } catch (error) {
+      console.error('Error uploading syllabus:', error.response ? error.response.data : error.message);
+      setUploadMessage(`❌ Upload failed: ${error.response ? error.response.data.detail || error.message : error.message}`);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
-    <div className="p-4 border rounded-xl shadow bg-white">
-      <h3 className="text-lg font-bold mb-2">Upload Your Syllabus</h3>
-      <input type="file" onChange={handleFileChange} className="mb-2" />
-      <button
-        onClick={handleUpload}
-        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto', color: '#fff' }}>
+      <h2>Upload Syllabus</h2>
+      <p>Upload your course syllabus here (PDF only). The AI will process it to generate personalized practice problems and quizzes.</p>
+      
+      <input
+        type="file"
+        accept=".pdf"
+        onChange={handleFileChange}
+        style={{ margin: '15px 0', display: 'block', color: '#fff' }}
+      />
+      
+      {selectedFile && (
+        <p>Selected file: {selectedFile.name}</p>
+      )}
+
+      <button 
+        onClick={handleUpload} 
+        disabled={!selectedFile || isUploading}
+        style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
       >
-        Upload
+        {isUploading ? 'Uploading...' : 'Upload Syllabus'}
       </button>
-      {status && <p className="mt-2 text-sm">{status}</p>}
+
+      {uploadMessage && <p style={{ marginTop: '15px', color: uploadMessage.startsWith('❌') ? 'red' : 'green' }}>{uploadMessage}</p>}
+      
+      {extractedSyllabusId && (
+        <p style={{ marginTop: '10px', fontSize: '0.9em' }}>
+          You can use this Syllabus ID for problem generation: <strong>{extractedSyllabusId}</strong>
+        </p>
+      )}
     </div>
   );
 }
