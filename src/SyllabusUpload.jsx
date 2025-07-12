@@ -4,7 +4,6 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
 import { AppContentContext } from './AppContentContext'; // NEW: Import AppContentContext
-import '../index.css';
 
 const SyllabusUpload = () => {
     const { currentUser } = useContext(AuthContext);
