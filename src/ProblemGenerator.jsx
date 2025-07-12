@@ -1,136 +1,117 @@
 // src/ProblemGenerator.jsx
 
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure you have axios installed: npm install axios
+import { useLocation } from 'react-router-dom'; // Import useLocation from react-router-dom
 
-function ProblemGenerator() {
-  const [subject, setSubject] = useState('');
-  const [grade, setGrade] = useState('');
-  const [topic, setTopic] = useState('');
-  const [syllabusText, setSyllabusText] = useState('');
-  const [problem, setProblem] = useState('');
-  const [solution, setSolution] = useState(''); // New state for solution
-  const [showSolutionPopup, setShowSolutionPopup] = useState(false); // State for popup visibility
-  const [loading, setLoading] = useState(false);
+export default function ProblemGenerator() {
+  const [prompt, setPrompt] = useState('');
+  const [generatedProblem, setGeneratedProblem] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [syllabusText, setSyllabusText] = useState(''); // State to store syllabus text
+
+  const location = useLocation(); // Get location object from React Router
+  // Access the passed syllabusId from the Link state.
+  // This assumes you're passing it like: <Link to={{ pathname: "/generate-problem", state: { syllabusId: "YOUR_ID" } }}>
+  const syllabusId = location.state?.syllabusId; 
+
+  // --- useEffect to fetch syllabus text when component mounts or syllabusId changes ---
+  useEffect(() => {
+    const fetchSyllabusText = async () => {
+      if (!syllabusId) {
+        // console.log("No syllabus ID provided to ProblemGenerator.");
+        return; // Don't fetch if no ID
+      }
+      setError('');
+      try {
+        // Make sure your FastAPI backend is running on http://127.0.0.1:8000
+        const response = await axios.get(`http://127.0.0.1:8000/get-syllabus-text/${syllabusId}`);
+        setSyllabusText(response.data.syllabus_text);
+        // console.log("Fetched syllabus text:", response.data.syllabus_text.substring(0, 100) + "..."); // Log first 100 chars
+      } catch (err) {
+        console.error("Error fetching syllabus text:", err.response ? err.response.data : err.message);
+        setError("Failed to load syllabus context. Please ensure the syllabus ID is valid and the backend is running.");
+      }
+    };
+
+    fetchSyllabusText();
+  }, [syllabusId]); // Re-run this effect if syllabusId changes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setProblem('');
-    setSolution(''); // Clear previous solution
+    setIsLoading(true);
     setError('');
-    setShowSolutionPopup(false); // Hide popup on new generation
+    setGeneratedProblem('');
+
+    // Combine user prompt with syllabus text as context for the AI
+    // The LLM will use this combined text to generate a relevant problem.
+    const fullPrompt = syllabusText 
+      ? `Based on the following syllabus content, generate a practice problem:\n\nSyllabus Content:\n"${syllabusText}"\n\nUser Request: ${prompt}`
+      : `Generate a practice problem based on: ${prompt}`;
 
     try {
-      const response = await axios.post('http://localhost:8000/generate_problem', {
-        subject,
-        grade,
-        topic,
-        syllabus_text: syllabusText,
+      // --- THIS IS WHERE YOU'LL INTEGRATE WITH YOUR ACTUAL AI/LLM API ---
+      // This is a placeholder for your LLM call. You would typically send 'fullPrompt'
+      // to your backend's LLM endpoint (e.g., a FastAPI endpoint that calls Google Gemini).
+      
+      // Example of a simulated API call (replace with your actual backend call)
+      const simulatedResponse = await new Promise(resolve => setTimeout(() => {
+        resolve({ data: { problem: `Simulated problem for: "${prompt}"\n\nContext used (first 50 chars): "${syllabusText.substring(0, 50)}..."` } });
+      }, 2000));
+      
+      setGeneratedProblem(simulatedResponse.data.problem);
+
+      // Example of how you might call your actual backend LLM endpoint:
+      /*
+      const actualLLMResponse = await axios.post('http://127.0.0.1:8000/generate-llm-problem', {
+        prompt: fullPrompt
       });
-      setProblem(response.data.problem);
-      setSolution(response.data.solution); // Set the solution from response
+      setGeneratedProblem(actualLLMResponse.data.generated_text);
+      */
+
     } catch (err) {
-      console.error('Error generating problem:', err);
-      if (err.response) {
-        setError(`Server error: ${err.response.status} - ${err.response.data.detail || 'Unknown error'}`);
-      } else if (err.request) {
-        setError('Error: No response from server. Is the FastAPI backend running?');
-      } else {
-        setError(`An unexpected error occurred: ${err.message}`);
-      }
-      setProblem('');
-      setSolution('');
+      console.error("Error generating problem:", err.response ? err.response.data : err.message);
+      setError("Failed to generate problem. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleShowSolution = () => {
-    setShowSolutionPopup(true);
-  };
-
-  const handleCloseSolution = () => {
-    setShowSolutionPopup(false);
-  };
-
   return (
-    <div className="container">
-      <h2>Generate Practice Problems</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="subject">Subject:</label>
-          <select id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
-            <option value="">Select Subject</option>
-            <option value="Physics">Physics</option>
-            <option value="Chemistry">Chemistry</option>
-            <option value="Mathematics">Mathematics</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="grade">Grade:</label>
-          <select id="grade" value={grade} onChange={(e) => setGrade(e.target.value)} required>
-            <option value="">Select Grade</option>
-            <option value="11th">11th Grade</option>
-            <option value="12th">12th Grade</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="topic">Topic (e.g. "Kinematics", "Electrochemistry"):</label>
-          <input
-            type="text"
-            id="topic"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            required
-            placeholder="Enter a specific topic"
-          />
-        </div>
-        <div>
-          <label htmlFor="syllabus_text">Syllabus Context (Optional, for better relevance):</label>
-          <textarea
-            id="syllabus_text"
-            value={syllabusText}
-            onChange={(e) => setSyllabusText(e.target.value)}
-            rows="5"
-            placeholder="Paste relevant syllabus text here (e.g., from your extracted PDFs)"
-          ></textarea>
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Generating...' : 'Generate Problem'}
+    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto', color: '#fff' }}>
+      <h2>Generate Practice Problem</h2>
+      {syllabusId && <p style={{ fontSize: '0.9em', color: '#ccc' }}>Using Syllabus ID: <strong>{syllabusId}</strong></p>}
+      {syllabusText && <p style={{ fontSize: '0.8em', color: '#888' }}>Syllabus content loaded. (First 100 chars): {syllabusText.substring(0, 100)}...</p>}
+      {!syllabusText && syllabusId && <p style={{ color: 'orange' }}>Loading syllabus content or content is empty for this ID...</p>}
+      {!syllabusId && <p style={{ color: '#aaa' }}>No Syllabus ID provided. Problem will be generated without specific syllabus context.</p>}
+      
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="e.g., 'A difficult problem on thermodynamics from Chapter 3'"
+          rows="5"
+          style={{ width: '100%', padding: '10px', backgroundColor: '#333', color: '#fff', border: '1px solid #555', borderRadius: '5px' }}
+          required
+        ></textarea>
+        <button
+          type="submit"
+          disabled={isLoading || !prompt}
+          style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+        >
+          {isLoading ? 'Generating...' : 'Generate Problem'}
         </button>
       </form>
 
-      {error && <p style={{ color: 'red', marginTop: '20px' }}>{error}</p>}
+      {error && <p style={{ color: 'red', marginTop: '15px' }}>{error}</p>}
 
-      <h3>Generated Problem:</h3>
-      <div className="generated-problem-output">
-        <div className="generated-problem-text">
-          {problem}
-        </div>
-      </div>
-
-      {problem && ( // Only show the solution button if a problem exists
-        <button onClick={handleShowSolution} style={{ marginTop: '15px' }}>
-          Show Solution
-        </button>
-      )}
-
-      {/* Solution Popup Modal */}
-      {showSolutionPopup && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="close-button" onClick={handleCloseSolution}>&times;</button>
-            <h4>Solution:</h4>
-            <div className="solution-text">
-              {solution}
-            </div>
-          </div>
+      {generatedProblem && (
+        <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '5px' }}>
+          <h3>Generated Problem:</h3>
+          <p style={{ whiteSpace: 'pre-wrap', color: '#ddd' }}>{generatedProblem}</p>
         </div>
       )}
     </div>
   );
 }
-
-export default ProblemGenerator;
