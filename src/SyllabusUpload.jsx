@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Make sure you have axios installed: npm install axios
 
-export default function SyllabusUpload() {
+// Fix: Accept onUploadSuccess as a prop in the function signature
+export default function SyllabusUpload({ onUploadSuccess }) { 
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadMessage, setUploadMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -43,9 +44,15 @@ export default function SyllabusUpload() {
       });
 
       console.log('Upload successful:', response.data);
-      setUploadMessage(`✅ Success! Syllabus processed. ID: ${response.data.syllabus_id}`);
-      setExtractedSyllabusId(response.data.syllabus_id); // Store the ID for later use
+      const newSyllabusId = response.data.syllabus_id; // Get the ID from the response
+      setUploadMessage(`✅ Success! Syllabus processed. ID: ${newSyllabusId}`);
+      setExtractedSyllabusId(newSyllabusId); // Store the ID for local display
       setSelectedFile(null); // Clear selected file after successful upload
+
+      // Fix: Call the onUploadSuccess prop to send the ID back to AppContent
+      if (onUploadSuccess) {
+        onUploadSuccess(newSyllabusId); 
+      }
 
     } catch (error) {
       console.error('Error uploading syllabus:', error.response ? error.response.data : error.message);
