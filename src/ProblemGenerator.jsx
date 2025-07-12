@@ -1,112 +1,100 @@
-// src/ProblemGenerator.jsx
+// frontend/src/pages/ProblemGenerator.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom'; // Import useLocation from react-router-dom
+import { AuthContext } from '../context/AuthContext';
+import { AppContentContext } from '../context/AppContentContext'; // Import AppContentContext
+import '../index.css'; // Make sure this path is correct if you have global styles
 
-export default function ProblemGenerator() {
+const ProblemGenerator = () => {
+    const { currentUser } = useContext(AuthContext);
+    // Access lastUploadedSyllabusId from AppContentContext
+    const { lastUploadedSyllabusId } = useContext(AppContentContext); 
     const [prompt, setPrompt] = useState('');
     const [generatedProblem, setGeneratedProblem] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [syllabusText, setSyllabusText] = useState(''); // State to store syllabus text
 
-    const location = useLocation(); // Get location object from React Router
-    // Access the passed syllabusId from the Link state.
-    const syllabusId = location.state?.syllabusId; //
-
-    // --- useEffect to fetch syllabus text when component mounts or syllabusId changes ---
-    useEffect(() => {
-        const fetchSyllabusText = async () => {
-            if (!syllabusId) {
-                setSyllabusText(''); // Clear previous syllabus text if ID is null
-                return; // Don't fetch if no ID
-            }
-            setError('');
-            try {
-                // Make sure your FastAPI backend is running on http://127.0.0.1:8000
-                const response = await axios.get(`http://127.0.0.1:8000/get-syllabus-text/${syllabusId}`);
-                setSyllabusText(response.data.syllabus_text);
-                console.log("Fetched syllabus text (first 100 chars):", response.data.syllabus_text.substring(0, 100) + "...");
-            } catch (err) {
-                console.error("Error fetching syllabus text:", err.response ? err.response.data : err.message);
-                setError("Failed to load syllabus context. Please ensure the syllabus ID is valid and the backend is running.");
-                setSyllabusText(''); // Clear syllabus text on error
-            }
-        };
-
-        fetchSyllabusText();
-    }, [syllabusId]); // Re-run this effect if syllabusId changes
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError('');
+    const handleGenerateProblem = async () => {
+        setLoading(true);
         setGeneratedProblem('');
-
-        // Combine user prompt with syllabus text as context for the AI
-        const fullPrompt = syllabusText
-            ? `Based on the following syllabus content, generate a practice problem:\n\nSyllabus Content:\n"${syllabusText}"\n\nUser Request: ${prompt}`
-            : `Generate a practice problem based on: ${prompt}`;
+        setError('');
 
         try {
-            // --- THIS IS THE MODIFICATION ---
-            // The simulated API call is now commented out.
-            // const simulatedResponse = await new Promise(resolve => setTimeout(() => {
-            //     resolve({ data: { problem: `Simulated problem for: "${prompt}"\n\nContext used (first 50 chars): "${syllabusText.substring(0, 50)}..."` } });
-            // }, 2000));
-            // setGeneratedProblem(simulatedResponse.data.problem);
+            const requestBody = {
+                prompt: prompt,
+                // Pass syllabusId as a separate field if available
+                syllabusId: lastUploadedSyllabusId || null // Send null if no ID
+            };
 
+            const response = await axios.post(
+                'http://127.0.0.1:8000/generate-llm-problem',
+                requestBody,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
-            // This is your actual backend LLM endpoint call
-            const actualLLMResponse = await axios.post('http://127.0.0.1:8000/generate-llm-problem', {
-              prompt: fullPrompt
-            });
-            setGeneratedProblem(actualLLMResponse.data.generated_text); // Assumes backend sends 'generated_text'
-
+            setGeneratedProblem(response.data.generated_text);
         } catch (err) {
-            console.error("Error generating problem:", err.response ? err.response.data : err.message);
-            setError("Failed to generate problem. Please try again. Check backend logs for details.");
+            console.error('Error generating problem:', err);
+            setError(err.response?.data?.detail || 'Failed to generate problem. Please try again. Check backend logs for details.');
+            setGeneratedProblem(''); // Clear any previous partial generation
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto', color: '#fff' }}>
-            <h2>Generate Practice Problem</h2>
-            {syllabusId && <p style={{ fontSize: '0.9em', color: '#ccc' }}>Using Syllabus ID: <strong>{syllabusId}</strong></p>}
-            {syllabusText && <p style={{ fontSize: '0.8em', color: '#888' }}>Syllabus content loaded. (First 100 chars): {syllabusText.substring(0, 100)}...</p>}
-            {/* Display message if no syllabus ID or content is empty after fetch */}
-            {!syllabusText && syllabusId && !isLoading && <p style={{ color: 'orange' }}>Loading syllabus content or content is empty for this ID. Ensure backend is running and ID is valid.</p>}
-            {!syllabusId && <p style={{ color: '#aaa' }}>No Syllabus ID provided. Problem will be generated without specific syllabus context.</p>}
+        <div className="container mx-auto p-4 max-w-2xl bg-white rounded-lg shadow-md mt-10">
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Generate Practice Problem</h1>
+            
+            {/* Display message about syllabus context */}
+            {lastUploadedSyllabusId ? (
+                <p className="text-green-600 mb-4 text-center">
+                    Using syllabus ID: {lastUploadedSyllabusId}. Problem will be generated with context.
+                </p>
+            ) : (
+                <p className="text-red-500 mb-4 text-center">
+                    No Syllabus ID provided. Problem will be generated without specific syllabus context.
+                </p>
+            )}
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div className="mb-4">
+                <label htmlFor="prompt" className="block text-gray-700 text-sm font-bold mb-2">
+                    Enter your problem prompt (e.g., "a difficult question on quantum physics", "a multiple choice problem about Newton's laws"):
+                </label>
                 <textarea
+                    id="prompt"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-y"
+                    rows="4"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="e.g., 'A difficult problem on thermodynamics from Chapter 3'"
-                    rows="5"
-                    style={{ width: '100%', padding: '10px', backgroundColor: '#333', color: '#fff', border: '1px solid #555', borderRadius: '5px' }}
-                    required
+                    placeholder="E.g., Generate a multiple choice question about the Doppler effect."
                 ></textarea>
-                <button
-                    type="submit"
-                    disabled={isLoading || !prompt}
-                    style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-                >
-                    {isLoading ? 'Generating...' : 'Generate Problem'}
-                </button>
-            </form>
+            </div>
 
-            {error && <p style={{ color: 'red', marginTop: '15px' }}>{error}</p>}
+            <button
+                onClick={handleGenerateProblem}
+                className={`w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200 
+                    ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-700 text-white font-bold'}`}
+                disabled={loading}
+            >
+                {loading ? 'Generating...' : 'Generate Problem'}
+            </button>
+
+            {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
 
             {generatedProblem && (
-                <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#222', border: '1px solid #444', borderRadius: '5px' }}>
-                    <h3>Generated Problem:</h3>
-                    <p style={{ whiteSpace: 'pre-wrap', color: '#ddd' }}>{generatedProblem}</p>
+                <div className="mt-6 p-4 bg-gray-100 rounded border border-gray-300">
+                    <h2 className="text-xl font-semibold mb-2 text-gray-800">Generated Problem:</h2>
+                    <p className="text-gray-700 whitespace-pre-wrap">{generatedProblem}</p>
                 </div>
             )}
         </div>
     );
-}
+};
+
+export default ProblemGenerator;
