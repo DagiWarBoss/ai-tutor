@@ -1,44 +1,82 @@
+# api_backend/main.py (or your chosen backend file name)
+
 import os
-import PyPDF2
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+from pypdf import PdfReader # PyPDF2 is now pypdf
+import uuid # For generating unique filenames
+import shutil # For saving uploaded files temporarily
 
-# ✅ Set the base folder path (where Maths, Physics, Chemistry folders exist)
-base_path = r"C:\Users\daksh\OneDrive\Dokumen\NCERT_PCM_ChapterWise"
+# Initialize FastAPI app
+app = FastAPI()
 
-# ✅ Map subjects to their folder paths
-subject_dirs = {
-    "Maths": os.path.join(base_path, "Maths"),
-    "Physics": os.path.join(base_path, "Physics"),
-    "Chemistry": os.path.join(base_path, "Chemistry")
-}
+# --- Configuration ---
+# ✅ Base directory for uploaded syllabi and extracted text
+# This should ideally be outside your direct source code, e.g., a 'data' folder
+# For demonstration, we'll place it relative to this script.
+UPLOAD_DIR = "uploaded_syllabi"
+EXTRACTED_TEXT_DIR = "extracted_syllabi_text"
 
-# ✅ Output folder for .txt files
-output_folder = os.path.join(base_path, "txt_outputs")
-os.makedirs(output_folder, exist_ok=True)
+# Create directories if they don't exist
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(EXTRACTED_TEXT_DIR, exist_ok=True)
 
-# ✅ Process each subject
-for subject, subject_path in subject_dirs.items():
-    if not os.path.isdir(subject_path):
-        print(f"❌ Folder not found: {subject_path}")
-        continue
+# --- PDF Extraction Utility Function ---
+def extract_text_from_pdf(pdf_path: str) -> str:
+    """Extracts text from a single PDF file."""
+    try:
+        with open(pdf_path, "rb") as file:
+            reader = PdfReader(file)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text() or ""
+        return text
+    except Exception as e:
+        print(f"Error extracting text from {pdf_path}: {e}")
+        raise
 
-    subject_output = os.path.join(output_folder, subject)
-    os.makedirs(subject_output, exist_ok=True)
+# --- FastAPI Endpoint for Syllabus Upload ---
+@app.post("/upload-syllabus/")
+async def upload_syllabus(file: UploadFile = File(...)):
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
 
-    for filename in os.listdir(subject_path):
-        if filename.lower().endswith(".pdf"):
-            pdf_path = os.path.join(subject_path, filename)
-            txt_path = os.path.join(subject_output, filename.replace(".pdf", ".txt"))
+    # Generate a unique ID for this upload
+    syllabus_id = str(uuid.uuid4())
+    
+    # Define paths for the uploaded PDF and the extracted text
+    pdf_save_path = os.path.join(UPLOAD_DIR, f"{syllabus_id}.pdf")
+    text_save_path = os.path.join(EXTRACTED_TEXT_DIR, f"{syllabus_id}.txt")
 
-            try:
-                with open(pdf_path, "rb") as file:
-                    reader = PyPDF2.PdfReader(file)
-                    text = ""
-                    for page in reader.pages:
-                        text += page.extract_text() or ""
-                
-                with open(txt_path, "w", encoding="utf-8") as f:
-                    f.write(text)
+    try:
+        # Save the uploaded PDF file temporarily
+        with open(pdf_save_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-                print(f"✅ Extracted: {filename}")
-            except Exception as e:
-                print(f"❌ Failed on {filename}: {e}")
+        # Extract text from the saved PDF
+        extracted_text = extract_text_from_pdf(pdf_save_path)
+
+        # Save the extracted text to a .txt file
+        with open(text_save_path, "w", encoding="utf-8") as f:
+            f.write(extracted_text)
+        
+        # In a real application, you'd store metadata (syllabus_id, original_filename, etc.)
+        # in a database here. For now, we'll just return the ID and a message.
+
+        return JSONResponse(content={
+            "message": "Syllabus uploaded and processed successfully!",
+            "syllabus_id": syllabus_id,
+            "filename": file.filename,
+            "extracted_text_path": text_save_path # For debugging/demonstration
+        }, status_code=200)
+
+    except HTTPException: # Re-raise FastAPI's own HTTPExceptions
+        raise
+    except Exception as e:
+        print(f"An error occurred during syllabus upload or processing: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to process syllabus: {e}")
+    finally:
+        # Clean up the temporary uploaded PDF file if you don't need to keep it
+        # For long-term storage, you might move it to permanent storage or S3
+        if os.path.exists(pdf_save_path):
+            os.remove(pdf_save_path) # Remove the uploaded PDF after processing
