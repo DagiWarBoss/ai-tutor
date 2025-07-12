@@ -114,7 +114,7 @@ async def generate_llm_problem(request: Request):
     try:
         # --- TOGETHER AI INTEGRATION ---
         # 1. Set your Together AI API key directly here (for quick testing, less secure for production):
-        together.api_key = "YOUR_TOGETHER_API_KEY_HERE" # <<<--- REPLACE THIS WITH YOUR ACTUAL KEY
+        together.api_key = "tgp_v1_Kxkjb939n6jsXPVOKRdvX0UIYYCpbx93J_shDyLNO5Q" # <<<--- REPLACE THIS WITH YOUR ACTUAL KEY
 
         # OR (recommended for production): Ensure TOGETHER_API_KEY is set as an environment variable
         # For example, in your shell before starting uvicorn:
