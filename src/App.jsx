@@ -1,36 +1,36 @@
 // src/App.jsx
 
-import React, { useState } from 'react'; // Added useState for dynamic syllabusId
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './AuthContext.jsx'; // Corrected to .jsx
-import ProtectedRoute from './ProtectedRoute.jsx'; // Corrected to .jsx
+import { AuthProvider, useAuth } from './AuthContext.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
 import { auth } from './firebase'; // Import auth for signOut
 
 // Import your components
-import ProblemGenerator from "./ProblemGenerator";
-import Dashboard from "./Dashboard";
-import Quiz from "./Quiz";
-import AuthPage from "./AuthPage";
-import SyllabusUpload from "./SyllabusUpload.jsx"; // Corrected to .jsx
+import ProblemGenerator from "./ProblemGenerator.jsx"; // Ensure .jsx extension
+import Dashboard from "./Dashboard.jsx";           // Ensure .jsx extension
+import Quiz from "./Quiz.jsx";                     // Ensure .jsx extension
+import AuthPage from "./AuthPage.jsx";             // Ensure .jsx extension
+import SyllabusUpload from "./SyllabusUpload.jsx"; // Ensure .jsx extension
 
 // Define AppContent component here, outside of the main App function
 function AppContent() {
   const navigate = useNavigate();
-  const { currentUser, loading } = useAuth(); // Use the auth context here
-  const [lastUploadedSyllabusId, setLastUploadedSyllabusId] = useState(null); // State to hold the last uploaded syllabus ID
+  const { currentUser, loading } = useAuth();
+  // State to hold the last uploaded syllabus ID, to be passed to ProblemGenerator
+  const [lastUploadedSyllabusId, setLastUploadedSyllabusId] = useState(null); 
 
-  // Console logs for debugging authentication state - keep them for now
   console.log("AppContent - currentUser:", currentUser);
   console.log("AppContent - loading:", loading);
+  console.log("AppContent - lastUploadedSyllabusId:", lastUploadedSyllabusId); // For debugging
 
   const handleLogout = async () => {
     try {
-      await auth.signOut(); // Use Firebase signOut from firebase.js
+      await auth.signOut();
       console.log("User logged out via Firebase!");
       navigate('/auth'); // Redirect to login page
     } catch (error) {
       console.error("Error logging out:", error);
-      // Handle error, e.g., display a message
     }
   };
 
@@ -49,23 +49,23 @@ function AppContent() {
       <nav className="main-nav">
         <ul>
           <li><Link to="/">Dashboard</Link></li>
-          {/* Link to Problem Generator, passing the last uploaded syllabus ID */}
+          {/* Link to Problem Generator, passing the last uploaded syllabus ID via state */}
           <li>
             <Link
               to={{
                 pathname: "/generate-problem",
-                state: { syllabusId: lastUploadedSyllabusId } // Pass the dynamic ID here
+                state: { syllabusId: lastUploadedSyllabusId } 
               }}
             >
               Generate Problem
             </Link>
           </li>
           <li><Link to="/quiz">Quiz</Link></li>
-          {/* Syllabus Upload link. We'll need a way to update lastUploadedSyllabusId from SyllabusUpload component */}
+          {/* Link to Syllabus Upload */}
           <li>
             <Link to="/syllabus-upload">Syllabus Upload</Link>
           </li>
-          {currentUser ? ( // Use currentUser from AuthContext for conditional rendering
+          {currentUser ? ( 
             <li>
               <button onClick={handleLogout} className="nav-button">Logout</button>
             </li>
@@ -86,7 +86,8 @@ function AppContent() {
         <Route path="/" element={<ProtectedRoute><Dashboard handleLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/generate-problem" element={<ProtectedRoute><ProblemGenerator /></ProtectedRoute>} />
         <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-        {/* Pass a function to SyllabusUpload to update the lastUploadedSyllabusId in AppContent */}
+        {/* Pass the setLastUploadedSyllabusId function to SyllabusUpload */}
+        {/* So SyllabusUpload can update AppContent's state on successful upload */}
         <Route 
           path="/syllabus-upload" 
           element={
