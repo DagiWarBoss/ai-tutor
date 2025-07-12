@@ -11,7 +11,7 @@ import ProblemGenerator from "./ProblemGenerator";
 import Dashboard from "./Dashboard";
 import Quiz from "./Quiz";
 import AuthPage from "./AuthPage";
-import SyllabusUpload from "./SyllabusUpload";
+import SyllabusUpload from "./SyllabusUpload.jsx";
 
 // Define AppContent component here, outside of the main App function
 function AppContent() {
