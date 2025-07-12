@@ -5,19 +5,17 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pypdf import PdfReader
-import uuid # For generating unique filenames
-import shutil # For saving uploaded files temporarily
-import io # For handling file in memory
-
-# Import for Together AI
-import together # UNCOMMENTED - Make sure you have installed: pip install together
+import uuid
+import shutil
+import io
+import together
+import json # Import json for parsing the response
 
 app = FastAPI()
 
-# --- CORS Configuration ---
 origins = [
     "http://localhost",
-    "http://localhost:5173",  # Your frontend's URL/port
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -28,20 +26,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Configuration ---
-UPLOAD_DIR = "uploaded_syllabi" # This folder is for temporary PDF storage, often cleaned up
-EXTRACTED_TEXT_DIR = "extracted_syllabi_text" # This folder stores the extracted text
+UPLOAD_DIR = "uploaded_syllabi"
+EXTRACTED_TEXT_DIR = "extracted_syllabi_text"
 
-# Create directories if they don't exist
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(EXTRACTED_TEXT_DIR, exist_ok=True)
 
-# --- PDF Extraction Utility Function ---
-# Modified to accept UploadFile directly, for cleaner handling
 def extract_text_from_pdf(pdf_file: UploadFile) -> str:
-    """Extracts text from a single PDF file from an UploadFile object."""
     try:
-        # Read the file content into a BytesIO object
         file_content = pdf_file.file.read()
         reader = PdfReader(io.BytesIO(file_content))
         text = ""
@@ -52,23 +44,16 @@ def extract_text_from_pdf(pdf_file: UploadFile) -> str:
         print(f"Error extracting text from {pdf_file.filename}: {e}")
         raise
 
-# --- FastAPI Endpoint for Syllabus Upload ---
 @app.post("/upload-syllabus/")
 async def upload_syllabus(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
 
     syllabus_id = str(uuid.uuid4())
-    
-    # We will save the extracted text directly, no need to save the PDF permanently
-    # pdf_save_path = os.path.join(UPLOAD_DIR, f"{syllabus_id}.pdf") # No longer needed for permanent storage
     text_save_path = os.path.join(EXTRACTED_TEXT_DIR, f"{syllabus_id}.txt")
 
     try:
-        # Extract text directly from the UploadFile
         extracted_text = extract_text_from_pdf(file)
-
-        # Save the extracted text to a .txt file
         with open(text_save_path, "w", encoding="utf-8") as f:
             f.write(extracted_text)
         
@@ -76,80 +61,106 @@ async def upload_syllabus(file: UploadFile = File(...)):
             "message": "Syllabus uploaded and processed successfully!",
             "syllabus_id": syllabus_id,
             "filename": file.filename,
-            "extracted_text_path": text_save_path # For debugging/demonstration
+            "extracted_text_path": text_save_path
         }, status_code=200)
 
     except Exception as e:
         print(f"An error occurred during syllabus upload or processing: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to process syllabus: {e}")
 
-# --- FastAPI Endpoint to Get Syllabus Text by ID ---
-@app.get("/get-syllabus-text/{syllabus_id}")
-async def get_syllabus_text(syllabus_id: str):
-    """
-    Retrieves the extracted text of a syllabus by its unique ID.
-    """
+# --- NEW HELPER FUNCTION to get raw syllabus text ---
+async def get_syllabus_content_by_id(syllabus_id: str) -> str:
     text_file_path = os.path.join(EXTRACTED_TEXT_DIR, f"{syllabus_id}.txt")
-
     if not os.path.exists(text_file_path):
-        raise HTTPException(status_code=404, detail="Syllabus text not found.")
-
+        return "" # Return empty string if not found, let LLM handle no context
     try:
         with open(text_file_path, "r", encoding="utf-8") as f:
-            syllabus_text = f.read()
-        return JSONResponse(content={"syllabus_text": syllabus_text}, status_code=200)
+            return f.read()
     except Exception as e:
         print(f"Error reading syllabus text for ID {syllabus_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve syllabus text.")
+        return "" # Return empty string on error
 
-# --- NEW ENDPOINT: LLM Problem Generation ---
+
+@app.get("/get-syllabus-text/{syllabus_id}")
+async def get_syllabus_text_endpoint(syllabus_id: str): # Renamed to avoid clash
+    """
+    Retrieves the extracted text of a syllabus by its unique ID for API consumers.
+    """
+    syllabus_text = await get_syllabus_content_by_id(syllabus_id) # Use the helper
+    if not syllabus_text:
+        raise HTTPException(status_code=404, detail="Syllabus text not found or error occurred.")
+    return JSONResponse(content={"syllabus_text": syllabus_text}, status_code=200)
+
+# --- MODIFIED ENDPOINT: LLM Problem Generation ---
 @app.post("/generate-llm-problem")
 async def generate_llm_problem(request: Request):
     data = await request.json()
-    prompt = data.get("prompt")
+    user_prompt = data.get("prompt") # Rename 'prompt' to 'user_prompt' for clarity
+    syllabus_id = data.get("syllabusId") # Expect syllabusId separately from frontend
 
-    if not prompt:
-        raise HTTPException(status_code=400, detail="Prompt is required for problem generation.")
+    if not user_prompt:
+        raise HTTPException(status_code=400, detail="User prompt is required for problem generation.")
+
+    syllabus_content = ""
+    if syllabus_id:
+        try:
+            syllabus_content = await get_syllabus_content_by_id(syllabus_id)
+            if not syllabus_content:
+                print(f"No syllabus content found for ID {syllabus_id}. Generating without specific context.")
+        except Exception as e:
+            print(f"Error fetching syllabus content for ID {syllabus_id}: {e}. Generating without specific context.")
+            syllabus_content = "" # Ensure it's empty on error
 
     try:
-        # --- TOGETHER AI INTEGRATION ---
-        # 1. Set your Together AI API key directly here (for quick testing, less secure for production):
-        together.api_key = "tgp_v1_Kxkjb939n6jsXPVOKRdvX0UIYYCpbx93J_shDyLNO5Q" # <<<--- REPLACE THIS WITH YOUR ACTUAL KEY
+        together.api_key = "YOUR_TOGETHER_API_KEY_HERE" # Replace with your actual key
 
-        # OR (recommended for production): Ensure TOGETHER_API_KEY is set as an environment variable
-        # For example, in your shell before starting uvicorn:
-        # export TOGETHER_API_KEY="your_key_here" (Linux/macOS)
-        # set TOGETHER_API_KEY=your_key_here (Windows CMD)
-        # The 'together' library typically picks it up automatically from os.environ.get("TOGETHER_API_KEY")
-
-        # Prepare the prompt for the LLM.
-        # For Llama-3-8b-chat-hf, it often expects an instruct-like format when using Completion.create
-        # If you were to use `together.chat.completions.create` (which caused the 'no attribute chat' error for you),
-        # you'd typically pass a list of messages: [{"role": "user", "content": prompt}]
+        # Construct a more specific prompt for the LLM
+        system_message = "You are an AI tutor. Your task is to generate a single, concise practice problem. Do NOT provide a solution. Do NOT repeat the input prompt or syllabus content in your response."
         
-        # Using the Completion.create method:
+        if syllabus_content:
+            llm_prompt_content = f"{system_message}\n\nBased on the following syllabus content, generate a {user_prompt} problem:\n\nSyllabus:\n```\n{syllabus_content}\n```\n\nPractice Problem:"
+        else:
+            llm_prompt_content = f"{system_message}\n\nGenerate a {user_prompt} problem. No specific syllabus context was provided."
+
+        # For Llama-3-8b-chat-hf and similar models on Together AI, the chat completion API
+        # is generally preferred, but since you had issues with `together.chat`,
+        # we stick to `Completion.create` but use the specific Llama-3 instruction format.
+        formatted_llm_prompt = (
+            f"<|begin_of_text|>"
+            f"<|start_header_id|>system<|end_header_id|>\n"
+            f"{system_message}<|eot_id|>"
+            f"<|start_header_id|>user<|end_header_id|>\n"
+            f"{llm_prompt_content}<|eot_id|>"
+            f"<|start_header_id|>assistant<|end_header_id|>\n"
+        )
+
         response = together.Completion.create(
-            model="meta-llama/Llama-3-8b-chat-hf", # This model works well with instruct-style prompts
-            prompt=f"[INST] {prompt} [/INST]", # Wrap prompt in instruct tags
-            max_tokens=500, # Max length of the generated response
-            temperature=0.7, # Controls creativity (0.0 for deterministic, 1.0 for very creative)
-            # You can add other parameters as needed, e.g., stop_sequences=["<|eot_id|>"]
+            model="meta-llama/Llama-3-8b-chat-hf",
+            prompt=formatted_llm_prompt,
+            max_tokens=500,
+            temperature=0.7,
+            stop=["<|eot_id|>", "<|end_of_text|>"] # Stop generation at these tokens
         )
         
-        # Extract the generated text from the response
-        # For Completion.create, the text is usually in response.choices[0].text
         generated_text = response.choices[0].text
+
+        # Clean up any leftover instruction tokens if the model somehow includes them
+        generated_text = generated_text.replace("[/INST]", "").replace("[INST]", "").strip()
+        generated_text = generated_text.replace("<|eot_id|>", "").replace("<|end_of_text|>", "").strip()
+        generated_text = generated_text.replace("<|start_header_id|>assistant<|end_header_id|>", "").strip()
+        generated_text = generated_text.replace("<|start_header_id|>user<|end_header_id|>", "").strip()
+        generated_text = generated_text.replace("<|start_header_id|>system<|end_header_id|>", "").strip()
+        generated_text = generated_text.replace("<|begin_of_text|>", "").strip()
+
 
         return JSONResponse(
             status_code=200,
             content={"generated_text": generated_text}
         )
     except Exception as e:
-        print(f"Error in LLM problem generation endpoint: {e}") # Log the specific error
-        # Re-raise as HTTPException so frontend gets an error response
+        print(f"Error in LLM problem generation endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate problem via LLM. Backend error: {e}")
 
-# --- Optional: Basic Root Endpoint to check if backend is running ---
 @app.get("/")
 async def read_root():
     return {"message": "FastAPI Backend for AI Tutor is running!"}
