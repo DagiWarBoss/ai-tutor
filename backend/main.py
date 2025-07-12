@@ -30,20 +30,23 @@ app.add_middleware(
 )
 
 # --- Configuration ---
-UPLOAD_DIR = "uploaded_syllabi" # This folder is for temporary PDF storage, often cleaned up
+# UPLOAD_DIR is no longer strictly needed for temporary PDF storage,
+# as we'll process in memory, but kept for consistency if you save other files.
+UPLOAD_DIR = "uploaded_syllabi"
 EXTRACTED_TEXT_DIR = "extracted_syllabi_text" # This folder stores the extracted text
 
 # Create directories if they don't exist
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(UPLOAD_DIR, exist_ok=True) # Still create if other uses
 os.makedirs(EXTRACTED_TEXT_DIR, exist_ok=True)
 
-# --- PDF Extraction Utility Function ---
+# --- PDF Extraction Utility Function (MODIFIED) ---
+# This function now directly accepts an UploadFile object.
 def extract_text_from_pdf(pdf_file: UploadFile) -> str:
     """Extracts text from a single PDF file from an UploadFile object."""
     try:
         # Read the file content into a BytesIO object
-        file_content = pdf_file.file.read()
-        reader = PdfReader(io.BytesIO(file_content))
+        # Use pdf_file.file.read() to get the bytes content
+        reader = PdfReader(io.BytesIO(pdf_file.file.read()))
         text = ""
         for page in reader.pages:
             text += page.extract_text() or ""
@@ -52,7 +55,7 @@ def extract_text_from_pdf(pdf_file: UploadFile) -> str:
         print(f"Error extracting text from {pdf_file.filename}: {e}")
         raise
 
-# --- FastAPI Endpoint for Syllabus Upload ---
+# --- FastAPI Endpoint for Syllabus Upload (MODIFIED) ---
 @app.post("/upload-syllabus/")
 async def upload_syllabus(file: UploadFile = File(...)):
     if not file.filename.lower().endswith(".pdf"):
@@ -62,7 +65,10 @@ async def upload_syllabus(file: UploadFile = File(...)):
     text_save_path = os.path.join(EXTRACTED_TEXT_DIR, f"{syllabus_id}.txt")
 
     try:
+        # Extract text directly from the UploadFile object (MODIFIED)
         extracted_text = extract_text_from_pdf(file)
+
+        # Save the extracted text to a .txt file
         with open(text_save_path, "w", encoding="utf-8") as f:
             f.write(extracted_text)
         
