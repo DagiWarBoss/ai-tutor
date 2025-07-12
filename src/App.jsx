@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './AuthContext.jsx';
+import { AuthProvider, useAuth } from './AuthContext.jsx'; // Corrected import
 import ProtectedRoute from './ProtectedRoute.jsx';
 import { auth } from './firebase'; // Import auth for signOut
 
 // Import your components
-import ProblemGenerator from "./ProblemGenerator.jsx"; // Ensure .jsx extension
-import Dashboard from "./Dashboard.jsx";           // Ensure .jsx extension
-import Quiz from "./Quiz.jsx";                     // Ensure .jsx extension
-import AuthPage from "./AuthPage.jsx";             // Ensure .jsx extension
-import SyllabusUpload from "./SyllabusUpload.jsx"; // Ensure .jsx extension
+import ProblemGenerator from "./ProblemGenerator.jsx";
+import Dashboard from "./Dashboard.jsx";
+import Quiz from "./Quiz.jsx";
+import AuthPage from "./AuthPage.jsx";
+import SyllabusUpload from "./SyllabusUpload.jsx";
 
 // Define AppContent component here, outside of the main App function
 function AppContent() {
