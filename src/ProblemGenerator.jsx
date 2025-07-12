@@ -2,9 +2,9 @@
 
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { AuthContext } from "./AuthContext"; // Corrected path
-import { AppContentContext } from "./AppContentContext"; // Corrected path
-import "./index.css"; // Make sure this path is correct if you have global styles
+import { AuthContext } from "./AuthContext";
+import { AppContentContext } from "./AppContentContext"; // NEW: Corrected path and import
+import "./index.css";
 
 const ProblemGenerator = () => {
     const { currentUser } = useContext(AuthContext);
