@@ -1,10 +1,10 @@
-// src/AuthContext.jsx (Previously AuthContext.js - renamed to fix JSX parsing issues)
+// src/AuthContext.jsx
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase'; // Make sure your firebase.js is correctly set up
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null); // <-- ADDED 'export' HERE
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -31,10 +31,13 @@ export const AuthProvider = ({ children }) => {
         return unsubscribe; // Cleanup subscription on unmount
     }, []);
 
+    // Removed conditional rendering for loading state from here.
+    // The loading state is managed, but children are always rendered.
+    // If you want a loading screen, it might be better placed in App.jsx or higher.
+
     return (
         <AuthContext.Provider value={{ currentUser, loading }}>
-            {/* MODIFICATION HERE: Removed conditional rendering */}
-            {children} 
+            {children}
         </AuthContext.Provider>
     );
 };

@@ -4,7 +4,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from "./AuthContext";
 import { AppContentContext } from "./AppContentContext";
-// import "./index.css"; // <--- THIS LINE IS REMOVED HERE TOO
+import "./index.css"; 
 
 const ProblemGenerator = () => {
     const { currentUser } = useContext(AuthContext);
