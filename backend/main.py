@@ -9,15 +9,19 @@ from dotenv import load_dotenv
 from together import Together
 from together.error import AuthenticationError # Import the error from its correct submodule
 
-# --- Load environment variables from .env file ---
-load_dotenv()
+# --- Explicitly load the .env file from the backend directory ---
+# This ensures we don't accidentally load a .env file from the frontend or root folder.
+script_dir = os.path.dirname(__file__)
+dotenv_path = os.path.join(script_dir, '.env')
+load_dotenv(dotenv_path=dotenv_path)
+
 
 # --- Securely load API Key ---
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 
 # --- Add this for debugging ---
 if TOGETHER_API_KEY:
-    print(f"DEBUG: API Key loaded successfully, starting with '{TOGETHER_API_KEY[:4]}...'.")
+    print(f"DEBUG: API Key loaded successfully from backend/.env, starting with '{TOGETHER_API_KEY[:4]}...'.")
 else:
     print("DEBUG: API Key was NOT loaded. Check your backend/.env file.")
 
