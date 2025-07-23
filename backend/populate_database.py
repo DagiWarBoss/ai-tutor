@@ -21,62 +21,56 @@ DB_PORT = os.getenv("DB_PORT")
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TXT_CACHE_FOLDER = "txt_outputs"
 
-def extract_topics_from_pdf(pdf_path):
+def extract_chapter_number_from_pdf(doc):
+    """Scans the first page of a PDF for a 'Unit X' or 'Chapter X' pattern."""
+    try:
+        first_page_text = doc[0].get_text()
+        # Look for patterns like "Unit 7" or "CHAPTER 12"
+        match = re.search(r"(?:Unit|CHAPTER)\s*(\d+)", first_page_text, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    except Exception:
+        return None
+    return None
+
+def extract_topics_from_pdf(doc):
     """
-    Smarter topic extraction. First tries bookmarks (get_toc), if that fails,
-    it manually scans the first few pages for topic-like text patterns.
+    Smarter topic extraction. Manually scans the first few pages for topic-like text patterns.
     """
     try:
-        doc = fitz.open(pdf_path)
-        # --- METHOD 1: Try the fast bookmark method first ---
-        toc = doc.get_toc()
-        if toc:
-            topics = []
-            for item in toc:
-                level, title, page = item
-                match = re.match(r"^\s*([\d\.]+)\s*(.*)", title)
-                if match:
-                    topic_number, topic_name = match.groups()
-                    if topic_name:
-                        topics.append({"topic_number": topic_number.strip(), "topic_name": topic_name.strip()})
-            if topics:
-                print("    - Success: Extracted topics using bookmarks (TOC).")
-                return topics
-
-        # --- METHOD 2: If bookmarks fail, manually scan pages ---
-        print("    - TOC bookmarks not found or empty. Scanning page text...")
         topics = []
-        topic_pattern = re.compile(r"^\s*(\d+\.\d+(\.\d+)*)\s+(.*)", re.MULTILINE)
+        # A stricter regex: must start a line, have a number, and be followed by capitalized text.
+        topic_pattern = re.compile(r"^\s*(\d+\.\d+[\.\d+]*)\s+([A-Z][A-Za-z\s,]+)", re.MULTILINE)
         
         for page_num in range(min(5, doc.page_count)):
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
                 topic_number = match[0]
-                topic_name = match[2].strip()
-                if topic_name and len(topic_name) > 3:
+                topic_name = match[1].strip()
+                if topic_name and len(topic_name) > 5: # Filter out short junk titles
                     topics.append({"topic_number": topic_number, "topic_name": topic_name})
 
-        if topics:
-             print(f"    - Success: Extracted {len(topics)} topics by scanning page text.")
-        else:
-             print(f"    - Warning: Could not find topics using any method for {os.path.basename(pdf_path)}.")
+        if not topics:
+             print(f"    - Warning: Could not find topics by scanning text.")
         
+        # Remove duplicates while preserving order
         seen = set()
         unique_topics = []
         for topic in topics:
-            if topic['topic_name'] not in seen:
-                seen.add(topic['topic_name'])
+            # Use a tuple for the dictionary to make it hashable for the set
+            topic_tuple = tuple(topic.items())
+            if topic_tuple not in seen:
+                seen.add(topic_tuple)
                 unique_topics.append(topic)
         
         return unique_topics
 
     except Exception as e:
-        print(f"    - Error processing TOC for {os.path.basename(pdf_path)}: {e}")
+        print(f"    - Error processing TOC for {os.path.basename(doc.name)}: {e}")
         return []
 
-
-def get_full_text(pdf_path, cache_path):
+def get_full_text(doc, cache_path):
     """
     Gets full text. Prioritizes reading from a cached .txt file.
     If not found, extracts from PDF and creates a .txt file for next time.
@@ -87,7 +81,6 @@ def get_full_text(pdf_path, cache_path):
     
     print(f"    - Cache miss. Extracting text from PDF...")
     try:
-        doc = fitz.open(pdf_path)
         full_text = ""
         for page in doc:
             full_text += page.get_text("text") + " "
@@ -99,7 +92,7 @@ def get_full_text(pdf_path, cache_path):
         
         return full_text.strip()
     except Exception as e:
-        print(f"    - Error extracting full text from {os.path.basename(pdf_path)}: {e}")
+        print(f"    - Error extracting full text from {os.path.basename(doc.name)}: {e}")
         return ""
 
 def main():
@@ -117,13 +110,11 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                # Loop directly through subject folders
                 for subject_name in sorted(os.listdir(pdf_root_full_path)):
                     subject_path = os.path.join(pdf_root_full_path, subject_name)
                     if os.path.isdir(subject_path):
                         print(f"\n===== Processing Subject: '{subject_name}' =====")
 
-                        # Upsert Subject and get its ID (simplified query)
                         upsert_subject_query = """
                             WITH ins AS (INSERT INTO subjects (name) VALUES (%s) ON CONFLICT (name) DO NOTHING RETURNING id)
                             SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s LIMIT 1;
@@ -132,7 +123,7 @@ def main():
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' has ID: {subject_id}")
 
-                        chapter_number_counter = 1
+                        fallback_counter = 1
                         for filename in sorted(os.listdir(subject_path)):
                             if filename.lower().endswith(".pdf"):
                                 chapter_name = os.path.splitext(filename)[0].strip()
@@ -147,19 +138,36 @@ def main():
                                 pdf_path = os.path.join(subject_path, filename)
                                 cache_path = os.path.join(txt_cache_full_path, subject_name, f"{chapter_name}.txt")
                                 
-                                full_chapter_text = get_full_text(pdf_path, cache_path)
-                                topics_data = extract_topics_from_pdf(pdf_path)
+                                try:
+                                    doc = fitz.open(pdf_path)
+                                    
+                                    # Get the real chapter number
+                                    chapter_number = extract_chapter_number_from_pdf(doc)
+                                    if chapter_number is None:
+                                        print(f"    - Warning: Could not find real chapter number. Using fallback counter: {fallback_counter}")
+                                        chapter_number = fallback_counter
+                                    else:
+                                        print(f"    - Success: Found real chapter number: {chapter_number}")
 
-                                cur.execute(
-                                    "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                    (subject_id, chapter_number_counter, chapter_name, full_chapter_text),
-                                )
-                                chapter_id = cur.fetchone()[0]
-                                chapter_number_counter += 1
+                                    full_chapter_text = get_full_text(doc, cache_path)
+                                    topics_data = extract_topics_from_pdf(doc)
+                                    
+                                    doc.close() # Close the document after processing
 
-                                if topics_data:
-                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                    psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                    cur.execute(
+                                        "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                                        (subject_id, chapter_number, chapter_name, full_chapter_text),
+                                    )
+                                    chapter_id = cur.fetchone()[0]
+                                    fallback_counter += 1
+
+                                    if topics_data:
+                                        print(f"    - Success: Extracted {len(topics_data)} topics. Inserting...")
+                                        topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
+                                        psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                
+                                except Exception as e:
+                                    print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
                                         
             print("\n✅ All data has been successfully inserted and committed.")
 
