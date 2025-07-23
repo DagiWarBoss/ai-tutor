@@ -1,100 +1,119 @@
-// frontend/src/ProblemGenerator.jsx
+import React, { useState } from 'react';
 
-import React, { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import { AuthContext } from "./AuthContext";
-import { AppContentContext } from "./AppContentContext";
-import "./index.css"; 
+// This is a simple icon component for the button. You can replace it with any library like lucide-react.
+const SparklesIcon = ({ className }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m12 3-1.9 5.8-5.8 1.9 5.8 1.9L12 21l1.9-5.8 5.8-1.9-5.8-1.9L12 3z" />
+    <path d="M5 3v4" />
+    <path d="M19 17v4" />
+    <path d="M3 5h4" />
+    <path d="M17 19h4" />
+  </svg>
+);
 
-const ProblemGenerator = () => {
-    const { currentUser } = useContext(AuthContext);
-    // Access lastUploadedSyllabusId from AppContentContext
-    const { lastUploadedSyllabusId } = useContext(AppContentContext); 
-    const [prompt, setPrompt] = useState('');
-    const [generatedProblem, setGeneratedProblem] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+// This is the component for your ProblemGenerator.jsx file
+export default function ProblemGenerator() {
+  const [prompt, setPrompt] = useState('Thermodynamics'); // Default prompt for ease of testing
+  const [generatedProblem, setGeneratedProblem] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const handleGenerateProblem = async () => {
-        setLoading(true);
-        setGeneratedProblem('');
-        setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!prompt) {
+      setError('Please enter a topic.');
+      return;
+    }
 
-        try {
-            const requestBody = {
-                prompt: prompt,
-                // Pass syllabusId as a separate field if available
-                syllabusId: lastUploadedSyllabusId || null // Send null if no ID
-            };
+    setIsLoading(true);
+    setError(null);
+    setGeneratedProblem('');
 
-            const response = await axios.post(
-                'http://127.0.0.1:8000/generate-llm-problem',
-                requestBody,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
+    try {
+      // The backend server is running on http://localhost:8000
+      const response = await fetch('http://localhost:8000/generate-llm-problem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: prompt }),
+      });
 
-            setGeneratedProblem(response.data.generated_text);
-        } catch (err) {
-            console.error('Error generating problem:', err);
-            setError(err.response?.data?.detail || 'Failed to generate problem. Please try again. Check backend logs for details.');
-            setGeneratedProblem(''); // Clear any previous partial generation
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (!response.ok) {
+        // Try to get a detailed error message from the backend
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+      }
 
-    return (
-        <div className="container mx-auto p-4 max-w-2xl bg-white rounded-lg shadow-md mt-10">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Generate Practice Problem</h1>
-            
-            {/* Display message about syllabus context */}
-            {lastUploadedSyllabusId ? (
-                <p className="text-green-600 mb-4 text-center">
-                    Using syllabus ID: {lastUploadedSyllabusId}. Problem will be generated with context.
-                </p>
-            ) : (
-                <p className="text-red-500 mb-4 text-center">
-                    No Syllabus ID provided. Problem will be generated without specific syllabus context.
-                </p>
-            )}
+      const data = await response.json();
+      setGeneratedProblem(data.generated_text);
 
-            <div className="mb-4">
-                <label htmlFor="prompt" className="block text-gray-700 text-sm font-bold mb-2">
-                    Enter your problem prompt (e.g., "a difficult question on quantum physics", "a multiple choice problem about Newton's laws"):
-                </label>
-                <textarea
-                    id="prompt"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-y"
-                    rows="4"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="E.g., Generate a multiple choice question about the Doppler effect."
-                ></textarea>
-            </div>
+    } catch (err) {
+      console.error("Failed to generate problem:", err);
+      setError(`Failed to connect to the AI service. Make sure your backend server is running. Error: ${err.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4 font-sans">
+      <div className="w-full max-w-2xl">
+        <header className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-purple-400">JEE AI Tutor</h1>
+          <p className="text-gray-400 mt-2">Enter a topic to generate a JEE (Mains & Advanced) level practice problem.</p>
+        </header>
+
+        <form onSubmit={handleSubmit} className="w-full mb-8">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="text"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="e.g., Kinematics, Organic Chemistry..."
+              className="flex-grow bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
+            />
             <button
-                onClick={handleGenerateProblem}
-                className={`w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200 
-                    ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-700 text-white font-bold'}`}
-                disabled={loading}
+              type="submit"
+              disabled={isLoading}
+              className="flex items-center justify-center bg-purple-600 hover:bg-purple-700 disabled:bg-purple-900 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg shadow-purple-600/20"
             >
-                {loading ? 'Generating...' : 'Generate Problem'}
+              <SparklesIcon className="w-5 h-5 mr-2" />
+              {isLoading ? 'Generating...' : 'Generate Problem'}
             </button>
+          </div>
+        </form>
 
-            {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 min-h-[200px] flex items-center justify-center">
+          {isLoading && (
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
+              <p className="mt-4 text-gray-400">Contacting the AI model...</p>
+            </div>
+          )}
 
-            {generatedProblem && (
-                <div className="mt-6 p-4 bg-gray-100 rounded border border-gray-300">
-                    <h2 className="text-xl font-semibold mb-2 text-gray-800">Generated Problem:</h2>
-                    <p className="text-gray-700 whitespace-pre-wrap">{generatedProblem}</p>
-                </div>
-            )}
+          {error && (
+            <div className="text-red-400 bg-red-900/20 border border-red-700 rounded-lg p-4">
+              <h3 className="font-bold mb-2">An Error Occurred</h3>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {generatedProblem && (
+            <div className="text-left w-full">
+              <h2 className="text-xl font-semibold mb-4 text-purple-300">Generated Problem:</h2>
+              <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{generatedProblem}</p>
+            </div>
+          )}
+
+          {!isLoading && !error && !generatedProblem && (
+            <p className="text-gray-500">The generated problem will appear here.</p>
+          )}
         </div>
-    );
-};
-
-export default ProblemGenerator;
+         <footer className="text-center mt-8 text-gray-500 text-sm">
+          <p>AI Tutor Alpha v0.1</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
