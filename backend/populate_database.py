@@ -2,21 +2,21 @@ import os
 import fitz  # PyMuPDF
 import psycopg2
 import re
+from dotenv import load_dotenv
 
-# --- YOUR SUPABASE CREDENTIALS (IPv4 Compatible) ---
-# Replace these with your actual database details from Supabase
-# Use the "Transaction Pooler" credentials
-DB_HOST = "aws-0-ap-south-1.pooler.supabase.com"
+# Load the environment variables from the .env file
+load_dotenv()
+
+# --- SECURELY GET CREDENTIALS FROM ENVIRONMENT ---
+DB_HOST = os.getenv("SUPABASE_HOST")
+DB_USER = os.getenv("SUPABASE_USER")
+DB_PASSWORD = os.getenv("SUPABASE_PASSWORD")
 DB_NAME = "postgres"
-DB_USER = "postgres.fwqeskdcauwbowsbycnf" # Make sure this is your correct pooler user
-DB_PASSWORD = "your-database-password"     # PASTE YOUR SAVED PASSWORD HERE
 DB_PORT = "5432"
 
 # --- CONFIGURATION ---
-# IMPORTANT: Update this to the path of your main folder
-PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise" 
-# IMPORTANT: Set the class level for the books being processed
-CLASS_LEVEL = 12 # Change to 11 or another value as needed
+PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
+CLASS_LEVEL = 12
 
 def extract_topics_from_pdf(pdf_path):
     """Extracts a list of topics from a chapter PDF's table of contents."""
@@ -39,11 +39,27 @@ def extract_topics_from_pdf(pdf_path):
                 })
         return topics
     except Exception as e:
-        print(f"    - Error processing {os.path.basename(pdf_path)}: {e}")
+        print(f"    - Error processing TOC for {os.path.basename(pdf_path)}: {e}")
         return []
+
+def extract_full_text_from_pdf(pdf_path):
+    """Extracts the full text content from a PDF file."""
+    try:
+        doc = fitz.open(pdf_path)
+        full_text = ""
+        for page in doc:
+            full_text += page.get_text("text") + " "
+        return full_text.strip()
+    except Exception as e:
+        print(f"    - Error extracting full text from {os.path.basename(pdf_path)}: {e}")
+        return ""
 
 def main():
     """Walks through the folder structure and populates the database."""
+    if not all([DB_HOST, DB_USER, DB_PASSWORD]):
+        print("❌ Error: Database credentials not found. Make sure you have a .env file with SUPABASE_HOST, SUPABASE_USER, and SUPABASE_PASSWORD.")
+        return
+
     conn = None
     cur = None
     conn_string = f"dbname='{DB_NAME}' user='{DB_USER}' host='{DB_HOST}' password='{DB_PASSWORD}' port='{DB_PORT}'"
@@ -72,20 +88,23 @@ def main():
 
                 chapter_number_counter = 1
                 for filename in sorted(os.listdir(subject_path)):
-                    if filename.endswith(".pdf"):
-                        chapter_name = filename.replace('.pdf', '')
-                        print(f"  -> Processing Chapter: {chapter_name}")
+                    if filename.lower().endswith(".pdf"):
+                        chapter_name = os.path.splitext(filename)[0].strip()
+
+                        cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
+                        if cur.fetchone():
+                            print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
+                            continue
+                        
+                        print(f"  -> Processing NEW Chapter: {chapter_name}")
                         
                         pdf_path = os.path.join(subject_path, filename)
                         topics_data = extract_topics_from_pdf(pdf_path)
+                        full_chapter_text = extract_full_text_from_pdf(pdf_path)
                         
-                        # =============================================================
-                        # THIS IS THE CORRECTED LINE
-                        # It no longer tries to insert a 'full_text' column
-                        # =============================================================
                         cur.execute(
-                            "INSERT INTO chapters (subject_id, chapter_number, name) VALUES (%s, %s, %s) RETURNING id",
-                            (subject_id, chapter_number_counter, chapter_name)
+                            "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                            (subject_id, chapter_number_counter, chapter_name, full_chapter_text)
                         )
                         chapter_id = cur.fetchone()[0]
                         chapter_number_counter += 1
@@ -108,7 +127,7 @@ def main():
     except psycopg2.Error as e:
         print(f"❌ A database error occurred: {e}")
         if conn:
-            conn.rollback() # Roll back the transaction on error
+            conn.rollback()
             print("\n  The transaction has been rolled back.")
     finally:
         if cur:
