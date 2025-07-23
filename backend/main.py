@@ -26,6 +26,18 @@ client = Together(api_key=TOGETHER_API_KEY)
 app = FastAPI()
 
 # --- CORS Configuration ---
+origins = [
+    "http://localhost",
+    "http://localhost:5173",  # Assuming your frontend runs on this port
+    # Add other origins if needed
+]
+
+# This block has been correctly indented
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -73,5 +85,3 @@ async def generate_llm_problem(request: Request):
     except Exception as e:
         print(f"Error in LLM problem generation endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate problem via LLM. Backend error: {e}")
-
-
