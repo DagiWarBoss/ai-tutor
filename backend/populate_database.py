@@ -19,7 +19,7 @@ DB_PORT = os.getenv("DB_PORT")
 
 # --- CONFIGURATION ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
-CLASS_LEVEL = 12  # Change to 11 or another value as needed
+CLASS_LEVEL = 11  # Change to 11 or another value as needed
 
 def extract_topics_from_pdf(pdf_path):
     """Extracts a list of topics from a chapter PDF's table of contents."""
