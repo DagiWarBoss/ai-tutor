@@ -1,0 +1,673 @@
+THREE DIMENSIONAL  GEOMETR Y 377
+/xrhombusThe moving power of mathematical invention is not
+reasoning but imagination. – A .DEMORGAN /xrhombus
+11.1  Intr oduction
+In Class XI, while studying Analytical Geometry in two
+dimensions, and the introduction to three dimensional
+geometry , we confined to the Cartesian methods only . In
+the previous chapter of this book, we have studied some
+basic concepts of vectors. We will now use vector algebra
+to three dimensional geometry . The purpose of this
+approach to 3-dimensional geometry is that it makes the
+study simple and elegant*.
+In this chapter , we shall study the direction cosines
+and direction ratios of a line joining two points and also
+discuss about the equations of lines and planes in space
+under different conditions, angle between two lines, two
+planes, a line and a plane, shortest distance between two
+skew lines and distance of a point from a plane. Most of
+the above results are obtained in vector form. Nevertheless, we shall also translate
+these results in the Cartesian form which, at times, presents a more clear geometric
+and analytic picture of the situation.
+11.2  Dir ection Cosines and Dir ection Ratios of a Line
+From Chapter 10, recall that if a directed line L passing through the origin makes
+angles α, β and γ with x, y and z-axes, respectively , called direction angles, then cosine
+of these angles, namely , cos α , cos β and cos γ are called direction cosines of the
+directed line L.
+If we reverse the direction of L, then the direction angles are replaced by their supplements,
+i.e., ,  and . Thus, the signs of the direction cosines are reversed.Chapter 11
+THREE DIMENSIONAL  GEOMETR Y
+*For various activities in three dimensional geometry , one may refer to the Book
+“A Hand Book for designing Mathematics Laboratory in Schools” , NCER T, 2005Leonhard Euler
+(1707-1783)
+Reprint 2025-26
+ MA THEMA TICS 378
+Note that a given line in space can be extended in two opposite directions and so it
+has two sets of direction cosines. In order to have a unique set of direction cosines for
+a given line in space, we must take the given line as a directed line. These unique
+direction cosines are denoted by l, m and n.
+Remark  If the given line in space does not pass through the origin, then, in order to find
+its direction cosines, we draw a line through the origin and parallel to the given line.
+Now take one of the directed lines from the origin and find its direction cosines as two
+parallel line have same set of direction cosines.
+Any three numbers which are proportional to the direction cosines of a line are
+called the direction ratios  of the line. If l, m, n are direction cosines and a, b, c are
+direction ratios of a line, then a = λl, b=λm and c = λn, for any nonzero λ ∈ R.
+/handptrtsld1Note    Some authors also call direction ratios as direction numbers.
+Let a, b, c be direction ratios of a line and let l, m and n be the direction cosines
+(d.c’s) of the line. Then
+l
+a = m
+b =nkc= (say), k being a constant.
+Therefore l = ak, m =bk, n = ck ... (1)
+But l2 + m2 + n2 =1
+Therefore k2 (a2 + b2 + c2) =1
+or k =2 2 21
+a b c±
++ +Fig 1 1.1
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 379
+Hence, from (1), the d.c.’s of the line are
+2 2 2 2 2 2 2 2 2, ,a b cl m n
+a b c a b c a b c= ± = ± = ±
++ + + + + +
+where, depending on the desired sign of k, either a positive or a negative sign is to be
+taken for l , m and n.
+For any line, if a, b, c are direction ratios of a line, then ka, kb, kc; k ≠ 0 is also a
+set of direction ratios. So, any two sets of direction ratios of a line are also proportional.
+Also, for any line there are infinitely many sets of direction ratios.
+11.2.1   Direction cosines of a line passing through two point s
+Since one and only one line passes through two given points, we can determine the
+direction cosines of a line passing through the given points P( x1, y1, z1) and Q( x2, y2, z2)
+as follows (Fig 1 1.2 (a)).
+Fig 1 1.2
+Let l, m, n be the direction cosines of the line PQ and let it makes angles α, β and  γ
+with the x, y and z-axis, respectively .
+Draw perpendiculars from P  and Q to XY -plane to meet at R and S. Draw a
+perpendicular from P  to QS to meet at N. Now , in right angle triangle PNQ, ∠PQN=  γ
+(Fig 1 1.2 (b).
+Therefore, cosγ =2 1 NQ
+PQ PQz z−=
+Similarly cosα =2 1 2 1and cosPQ PQx x y y − −β=
+Hence, the direction cosines of the line segment joining the points P( x1, y1, z1) and
+Q(x2, y2, z2) are
+Reprint 2025-26
+ MA THEMA TICS 380
+2 1
+PQx x−, 2 1
+PQy y−, 2 1
+PQz z−
+where PQ = ( )2 2 2
+2 1 2 1 2 1 ( ) ( )x x y y z z− + − + −
+/handptrtsld1Note    The direction ratios of the line segment joining P( x1, y1, z1) and Q( x2, y2, z2)
+may be taken as
+x2 – x1, y2 – y1, z2 – z1 or x1 – x2, y1 – y2, z1 – z2
+Example 1  If a line makes angle 90°, 60° and 30° with the positive direction of x, y and
+z-axis respectively , find its direction cosines.
+Solution Let the d .c.'s of the lines be l , m, n. Then l = cos 900 = 0, m = cos 600 = 1
+2,
+n = cos 300 = 23.
+Example 2 If a line has direction ratios 2, – 1, – 2, determine its direction cosines.
+Solution Direction cosines are
+2 2 2) 2 ( ) 1 ( 22
+− + − +,  
+2 2 2) 2 ( ) 1 ( 21
+− + − +−,  
+( )2 2 2) 2 ( 1 22
+− + − +−
+or  2 1 2,,
+3 3 3− −
+Example 3  Find the direction cosines of the line passing through  the two points
+(– 2, 4, – 5) and (1,  2, 3).
+Solution  We know the direction cosines of the line passing through  two points
+P(x1, y1, z1) and Q( x2, y2, z2) are given by
+2 1 2 1 2 1 , ,
+PQ PQ PQx x y y z z− − −
+where PQ = ( )2
+1 22
+1 22
+1 2 ) ( ) ( z z y y x x− + − + −
+Here P is (– 2, 4, – 5) and Q is (1, 2, 3).
+So PQ =2 2 2(1 ( 2)) (2 4) (3 ( 5))− − + − + − −  = 77
+Thus , the direction cosines of the line joining two points is
+3 2 8, ,
+77 77 77−
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 381
+Example 4  Find the direction cosines of x, y and z-axis.
+Solution  The x-axis makes angles 0°, 90° and 90° respectively with x, y and z-axis.
+Therefore, the direction cosines of x-axis are cos 0°, cos 90°, cos 90° i.e., 1,0,0.
+Similarly , direction cosines of y-axis and z-axis are 0, 1, 0 and 0, 0, 1 respectively .
+Example 5  Show that the points A (2, 3, – 4), B (1, – 2, 3) and C (3, 8, – 1 1) are
+collinear .
+Solution  Direction ratios of line joining A and B are
+1 – 2, – 2 – 3, 3 + 4 i.e., – 1, – 5, 7.
+The direction ratios of line joining B and C are
+3 –1, 8 + 2, – 1 1 – 3, i.e., 2, 10, – 14.
+It is clear that direction ratios of AB and BC are proportional, hence, AB is parallel
+to BC. But point B is common to both AB and BC. Therefore, A, B, C are
+collinear points.
+EXERCISE 1 1.1
+1.If a line makes angles 90°, 135°, 45° with the x, y and z-axes respectively , find its
+direction cosines.
+2.Find the direction cosines of a line which makes equal angles with the coordinate
+axes.
+3.If a line has the direction ratios –18, 12, – 4, then what are its direction cosines ?
+4.Show that the points (2, 3, 4), (– 1, – 2, 1), (5, 8, 7) are collinear .
+5.Find the direction cosines of the sides of the triangle whose vertices are
+(3, 5, –  4), (– 1, 1, 2) and (– 5, – 5, – 2).
+11.3 Equation of a Line in Space
+We have studied equation of  lines in two dimensions in Class XI, we shall now study
+the vector and cartesian equations of a line in space.
+A line is uniquely determined if
+(
+i)it passes through a given point and has given direction, or
+(ii)it passes through two given points.
+11.3.1 Equation of a line through a given point and parallel to  given vector 
+Let  be the position vector of the given point A with respect to the origin O of the
+rectangular coordinate system. Let l be the line which passes through the point A and
+is parallel to a given vector . Let   be the position vector of an arbitrary point P on the
+line (Fig 1 1.3).
+Reprint 2025-26
+ MA THEMA TICS 382
+Then AP/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ is parallel to the vector ,  i.e.,
+AP/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ = λ ,  where λ is some real number .
+But AP/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ =OP–OA/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp /combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+i.e. λ  = −/arrowrightnosp /arrowrightnospr a
+Conversely , for each value of the
+parameter λ, this equation gives the position
+vector of a point P on the line.  Hence, the
+vector equation of the line is given by
+ =»/arrowrightnosp/arrowrightnospa+ b ... (1)
+Remark  If ˆˆ ˆ= + +/arrowrightnosp
+b ai bj ck , then a, b, c are direction ratios of the line and conversely ,
+if a, b, c are direction ratios of a line, then ˆˆ ˆ= + +/arrowrightnosp
+b ai bj ck  will be the parallel to
+the line. Here, b  should not be confused with | |.
+Derivation of cartesian form from vector form
+Let the coordinates of the given point A be (x1, y1, z1) and the direction  ratios of
+the line be a, b, c. Consider the coordinates of any point P  be (x, y, z). Then
+ˆ ˆ ˆr xi yj zk= + +/arrowrightnosp; 1 1 1ˆ ˆ ˆa x i y j z k= + +/arrowrightnosp
+and ˆˆ ˆ = + +/arrowrightnosp
+b ai b j ck
+Substituting these values in (1) and equating the coefficients of ˆ ˆ,i j and kˆ, we get
+x = x1 + λa;  y =y1 + λ b;  z = z1+ λc ... (2)
+These are parametric equations of the line. Eliminating the parameter λ from (2),
+we get
+1 x – x
+a =1 1 y – y z – z=b c... (3)
+This is the Cartesian equation of the line.
+/handptrtsld1Note    If l, m, n are the direction cosines of the line, the equation of the line is
+1 x – x
+l =1 1 y – y z – z=m n
+Example 6 Find the vector and the Cartesian equations of the line through the point
+(5, 2, – 4) and which is parallel to the vector ˆ ˆ ˆ3 2 8i j k+ − .
+Solution We have
+ =ˆ ˆ ˆ ˆ ˆ ˆ 5 2 4 and 3 2 8+ − = + −/arrowrightnosp
+i j k b i j kFig 1 1.3
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 383
+Therefore, the vector equation of the line is
+ =ˆ ˆ ˆ ˆ ˆ ˆ 5 2 4 ( 3 2 8 )i j k i j k+ − + λ + −
+Now ,  is the position vector of any point P( x, y, z) on the line.
+Therefore,ˆ ˆ ˆxi y j z k+ +  =ˆ ˆ ˆ ˆ ˆ ˆ 5 2 4 ( 3 2 8 )+ − + λ + −i j k i j k
+= ˆˆ ˆ(5 3 ) (2 2 ) ( 4 8 )+ λ + + λ + − − λi j k
+Eliminating λ  , we get
+5
+3x− =2 4
+2 8y z− +=−
+which is the equation of the line in Cartesian form.
+11.4  Angle between T wo Lines
+Let L1 and L2 be two lines passing through the origin
+and with direction ratios a1, b1, c1 and a2, b2, c2,
+respectively . Let P  be a point on L1 and Q be a point
+on L2. Consider the directed lines OP and OQ as
+given in Fig 1 1.6. Let θ be the acute angle between
+OP and OQ. Now recall that the directed line
+segments OP and OQ are vectors with components
+a1, b1, c1 and a2, b2, c2, respectively . Therefore, the
+angle θ between them is given by
+cosθ =1 2 1 2 1 2
+2 2 2 2 2 2
+1 1 1 2 2 2a a b b c c
+a b c a b c+ ++ + + ++ +
++ + + ++ + + ++ + + ++ + + +... (1)
+The angle between the lines in terms of sin θ is given by
+sin θ =21 cos− θ
+=( )( )2
+1 2 1 2 1 2
+2 2 2 2 2 2
+1 1 1 2 2 2( )1a a b b c c
+a b c a b c+ +−
++ + + +
+=( )( )( )
+( ) ( )2 2 2 2 2 2 2
+1 1 1 2 2 2 1 2 1 2 1 2
+2 2 2 2 2 2
+1 1 1 2 2 2a b c a b c a a b b c c
+a b c a b c+ + + + − + +
++ + + +
+=2 2 2
+1 2 2 1 1 2 2 1 1 2 2 1
+2 2 2 2 2 2
+1 1 1 2 2 2( ) ( ) ( ) − + − + −
++ + + +a b a b b c b c c a c a
+a b c a b c... (2)Fig 1 1.4
+Reprint 2025-26
+ MA THEMA TICS 384
+/handptrtsld1Note    In case the lines L1 and L2 do not pass through the origin, we may take
+lines 1 2L and L′ ′ which are parallel to L1 and L2 respectively and pass through
+the origin.
+If instead of direction ratios for the lines L1 and L2, direction cosines, namely ,
+l1, m1, n1 for L1 and l2, m2, n2 for L2 are given, then (1) and (2) takes the following form:
+cos θ =|l1 l2 + m1m2 + n1n2|    (as 2 2 2
+1 1 1 1 l m n+ + =2 2 2
+2 2 2l m n= + + ) ... (3)
+and sin θ =( )2 2 2
+1 2 2 1 1 2 2 1 1 2 2 1 ( ) ( ) l m l m m n m n n l n l − − − + −                    ... (4)
+Two lines with direction ratios a1, b1, c1 and a2, b2, c2 are
+(i)perpendicular i.e. if θ = 90° by (1)
+a1a2 + b1b2 + c1c2 = 0
+(ii) parallel i.e. if θ = 0 by (2)
+1
+2a
+a =1 1
+2 2b c
+b c== ==
+Now , we find the angle between two lines when their equations are given. If θ is
+acute the angle between the lines
+ =1 1a b+ λ  
+ and   = 2 2+ µ/arrowrightnosp/arrowrightnospa b
+then cosθ =1 2
+1 2⋅/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb b
+b b
+In Cartesian form, if θ  is the angle between the lines
+1
+1x x
+a−
+ =1 1
+1 1y y z z
+b c− −= ... (1)
+and2
+2x x
+a−
+ =2 2
+2 2y y z z
+b c− −= ... (2)
+where, a1, b1, c1 and a2, b2, c2 are the direction ratios of the lines (1) and (2), respectively ,
+then
+cos θ =1 2 1 2 1 2
+2 2 2 2 2 2
+1 1 1 2 2 2a a b b c c
+a b c a b c+ +
++ + + +
+Example 7  Find the angle between the pair of lines given by
+ = ˆ ˆ ˆ ˆ ˆ ˆ3 2 4 ( 2 2 )i j k i j k+ − + λ + +
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 385
+and  = ˆ ˆ ˆ ˆ ˆ5 2 (3 2 6 )i j i j k− + µ + +
+Solution Here 1/arrowrightnosp
+b = ˆ ˆ ˆ2 2i j k+ +  and 2/arrowrightnosp
+b = ˆ ˆ ˆ3 2 6i j k+ +
+The angle θ between the two lines is given by
+cos θ =1 2
+1 2ˆ ˆ ˆ ˆ ˆ ˆ( 2 2) (3 2 6 )
+1 4 4 9 4 36⋅ + + ⋅ + +=
++ + + +/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb bi j k i j k
+b b
+=3 4 12 19
+3 7 21+ +=×
+Hence θ =cos–1 19
+21   
+Example 8  Find the angle between the pair of lines
+3
+3x+ =1 3
+5 4y z− +=
+and1
+1x+ =4 5
+1 2y z− −=
+Solution The direction ratios of the first line are 3, 5, 4 and the direction ratios of the
+second line are 1, 1, 2.  If θ is the angle between them, then
+cos θ =2 2 2 2 2 23.1 5.1 4.2 16 16 8 3
+15 50 6 5 2 6 3 5 4 1 1 2+ += = =
++ + + +
+Hence, the required angle is co s–18 3
+15 
+   .
+11.5  Shortest Distance between Two Lines
+If two lines in space intersect at a point,
+then the shortest distance between them is
+zero. Also, if two lines in space are parallel,
+then the shortest distance between them
+will be the perpendicular distance, i.e. the
+length of the perpendicular drawn from a
+point on one line onto the other line.
+Further , in a space, there are lines which
+are neither intersecting nor parallel. In fact,
+such pair of lines are non coplanar  and
+are called skew lines . For example, let us
+consider a room of size 1, 3, 2 units along
+x, y and z -axes respectively Fig 1 1.5.Fig 1 1.5
+Reprint 2025-26
+ MA THEMA TICS 386
+l2
+ST
+Q
+Pl1The line GE that goes diagonally across the ceiling and the line DB passes through
+one corner of the ceiling directly above A and goes diagonally down the wall. These
+lines are skew because they are not parallel and also never meet.
+By the shortest distance between two lines we mean the join of a point in one line
+with one point on the other line so that the length of the segment so obtained is the
+smallest.
+For skew lines, the line of the shortest distance will be perpendicular to both
+the lines.
+11.5.1   Dist ance between two skew lines
+We now determine the shortest distance between two skew lines in the following way:
+Let l1 and l2  be two skew lines with equations (Fig. 1 1.6)
+ =1 1+ λ/arrowrightnosp/arrowrightnospab     ... (1)
+and  =2 2+ µ/arrowrightnosp/arrowrightnospa b   ... (2)
+Take any point S on l1 with position vector 1a/arrowrightnosp
+ and T on l2, with position vector  2a/arrowrightnosp.
+Then the magnitude of the shortest distance vector
+will be equal to that of the projection of ST along the
+direction of the line of shortest dis tance (See 10.6.2).
+If  PQ/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ is the shortest distance vector between l1
+and l2 , then it being perpendicular to both  1/arrowrightnosp
+b and 2/arrowrightnosp
+b,
+the unit vector nˆ along PQ/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ would therefore be
+ˆn =1 2
+1 2| |×
+×/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb b
+b b  ... (3)
+Then PQ/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+ =d nˆ
+where, d  is the magnitude of the shortest distance vector . Let θ  be the angle between
+ST/combarrowextender/combarrowextender/arrowrightnosp
+ and PQ/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp
+. Then
+PQ = ST |cos θ|
+But cos θ =PQ ST
+|PQ ||ST|⋅/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp /combarrowextender/combarrowextender/arrowrightnosp
+/combarrowextender/combarrowextender/combarrowextender/combarrowextender/arrowrightnosp /combarrowextender/combarrowextender/arrowrightnosp
+ =2 1ˆ( )
+ST⋅ −/arrowrightnosp /arrowrightnospd n a a
+d(since  2 1ST )= −/combarrowextender/combarrowextender/arrowrightnosp/arrowrightnosp /arrowrightnospa a
+=1 2 2 1
+1 2( ) ( )
+ST× ⋅ −
+×/arrowrightnosp /arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb b a a
+b b[From (3)]Fig 1 1.6
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 387
+Hence, the required shortest distance is
+d =PQ = ST |cos θ|
+or d =(×).( )
+| × |1 2 2 1
+1 2/arrowrightnosp /arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb ba a
+b b×
+Cartesian form
+The shortest distance between the lines
+l1 : x x
+a−1
+1 =y y
+bz z
+c−=−1
+11
+1
+and l2  : x x
+a−2
+2 =y y
+bz z
+c−=−2
+22
+2
+isx x y y z z
+a b c
+a b c
+b c b c c a c a a b2 1 2 1 2 1
+1 1 1
+2 2 2
+1 2 2 12
+1 2 2 12
+1
+2− − − − − −
+− − + + − − + + (
+) ( ) ( − − − −a b2 12)
+11.5.2  Dist ance between parallel lines
+If two lines l1 and  l2 are parallel, then they are coplanar .  Let the lines be given by
+... (1)
+and … (2)
+where, 1a/arrowrightnospis the position vector of a point S on l1 and  2a/arrowrightnosp
+is the position vector of a point T on l2 Fig 1 1.7.
+As l1, l2 are coplanar , if the foot of the perpendicular
+from T on the line l1 is P, then the distance between the
+lines l1 and l2 =  |TP|.
+Let θ be the angle between the vectors ST/combarrowextender/combarrowextender/arrowrightnosp
+ and .
+Then
+ST× =/combarrowextender/combarrowextender/arrowrightnosp/arrowrightnosp
+b  ˆ... (3)
+where nˆ is the unit vector perpendicular to the plane of the lines l1 and l2.
+But ST/combarrowextender/combarrowextender/arrowrightnosp
+ =2 1−/arrowrightnosp /arrowrightnospa aFig 1 1.7
+Reprint 2025-26
+ MA THEMA TICS 388
+Therefore, from (3), we get
+2 1( )× −/arrowrightnosp/arrowrightnosp /arrowrightnospb a a  =ˆ|PT/arrowrightnosp
+b n         (since PT = ST sin θ)
+i.e.,2 1| ( )|× −/arrowrightnosp/arrowrightnosp /arrowrightnospb a a  =| |PT 1 ⋅/arrowrightnosp
+b        (as | |ˆn = 1)
+Hence, the distance between the given parallel lines is
+d =
+Example 9 Find the shortest distance between the lines l1 and l2 whose vector
+equations are
+ = ˆ ˆ ˆ ˆ ˆ (2 ) i j i j k+ + λ − + ... (1)
+and  = ˆ ˆ ˆ ˆ ˆ ˆ2 (3 5 2 ) i j k i j k+ − + µ − + ... (2)
+Solution Comparing (1) and (2) with  = 1 1+ λ/arrowrightnosp/arrowrightnospa b  and  2 2r a b µ = +/arrowrightnosp/arrowrightnosp /arrowrightnosp respectively ,
+we get1a/arrowrightnosp =1ˆ ˆ ˆ ˆ ˆ, 2+ = − +/arrowrightnosp
+i j b i j k
+2a/arrowrightnosp =2ˆi +ˆj– ˆk and 2/arrowrightnosp
+b = 3ˆi – 5ˆj + 2ˆk
+Therefore2 1−/arrowrightnosp /arrowrightnospa a  = ˆˆi k−
+and1 2×/arrowrightnosp /arrowrightnosp
+b b  = ˆ ˆ ˆ ˆ ˆ ˆ( 2 ) ( 3 5 2 )i j k i j k− + × − +
+=ˆ ˆ ˆ
+ˆ ˆ ˆ 2 1 1 3 7
+3 5 2i j k
+i j k − = − −
+−
+So1 2| |×/arrowrightnosp /arrowrightnosp
+b b  = 9 1 49 59+ + =
+Hence, the shortest distance between the given lines is given by
+d  =1 2 2 1
+1 2(b b ) .(a a )
+| b b |× −
+×/arrowrightnosp /arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnosp/arrowrightnosp   5910
+59| 7 0 3 |=+ −=
+Example 10 Find the distance between the lines l1 and l2 given by
+ =ˆ ˆ ˆ ˆ ˆ ˆ 2 4 ( 2 3 6 )i j k i j k+ − + λ + +
+and  =ˆ ˆ ˆ ˆ ˆ ˆ 3 3 5 ( 2 3 6 )i j k i j k+ − + µ + +
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 389
+Solution The two lines are parallel (Why? ) We have
+1a/arrowrightnosp = ˆ ˆ ˆ2 4i j k+ − , 2a/arrowrightnosp = ˆ ˆ ˆ3 3 5i j k+ −  and  = ˆ ˆ ˆ2 3 6i j k+ +
+Therefore, the distance between the lines is given by
+d =2 1( )
+| |× −/arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnospb a a
+b = ˆ ˆ ˆ
+2 3 6
+2 1 1
+4 9 36i j k
+−
++ +
+or =ˆ ˆ ˆ| 9 14 4 | 293 293
+7 49 49i j k− + −= =
+EXERCISE 1 1.2
+1.Show that the three lines with direction cosines
+12 3 4 4 12 3 3 4 12, , ; , , ; , ,13 13 13 13 13 13 13 13 13− − − are mutually perpendicular .
+2.Show that the line through the points (1, – 1, 2), (3, 4, – 2) is perpendicular to the
+line through the points (0, 3, 2) and (3, 5, 6).
+3.Show that the line through the points (4, 7, 8), (2, 3, 4) is parallel to the line
+through the points (– 1, – 2, 1), (1, 2, 5).
+4.Find the equation of the line which passes through the point (1, 2, 3) and is
+parallel to the vector ˆ ˆ ˆ3 2 2i j k+ − .
+5.Find the equation of the line in vector and in cartesian form that passes through
+the point with position vector ˆ ˆ2 4i j k− + and is in the direction ˆ ˆ ˆ2i j k+ − .
+6.Find the cartesian equation of the line which passes through the point (– 2, 4, – 5)
+and parallel to the line given by 3 4 8
+3 5 6x y z+ − += = .
+7.The cartesian equation of a line is 5 4 6
+3 7 2x y z− + −= = . Write its vector form.
+8.Find the angle between the following pairs of lines:
+(i) ˆ ˆ ˆ ˆ ˆ ˆ2 5 (3 2 6 )= − + + λ + +/arrowrightnospr i j k i j k and
+ˆ ˆ ˆ ˆ ˆ7 6 ( 2 2 )= − + µ + +/arrowrightnospr i k i j k
+Reprint 2025-26
+ MA THEMA TICS 390
+(ii) ˆ ˆ ˆ ˆ ˆ ˆ3 2 ( 2 )= + − + λ − −/arrowrightnospr i j k i j k and
+ˆ ˆ ˆ ˆ ˆ ˆ 2 56 (3 5 4 )= − − + µ − −/arrowrightnospr i j k i j k
+9.Find the angle between the following pair of lines:
+(i)2 1 3 2 4 5and2 5 3 1 8 4x y z x y z− − + + − −= = = =− −
+(ii)5 2 3and2 2 1 4 1 8x y z x y z − − −= = = =
+10. Find the values of p so that the lines 1 7 14 3
+3 2 2x y z
+p− − −= =
+and  7 7 5 6
+3 1 5x y z
+p− − −= =  are at right angles.
+11.Show that the lines 5 2
+7 5 1x y z− += =− and 1 2 3x y z= =  are perpendicular to
+each other .
+12. Find the shortest distance between the lines
+ˆˆ ˆ( 2 )= + +/arrowrightnospr i j k  + ˆ ˆ ˆ( )i j kλ − +  and
+ˆ ˆ ˆ ˆ ˆ ˆ2 (2 2 ) = − − + µ + +/arrowrightnospr i j k i j k
+13. Find the shortest distance between the lines
+1 1 1
+7 6 1x y z+ + += =
+−   and  3 5 7
+1 2 1x y z− − −= =−
+14. Find the shortest distance between the lines whose vector equations are
+ˆˆ ˆ( 2 3 )= + +/arrowrightnospr i j k  + ˆ ˆ ˆ( 3 2 )i j kλ − +
+and  ˆ ˆ ˆ ˆ ˆ ˆ 4 5 6 (2 3 )= + + + µ + +/arrowrightnospr i j k i j k
+15. Find the shortest distance between the lines whose vector equations are
+ˆ ˆ ˆ(1 ) ( 2) (3 2 )= − + − + −/arrowrightnospr t i t j t k  and
+ˆ ˆ ˆ( 1) (2 1) (2 1)= + + − − +/arrowrightnospr s i s j s k
+Miscellaneous Exercise on Chapter 1 1
+1.Find the angle between the lines whose direction ratios are a, b, c and
+b – c, c – a, a – b.
+2.Find the equation of a line parallel to x-axis and passing through the origin.
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 391
+3.If the lines 1 2 3 1 1 6and3 2 2 3 1 5x y z x y z
+k k− − − − − −= = = =− − are perpendicular ,
+find the value of k.
+4.Find the shortest distance between lines ˆ ˆ ˆ ˆ ˆ ˆ6 2 2 ( 2 2 )= + + + λ − +/arrowrightnospr i j k i j k
+and ˆ ˆ ˆ ˆ ˆ4 (3 2 2 )= − − + µ − −/arrowrightnospr i k i j k .
+5.Find the vector equation of the line passing through the point (1, 2, – 4) and
+perpendicular to the two lines:
+710
+1619
+38 −=−+=− z y xand 15
+3x− = 29 5
+8 5y z− −=−.
+Summary
+/rhombus5Direction cosines of a line are the cosines of the angles made by the line
+with the positive directions of the coordinate axes.
+/rhombus5If l, m, n are the direction cosines of a line, then l2 + m2 + n2 = 1.
+/rhombus5Direction cosines of a line joining two points P( x1, y1, z1) and Q(x2, y2, z2) are
+2 1 2 1 2 1, ,PQ PQ PQx x y y z z− − −
+where PQ =   ( )2
+1 22
+1 22
+1 2 ) ( ) ( z z y y x x− + − + −
+/rhombus5Direction ratios of a line are the numbers which are proportional to the
+direction cosines of a line.
+/rhombus5If l, m, n are the direction cosines and a, b, c are the direction ratios of a line
+then
+l = 2 2 2c b aa
++ +; m = 2 2 2c b ab
++ +; n = 
+2 2 2c b ac
++ +
+/rhombus5Skew lines are lines in space which are neither parallel nor intersecting.
+They lie in different planes.
+/rhombus5Angle between skew lines is the angle between two intersecting lines
+drawn from any point (preferably through the origin) parallel to each of the
+skew lines.
+/rhombus5If  l1, m1, n1 and l2, m2, n2 are the direction cosines of two lines; and  θ  is the
+acute angle between the two lines; then
+cosθ  =  |l1l2 + m1m2 + n1n2|
+Reprint 2025-26
+ MA THEMA TICS 392
+/rhombus5If a1, b1, c1 and a2, b2, c2 are the direction ratios of two lines and θ is the
+acute angle between the two lines; then
+cosθ = 1 2 1 2 1 2
+2 2 2 2 2 2
+1 1 1 2 2 2a a b b c c
+a b c a b c+ +
++ + + +
+/rhombus5Vector equation of a line that passes through the given point whose position
+vector is  and parallel to a given vector  is = + λ/arrowrightnosp/arrowrightnosp /arrowrightnospr a b  .
+/rhombus5Equation of a line through a point ( x1, y1, z1) and having direction cosines l, m, n is
+1 1 1 x x y y z z
+l m n− − −= =
+/rhombus5The vector equation of a line which passes through two points whose position
+vectors are  and  is ( ) = + λ −/arrowrightnosp/arrowrightnosp /arrowrightnosp /arrowrightnospr a b a .
+/rhombus5If θ is the acute angle between 1 1= + λ/arrowrightnosp/arrowrightnosp/arrowrightnospr a b  and 2 2= + λ/arrowrightnosp/arrowrightnosp/arrowrightnospr a b , then
+1 2
+1 2cos
+| || |⋅θ =/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospbb
+b b
+/rhombus5If  
+11
+11
+11
+nz z
+my y
+lx x −=−=− and  
+22
+22
+22
+nz z
+my y
+lx x −=−=−
+are the equations of two lines,  then the  acute angle between the two lines is
+given by cos θ  = |l1l2 + m1m2 + n1n2|.
+/rhombus5Shortest distance between two skew lines is the line segment perpendicular
+to both the lines.
+/rhombus5Shortest distance between 1 1= + λ/arrowrightnosp/arrowrightnosp /arrowrightnospr a b  and 2 2= + µ/arrowrightnosp/arrowrightnosp /arrowrightnospr a b  is
+1 2 2 1
+1 2( ) ( – )
+| |× ⋅
+×/arrowrightnosp /arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnosp /arrowrightnospb ba a
+b b
+/rhombus5Shortest distance between the lines: 1 1 1
+1 1 1x x y y z z
+a b c− − −= =  and
+2 2
+2 2x x y y
+a b− −=  = 2
+2z z
+c− is
+Reprint 2025-26
+THREE DIMENSIONAL  GEOMETR Y 393
+2 1 2 1 2 1
+1 1 1
+2 2 2
+2 2 2
+1 2 2 1 1 2 2 1 1 2 2 1( ) ( ) ( )x x y y z z
+a b c
+a b c
+b c b c c a c a a b a b− − −
+− + − + −
+/rhombus5Distance between parallel lines 1= + λ/arrowrightnosp/arrowrightnosp /arrowrightnospr a b  and 2= + µ/arrowrightnosp/arrowrightnosp /arrowrightnospr a b  is
+2 1( )
+| |× −/arrowrightnosp/arrowrightnosp /arrowrightnosp
+/arrowrightnospb a a
+b
+—/xrhombus /xrhombus/xrhombus /xrhombus/xrhombus—
+Reprint 2025-26

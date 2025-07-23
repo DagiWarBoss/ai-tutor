@@ -1,0 +1,471 @@
+ 18 MATHEMA TICS
+vMathematics, in general, is fundamentally the science of
+self-evident things. — FELIX KLEIN v
+2.1  Introduction
+In Chapter 1, we have studied that the inverse of a function
+f, denoted by f–1, exists if f is one-one and onto. There are
+many functions which are not one-one, onto or both and
+hence we can not talk of their inverses. In Class XI, we
+studied that trigonometric functions are not one-one and
+onto over their natural domains and ranges and hence their
+inverses do not exist. In this chapter , we shall study about
+the restrictions on domains and ranges of trigonometric
+functions which ensure the existence of their inverses and
+observe their behaviour through graphical representations.
+Besides, some elementary properties will also be discussed.
+The inverse trigonometric functions play an important
+role in calculus for they serve to define many integrals.
+The concepts of inverse trigonometric functions is also used in science and engineering.
+2.2  Basic Concepts
+In Class XI, we have studied trigonometric functions, which are defined as follows:
+sine function, i.e., sine : R → [– 1, 1]
+cosine function, i.e., cos : R → [– 1, 1]
+tangent function, i.e., tan : R – { x : x = (2 n 
++ 1) 2π, n ∈ Z} → R
+cotangent function, i.e., cot : R – { x : x = nπ, n ∈ Z} → R
+secant function, i.e., sec : R – { x : x = (2 n + 1) 2π, n ∈ Z} → R – (– 1, 1)
+cosecant function, i.e., cosec : R – { x : x = nπ,  n ∈ Z} → R – (– 1, 1)Chapter 2
+INVERSE TRIGONOMETRIC
+FUNCTIONS
+Aryabhata
+ (476-550 A. D.)
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      19
+We have also learnt in Chapter 1 that if f : X→Y such that f(x) = y is one-one and
+onto, then we can define a unique function g : Y→X such that g(y) = x, where x ∈ X
+and y = f(x), y ∈ 
+Y. Here, the domain of g = range of f and the range of g =  domain
+of f. The function g is called the inverse of f and is denoted by f–1. Further , g is also
+one-one and onto and inverse of g is f. Thus, g–1 = (f –1)–1 = f. We also have
+(f –1 o f ) ( x) = f –1 (f (x)) = f –1(y) = x
+and (f o f –1) (y) = f (f –1(y))  = f(x) = y
+Since the domain of sine function is the set of all real numbers and range is the
+closed interval [–1, 1]. If we restrict its domain to ,2 2−π π 
+  , then it becomes one-one
+and onto with range [– 1, 1]. Actually , sine function restricted to any of the intervals
+−
+
+3
+2 2π π,, ,2 2−π π 
+  , 3,2 2π π 
+  etc., is one-one and its range is [–1, 1]. We can,
+therefore, define the inverse of sine function in each of these intervals. We denote the
+inverse of sine function by sin–1 (arc sine function). Thus, sin–1 is a function whose
+domain is [– 1, 1] and range could be any of the intervals 3,2 2− π −π 
+  , ,2 2−π π 
+   or
+3,2 2π π 
+  , and so on. Corresponding to each such interval, we get a branch  of the
+function sin–1. The branch with range ,2 2−π π 
+   is called the principal value branch,
+wher eas other inter vals as range give differ ent branches of sin–1. When we refer
+to the function sin–1, we take it as the function whose domain is [–1, 1] and range is
+,2 2−π π 
+  . We write  sin–1 : [–1, 1] → ,2 2−π π 
+  
+From the definition of the inverse functions, it follows that sin (sin–1 x) = x
+if  – 1 ≤ x ≤ 1 and sin–1 (sin x) = x if 2 2xπ π− ≤ ≤ . In other words, if y = sin–1 x, then
+sin y = x.
+Remarks
+(i)We know from Chapter 1, that if y = f(x) is an invertible function, then  x = f –1 (y).
+Thus, the graph of sin–1 function can be obtained from the graph of original
+function  by interchanging x and y axes, i.e., if ( a, b) is a point on the graph  of
+sine function, then ( b, a) becomes the corresponding point on the graph of inverse
+Reprint 2025-26
+ 20 MATHEMA TICS
+of sine function. Thus, the graph of the function y = sin–1 x can be obtained from
+the graph of y = sin x  by interchanging x and y axes. The graphs of y = sin x and
+y = sin–1 x are as given in Fig 2.1 (i), (ii), (iii). The dark portion of the graph of
+y = sin–1 x represent the principal value branch.
+(ii) It can be shown that the graph of an inverse function can be obtained from the
+corresponding graph of original function as a mirror image (i.e., reflection) along
+the line y = x. This can be visualised by looking the graphs of y = sin x and
+y = sin–1 x as given in the same axes (Fig 2.1 (iii)).
+Like sine function, the cosine function is a function whose domain is the set of all
+real numbers and range is the set [–1, 1]. If we restrict the domain of cosine function
+to [0, π], then it becomes one-one and onto with range [–1, 1]. Actually ,  cosine functionFig 2.1 (ii) Fig 2.1 (iii)Fig 2.1 (i)
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      21
+restricted to an y of the intervals [– π, 0],  [0,π], [π, 2π] etc., is bijective with range as
+[–1, 1]. We can, therefore, define the inverse of cosine function in each of these
+intervals. We denote the inverse of the cosine function by cos–1 (arc cosine function).
+Thus, cos–1 is a function whose domain is [–1, 1] and range
+could be any of the intervals [– π, 0], [0, π], [π , 2π] etc.
+Corresponding to each such interval, we get a branch of the
+function cos–1. The  branch with range [0, π] is called the principal
+value branch of the function cos–1. We write
+cos–1 : [–1, 1] → [0, π].
+The graph of  the function given by  y = cos–1 x can be drawn
+in the same way as discussed about the graph of y = sin–1 x. The
+graphs of y = cos x and y = cos–1x are given in Fig  
+2.2 (i) and  (ii).
+Fig 2.2 (ii)
+Let us now discuss cosec–1x and sec–1x as follows:
+Since, cosec x = 1
+sinx, the domain of the cosec function is the set {x : x ∈ R and
+x ≠ nπ, n
+ ∈ Z} and the range is the set {y : y ∈ R, y ≥ 1 or y ≤ –1} i.e., the set
+R – (–1, 1). It means that y = cosec x assumes all real values except –1 < y < 1 and is
+not defined for integral multiple of π. If we restrict the domain of cosec function to
+,2 2π π −  – {0}, then it is one to one and onto with its range as the set R – (– 1, 1). Actually ,
+cosec  function restricted to any of the intervals 3, { }2 2− π −π − −π  , ,2 2−π π 
+   – {0},
+3, { }2 2π π − π   etc., is bijective and its range is the set of all real numbers R – (–1, 1).Fig 2.2 (i)
+Reprint 2025-26
+ 22 MATHEMA TICS
+Thus cosec–1 can be defined as a function whose domain is R – (–1, 1) and range could
+be any of the intervals − −
+
+− −3
+2 2π ππ , { } , −
+
+−π π
+2 20 , { }, 3, { }2 2π π − π  etc. The
+function corresponding to the range , {0}2 2−π π −  is called the principal value branch
+of cosec–1. We thus have principal branch as
+cosec–1  : R – (–1, 1) → , {0}2 2−π π −  
+The graphs of y = cosec x and y = cosec–1 x are given in Fig 2.3 (i), (ii).
+Also, since sec x = 1
+cosx, the domain of y = sec x is the set R – {x : x = (2n + 1) 2π,
+n ∈ Z} and range is the set R – (–1, 1). It means that sec (secant function) assumes
+all real values except –1 < y < 1 and is not defined for odd multiples of 2π. If we
+restrict the domain of  secant function to [0, π] – { 2π}, then it is one-one and onto withFig 2.3 (i) Fig 2.3 (ii)
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      23
+its range as the set R – (–1, 1). Actually , secant function  restricted to any of the
+intervals [– π, 0] – {2−π}, [0, ] –2π π  , [π, 2π] – {3
+2π} etc., is bijective and its range
+is R – {–1, 1}. Thus sec–1 can be defined as a function whose domain is R– (–1, 1) and
+range could be any of the intervals [– π, 0] – {2−π}, [0, π] – {2π}, [π, 2π] – {3
+2π} etc.
+Corresponding to each of t hese intervals , we get  different branches of the function sec–1.
+The branch with range [0, π] – {2π} is called the principal value branch of the
+function sec–1. We thus have
+sec–1 : R – (–1,1) →  [0, π] – {2π}
+The graphs of the functions y = sec x  and y = sec-1 x are given in Fig 2.4 (i), (ii).
+Finally , we now discuss tan–1 and cot–1
+We know that the domain of the tan function (tangent function) is the set
+{x : x ∈ R and x ≠ (2
+n +1) 2π, n ∈ Z} and the range is R. It means that tan function
+is not defined for odd multiples of  2π. If we restrict the domain of tangent function toFig 2.4 (i) Fig 2.4 (ii)
+Reprint 2025-26
+ 24 MATHEMA TICS
+,2 2−π π 
+  , then it is one-one and onto with its range as R. Actually , tangent function
+restricted to any of the intervals 3,2 2− π −π 
+  , ,2 2−π π 
+  , 3,2 2π π 
+   etc., is bijective
+and its range is R. Thus tan–1 can be defined as a function whose domain is R and
+range could be any of the intervals 3,2 2− π −π 
+  , ,2 2−π π 
+  , 3,2 2π π 
+   and so on. These
+intervals give different branches of the function  tan–1. The branch with range ,2 2−π π 
+  
+is called the principal value branch  of the function tan–1.
+We thus have
+tan–1 : R → ,2 2−π π 
+  
+The graphs of the function  y = tan x and y = tan–1x are given in Fig 2.5 (i), (ii).
+Fig 2.5 (i) Fig  2.5 (ii)
+We know that domain of the cot function (cotangent function) is the set
+{x : x ∈ R and x ≠ nπ, n ∈ Z} and range is R. It means that cotangent function is not
+defined for integral multiples of π. If we restrict the domain of cotangent function to
+(0, π), then it is bijective with and its range as R. In fact, cotangent function restricted
+to any of the intervals (– π, 0), (0, π), (π, 2π) etc., is bijective and its range is R. Thus
+cot–1 can be defined as a function whose domain is the R and range as any of the
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      25
+intervals (– π, 0), (0, π ), (π, 2π) etc. These intervals give different branches of the
+function co t–1. The function with range (0, π) is called the principal value branch  of
+the function co t–1. We thus have
+cot–1 : R → (0, π)
+The graphs of 
+y = cot x and y = cot–1x are given in Fig 2.6 (i), (ii).
+Fig 2.6 (i) Fig 2.6 (ii)
+The following table gives the inverse trigonometric function (principal value
+branches) along with their domains and ranges.
+sin–1: [–1, 1] → ,2 2π π −  
+cos–1: [–1, 1] → [0, π]
+cosec–1: R – (–1,1) → ,2 2π π −  – {0}
+sec–1: R – (–1, 1) → [0, π] – { }2π
+tan–1: R → ,2 2−π π 
+  
+cot–1: R → (0, π )
+Reprint 2025-26
+ 26 MATHEMA TICS
+ANote
+1.sin–1x should not be confused with (sin x)–1. In fact (sin x)–1 = 1
+sinx and
+similarly for other trigonometric functions.
+2.Whenever no branch of an inverse trigonometric functions is mentioned, we
+mean the principal value branch of that function.
+3.The value of an inverse trigonometric functions which lies in the range of
+principal branch is called the principal value of that inverse trigonometric
+functions.
+We now consider some examples:
+Example 1 Find the principal value of sin–1 1
+2 
+  .
+Solution  Let sin–1 1
+2 
+  = y. Then, sin y = 1
+2.
+We know that the range of the principal value branch of sin–1 is −
+
+π π
+2 2,  and
+sin4π 
+  = 1
+2. Therefore, principal value of sin–1 1
+2 
+   is 4π
+Example 2 Find the principal value of cot–1 1
+3− 
+  
+Solution  Let cot–1 1
+3− 
+   = y. Then,
+1cot cot3 3y− π  = = −    = cot3π  π −   = 2cot3π   
+We know that the range of principal value branch of cot–1 is (0, π) and
+cot 2
+3π 
+  = 1
+3−. Hence, principal value of cot–1 1
+3− 
+   is 2
+3π
+EXERCISE 2.1
+Find the principal values of the following:
+1.sin–1 1
+2 −  2.cos–1 3
+2 
+   3.cosec–1 (2)
+4.tan–1 ( 3)− 5.cos–1 1
+2 −  6.tan–1 (–1)
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      27
+7.sec–1 2
+3 
+  8.cot–1 ( 3) 9.cos–1 1
+2 −  
+10. cosec–1 ( 2− )
+Find the values of  the following:
+11.tan–1(1) + cos–1 1
+2  −    + sin–1 1
+2  −    12. cos–11
+2  
+    + 2 sin–1 1
+2  
+    
+13. If sin–1 x = y, then
+(A) 0 ≤ y ≤ π (B)2 2yπ π− ≤ ≤
+(C) 0 <  y < π (D)2 2yπ π− < <
+14. tan–1 ()13 sec 2−− −  is equal to
+(A) π (B)3π− (C)3π(D)2
+3π
+2.3  Pr oper ties of Inverse Trigonometric Functions
+In this section, we shall prove some important properties of inverse trigonometric
+functions. It may be mentioned here that these results are valid within the principal
+value branches of the corresponding inverse trigonometric functions and wherever
+they are defined. Some results may not be valid for all values of the domains of inverse
+trigonometric functions. In fact, they will be valid only for some values of x for which
+inverse trigonometric functions are defined. We will not go into the details of these
+values of x in the domain as this discussion goes beyond the scope of this textbook.
+Let us recall that if y = sin–1x, then x = sin y and if x = sin y, then y = sin–1x. This
+is equivalent to
+sin (sin–1 x) = x, x ∈  [– 1, 1] and sin–1 (sin x) = x, x ∈ ,2 2−π π 
+  
+For suitable values of  domain similar results follow for remaining trigonometric
+functions.
+Reprint 2025-26
+ 28 MATHEMA TICS
+We now consider some examples.
+Example 3  Show that
+(i)sin–1 ( )22 1x x−  = 2 sin–1 x, 1 1
+2 2x − ≤ ≤
+(ii) sin–1 ( )22 1x x−  = 2 cos–1 x, 11
+2x≤ ≤
+Solution
+(i)Let x = sin θ. Then sin–1 x = θ. We have
+sin–1 ( )22 1x x−  =sin–1 ( )22sin 1 sin θ − θ
+=sin–1 (2sin θ cosθ ) = sin–1 (sin2 θ) = 2 θ
+=2 sin–1 x
+(ii)Take x = cos θ, then proceeding as above, we get , sin–1 ( )22 1x x− = 2 cos–1 x
+Example 4  Express 1costan1 sinx
+x−  
+    −, 3
+2 2π π−< <x  in the simplest form.
+Solution  We write
+2 2
+1 –1
+2 2cos sincos 2 2tan tan1 sincos sin 2sin cos2 2 2 2x x
+x
+x x x x x− −   =    −    + − 
+=–1
+2cos sin cos sin2 2 2 2tan
+cos sin2 2x x x x
+x x    + −        
+   −       
+=–1cos sin2 2tan
+cos sin2 2x x
+x x + 
+ 
+  −  –11 tan2tan
+1 tan2x
+x + =  
+ − 
+=–1tan tan4 2 4 2x x   π π + = +    
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      29
+Example 5 W rite –1
+21cot
+1x 
+ −  ,  x > 1 in the simplest form.
+Solution  Let x  = sec θ, then 21x−= 2sec 1 tanθ − = θ
+Therefore, –1
+21cot
+1x−= cot–1 (cot θ ) = θ = sec–1 x, which is the simplest form.
+EXERCISE 2.2
+Prove the following:
+1.3sin–1 x = sin–1 (3x – 4
+x3), 1 1– ,2 2x ∈  
+2.3cos–1 x = cos–1 (4x3 – 3x), 1, 12x ∈  
+Write the following functions in the simplest form:
+3.2
+11 1tanx
+x− + −, x ≠ 0 4.11 costan1 cosx
+x− −  + , 0 < x  < π
+5.1cos sintancos sinx x
+x x−  −
+ +  ,4−π < x <3
+4π
+6.1
+2 2tanx
+a x−
+−, |x| < a
+7.2 3
+1
+3 23tan
+3a x x
+a ax−  −
+ − , a > 0; 3 3−< <a ax
+Find the values of each of the following:
+8.–1 –11tan 2cos 2sin2         
+9.2
+–1 –1
+2 21 2 1tan sin cos2 1 1x y
+x y  −+  + +  , |x| < 1, y > 0 and xy < 1
+Reprint 2025-26
+ 30 MATHEMA TICS
+Find the values of each of the expressions in Exercises 16 to 18.
+10.–1 2sin sin3π  
+  11.–1 3tan tan4π  
+  
+12.–1 –13 3tan sin cot5 2 +   
+13.1 7cos cos is equal to6− π    
+(A)7
+6π(B)5
+6π(C)3π(D)6π
+14.11sin sin ( )3 2− π − −   is equal to
+(A)1
+2(B)1
+3(C)1
+4(D) 1
+15.1 1tan 3 cot ( 3)− −− −  is equal to
+(A) π (B)2π− (C) 0 (D) 2 3
+Miscellaneous Examples
+Example 6 Find the value of 1 3sin (sin )5− π
+Solution  We know that 1sin (sin ) x x−=. Therefore, 1 3 3sin (sin )5 5− π π=
+But3,5 2 2π π π ∉ −  , which is the principal branch of sin–1 x
+However3 3 2sin ( ) sin( ) sin5 5 5π π π= π − =  and 2,5 2 2π π π ∈ −  
+Therefore1 1 3 2 2sin (sin ) sin (sin )5 5 5− − π π π= =
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      31
+Miscellaneous Exercise on Chapter 2
+Find the value of the following:
+1.–1 13cos cos6π  
+  2.–1 7tan tan6π  
+  
+Prove that
+3.–1 –13 242sin tan5 7= 4.–1 –1 –1 8 3 77sin sin tan17 5 36+ =
+5.–1 –1 –1 4 12 33cos cos cos5 13 65+ = 6.–1 –1 –1 12 3 56cos sin sin13 5 65+ =
+7.–1 –1 –1 63 5 3tan sin cos16 13 5= +
+Prove that
+8.–1 –1 1 1tan cos2 1xxx−  =     +, x ∈ [0, 1]
+9.–1 1 sin 1 sincot2 1 sin 1 sinx x x
+x x + + −=   + − − , 0,4xπ ∈  
+10.–1 –1 1 1 1tan cos4 2 1 1x xx
+x x + − − π= −   + + − , 11
+2x − ≤ ≤  [Hint: Put x  = cos 2 θ]
+Solve the following equations:
+11.2tan–1 (cos x ) = tan–1 (2 cosec x)12.–1 –1 1 1tan tan ,( 0)1 2xx xx−= >+
+13. sin (tan–1 x), |x| < 1 is equal to
+(A)21x
+x−(B)21
+1x−(C)21
+1x+(D)21x
+x+
+14. sin–1 (1 – x) – 2 sin–1 x = 2π, then x is equal to
+(A) 0, 1
+2(B) 1, 1
+2(C) 0 (D)1
+2
+Reprint 2025-26
+ 32 MATHEMA TICS
+Summary
+®The domains and ranges (principal value branches) of inverse trigonometric
+functions are given in the following table:
+Functions Domain Range
+(Principal Value Branches)
+y = sin–1 x [–1, 1] ,2 2−π π 
+  
+y = cos–1 x [–1, 1]  [0, π]
+y = cosec–1 x R – (–1,1) ,2 2−π π 
+  – {0}
+y = sec–1 x R – (–1, 1) [0, π] – { }2π
+y = tan–1 x R ,2 2π π −  
+y = cot–1 x R (0, π )
+®sin–1x should not be confused with (sin x)–1. In fact (sin x)–1 = 1
+sinx and
+similarly for other trigonometric functions.
+®The value of an inverse trigonometric functions which lies in its principal
+value branch is called the principal value of that inverse trigonometric
+functions.
+For suitable values of domain, we have
+®y = sin–1 x ⇒ x = sin y ®x = 
+sin y  ⇒ y = sin–1 x
+®sin (sin–1 x) = x ®sin–1 (sinx ) = x
+Reprint 2025-26
+INVERSE TRIGONOMETRIC FUNCTIONS      33
+Historical Note
+The study of trigonometry was first started in India. The ancient Indian
+Mathematicians, Aryabhata (476A.D.), Brahmagupta (598 A.D.), Bhaskara I
+(600 A.D.) and Bhaskara II (1 114 A.D.) got important results of trigonometry . All
+this knowledge went from India to Arabia and then from there to Europe. The
+Greeks had also started the study of trigonometry but their approach was so
+clumsy that when the Indian approach became known, it was immediately adopted
+throughout the world.
+In India, the predecessor of the modern trigonometric functions, known as
+the sine of an angle, and the introduction of the sine function represents one of
+the main contribution of the siddhantas (Sanskrit astronomical works) to
+mathematics.
+Bhaskara I (about 600 A.D.) gave formulae to find the values of sine functions
+for angles more than 90 °. A sixteenth century Malayalam work Yuktibhasa
+contains a proof for the expansion of sin (A + B). Exact expression for sines or
+cosines of 18 °, 36°, 54°, 72°, etc., were given by Bhaskara II.
+The symbols sin–1 x, cos–1 x, etc., for arc sin x, arc cos x, etc., were suggested
+by the astronomer Sir John F .W. Hersehel (1813) The name of Thales
+(about 600 B.C.) is invariably associated with height and distance problems. He
+is credited with the determination of the height of a great pyramid in Egypt by
+measuring shadows of the pyramid and an auxiliary staff (or gnomon) of known
+height, and comparing the ratios:
+H
+Sh
+s= = tan (sun’ s altitude)
+Thales is also said to have calculated the distance of a ship at sea through
+the proportionality of sides of similar triangles. Problems on height and distance
+using the similarity property are also found in ancient Indian works.
+—v vv vv—
+Reprint 2025-26
