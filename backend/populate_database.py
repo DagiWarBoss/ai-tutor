@@ -31,17 +31,19 @@ def extract_topics_from_pdf(pdf_path):
             print(f"    - Warning: No table of contents found in {os.path.basename(pdf_path)}.")
             return []
 
+        print(f"    - DEBUG: Reading Table of Contents for {os.path.basename(pdf_path)}...")
         for item in toc:
+            # --- THIS IS THE NEW DEBUG LINE ---
+            print(f"      -> Found TOC item: {item}")
+
             level, title, page = item
             match = re.match(r"^\s*([\d\.]+)\s*(.*)", title)
             if match:
                 topic_number, topic_name = match.groups()
                 topics.append({"topic_number": topic_number.strip(), "topic_name": topic_name.strip()})
-        # This line was corrected
         return topics
     except Exception as e:
         print(f"    - Error processing TOC for {os.path.basename(pdf_path)}: {e}")
-        # This line was corrected
         return []
 
 def extract_full_text_from_pdf(pdf_path):
