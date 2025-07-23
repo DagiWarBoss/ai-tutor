@@ -1,0 +1,9 @@
+# For main.py (FastAPI server)
+fastapi
+uvicorn[standard]
+python-dotenv
+together
+
+# For populate_database.py
+PyMuPDF
+psycopg2-binary
