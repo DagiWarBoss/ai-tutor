@@ -66,11 +66,19 @@ def main():
     conn = None
     cur = None
 
+    # --- Step 1: Connect to the database ---
     try:
+        print("Attempting to connect to the database...")
         conn = psycopg2.connect(conn_string)
         cur = conn.cursor()
         print("✅ Successfully connected to the database.")
+    except psycopg2.OperationalError as e:
+        print("\n❌ DATABASE CONNECTION FAILED. Please double-check your credentials in the .env file, especially the DB_PASSWORD.")
+        print(f"   Error details: {e}")
+        return # Stop the script if connection fails
 
+    # --- Step 2: Process files and populate the database ---
+    try:
         # Construct the full path to the PDF root folder
         pdf_root_full_path = os.path.join(os.path.dirname(__file__), PDF_ROOT_FOLDER)
 
