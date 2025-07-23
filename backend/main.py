@@ -21,26 +21,11 @@ if TOGETHER_API_KEY:
 else:
     print("DEBUG: API Key was NOT loaded. Check your backend/.env file.")
 
-if not TOGETHER_API_KEY:
-    print("FATAL ERROR: TOGETHER_API_KEY environment variable not set.")
-    # In a real app, you might exit or have a fallback.
-    # For development, this print statement is a clear indicator.
-
 client = Together(api_key=TOGETHER_API_KEY)
 
 app = FastAPI()
 
 # --- CORS Configuration ---
-origins = [
-    "http://localhost",
-    "http://localhost:5173",  # Your frontend's URL/port
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -49,19 +34,21 @@ app.add_middleware(
 async def generate_llm_problem(request: Request):
     data = await request.json()
     user_prompt = data.get("prompt")
-    # Expect the full syllabus text directly, not an ID
-    syllabus_content = data.get("syllabusText", "") # Default to empty string
 
     if not user_prompt:
         raise HTTPException(status_code=400, detail="User prompt is required for problem generation.")
 
     try:
-        # Construct a more specific prompt for the LLM using the modern chat format
-        system_message = "You are an AI tutor. Your task is to generate a single, concise practice problem based on the user's request. Do NOT provide a solution or any explanation. Only output the problem statement."
-        user_message_content = f"Generate a {user_prompt} problem."
-
-        if syllabus_content:
-            user_message_content += f"\n\nStrictly adhere to the following syllabus context:\n```\n{syllabus_content}\n```"
+        # Construct a more specific prompt for the LLM
+        system_message = (
+            "You are an expert-level AI physics and mathematics tutor. Your primary audience is students preparing for the IIT-JEE (Mains and Advanced) competitive exams in India. "
+            "Your task is to generate a single, challenging, and non-trivial practice problem based on the user's request. "
+            "The problem must be of 'JEE Advanced' difficulty, often requiring the synthesis of multiple concepts. "
+            "Do NOT generate simple, textbook-style, or single-concept questions. Assume the user is highly intelligent and is looking for a challenge. "
+            "Output ONLY the problem statement. Do not provide any hints, solutions, or explanations."
+        )
+        # Pass the user's prompt directly for a cleaner request.
+        user_message_content = user_prompt
 
         messages = [
             {"role": "system", "content": system_message},
@@ -74,7 +61,6 @@ async def generate_llm_problem(request: Request):
             max_tokens=500,
             temperature=0.7,
         )
-
         generated_text = response.choices[0].message.content.strip()
 
         return JSONResponse(
@@ -88,7 +74,4 @@ async def generate_llm_problem(request: Request):
         print(f"Error in LLM problem generation endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate problem via LLM. Backend error: {e}")
 
-# --- Optional: Basic Root Endpoint to check if backend is running ---
-@app.get("/")
-async def read_root():
-    return {"message": "FastAPI Backend for AI Tutor is running!"}
+
