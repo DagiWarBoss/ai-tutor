@@ -6,7 +6,8 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 # Import for Together AI
 from dotenv import load_dotenv
-from together import Together, AuthenticationError # Use the modern client and import specific error
+from together import Together
+from together.error import AuthenticationError # Import the error from its correct submodule
 
 # --- Load environment variables from .env file ---
 load_dotenv()
@@ -73,7 +74,7 @@ async def generate_llm_problem(request: Request):
             max_tokens=500,
             temperature=0.7,
         )
-        
+
         generated_text = response.choices[0].message.content.strip()
 
         return JSONResponse(
