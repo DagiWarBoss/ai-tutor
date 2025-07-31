@@ -24,9 +24,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
 # --- Initialize Models ---
-# This loads the AI model for generating text
 llm_client = Together(api_key=TOGETHER_API_KEY)
-# This loads the AI model for creating embeddings (the "smart librarian")
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 app = FastAPI()
@@ -66,7 +64,6 @@ async def ask_question(request: Request):
     question_embedding = embedding_model.encode(user_question).tolist()
 
     # --- 2. RETRIEVAL (Semantic Search) ---
-    # Use our new database function to find the most relevant chapter.
     conn = get_db_connection()
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
@@ -75,9 +72,13 @@ async def ask_question(request: Request):
     found_chapter_name = ""
     try:
         with conn.cursor() as cur:
-            # Call the match_chapters function in the database
+            # =================================================================
+            # THIS IS THE FIX: We add '::vector' to explicitly cast the
+            # incoming array of numbers to the 'vector' type that the
+            # function expects.
+            # =================================================================
             cur.execute(
-                "SELECT * FROM match_chapters(%s, 0.5, 1)",
+                "SELECT * FROM match_chapters(%s::vector, 0.5, 1)",
                 (question_embedding,)
             )
             match_result = cur.fetchone()
@@ -88,7 +89,6 @@ async def ask_question(request: Request):
             matched_chapter_id, matched_chapter_name, similarity = match_result
             print(f"DEBUG: Found most similar chapter: '{matched_chapter_name}' (Similarity: {similarity:.4f})")
             
-            # Now, fetch the full text of that chapter
             cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
             text_result = cur.fetchone()
             if text_result:
@@ -100,7 +100,6 @@ async def ask_question(request: Request):
     finally:
         conn.close()
 
-    # Truncate the text to avoid exceeding the model's context limit
     max_chars = 15000
     if len(relevant_chapter_text) > max_chars:
         relevant_chapter_text = relevant_chapter_text[:max_chars]
