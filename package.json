@@ -13,9 +13,11 @@
     "axios": "^1.10.0",
     "firebase": "^11.10.0",
     "gitwatch": "^0.5.91",
+    "katex": "^0.16.22",
     "pdfjs-dist": "^5.3.93",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-katex": "^3.1.0",
     "react-router-dom": "^7.6.3"
   },
   "devDependencies": {
