@@ -128,4 +128,48 @@ def main():
                                     if filename.lower().endswith(".pdf"):
                                         chapter_name = os.path.splitext(filename)[0].strip()
 
-                                        cur.execut
+                                        cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
+                                        if cur.fetchone():
+                                            print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
+                                            continue
+
+                                        print(f"  -> Processing NEW Chapter: {chapter_name}")
+
+                                        pdf_path = os.path.join(class_path, filename)
+                                        cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
+                                        
+                                        try:
+                                            doc = fitz.open(pdf_path)
+                                            chapter_number = extract_chapter_number_from_pdf(doc)
+                                            if chapter_number is None:
+                                                chapter_number = fallback_counter
+                                            
+                                            full_chapter_text = get_full_text(doc, cache_path)
+                                            topics_data = extract_topics_from_pdf(doc)
+                                            doc.close()
+
+                                            cur.execute(
+                                                "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                                                (subject_id, chapter_number, chapter_name, full_chapter_text),
+                                            )
+                                            chapter_id = cur.fetchone()[0]
+                                            fallback_counter += 1
+
+                                            if topics_data:
+                                                topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
+                                                psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                        except Exception as e:
+                                            print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
+                                        
+            print("\n✅ All data has been successfully inserted and committed.")
+
+    except FileNotFoundError:
+        print(f"❌ Error: The root folder '{pdf_root_full_path}' was not found. Please check the path.")
+    except psycopg2.Error as e:
+        print(f"❌ Database error: {e}")
+        print("  The transaction has been rolled back.")
+    finally:
+        print("\nScript finished.")
+
+if __name__ == '__main__':
+    main()
