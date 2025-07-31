@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-// 1. Import the KaTeX component and its CSS
-import 'katex/dist/katex.min.css';
-import { InlineMath, BlockMath } from 'react-katex';
-
 
 // Icons for UI elements
 const SparklesIcon = ({ className }) => (
@@ -12,28 +8,6 @@ const SparklesIcon = ({ className }) => (
 const ChevronDownIcon = ({ className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
 );
-
-// 2. Create a component to render text with math
-const MathText = ({ text }) => {
-    // This regex splits the text by LaTeX delimiters ($...$ and $$...$$)
-    const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
-
-    return (
-        <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
-            {parts.map((part, index) => {
-                if (part.startsWith('$$') && part.endsWith('$$')) {
-                    // Display math for block-level equations
-                    return <BlockMath key={index} math={part.slice(2, -2)} />;
-                } else if (part.startsWith('$') && part.endsWith('$')) {
-                    // Display math for inline equations
-                    return <InlineMath key={index} math={part.slice(1, -1)} />;
-                }
-                // Render regular text
-                return <span key={index}>{part}</span>;
-            })}
-        </p>
-    );
-};
 
 
 export default function ProblemGenerator() {
@@ -60,9 +34,12 @@ export default function ProblemGenerator() {
     setShowSolution(false);
 
     try {
+      // Call the new "smart" problem generation endpoint
       const response = await fetch('http://localhost:8000/generate-grounded-problem', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ topic: topic }),
       });
 
@@ -112,9 +89,21 @@ export default function ProblemGenerator() {
           </div>
         </form>
 
+        {/* Main content area */}
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 min-h-[300px] flex flex-col items-center justify-center">
-          {isLoading && ( /* ... loading spinner ... */ )}
-          {error && ( /* ... error message ... */ )}
+          {isLoading && (
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
+              <p className="mt-4 text-gray-400">Finding relevant chapter and generating problem...</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="text-red-400 bg-red-900/20 border border-red-700 rounded-lg p-4 w-full">
+              <h3 className="font-bold mb-2">An Error Occurred</h3>
+              <p>{error}</p>
+            </div>
+          )}
 
           {generatedProblem && (
             <div className="text-left w-full">
@@ -124,9 +113,9 @@ export default function ProblemGenerator() {
                 </p>
               )}
               <h2 className="text-xl font-semibold mb-4 text-purple-300">Generated Problem:</h2>
-              {/* 3. Use the new MathText component */}
-              <MathText text={generatedProblem} />
+              <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{generatedProblem}</p>
               
+              {/* Solution Section */}
               <div className="mt-6">
                 <button 
                   onClick={() => setShowSolution(!showSolution)}
@@ -137,8 +126,7 @@ export default function ProblemGenerator() {
                 </button>
                 {showSolution && solution && (
                   <div className="mt-2 p-4 bg-gray-900/50 rounded-b-lg border-t-0 border border-gray-700">
-                    {/* 3. Use the new MathText component for the solution too */}
-                    <MathText text={solution} />
+                    <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{solution}</p>
                   </div>
                 )}
               </div>
@@ -150,7 +138,7 @@ export default function ProblemGenerator() {
           )}
         </div>
          <footer className="text-center mt-8 text-gray-500 text-sm">
-          <p>AI Tutor Alpha v0.5 - Math Rendering Enabled</p>
+          <p>AI Tutor Alpha v0.4 - Grounded Problem Generation</p>
         </footer>
       </div>
     </div>
