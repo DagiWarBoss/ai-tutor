@@ -83,7 +83,7 @@ def get_full_text(doc, cache_path):
         return ""
 
 def main():
-    """Walks through a class-based folder structure and populates the database."""
+    """Walks through a Subject -> Class folder structure and populates the database."""
     if not all([DB_HOST, DB_PASSWORD, DB_USER, DB_PORT, DB_NAME]):
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
@@ -97,21 +97,23 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                for class_folder_name in sorted(os.listdir(pdf_root_full_path)):
-                    class_path = os.path.join(pdf_root_full_path, class_folder_name)
-                    if os.path.isdir(class_path) and "class" in class_folder_name.lower():
-                        try:
-                            class_level = int(re.search(r'\d+', class_folder_name).group())
-                        except (AttributeError, ValueError):
-                            print(f"Could not determine class level from folder '{class_folder_name}'. Skipping.")
-                            continue
-
-                        print(f"\n===== Processing Class {class_level} =====")
+                # Loop through Subject folders first (e.g., 'Chemistry', 'Maths')
+                for subject_name in sorted(os.listdir(pdf_root_full_path)):
+                    subject_path = os.path.join(pdf_root_full_path, subject_name)
+                    if os.path.isdir(subject_path):
+                        print(f"\n===== Processing Subject: '{subject_name}' =====")
                         
-                        for subject_name in sorted(os.listdir(class_path)):
-                            subject_path = os.path.join(class_path, subject_name)
-                            if os.path.isdir(subject_path):
-                                print(f"\n  Processing Subject: '{subject_name}'")
+                        # Then loop through Class folders inside each Subject (e.g., 'Class 11')
+                        for class_folder_name in sorted(os.listdir(subject_path)):
+                            class_path = os.path.join(subject_path, class_folder_name)
+                            if os.path.isdir(class_path) and "class" in class_folder_name.lower():
+                                try:
+                                    class_level = int(re.search(r'\d+', class_folder_name).group())
+                                except (AttributeError, ValueError):
+                                    print(f"Could not determine class level from folder '{class_folder_name}'. Skipping.")
+                                    continue
+
+                                print(f"\n  Processing Class {class_level}")
 
                                 upsert_subject_query = """
                                     WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id)
@@ -122,52 +124,8 @@ def main():
                                 print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
                                 fallback_counter = 1
-                                for filename in sorted(os.listdir(subject_path)):
+                                for filename in sorted(os.listdir(class_path)):
                                     if filename.lower().endswith(".pdf"):
                                         chapter_name = os.path.splitext(filename)[0].strip()
 
-                                        cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
-                                        if cur.fetchone():
-                                            print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
-                                            continue
-
-                                        print(f"  -> Processing NEW Chapter: {chapter_name}")
-
-                                        pdf_path = os.path.join(subject_path, filename)
-                                        cache_path = os.path.join(txt_cache_full_path, f"Class {class_level}", subject_name, f"{chapter_name}.txt")
-                                        
-                                        try:
-                                            doc = fitz.open(pdf_path)
-                                            chapter_number = extract_chapter_number_from_pdf(doc)
-                                            if chapter_number is None:
-                                                chapter_number = fallback_counter
-                                            
-                                            full_chapter_text = get_full_text(doc, cache_path)
-                                            topics_data = extract_topics_from_pdf(doc)
-                                            doc.close()
-
-                                            cur.execute(
-                                                "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                                (subject_id, chapter_number, chapter_name, full_chapter_text),
-                                            )
-                                            chapter_id = cur.fetchone()[0]
-                                            fallback_counter += 1
-
-                                            if topics_data:
-                                                topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                                psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
-                                        except Exception as e:
-                                            print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
-                                        
-            print("\n✅ All data has been successfully inserted and committed.")
-
-    except FileNotFoundError:
-        print(f"❌ Error: The root folder '{pdf_root_full_path}' was not found. Please check the path.")
-    except psycopg2.Error as e:
-        print(f"❌ Database error: {e}")
-        print("  The transaction has been rolled back.")
-    finally:
-        print("\nScript finished.")
-
-if __name__ == '__main__':
-    main()
+                                        cur.execut
