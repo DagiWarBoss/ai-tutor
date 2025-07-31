@@ -1,5 +1,5 @@
 // frontend/src/Dashboard.jsx
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; // Import useAuth hook
 
@@ -9,61 +9,68 @@ const Dashboard = () => {
 
     const handleLogout = async () => {
         try {
-            // If you have Firebase auth.signOut(), uncomment this:
-            // await auth.signOut();
-            localStorage.clear(); // Clear all local storage
-            navigate('/login');
+            // This is a placeholder for a real logout function
+            // In a real app with Firebase, you'd call auth.signOut()
+            localStorage.clear(); // Clear all local storage for now
+            navigate('/auth'); // Navigate to the auth page after logout
         } catch (error) {
             console.error("Failed to log out:", error);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
-            <header className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6 mb-8 flex justify-between items-center">
-                <h1 className="text-4xl font-extrabold text-gray-800">AI Tutor Dashboard</h1>
-                <nav>
-                    <ul className="flex space-x-6">
-                        <li>
-                            <Link to="/upload-syllabus" className="text-blue-600 hover:text-blue-800 font-semibold text-lg transition duration-200">
-                                Upload Syllabus
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/generate-problem" className="text-green-600 hover:text-green-800 font-semibold text-lg transition duration-200">
-                                Generate Problem
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/quiz" className="text-purple-600 hover:text-purple-800 font-semibold text-lg transition duration-200">
-                                Start Quiz
-                            </Link>
-                        </li>
-                        <li>
-                            <button
-                                onClick={handleLogout}
-                                className="text-red-600 hover:text-red-800 font-semibold text-lg transition duration-200 bg-transparent border-none cursor-pointer"
-                            >
-                                Logout
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4 font-sans">
+            <div className="w-full max-w-5xl">
+                <header className="bg-gray-800 shadow-md rounded-lg p-6 mb-8 flex justify-between items-center border border-gray-700">
+                    <h1 className="text-3xl font-bold text-cyan-400">AI Tutor Dashboard</h1>
+                    <nav>
+                        <ul className="flex items-center space-x-6">
+                            {/* NEW LINK to the Syllabus Explainer (Smart Test) */}
+                            <li>
+                                <Link to="/explain-syllabus" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition duration-200">
+                                    Explain a Topic
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/generate-problem" className="text-purple-400 hover:text-purple-300 font-semibold text-lg transition duration-200">
+                                    Generate Problem
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/quiz" className="text-green-400 hover:text-green-300 font-semibold text-lg transition duration-200">
+                                    Start Quiz
+                                </Link>
+                            </li>
+                            {/* "Upload Syllabus" link has been removed */}
+                            <li>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-red-500 hover:text-red-400 font-semibold text-lg transition duration-200 bg-transparent border-none cursor-pointer"
+                                >
+                                    Logout
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
 
-            <main className="w-full max-w-4xl bg-white shadow-md rounded-lg p-8">
-                {currentUser && (
-                    <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">
-                        Welcome, {currentUser.email}!
-                    </h2>
-                )}
+                <main className="w-full bg-gray-800 shadow-md rounded-lg p-8 border border-gray-700">
+                    {currentUser && (
+                        <h2 className="text-2xl font-bold text-gray-300 mb-6 text-center">
+                            Welcome, <span className="text-cyan-400">{currentUser.email}</span>!
+                        </h2>
+                    )}
 
-                <p className="text-gray-600 text-lg text-center mb-8">
-                    Choose an option from the navigation above to get started.
-                </p>
+                    <p className="text-gray-400 text-lg text-center mb-8">
+                        This is your central hub for JEE preparation. Choose an option from the navigation above to get started.
+                    </p>
 
-                {/* This version of Dashboard does NOT render dynamic subject lists */}
-            </main>
+                    {/* We will build the dynamic panels from our feature plan here later */}
+                    <div className="text-center text-gray-500">
+                        <p>[Future home of the 'Overall Progress Snapshot' and 'Today's Focus' panels]</p>
+                    </div>
+                </main>
+            </div>
         </div>
     );
 };
