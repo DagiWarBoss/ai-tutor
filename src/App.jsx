@@ -8,16 +8,17 @@ import ProblemGenerator from './ProblemGenerator';
 import SyllabusUpload from './SyllabusUpload';
 import Quiz from './Quiz';
 import ProtectedRoute from './ProtectedRoute';
-import { AuthProvider } from './AuthContext'; // Assuming AuthProvider is also exported from AuthContext
-import { AppContentProvider } from './AppContentContext'; // NEW: Import AppContentProvider
+import { AuthProvider } from './AuthContext';
+import { AppContentProvider } from './AppContentContext';
+import SyllabusExplainer from './SyllabusExplainer'; // <-- 1. IMPORT THE NEW COMPONENT
 import './App.css';
 import './index.css';
 
 function App() {
   return (
     <Router>
-      <AuthProvider> {/* AuthProvider wraps the entire application */}
-        <AppContentProvider> {/* NEW: AppContentProvider wraps content needing syllabus ID */}
+      <AuthProvider>
+        <AppContentProvider>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/" element={<Navigate to="/dashboard" />} />
@@ -37,9 +38,13 @@ function App() {
               path="/quiz" 
               element={<ProtectedRoute><Quiz /></ProtectedRoute>} 
             />
-            {/* Add other routes as needed */}
+            {/* 2. ADD THE NEW ROUTE FOR THE SMART TEST */}
+            <Route 
+              path="/smart-test" 
+              element={<ProtectedRoute><SyllabusExplainer /></ProtectedRoute>} 
+            />
           </Routes>
-        </AppContentProvider> {/* NEW: Close AppContentProvider */}
+        </AppContentProvider>
       </AuthProvider>
     </Router>
   );
