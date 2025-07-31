@@ -73,12 +73,11 @@ async def ask_question(request: Request):
     try:
         with conn.cursor() as cur:
             # =================================================================
-            # THIS IS THE FIX: We add '::vector' to explicitly cast the
-            # incoming array of numbers to the 'vector' type that the
-            # function expects.
+            # THIS IS THE FIX: We have lowered the match_threshold from 0.5
+            # to 0.3 to make the search a little less strict.
             # =================================================================
             cur.execute(
-                "SELECT * FROM match_chapters(%s::vector, 0.5, 1)",
+                "SELECT * FROM match_chapters(%s::vector, 0.3, 1)",
                 (question_embedding,)
             )
             match_result = cur.fetchone()
@@ -125,7 +124,7 @@ async def ask_question(request: Request):
         ]
 
         response = llm_client.chat.completions.create(
-            model="meta-llama/Llama-3-8b-chat-hf",
+            model="meta-llama-Llama-3-8b-chat-hf",
             messages=messages,
             max_tokens=1024,
             temperature=0.3,
