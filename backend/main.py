@@ -124,7 +124,10 @@ async def ask_question(request: Request):
         ]
 
         response = llm_client.chat.completions.create(
-            model="meta-llama-Llama-3-8b-chat-hf",
+            # =================================================================
+            # THIS IS THE FIX: Switched to a different, reliable model.
+            # =================================================================
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
             max_tokens=1024,
             temperature=0.3,
