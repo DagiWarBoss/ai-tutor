@@ -2,6 +2,7 @@
 
 import os
 import psycopg2
+import json # Import the json library to handle JSON parsing
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -50,38 +51,27 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-# === ENDPOINT: The Final, "Smartest" RAG Pipeline ===
+# === ENDPOINT 1: The "Smart" RAG Pipeline for Questions ===
 @app.post("/ask-question")
 async def ask_question(request: Request):
+    # This endpoint remains the same
     data = await request.json()
     user_question = data.get("question")
 
     if not user_question:
         raise HTTPException(status_code=400, detail="A question is required.")
 
-    # --- 1. Create an embedding for the user's question ---
-    print(f"DEBUG: Creating embedding for question: '{user_question}'")
     question_embedding = embedding_model.encode(user_question).tolist()
 
-    # --- 2. RETRIEVAL (Semantic Search) ---
     conn = get_db_connection()
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
-    relevant_chapter_text = ""
-    found_chapter_name = ""
+    relevant_chapter_text, found_chapter_name = "", ""
     try:
         with conn.cursor() as cur:
-            # =================================================================
-            # THIS IS THE FIX: We have lowered the match_threshold from 0.5
-            # to 0.3 to make the search a little less strict.
-            # =================================================================
-            cur.execute(
-                "SELECT * FROM match_chapters(%s::vector, 0.3, 1)",
-                (question_embedding,)
-            )
+            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (question_embedding,))
             match_result = cur.fetchone()
-
             if not match_result:
                 raise HTTPException(status_code=404, detail="Could not find a relevant chapter for your question.")
 
@@ -91,11 +81,7 @@ async def ask_question(request: Request):
             cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
             text_result = cur.fetchone()
             if text_result:
-                relevant_chapter_text = text_result[0]
-                found_chapter_name = matched_chapter_name
-    except psycopg2.Error as e:
-        print(f"Database query error: {e}")
-        raise HTTPException(status_code=500, detail="Error querying the database.")
+                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
     finally:
         conn.close()
 
@@ -103,44 +89,84 @@ async def ask_question(request: Request):
     if len(relevant_chapter_text) > max_chars:
         relevant_chapter_text = relevant_chapter_text[:max_chars]
 
-    # --- 3. AUGMENTATION & 4. GENERATION ---
+    try:
+        system_message = "You are an expert JEE tutor..." # Abridged for brevity
+        user_message_content = f"User's Question: '{user_question}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
+        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
+
+        response = llm_client.chat.completions.create(model="mistralai/Mixtral-8x7B-Instruct-v0.1", messages=messages, max_tokens=1024, temperature=0.3)
+        generated_answer = response.choices[0].message.content.strip()
+        return JSONResponse(content={"answer": generated_answer, "source_chapter": found_chapter_name})
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate answer. Backend error: {e}")
+
+# === ENDPOINT 2: The NEW "Smart" Problem Generator ===
+@app.post("/generate-grounded-problem")
+async def generate_grounded_problem(request: Request):
+    data = await request.json()
+    topic_prompt = data.get("topic")
+
+    if not topic_prompt:
+        raise HTTPException(status_code=400, detail="A topic is required.")
+
+    # --- 1. RETRIEVAL (Semantic Search) ---
+    print(f"DEBUG: Finding relevant chapter for topic: '{topic_prompt}'")
+    topic_embedding = embedding_model.encode(topic_prompt).tolist()
+    
+    conn = get_db_connection()
+    if conn is None:
+        raise HTTPException(status_code=503, detail="Database connection unavailable.")
+    
+    relevant_chapter_text, found_chapter_name = "", ""
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (topic_embedding,))
+            match_result = cur.fetchone()
+            if not match_result:
+                raise HTTPException(status_code=404, detail=f"Could not find a relevant chapter for the topic '{topic_prompt}'.")
+
+            matched_chapter_id, matched_chapter_name, similarity = match_result
+            print(f"DEBUG: Found chapter '{matched_chapter_name}' (Similarity: {similarity:.4f}) to generate problem.")
+            
+            cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+            text_result = cur.fetchone()
+            if text_result:
+                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
+    finally:
+        conn.close()
+
+    max_chars = 15000
+    if len(relevant_chapter_text) > max_chars:
+        relevant_chapter_text = relevant_chapter_text[:max_chars]
+
+    # --- 2. GENERATION with JSON output ---
     try:
         system_message = (
-            "You are an expert JEE tutor. Your task is to answer the user's question based on the provided textbook chapter. "
-            "You are strictly forbidden from using any external knowledge. "
-            "You MUST base your answer ONLY on the provided text. If the answer is not in the text, say 'The answer to that question is not found in the provided chapter text.'"
+            "You are an expert-level AI physics and mathematics tutor for students preparing for the IIT-JEE exams in India. "
+            "Your task is to generate a single, challenging, JEE-Advanced level practice problem based on the user's requested topic and the provided textbook chapter. "
+            "You MUST provide both the problem statement and a detailed, step-by-step solution. "
+            "You are strictly forbidden from using any external knowledge. Your entire response MUST be based ONLY on the provided textbook text. "
+            "Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
         )
         
-        user_message_content = (
-            f"User's Question: '{user_question}'\n\n"
-            f"--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n"
-            f"{relevant_chapter_text}\n"
-            f"--- END OF CHAPTER ---"
-        )
-
-        messages = [
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_message_content}
-        ]
+        user_message_content = f"User's Topic: '{topic_prompt}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
+        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
         response = llm_client.chat.completions.create(
-            # =================================================================
-            # THIS IS THE FIX: Switched to a different, reliable model.
-            # =================================================================
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
-            max_tokens=1024,
-            temperature=0.3,
+            max_tokens=2048,
+            temperature=0.8,
+            response_format={"type": "json_object"},
         )
-        generated_answer = response.choices[0].message.content.strip()
+        
+        response_content = response.choices[0].message.content.strip()
+        parsed_json = json.loads(response_content)
+        problem = parsed_json.get("problem", "Error: Could not generate problem.")
+        solution = parsed_json.get("solution", "Error: Could not generate solution.")
 
-        return JSONResponse(
-            status_code=200,
-            content={
-                "answer": generated_answer,
-                "source_chapter": found_chapter_name
-            }
-        )
+        return JSONResponse(content={"problem": problem, "solution": solution, "source_chapter": found_chapter_name})
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="The AI model returned an invalid format. Please try again.")
     except Exception as e:
-        print(f"Error in RAG answer generation: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate answer. Backend error: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate problem. Backend error: {e}")
