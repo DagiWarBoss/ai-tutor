@@ -5,12 +5,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthPage from './AuthPage';
 import Dashboard from './Dashboard';
 import ProblemGenerator from './ProblemGenerator';
-// SyllabusUpload is no longer needed, so the import is removed.
 import Quiz from './Quiz';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider } from './AuthContext';
 import { AppContentProvider } from './AppContentContext';
-import SyllabusExplainer from './SyllabusExplainer'; // 1. IMPORT THE NEW COMPONENT
+import SyllabusExplorer from './SyllabusExplorer'; // Import the new component
 import './App.css';
 import './index.css';
 
@@ -30,15 +29,14 @@ function App() {
               path="/generate-problem" 
               element={<ProtectedRoute><ProblemGenerator /></ProtectedRoute>} 
             />
-            {/* The /syllabus-upload route has been removed */}
             <Route 
               path="/quiz" 
               element={<ProtectedRoute><Quiz /></ProtectedRoute>} 
             />
-            {/* 2. ADD THE NEW ROUTE FOR THE SYLLABUS EXPLAINER */}
+            {/* The new route for the Syllabus Explorer */}
             <Route 
-              path="/explain-syllabus" 
-              element={<ProtectedRoute><SyllabusExplainer /></ProtectedRoute>} 
+              path="/syllabus" 
+              element={<ProtectedRoute><SyllabusExplorer /></ProtectedRoute>} 
             />
           </Routes>
         </AppContentProvider>
