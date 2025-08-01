@@ -9,9 +9,8 @@ import Quiz from './Quiz';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider } from './AuthContext';
 import { AppContentProvider } from './AppContentContext';
-import SyllabusExplorer from './SyllabusExplorer'; // Import the new component
-import './App.css';
-import './index.css';
+import SyllabusExplainer from './SyllabusExplainer'; // Make sure this is imported
+import SyllabusExplorer from './SyllabusExplorer';   // Make sure this is imported too
 
 function App() {
   return (
@@ -19,21 +18,19 @@ function App() {
       <AuthProvider>
         <AppContentProvider>
           <Routes>
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route 
-              path="/dashboard" 
-              element={<ProtectedRoute><Dashboard /></ProtectedRoute>} 
-            />
-            <Route 
-              path="/generate-problem" 
-              element={<ProtectedRoute><ProblemGenerator /></ProtectedRoute>} 
-            />
+            {/* ... other routes ... */}
             <Route 
               path="/quiz" 
               element={<ProtectedRoute><Quiz /></ProtectedRoute>} 
             />
-            {/* The new route for the Syllabus Explorer */}
+            
+            {/* This is the route that was missing or incorrect */}
+            <Route 
+              path="/explain-syllabus" 
+              element={<ProtectedRoute><SyllabusExplainer /></ProtectedRoute>} 
+            />
+
+            {/* This is the route for the 3-pane explorer */}
             <Route 
               path="/syllabus" 
               element={<ProtectedRoute><SyllabusExplorer /></ProtectedRoute>} 
