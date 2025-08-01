@@ -1,7 +1,7 @@
 // frontend/src/Dashboard.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Import useAuth hook
+import { useAuth } from './AuthContext';
 
 const Dashboard = () => {
     const { currentUser } = useAuth();
@@ -10,9 +10,8 @@ const Dashboard = () => {
     const handleLogout = async () => {
         try {
             // This is a placeholder for a real logout function
-            // In a real app with Firebase, you'd call auth.signOut()
-            localStorage.clear(); // Clear all local storage for now
-            navigate('/auth'); // Navigate to the auth page after logout
+            localStorage.clear();
+            navigate('/auth');
         } catch (error) {
             console.error("Failed to log out:", error);
         }
@@ -25,10 +24,10 @@ const Dashboard = () => {
                     <h1 className="text-3xl font-bold text-cyan-400">AI Tutor Dashboard</h1>
                     <nav>
                         <ul className="flex items-center space-x-6">
-                            {/* NEW LINK to the Syllabus Explainer (Smart Test) */}
+                            {/* NEW LINK to the Syllabus Explorer */}
                             <li>
-                                <Link to="/explain-syllabus" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition duration-200">
-                                    Explain a Topic
+                                <Link to="/syllabus" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition duration-200">
+                                    Syllabus Explorer
                                 </Link>
                             </li>
                             <li>
@@ -41,7 +40,6 @@ const Dashboard = () => {
                                     Start Quiz
                                 </Link>
                             </li>
-                            {/* "Upload Syllabus" link has been removed */}
                             <li>
                                 <button
                                     onClick={handleLogout}
@@ -65,7 +63,6 @@ const Dashboard = () => {
                         This is your central hub for JEE preparation. Choose an option from the navigation above to get started.
                     </p>
 
-                    {/* We will build the dynamic panels from our feature plan here later */}
                     <div className="text-center text-gray-500">
                         <p>[Future home of the 'Overall Progress Snapshot' and 'Today's Focus' panels]</p>
                     </div>
