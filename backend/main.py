@@ -163,54 +163,56 @@ async def generate_grounded_problem(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate problem. Backend error: {e}")
 
-# === NEW ENDPOINT 3: Fetch the entire syllabus structure ===
+# === NEW ENDPOINT 3: Fetch the entire syllabus structure (OPTIMIZED) ===
 @app.get("/api/syllabus")
 async def get_syllabus():
     """
-    Fetches the entire structured syllabus from the database.
+    Fetches the entire structured syllabus from the database using an efficient,
+    low-query method to prevent slow load times.
     """
     conn = get_db_connection()
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
-    syllabus = []
     try:
         with conn.cursor() as cur:
+            # Step 1: Fetch all data in as few queries as possible
             cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
-            subjects = cur.fetchall()
+            subjects_raw = cur.fetchall()
             
-            for subject_id, subject_name, class_level in subjects:
-                subject_data = {
-                    "id": subject_id,
-                    "name": subject_name,
-                    "class_level": class_level,
-                    "chapters": []
-                }
-                
-                cur.execute("SELECT id, name, chapter_number FROM chapters WHERE subject_id = %s ORDER BY chapter_number", (subject_id,))
-                chapters = cur.fetchall()
-                
-                for chapter_id, chapter_name, chapter_number in chapters:
-                    chapter_data = {
-                        "id": chapter_id,
-                        "name": chapter_name,
-                        "number": chapter_number,
-                        "topics": []
-                    }
-                    
-                    cur.execute("SELECT id, name, topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
-                    topics = cur.fetchall()
-                    
-                    for topic_id, topic_name, topic_number in topics:
-                        chapter_data["topics"].append({
-                            "id": topic_id,
-                            "name": topic_name,
-                            "number": topic_number
-                        })
-                    
-                    subject_data["chapters"].append(chapter_data)
-                
-                syllabus.append(subject_data)
+            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY chapter_number")
+            chapters_raw = cur.fetchall()
+            
+            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY id")
+            topics_raw = cur.fetchall()
+
+            # Step 2: Process the data in Python using maps for efficiency
+            subjects_map = {
+                s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []}
+                for s_id, s_name, s_class in subjects_raw
+            }
+            
+            chapters_map = {
+                c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []}
+                for c_id, c_name, c_num, s_id in chapters_raw
+            }
+
+            # Step 3: Link topics to chapters
+            for t_id, t_name, t_num, c_id in topics_raw:
+                if c_id in chapters_map:
+                    chapters_map[c_id]["topics"].append({
+                        "id": t_id,
+                        "name": t_name,
+                        "number": t_num
+                    })
+
+            # Step 4: Link chapters to subjects
+            for c_id, c_name, c_num, s_id in chapters_raw:
+                if s_id in subjects_map:
+                    subjects_map[s_id]["chapters"].append(chapters_map[c_id])
+            
+            # Final structure is the list of values from the subjects map
+            syllabus = list(subjects_map.values())
 
         return JSONResponse(content=syllabus)
         
