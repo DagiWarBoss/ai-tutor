@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Simple loading spinner component
 const Spinner = () => (
@@ -15,6 +15,9 @@ export default function SyllabusExplorer() {
 
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [selectedChapter, setSelectedChapter] = useState(null);
+    const [selectedTopic, setSelectedTopic] = useState(null); // State for the selected topic
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSyllabus = async () => {
@@ -34,15 +37,25 @@ export default function SyllabusExplorer() {
         };
 
         fetchSyllabus();
-    }, []); // Empty dependency array means this runs once on mount
+    }, []);
 
     const handleSubjectClick = (subject) => {
         setSelectedSubject(subject);
-        setSelectedChapter(null); // Reset chapter selection when a new subject is chosen
+        setSelectedChapter(null);
+        setSelectedTopic(null);
     };
     
     const handleChapterClick = (chapter) => {
         setSelectedChapter(chapter);
+        setSelectedTopic(null);
+    };
+
+    // When a topic is clicked, we navigate to the explainer page
+    const handleTopicClick = (topic) => {
+        setSelectedTopic(topic);
+        // Navigate to the explainer page and pass the topic name as a question
+        // Note: The route is '/explain-syllabus' as defined in your App.jsx
+        navigate('/explain-syllabus', { state: { question: `Explain the topic: ${topic.name}` } });
     };
 
     if (isLoading) {
@@ -86,7 +99,7 @@ export default function SyllabusExplorer() {
                                     onClick={() => handleChapterClick(chapter)}
                                     className={`p-3 rounded-md cursor-pointer transition-colors duration-200 ${selectedChapter?.id === chapter.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}
                                 >
-                                    {chapter.number}. {chapter.name}
+                                    Chapter {chapter.number}: {chapter.name}
                                 </li>
                             ))}
                         </ul>
@@ -101,7 +114,10 @@ export default function SyllabusExplorer() {
                     {selectedChapter ? (
                          <ul>
                             {selectedChapter.topics.map((topic) => (
-                                <li key={topic.id} className="p-3 text-gray-400">
+                                <li key={topic.id} 
+                                    onClick={() => handleTopicClick(topic)}
+                                    className={`p-3 rounded-md cursor-pointer transition-colors duration-200 ${selectedTopic?.id === topic.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}
+                                >
                                     {topic.number} {topic.name}
                                 </li>
                             ))}
