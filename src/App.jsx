@@ -9,7 +9,8 @@ import Quiz from './Quiz';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider } from './AuthContext';
 import { AppContentProvider } from './AppContentContext';
-import SyllabusExplorer from './SyllabusExplorer'; // Import the new component
+import SyllabusExplorer from './SyllabusExplorer';
+import SyllabusExplainer from './SyllabusExplainer'; // Make sure this is imported
 import './App.css';
 import './index.css';
 
@@ -33,10 +34,14 @@ function App() {
               path="/quiz" 
               element={<ProtectedRoute><Quiz /></ProtectedRoute>} 
             />
-            {/* The new route for the Syllabus Explorer */}
             <Route 
               path="/syllabus" 
               element={<ProtectedRoute><SyllabusExplorer /></ProtectedRoute>} 
+            />
+            {/* THIS IS THE MISSING ROUTE THAT FIXES THE BLANK PAGE */}
+            <Route 
+              path="/explain-syllabus" 
+              element={<ProtectedRoute><SyllabusExplainer /></ProtectedRoute>} 
             />
           </Routes>
         </AppContentProvider>
