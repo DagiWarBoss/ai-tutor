@@ -2,7 +2,7 @@
 
 import os
 import psycopg2
-import json # Import the json library to handle JSON parsing
+import json
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -54,7 +54,6 @@ def get_db_connection():
 # === ENDPOINT 1: The "Smart" RAG Pipeline for Questions ===
 @app.post("/ask-question")
 async def ask_question(request: Request):
-    # This endpoint remains the same
     data = await request.json()
     user_question = data.get("question")
 
@@ -100,7 +99,7 @@ async def ask_question(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate answer. Backend error: {e}")
 
-# === ENDPOINT 2: The NEW "Smart" Problem Generator ===
+# === ENDPOINT 2: The "Smart" Problem Generator ===
 @app.post("/generate-grounded-problem")
 async def generate_grounded_problem(request: Request):
     data = await request.json()
@@ -109,8 +108,6 @@ async def generate_grounded_problem(request: Request):
     if not topic_prompt:
         raise HTTPException(status_code=400, detail="A topic is required.")
 
-    # --- 1. RETRIEVAL (Semantic Search) ---
-    print(f"DEBUG: Finding relevant chapter for topic: '{topic_prompt}'")
     topic_embedding = embedding_model.encode(topic_prompt).tolist()
     
     conn = get_db_connection()
@@ -139,14 +136,9 @@ async def generate_grounded_problem(request: Request):
     if len(relevant_chapter_text) > max_chars:
         relevant_chapter_text = relevant_chapter_text[:max_chars]
 
-    # --- 2. GENERATION with JSON output ---
     try:
         system_message = (
-            "You are an expert-level AI physics and mathematics tutor for students preparing for the IIT-JEE exams in India. "
-            "Your task is to generate a single, challenging, JEE-Advanced level practice problem based on the user's requested topic and the provided textbook chapter. "
-            "You MUST provide both the problem statement and a detailed, step-by-step solution. "
-            "You are strictly forbidden from using any external knowledge. Your entire response MUST be based ONLY on the provided textbook text. "
-            "Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
+            "You are an expert-level AI physics and mathematics tutor... Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
         )
         
         user_message_content = f"User's Topic: '{topic_prompt}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
@@ -170,3 +162,60 @@ async def generate_grounded_problem(request: Request):
         raise HTTPException(status_code=500, detail="The AI model returned an invalid format. Please try again.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate problem. Backend error: {e}")
+
+# === NEW ENDPOINT 3: Fetch the entire syllabus structure ===
+@app.get("/api/syllabus")
+async def get_syllabus():
+    """
+    Fetches the entire structured syllabus from the database.
+    """
+    conn = get_db_connection()
+    if conn is None:
+        raise HTTPException(status_code=503, detail="Database connection unavailable.")
+    
+    syllabus = []
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
+            subjects = cur.fetchall()
+            
+            for subject_id, subject_name, class_level in subjects:
+                subject_data = {
+                    "id": subject_id,
+                    "name": subject_name,
+                    "class_level": class_level,
+                    "chapters": []
+                }
+                
+                cur.execute("SELECT id, name, chapter_number FROM chapters WHERE subject_id = %s ORDER BY chapter_number", (subject_id,))
+                chapters = cur.fetchall()
+                
+                for chapter_id, chapter_name, chapter_number in chapters:
+                    chapter_data = {
+                        "id": chapter_id,
+                        "name": chapter_name,
+                        "number": chapter_number,
+                        "topics": []
+                    }
+                    
+                    cur.execute("SELECT id, name, topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
+                    topics = cur.fetchall()
+                    
+                    for topic_id, topic_name, topic_number in topics:
+                        chapter_data["topics"].append({
+                            "id": topic_id,
+                            "name": topic_name,
+                            "number": topic_number
+                        })
+                    
+                    subject_data["chapters"].append(chapter_data)
+                
+                syllabus.append(subject_data)
+
+        return JSONResponse(content=syllabus)
+        
+    except psycopg2.Error as e:
+        print(f"Database query error while fetching syllabus: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
+    finally:
+        conn.close()
