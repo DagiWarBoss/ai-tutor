@@ -209,18 +209,8 @@ async def get_syllabus():
             # Step 4: Link chapters to subjects
             for c_id, c_name, c_num, s_id in chapters_raw:
                 if s_id in subjects_map:
-                    # To avoid duplicating chapters, we build a new list for each subject
-                    pass
-
-            # Create a clean chapter list for each subject
-            for subject_id in subjects_map:
-                chapters_for_subject = []
-                for c_id, c_name, c_num, s_id in chapters_raw:
-                    if s_id == subject_id:
-                        chapters_for_subject.append(chapters_map[c_id])
-                subjects_map[subject_id]['chapters'] = chapters_for_subject
-
-
+                    subjects_map[s_id]["chapters"].append(chapters_map[c_id])
+            
             # Final structure is the list of values from the subjects map
             syllabus = list(subjects_map.values())
 
