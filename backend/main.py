@@ -163,7 +163,7 @@ async def generate_grounded_problem(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate problem. Backend error: {e}")
 
-# === NEW ENDPOINT 3: Fetch the entire syllabus structure (OPTIMIZED) ===
+# === ENDPOINT 3: Fetch the entire syllabus structure (OPTIMIZED) ===
 @app.get("/api/syllabus")
 async def get_syllabus():
     """
@@ -209,8 +209,18 @@ async def get_syllabus():
             # Step 4: Link chapters to subjects
             for c_id, c_name, c_num, s_id in chapters_raw:
                 if s_id in subjects_map:
-                    subjects_map[s_id]["chapters"].append(chapters_map[c_id])
-            
+                    # To avoid duplicating chapters, we build a new list for each subject
+                    pass
+
+            # Create a clean chapter list for each subject
+            for subject_id in subjects_map:
+                chapters_for_subject = []
+                for c_id, c_name, c_num, s_id in chapters_raw:
+                    if s_id == subject_id:
+                        chapters_for_subject.append(chapters_map[c_id])
+                subjects_map[subject_id]['chapters'] = chapters_for_subject
+
+
             # Final structure is the list of values from the subjects map
             syllabus = list(subjects_map.values())
 
