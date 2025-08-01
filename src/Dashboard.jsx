@@ -10,6 +10,7 @@ const Dashboard = () => {
     const handleLogout = async () => {
         try {
             // This is a placeholder for a real logout function
+            // In a real app with Firebase, you'd call auth.signOut()
             localStorage.clear();
             navigate('/auth');
         } catch (error) {
@@ -24,20 +25,19 @@ const Dashboard = () => {
                     <h1 className="text-3xl font-bold text-cyan-400">AI Tutor Dashboard</h1>
                     <nav>
                         <ul className="flex items-center space-x-6">
-                            {/* NEW LINK to the Syllabus Explorer */}
                             <li>
                                 <Link to="/syllabus" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition duration-200">
                                     Syllabus Explorer
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/generate-problem" className="text-purple-400 hover:text-purple-300 font-semibold text-lg transition duration-200">
-                                    Generate Problem
+                             <li>
+                                <Link to="/explain-syllabus" className="text-green-400 hover:text-green-300 font-semibold text-lg transition duration-200">
+                                    Ask a Question
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/quiz" className="text-green-400 hover:text-green-300 font-semibold text-lg transition duration-200">
-                                    Start Quiz
+                                <Link to="/generate-problem" className="text-purple-400 hover:text-purple-300 font-semibold text-lg transition duration-200">
+                                    Generate Problem
                                 </Link>
                             </li>
                             <li>
