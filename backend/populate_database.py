@@ -33,29 +33,41 @@ def extract_chapter_number_from_pdf(doc):
     return None
 
 def extract_topics_from_pdf(doc):
-    """Smarter topic extraction from PDF text."""
+    """
+    A much smarter topic extraction function with better filtering.
+    """
     try:
         topics = []
-        topic_pattern = re.compile(r"^\s*(\d+\.\d+[\.\d+]*)\s+([A-Z][A-Za-z\s,]+)", re.MULTILINE)
+        # Regex: Must start a line, have a number (e.g., 7.1, 7.1.1), space, and then a title.
+        # The title must not be excessively long.
+        topic_pattern = re.compile(r"^\s*(\d+\.\d+[\.\d+]*)\s+([A-Z][A-Za-z\s,]{3,80})$", re.MULTILINE)
         
-        for page_num in range(min(5, doc.page_count)):
+        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
                 topic_number = match[0]
                 topic_name = match[1].strip()
-                if topic_name and len(topic_name) > 5:
-                    topics.append({"topic_number": topic_number, "topic_name": topic_name})
+                
+                # Additional filter: ignore lines that are clearly just page references
+                if topic_name.lower() == "notes":
+                    continue
 
-        seen = set()
+                topics.append({"topic_number": topic_number, "topic_name": topic_name})
+
+        if not topics:
+             print(f"    - Warning: Could not find topics by scanning text for {os.path.basename(doc.name)}.")
+        
+        # Remove duplicates while preserving order
+        seen_topics = set()
         unique_topics = []
         for topic in topics:
-            topic_tuple = tuple(topic.items())
-            if topic_tuple not in seen:
-                seen.add(topic_tuple)
+            if topic['topic_name'] not in seen_topics:
+                seen_topics.add(topic['topic_name'])
                 unique_topics.append(topic)
         
         return unique_topics
+
     except Exception as e:
         print(f"    - Error processing TOC for {os.path.basename(doc.name)}: {e}")
         return []
@@ -83,7 +95,7 @@ def get_full_text(doc, cache_path):
         return ""
 
 def main():
-    """Walks through a Subject -> Class folder structure and populates the database."""
+    """Walks through the folder structure and populates the database."""
     if not all([DB_HOST, DB_PASSWORD, DB_USER, DB_PORT, DB_NAME]):
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
@@ -97,20 +109,22 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                # Loop through Subject folders first (e.g., 'Chemistry', 'Maths')
+                # First, clean the database to ensure we have the freshest data
+                print("Cleaning old data from tables...")
+                cur.execute("TRUNCATE TABLE subjects, chapters, topics RESTART IDENTITY CASCADE;")
+                print("✅ Tables cleaned.")
+
                 for subject_name in sorted(os.listdir(pdf_root_full_path)):
                     subject_path = os.path.join(pdf_root_full_path, subject_name)
                     if os.path.isdir(subject_path):
                         print(f"\n===== Processing Subject: '{subject_name}' =====")
                         
-                        # Then loop through Class folders inside each Subject (e.g., 'Class 11')
                         for class_folder_name in sorted(os.listdir(subject_path)):
                             class_path = os.path.join(subject_path, class_folder_name)
                             if os.path.isdir(class_path) and "class" in class_folder_name.lower():
                                 try:
                                     class_level = int(re.search(r'\d+', class_folder_name).group())
                                 except (AttributeError, ValueError):
-                                    print(f"Could not determine class level from folder '{class_folder_name}'. Skipping.")
                                     continue
 
                                 print(f"\n  Processing Class {class_level}")
@@ -127,12 +141,7 @@ def main():
                                 for filename in sorted(os.listdir(class_path)):
                                     if filename.lower().endswith(".pdf"):
                                         chapter_name = os.path.splitext(filename)[0].strip()
-
-                                        cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
-                                        if cur.fetchone():
-                                            print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
-                                            continue
-
+                                        
                                         print(f"  -> Processing NEW Chapter: {chapter_name}")
 
                                         pdf_path = os.path.join(class_path, filename)
@@ -156,6 +165,7 @@ def main():
                                             fallback_counter += 1
 
                                             if topics_data:
+                                                print(f"    - Success: Found {len(topics_data)} clean topics. Inserting...")
                                                 topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
                                                 psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
                                         except Exception as e:
