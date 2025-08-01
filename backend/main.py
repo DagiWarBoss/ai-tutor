@@ -89,7 +89,11 @@ async def ask_question(request: Request):
         relevant_chapter_text = relevant_chapter_text[:max_chars]
 
     try:
-        system_message = "You are an expert JEE tutor..." # Abridged for brevity
+        system_message = (
+            "You are an expert JEE tutor. Your task is to answer the user's question based on the provided textbook chapter. "
+            "You are strictly forbidden from using any external knowledge. "
+            "You MUST base your answer ONLY on the provided text. If the answer is not in the text, say 'The answer to that question is not found in the provided chapter text.'"
+        )
         user_message_content = f"User's Question: '{user_question}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
@@ -138,7 +142,11 @@ async def generate_grounded_problem(request: Request):
 
     try:
         system_message = (
-            "You are an expert-level AI physics and mathematics tutor... Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
+            "You are an expert-level AI physics and mathematics tutor for students preparing for the IIT-JEE exams in India. "
+            "Your task is to generate a single, challenging, JEE-Advanced level practice problem based on the user's requested topic and the provided textbook chapter. "
+            "You MUST provide both the problem statement and a detailed, step-by-step solution. "
+            "You are strictly forbidden from using any external knowledge. Your entire response MUST be based ONLY on the provided textbook text. "
+            "Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
         )
         
         user_message_content = f"User's Topic: '{topic_prompt}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
