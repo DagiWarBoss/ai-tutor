@@ -23,7 +23,6 @@ TXT_CACHE_FOLDER = "txt_outputs"
 
 # =================================================================
 # FINALIZED CHAPTER ORDER MAPPING (Updated to match your exact filenames)
-# The order of files in these lists will determine the chapter number.
 # =================================================================
 CHAPTER_ORDER_MAPPING = {
     "Chemistry": {
@@ -75,15 +74,25 @@ CHAPTER_ORDER_MAPPING = {
 
 
 def extract_topics_from_pdf(doc):
-    """A stricter topic extraction function that only captures numbered headings."""
+    """A more flexible and robust topic extraction function."""
     try:
         topics = []
-        topic_pattern = re.compile(r"^\s*(\d+\.\d+[\.\d+]*)\s+([A-Z][A-Za-z\s,]{3,80})$", re.MULTILINE)
+        # =================================================================
+        # NEW, MORE FLEXIBLE REGEX
+        # This pattern is less strict about capitalization and length.
+        # =================================================================
+        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,120})$", re.MULTILINE)
+        
         for page_num in range(min(5, doc.page_count)):
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
-                topics.append({"topic_number": match[0], "topic_name": match[1].strip()})
+                topic_number = match[0]
+                topic_name = match[1].strip()
+                # Filter out lines that are likely not real topics
+                if topic_name.endswith('.') or topic_name.lower() == "notes":
+                    continue
+                topics.append({"topic_number": topic_number, "topic_name": topic_name})
         
         seen_topics = set()
         unique_topics = []
@@ -130,7 +139,6 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                # Iterate through our reliable mapping
                 for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
                     for class_level, chapter_files in classes.items():
                         if not chapter_files: continue
@@ -145,8 +153,6 @@ def main():
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
-                        # --- THIS IS THE FIX ---
-                        # We use enumerate to get the correct chapter number from the list's order.
                         for chapter_number, filename in enumerate(chapter_files, 1):
                             chapter_name = os.path.splitext(filename)[0].strip()
                             
