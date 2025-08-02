@@ -5,6 +5,7 @@ import json
 from dotenv import load_dotenv
 from together import Together
 import time
+import re
 
 # --- Load Environment Variables ---
 script_dir = os.path.dirname(__file__)
@@ -30,14 +31,21 @@ def get_db_connection():
         print(f"    - ERROR: Could not connect to database: {e}")
         return None
 
+def preprocess_text(text):
+    """Cleans the raw text extracted from the PDF to make it easier for the LLM to parse."""
+    # Replace multiple newlines with a single one
+    text = re.sub(r'\n\s*\n', '\n', text)
+    # Join lines that are likely part of the same sentence
+    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text)
+    return text
+
 def get_structured_topics_from_ai(chapter_text, chapter_name):
-    """Uses an LLM with a highly specific, strict prompt to generate a structured list of numbered topics."""
-    max_chars = 25000 
+    """Uses an LLM with a strict prompt on pre-processed text to generate a structured list of numbered topics."""
+    max_chars = 30000 
     if len(chapter_text) > max_chars:
         chapter_text = chapter_text[:max_chars]
 
     try:
-        # This is the new, much stricter prompt.
         system_message = (
             "You are a meticulous data extraction expert specializing in the NCERT curriculum. Your task is to read the provided textbook chapter and extract a structured list of all its official, numbered topics and sub-topics."
             "You MUST ONLY extract headings that are preceded by a number (e.g., '7.1', '7.1.1'). Ignore all other text, summaries, exercises, or unnumbered headings."
@@ -58,7 +66,7 @@ def get_structured_topics_from_ai(chapter_text, chapter_name):
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
             max_tokens=3000,
-            temperature=0.0, # Zero temperature for maximum determinism
+            temperature=0.0,
             response_format={"type": "json_object"},
         )
         
@@ -94,7 +102,11 @@ def main():
             print("    - Warning: Chapter has no text. Skipping.")
             continue
 
-        structured_data = get_structured_topics_from_ai(full_text, chapter_name)
+        # --- THIS IS THE NEW STEP ---
+        print("    - Pre-processing text for AI...")
+        cleaned_text = preprocess_text(full_text)
+        
+        structured_data = get_structured_topics_from_ai(cleaned_text, chapter_name)
 
         if structured_data and 'topics' in structured_data:
             update_conn = get_db_connection()
@@ -108,9 +120,7 @@ def main():
                         
                         numbered_topics = structured_data.get('topics', [])
                         for topic in numbered_topics:
-                            # Final check to ensure we only insert topics with numbers
                             if topic.get('topic_number'):
-                                # All topics from this script are considered primary
                                 topics_to_insert.append((chapter_id, topic.get('topic_number'), topic.get('topic_name', ''), True))
 
                         if topics_to_insert:
