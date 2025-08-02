@@ -23,113 +23,56 @@ TXT_CACHE_FOLDER = "txt_outputs"
 
 # =================================================================
 # FINALIZED CHAPTER ORDER MAPPING (Updated to match your exact filenames)
+# The order of files in these lists will determine the chapter number.
 # =================================================================
 CHAPTER_ORDER_MAPPING = {
     "Chemistry": {
         11: [
-            "Some Basic Concepts Of Chemistry.pdf",
-            "Structure Of Atom.pdf",
-            "Classification Of Elements And Periodicity.pdf",
-            "Chemical Bonding And Molecular Structure.pdf",
-            "Thermodynamics.pdf",
-            "Equilibrium.pdf",
-            "Redox Reactions.pdf",
-            "Organic Chemistry Basics.pdf",
-            "Hydrocarbons.pdf"
+            "Some Basic Concepts Of Chemistry.pdf", "Structure Of Atom.pdf",
+            "Classification Of Elements And Periodicity.pdf", "Chemical Bonding And Molecular Structure.pdf",
+            "Thermodynamics.pdf", "Equilibrium.pdf", "Redox Reactions.pdf",
+            "Organic Chemistry Basics.pdf", "Hydrocarbons.pdf"
         ],
         12: [
-            "Solutions.pdf",
-            "Electrochemistry.pdf",
-            "Chemical Kinetics.pdf",
-            "D And F Block.pdf",
-            "Coordination Compounds.pdf",
-            "Haloalkanes And Haloarenes.pdf",
-            "Alcohol Phenols Ethers.pdf",
-            "Aldehydes, Ketones And Carboxylic Acid.pdf",
-            "Amines.pdf",
-            "Biomolecules.pdf"
+            "Solutions.pdf", "Electrochemistry.pdf", "Chemical Kinetics.pdf", "D And F Block.pdf",
+            "Coordination Compounds.pdf", "Haloalkanes And Haloarenes.pdf", "Alcohol Phenols Ethers.pdf",
+            "Aldehydes, Ketones And Carboxylic Acid.pdf", "Amines.pdf", "Biomolecules.pdf"
         ]
     },
     "Maths": {
         11: [
-            "Sets.pdf",
-            "Relations And Functions.pdf",
-            "Trigonometric Functions.pdf",
-            "Complex Numbers And Quadratic Equations.pdf",
-            "Linear Inequalities.pdf",
-            "Permutations And Combinations.pdf",
-            "Binomial Theorem.pdf",
-            "Sequences And Series.pdf",
-            "Straight Lines.pdf",
-            "Conic Sections.pdf",
-            "3D Geometry.pdf", # Note: This is "Introduction to 3D Geometry"
-            "Limits And Derivatives.pdf",
-            "Statistics.pdf",
-            "Probability.pdf"
+            "Sets.pdf", "Relations And Functions.pdf", "Trigonometric Functions.pdf",
+            "Complex Numbers And Quadratic Equations.pdf", "Linear Inequalities.pdf",
+            "Permutations And Combinations.pdf", "Binomial Theorem.pdf", "Sequences And Series.pdf",
+            "Straight Lines.pdf", "Conic Sections.pdf", "3D Geometry.pdf",
+            "Limits And Derivatives.pdf", "Statistics.pdf", "Probability.pdf"
         ],
         12: [
-            "Relations And Functions.pdf",
-            "Inverse Trigonometric Functions.pdf",
-            "Matrices.pdf",
-            "Determinants.pdf",
-            "Contunuity And Differentiability.pdf",
-            "Application Of Derivatives.pdf",
-            "Integrals.pdf",
-            "Application Of Integrals.pdf",
-            "Differential Equations.pdf",
-            "Vector Algebra.pdf",
-            "3D Geometry.pdf",
-            "Linear Programming.pdf",
-            "Probability.pdf"
+            "Relations And Functions.pdf", "Inverse Trigonometric Functions.pdf", "Matrices.pdf",
+            "Determinants.pdf", "Contunuity And Differentiability.pdf",
+            "Application Of Derivatives.pdf", "Integrals.pdf", "Application Of Integrals.pdf",
+            "Differential Equations.pdf", "Vector Algebra.pdf", "3D Geometry.pdf",
+            "Linear Programming.pdf", "Probability.pdf"
         ]
     },
     "Physics": {
         11: [
-            "Units And Measurements.pdf",
-            "Motion In A Straight Line.pdf",
-            "Motion In A Plane.pdf",
-            "Laws Of Motion.pdf",
-            "Work Energy Power.pdf",
-            "System Of Particles And Rotational Motion.pdf",
-            "Gravitation.pdf",
-            "Mechanical Properties Of Solids.pdf",
-            "Mechanical Properties Of Fluids.pdf",
-            "Thermal Properties Of Matter.pdf",
-            "Thermodynamics.pdf",
-            "Kinetic Theory.pdf",
-            "Oscillations.pdf",
-            "Waves.pdf"
+            "Units And Measurements.pdf", "Motion In A Straight Line.pdf", "Motion In A Plane.pdf",
+            "Laws Of Motion.pdf", "Work Energy Power.pdf", "System Of Particles And Rotational Motion.pdf",
+            "Gravitation.pdf", "Mechanical Properties Of Solids.pdf", "Mechanical Properties Of Fluids.pdf",
+            "Thermal Properties Of Matter.pdf", "Thermodynamics.pdf", "Kinetic Theory.pdf",
+            "Oscillations.pdf", "Waves.pdf"
         ],
         12: [
-            "Electric Charges And Fields.pdf",
-            "Electrostatic Potential And Capacitance.pdf",
-            "Current Electricity.pdf",
-            "Moving Charges And Magnetism.pdf",
-            "Magnetism And Matter.pdf",
-            "Electromagnetic Induction.pdf",
-            "Alternating Current.pdf",
-            "Electromagnetic Waves.pdf",
-            "Ray Optics.pdf",
-            "Wave Optics.pdf",
-            "Dual Nature Of Radiation And Matter.pdf",
-            "Atoms.pdf",
-            "Nuclei.pdf",
-            "SemiConductor Electronics.pdf"
+            "Electric Charges And Fields.pdf", "Electrostatic Potential And Capacitance.pdf",
+            "Current Electricity.pdf", "Moving Charges And Magnetism.pdf", "Magnetism And Matter.pdf",
+            "Electromagnetic Induction.pdf", "Alternating Current.pdf", "Electromagnetic Waves.pdf",
+            "Ray Optics.pdf", "Wave Optics.pdf", "Dual Nature Of Radiation And Matter.pdf",
+            "Atoms.pdf", "Nuclei.pdf", "SemiConductor Electronics.pdf"
         ]
     }
 }
 
-def extract_chapter_number_from_pdf(doc):
-    """Scans the first page of a PDF for a 'Unit X' or 'Chapter X' pattern."""
-    try:
-        first_page_text = doc[0].get_text("text")
-        # Look for patterns like "Unit 7" or "CHAPTER 12"
-        match = re.search(r"(?:Unit|CHAPTER)\s*(\d+)", first_page_text, re.IGNORECASE)
-        if match:
-            return int(match.group(1))
-    except Exception as e:
-        print(f"    - Warning: Error while extracting chapter number: {e}")
-    return None
 
 def extract_topics_from_pdf(doc):
     """A stricter topic extraction function that only captures numbered headings."""
@@ -187,7 +130,7 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                # Iterate through our reliable mapping instead of os.listdir
+                # Iterate through our reliable mapping
                 for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
                     for class_level, chapter_files in classes.items():
                         if not chapter_files: continue
@@ -202,15 +145,17 @@ def main():
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
-                        for chapter_counter, filename in enumerate(chapter_files, 1):
+                        # --- THIS IS THE FIX ---
+                        # We use enumerate to get the correct chapter number from the list's order.
+                        for chapter_number, filename in enumerate(chapter_files, 1):
                             chapter_name = os.path.splitext(filename)[0].strip()
                             
                             cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
                             if cur.fetchone():
-                                print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
+                                print(f"  -> Chapter {chapter_number}: '{chapter_name}' already exists. Skipping.")
                                 continue
 
-                            print(f"  -> Processing Chapter: {chapter_name}")
+                            print(f"  -> Processing Chapter {chapter_number}: {chapter_name}")
 
                             pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
                             if not os.path.exists(pdf_path):
@@ -221,15 +166,6 @@ def main():
                             
                             try:
                                 doc = fitz.open(pdf_path)
-                                
-                                # --- THIS IS THE NEW LOGIC ---
-                                chapter_number = extract_chapter_number_from_pdf(doc)
-                                if chapter_number is None:
-                                    print(f"    - Warning: Could not find real chapter number. Using fallback counter: {chapter_counter}")
-                                    chapter_number = chapter_counter
-                                else:
-                                    print(f"    - Success: Found real chapter number: {chapter_number}")
-
                                 full_chapter_text = get_full_text(doc, cache_path)
                                 topics_data = extract_topics_from_pdf(doc)
                                 doc.close()
