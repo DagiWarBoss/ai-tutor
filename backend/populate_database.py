@@ -22,38 +22,99 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TXT_CACHE_FOLDER = "txt_outputs"
 
 # =================================================================
-# NEW: CHAPTER ORDER MAPPING
-# This is the "source of truth" for the correct chapter order.
-# Add the filenames for other subjects and classes here.
+# FINALIZED CHAPTER ORDER MAPPING (Updated to match your exact filenames)
 # =================================================================
 CHAPTER_ORDER_MAPPING = {
-    "Maths": {
+    "Chemistry": {
         11: [
-            "Sets.pdf", "Relations And Functions.pdf", "Trigonometric Functions.pdf",
-            "Principle of Mathematical Induction.pdf", "Complex Numbers And Quadratic Equations.pdf",
-            "Linear Inequalities.pdf", "Permutations And Combinations.pdf", "Binomial Theorem.pdf",
-            "Sequences And Series.pdf", "Straight Lines.pdf", "Conic Sections.pdf",
-            "Introduction to Three Dimensional Geometry.pdf", "Limitis And Derivatives.pdf",
-            "Statistics.pdf", "Probability.pdf"
+            "Some Basic Concepts Of Chemistry.pdf",
+            "Structure Of Atom.pdf",
+            "Classification Of Elements And Periodicity.pdf",
+            "Chemical Bonding And Molecular Structure.pdf",
+            "Thermodynamics.pdf",
+            "Equilibrium.pdf",
+            "Redox Reactions.pdf",
+            "Organic Chemistry Basics.pdf",
+            "Hydrocarbons.pdf"
         ],
         12: [
-            # Add Class 12 Maths PDF filenames here in the correct order
+            "Solutions.pdf",
+            "Electrochemistry.pdf",
+            "Chemical Kinetics.pdf",
+            "D And F Block.pdf",
+            "Coordination Compounds.pdf",
+            "Haloalkanes And Haloarenes.pdf",
+            "Alcohol Phenols Ethers.pdf",
+            "Aldehydes, Ketones And Carboxylic Acid.pdf",
+            "Amines.pdf",
+            "Biomolecules.pdf"
+        ]
+    },
+    "Maths": {
+        11: [
+            "Sets.pdf",
+            "Relations And Functions.pdf",
+            "Trigonometric Functions.pdf",
+            "Complex Numbers And Quadratic Equations.pdf",
+            "Linear Inequalities.pdf",
+            "Permutations And Combinations.pdf",
+            "Binomial Theorem.pdf",
+            "Sequences And Series.pdf",
+            "Straight Lines.pdf",
+            "Conic Sections.pdf",
+            "3D Geometry.pdf", # Note: This is "Introduction to 3D Geometry"
+            "Limits And Derivatives.pdf",
+            "Statistics.pdf",
+            "Probability.pdf"
+        ],
+        12: [
+            "Relations And Functions.pdf",
+            "Inverse Trigonometric Functions.pdf",
+            "Matrices.pdf",
+            "Determinants.pdf",
+            "Contunuity And Differentiability.pdf",
+            "Application Of Derivatives.pdf",
+            "Integrals.pdf",
+            "Application Of Integrals.pdf",
+            "Differential Equations.pdf",
+            "Vector Algebra.pdf",
+            "3D Geometry.pdf",
+            "Linear Programming.pdf",
+            "Probability.pdf"
         ]
     },
     "Physics": {
         11: [
-            # Add Class 11 Physics PDF filenames here in the correct order
+            "Units And Measurements.pdf",
+            "Motion In A Straight Line.pdf",
+            "Motion In A Plane.pdf",
+            "Laws Of Motion.pdf",
+            "Work Energy Power.pdf",
+            "System Of Particles And Rotational Motion.pdf",
+            "Gravitation.pdf",
+            "Mechanical Properties Of Solids.pdf",
+            "Mechanical Properties Of Fluids.pdf",
+            "Thermal Properties Of Matter.pdf",
+            "Thermodynamics.pdf",
+            "Kinetic Theory.pdf",
+            "Oscillations.pdf",
+            "Waves.pdf"
         ],
         12: [
-            # Add Class 12 Physics PDF filenames here in the correct order
-        ]
-    },
-    "Chemistry": {
-        11: [
-            # Add Class 11 Chemistry PDF filenames here in the correct order
-        ],
-        12: [
-            # Add Class 12 Chemistry PDF filenames here in the correct order
+            "Electric Charges And Fields.pdf",
+            "Electrostatic Potential And Capacitance.pdf",
+            "Current Electricity.pdf",
+            "Moving Charges And Magnetism.pdf",
+            "Magnetism And Matter.pdf",
+            "Electromagnetic Induction.pdf",
+            "Alternating Current.pdf",
+            "Electromagnetic Waves.pdf",
+            "Ray Optics.pdf",
+            "Wave Optics.pdf",
+            "Dual Nature Of Radiation And Matter.pdf",
+            "Atoms.pdf",
+            "Nuclei.pdf",
+            "SemiConductor Electronics.pdf"
         ]
     }
 }
@@ -122,7 +183,6 @@ def main():
 
                         print(f"\n===== Processing Subject: '{subject_name}' (Class {class_level}) =====")
                         
-                        # Get the subject_id for the current subject and class
                         upsert_subject_query = """
                             WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id)
                             SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;
@@ -131,7 +191,6 @@ def main():
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
-                        # Iterate through the correctly ordered list of chapter files
                         for chapter_number, filename in enumerate(chapter_files, 1):
                             chapter_name = os.path.splitext(filename)[0].strip()
                             
@@ -144,7 +203,7 @@ def main():
 
                             pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
                             if not os.path.exists(pdf_path):
-                                print(f"    - ❌ ERROR: File not found at {pdf_path}. Skipping.")
+                                print(f"    - ❌ ERROR: File not found at {pdf_path}. Please check filename. Skipping.")
                                 continue
 
                             cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
