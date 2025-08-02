@@ -24,7 +24,6 @@ llm_client = Together(api_key=TOGETHER_API_KEY)
 
 def get_topics_from_ai(chapter_text, chapter_name):
     """Uses an LLM to generate a structured list of topics from chapter text."""
-    # Truncate text to stay within model limits
     max_chars = 20000 
     if len(chapter_text) > max_chars:
         chapter_text = chapter_text[:max_chars]
@@ -52,7 +51,7 @@ def get_topics_from_ai(chapter_text, chapter_name):
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
             max_tokens=2048,
-            temperature=0.1, # Low temperature for factual, deterministic output
+            temperature=0.1,
             response_format={"type": "json_object"},
         )
         
@@ -73,14 +72,16 @@ def main():
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
 
+    conn_string = f"dbname='{DB_NAME}' user='{DB_USER}' password='{DB_PASSWORD}' host='{DB_HOST}' port='{DB_PORT}'"
+    
     try:
-        with psycopg2.connect(
-            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
-        ) as conn:
+        with psycopg2.connect(conn_string) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
+                print("Fetching all chapters from the database...")
                 cur.execute("SELECT id, name, full_text FROM chapters")
                 all_chapters = cur.fetchall()
+                print(f"Found {len(all_chapters)} chapters to process.")
 
                 for i, (chapter_id, chapter_name, full_text) in enumerate(all_chapters):
                     print(f"\nProcessing chapter {i+1}/{len(all_chapters)}: '{chapter_name}' (ID: {chapter_id})")
@@ -89,31 +90,28 @@ def main():
                         print("    - Warning: Chapter has no text. Skipping.")
                         continue
 
-                    # Get the structured topics from the AI
                     ai_generated_topics = get_topics_from_ai(full_text, chapter_name)
 
                     if ai_generated_topics:
-                        # First, delete all old, incorrect topics for this chapter
-                        cur.execute("DELETE FROM topics WHERE chapter_id = %s", (chapter_id,))
-                        print(f"    - Deleted {cur.rowcount} old topics.")
+                        # This part now happens inside the main loop to ensure the connection is always active
+                        with conn.cursor() as update_cur:
+                            update_cur.execute("DELETE FROM topics WHERE chapter_id = %s", (chapter_id,))
+                            print(f"    - Deleted {update_cur.rowcount} old topics.")
 
-                        # Now, insert the new, clean topics
-                        topic_values = [
-                            (chapter_id, topic.get('topic_number', ''), topic.get('topic_name', ''))
-                            for topic in ai_generated_topics
-                        ]
-                        
-                        psycopg2.extras.execute_values(
-                            cur,
-                            "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s",
-                            topic_values
-                        )
-                        print(f"    - Success: Inserted {len(topic_values)} new AI-generated topics.")
+                            topic_values = [
+                                (chapter_id, topic.get('topic_number', ''), topic.get('topic_name', ''))
+                                for topic in ai_generated_topics
+                            ]
+                            
+                            psycopg2.extras.execute_values(
+                                update_cur,
+                                "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s",
+                                topic_values
+                            )
+                            print(f"    - Success: Inserted {len(topic_values)} new AI-generated topics.")
                     
-                    # Add a small delay to avoid hitting API rate limits
-                    time.sleep(2) 
+                    time.sleep(2) # To avoid hitting API rate limits
 
-            # The 'with' block commits the transaction here
             print("\n✅ All chapters have been processed and topics have been refined.")
 
     except psycopg2.Error as e:
