@@ -21,47 +21,62 @@ DB_PORT = os.getenv("DB_PORT")
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TXT_CACHE_FOLDER = "txt_outputs"
 
-def extract_chapter_number_from_pdf(doc):
-    """Scans the first page of a PDF for a 'Unit X' or 'Chapter X' pattern."""
-    try:
-        first_page_text = doc[0].get_text("text", flags=fitz.TEXT_INHIBIT_SPACES)
-        # Look for patterns like "Unit7" or "CHAPTER12" (spaces might be inconsistent)
-        match = re.search(r"(?:Unit|CHAPTER)\s*(\d+)", first_page_text, re.IGNORECASE)
-        if match:
-            return int(match.group(1))
-    except Exception as e:
-        print(f"    - Warning: Error while extracting chapter number: {e}")
-    return None
+# =================================================================
+# NEW: CHAPTER ORDER MAPPING
+# This is the "source of truth" for the correct chapter order.
+# Add the filenames for other subjects and classes here.
+# =================================================================
+CHAPTER_ORDER_MAPPING = {
+    "Maths": {
+        11: [
+            "Sets.pdf", "Relations And Functions.pdf", "Trigonometric Functions.pdf",
+            "Principle of Mathematical Induction.pdf", "Complex Numbers And Quadratic Equations.pdf",
+            "Linear Inequalities.pdf", "Permutations And Combinations.pdf", "Binomial Theorem.pdf",
+            "Sequences And Series.pdf", "Straight Lines.pdf", "Conic Sections.pdf",
+            "Introduction to Three Dimensional Geometry.pdf", "Limitis And Derivatives.pdf",
+            "Statistics.pdf", "Probability.pdf"
+        ],
+        12: [
+            # Add Class 12 Maths PDF filenames here in the correct order
+        ]
+    },
+    "Physics": {
+        11: [
+            # Add Class 11 Physics PDF filenames here in the correct order
+        ],
+        12: [
+            # Add Class 12 Physics PDF filenames here in the correct order
+        ]
+    },
+    "Chemistry": {
+        11: [
+            # Add Class 11 Chemistry PDF filenames here in the correct order
+        ],
+        12: [
+            # Add Class 12 Chemistry PDF filenames here in the correct order
+        ]
+    }
+}
+
 
 def extract_topics_from_pdf(doc):
-    """A much stricter topic extraction function that only captures numbered headings."""
+    """A stricter topic extraction function that only captures numbered headings."""
     try:
         topics = []
-        # Regex: Must start a line, have a number (e.g., 7.1, 7.1.1), space, and then a title.
-        # The title must be properly capitalized and not excessively long.
         topic_pattern = re.compile(r"^\s*(\d+\.\d+[\.\d+]*)\s+([A-Z][A-Za-z\s,]{3,80})$", re.MULTILINE)
-        
-        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
+        for page_num in range(min(5, doc.page_count)):
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
-                topic_number = match[0]
-                topic_name = match[1].strip()
-                topics.append({"topic_number": topic_number, "topic_name": topic_name})
-
-        if not topics:
-             print(f"    - Warning: Could not find any numbered topics by scanning text for {os.path.basename(doc.name)}.")
+                topics.append({"topic_number": match[0], "topic_name": match[1].strip()})
         
-        # Remove duplicates while preserving order
         seen_topics = set()
         unique_topics = []
         for topic in topics:
             if topic['topic_name'] not in seen_topics:
                 seen_topics.add(topic['topic_name'])
                 unique_topics.append(topic)
-        
         return unique_topics
-
     except Exception as e:
         print(f"    - Error processing TOC for {os.path.basename(doc.name)}: {e}")
         return []
@@ -71,25 +86,22 @@ def get_full_text(doc, cache_path):
     if os.path.exists(cache_path):
         with open(cache_path, 'r', encoding='utf-8', errors='ignore') as f:
             return f.read()
-    
     print(f"    - Cache miss. Extracting text from PDF...")
     try:
         full_text = ""
         for page in doc:
             full_text += page.get_text("text") + " "
-        
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
         with open(cache_path, 'w', encoding='utf-8') as f:
             f.write(full_text)
         print(f"    - Saved text to cache: '{os.path.basename(cache_path)}'")
-        
         return full_text.strip()
     except Exception as e:
         print(f"    - Error extracting full text from {os.path.basename(doc.name)}: {e}")
         return ""
 
 def main():
-    """Walks through the folder structure and populates the database."""
+    """Walks through the folder structure using the mapping and populates the database."""
     if not all([DB_HOST, DB_PASSWORD, DB_USER, DB_PORT, DB_NAME]):
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
@@ -103,70 +115,58 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                for subject_name in sorted(os.listdir(pdf_root_full_path)):
-                    subject_path = os.path.join(pdf_root_full_path, subject_name)
-                    if os.path.isdir(subject_path):
-                        print(f"\n===== Processing Subject: '{subject_name}' =====")
+                # Iterate through our reliable mapping instead of os.listdir
+                for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
+                    for class_level, chapter_files in classes.items():
+                        if not chapter_files: continue
+
+                        print(f"\n===== Processing Subject: '{subject_name}' (Class {class_level}) =====")
                         
-                        for class_folder_name in sorted(os.listdir(subject_path)):
-                            class_path = os.path.join(subject_path, class_folder_name)
-                            if os.path.isdir(class_path) and "class" in class_folder_name.lower():
-                                try:
-                                    class_level = int(re.search(r'\d+', class_folder_name).group())
-                                except (AttributeError, ValueError):
-                                    continue
+                        # Get the subject_id for the current subject and class
+                        upsert_subject_query = """
+                            WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id)
+                            SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;
+                        """
+                        cur.execute(upsert_subject_query, (subject_name, class_level, subject_name, class_level))
+                        subject_id = cur.fetchone()[0]
+                        print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
-                                print(f"\n  Processing Class {class_level}")
+                        # Iterate through the correctly ordered list of chapter files
+                        for chapter_number, filename in enumerate(chapter_files, 1):
+                            chapter_name = os.path.splitext(filename)[0].strip()
+                            
+                            cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
+                            if cur.fetchone():
+                                print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
+                                continue
 
-                                upsert_subject_query = """
-                                    WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id)
-                                    SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;
-                                """
-                                cur.execute(upsert_subject_query, (subject_name, class_level, subject_name, class_level))
-                                subject_id = cur.fetchone()[0]
-                                print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
+                            print(f"  -> Processing Chapter {chapter_number}: {chapter_name}")
 
-                                fallback_counter = 1
-                                for filename in sorted(os.listdir(class_path)):
-                                    if filename.lower().endswith(".pdf"):
-                                        chapter_name = os.path.splitext(filename)[0].strip()
-                                        
-                                        cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
-                                        if cur.fetchone():
-                                            print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
-                                            continue
+                            pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
+                            if not os.path.exists(pdf_path):
+                                print(f"    - ❌ ERROR: File not found at {pdf_path}. Skipping.")
+                                continue
 
-                                        print(f"  -> Processing NEW Chapter: {chapter_name}")
+                            cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
+                            
+                            try:
+                                doc = fitz.open(pdf_path)
+                                full_chapter_text = get_full_text(doc, cache_path)
+                                topics_data = extract_topics_from_pdf(doc)
+                                doc.close()
 
-                                        pdf_path = os.path.join(class_path, filename)
-                                        cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
-                                        
-                                        try:
-                                            doc = fitz.open(pdf_path)
-                                            chapter_number = extract_chapter_number_from_pdf(doc)
-                                            if chapter_number is None:
-                                                print(f"    - Warning: Could not find real chapter number. Using fallback: {fallback_counter}")
-                                                chapter_number = fallback_counter
-                                            else:
-                                                print(f"    - Success: Found real chapter number: {chapter_number}")
+                                cur.execute(
+                                    "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                                    (subject_id, chapter_number, chapter_name, full_chapter_text),
+                                )
+                                chapter_id = cur.fetchone()[0]
 
-                                            full_chapter_text = get_full_text(doc, cache_path)
-                                            topics_data = extract_topics_from_pdf(doc)
-                                            doc.close()
-
-                                            cur.execute(
-                                                "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                                (subject_id, chapter_number, chapter_name, full_chapter_text),
-                                            )
-                                            chapter_id = cur.fetchone()[0]
-                                            fallback_counter += 1
-
-                                            if topics_data:
-                                                print(f"    - Success: Found {len(topics_data)} clean topics. Inserting...")
-                                                topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                                psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
-                                        except Exception as e:
-                                            print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
+                                if topics_data:
+                                    print(f"    - Found {len(topics_data)} clean topics. Inserting...")
+                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
+                                    psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                            except Exception as e:
+                                print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
                                         
             print("\n✅ All data has been successfully inserted and committed.")
 
