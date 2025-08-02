@@ -31,38 +31,34 @@ def get_db_connection():
         return None
 
 def get_structured_topics_from_ai(chapter_text, chapter_name):
-    """Uses an LLM with a highly specific, few-shot prompt to generate structured topics."""
+    """Uses an LLM with a highly specific, strict prompt to generate a structured list of numbered topics."""
     max_chars = 25000 
     if len(chapter_text) > max_chars:
         chapter_text = chapter_text[:max_chars]
 
     try:
-        # This is a much more robust, "few-shot" prompt with examples.
+        # This is the new, much stricter prompt.
         system_message = (
-            "You are a meticulous data extraction expert specializing in the NCERT curriculum. Your task is to read the provided textbook chapter and extract a structured list of all its topics and headings. You must differentiate between official, numbered topics (primary topics) and other important, unnumbered headings (secondary headings)."
-            "Your entire response MUST be a single, valid JSON object with two keys: 'primary_topics' and 'secondary_headings'."
-            "The value for each key must be an array of objects. Each object must have 'topic_number' and 'topic_name'."
-            "For 'secondary_headings', the 'topic_number' can be an empty string."
+            "You are a meticulous data extraction expert specializing in the NCERT curriculum. Your task is to read the provided textbook chapter and extract a structured list of all its official, numbered topics and sub-topics."
+            "You MUST ONLY extract headings that are preceded by a number (e.g., '7.1', '7.1.1'). Ignore all other text, summaries, exercises, or unnumbered headings."
+            "Your entire response MUST be a single, valid JSON object with a single key: 'topics'."
+            "The value for 'topics' must be an array of objects. Each object must have 'topic_number' and 'topic_name'."
             "EXAMPLE OUTPUT FORMAT:"
             "{"
-            "  \"primary_topics\": ["
+            "  \"topics\": ["
             "    { \"topic_number\": \"7.1\", \"topic_name\": \"Classification\" },"
             "    { \"topic_number\": \"7.1.1\", \"topic_name\": \"Alcohols- Mono, Di, Tri or Polyhydric alcohols\" }"
-            "  ],"
-            "  \"secondary_headings\": ["
-            "    { \"topic_number\": \"\", \"topic_name\": \"Summary\" },"
-            "    { \"topic_number\": \"\", \"topic_name\": \"Points to Ponder\" }"
             "  ]"
             "}"
         )
-        user_message_content = f"Please extract the topics and headings from the following chapter titled '{chapter_name}':\n\n--- TEXTBOOK CHAPTER START ---\n{chapter_text}\n--- TEXTBOOK CHAPTER END ---"
+        user_message_content = f"Please extract the numbered topics from the following chapter titled '{chapter_name}':\n\n--- TEXTBOOK CHAPTER START ---\n{chapter_text}\n--- TEXTBOOK CHAPTER END ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
         response = llm_client.chat.completions.create(
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
             max_tokens=3000,
-            temperature=0.05,
+            temperature=0.0, # Zero temperature for maximum determinism
             response_format={"type": "json_object"},
         )
         
@@ -98,9 +94,9 @@ def main():
             print("    - Warning: Chapter has no text. Skipping.")
             continue
 
-        structured_topics = get_structured_topics_from_ai(full_text, chapter_name)
+        structured_data = get_structured_topics_from_ai(full_text, chapter_name)
 
-        if structured_topics:
+        if structured_data and 'topics' in structured_data:
             update_conn = get_db_connection()
             if update_conn:
                 try:
@@ -110,13 +106,12 @@ def main():
 
                         topics_to_insert = []
                         
-                        primary_topics = structured_topics.get('primary_topics', [])
-                        for topic in primary_topics:
-                            topics_to_insert.append((chapter_id, topic.get('topic_number', ''), topic.get('topic_name', ''), True)) # is_primary_topic = TRUE
-
-                        secondary_headings = structured_topics.get('secondary_headings', [])
-                        for heading in secondary_headings:
-                            topics_to_insert.append((chapter_id, heading.get('topic_number', ''), heading.get('topic_name', ''), False)) # is_primary_topic = FALSE
+                        numbered_topics = structured_data.get('topics', [])
+                        for topic in numbered_topics:
+                            # Final check to ensure we only insert topics with numbers
+                            if topic.get('topic_number'):
+                                # All topics from this script are considered primary
+                                topics_to_insert.append((chapter_id, topic.get('topic_number'), topic.get('topic_name', ''), True))
 
                         if topics_to_insert:
                             psycopg2.extras.execute_values(
@@ -124,7 +119,9 @@ def main():
                                 "INSERT INTO topics (chapter_id, topic_number, name, is_primary_topic) VALUES %s",
                                 topics_to_insert
                             )
-                            print(f"    - Success: Inserted {len(topics_to_insert)} new AI-generated topics/headings.")
+                            print(f"    - Success: Inserted {len(topics_to_insert)} new AI-generated primary topics.")
+                        else:
+                            print("    - Warning: AI did not return any numbered topics for this chapter.")
                     update_conn.commit()
                 except psycopg2.Error as e:
                     print(f"    - ERROR: Database update failed for this chapter: {e}")
