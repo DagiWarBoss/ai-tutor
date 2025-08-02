@@ -119,6 +119,17 @@ CHAPTER_ORDER_MAPPING = {
     }
 }
 
+def extract_chapter_number_from_pdf(doc):
+    """Scans the first page of a PDF for a 'Unit X' or 'Chapter X' pattern."""
+    try:
+        first_page_text = doc[0].get_text("text")
+        # Look for patterns like "Unit 7" or "CHAPTER 12"
+        match = re.search(r"(?:Unit|CHAPTER)\s*(\d+)", first_page_text, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    except Exception as e:
+        print(f"    - Warning: Error while extracting chapter number: {e}")
+    return None
 
 def extract_topics_from_pdf(doc):
     """A stricter topic extraction function that only captures numbered headings."""
@@ -191,7 +202,7 @@ def main():
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
-                        for chapter_number, filename in enumerate(chapter_files, 1):
+                        for chapter_counter, filename in enumerate(chapter_files, 1):
                             chapter_name = os.path.splitext(filename)[0].strip()
                             
                             cur.execute("SELECT id FROM chapters WHERE subject_id = %s AND name = %s", (subject_id, chapter_name))
@@ -199,7 +210,7 @@ def main():
                                 print(f"  -> Chapter '{chapter_name}' already exists. Skipping.")
                                 continue
 
-                            print(f"  -> Processing Chapter {chapter_number}: {chapter_name}")
+                            print(f"  -> Processing Chapter: {chapter_name}")
 
                             pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
                             if not os.path.exists(pdf_path):
@@ -210,6 +221,15 @@ def main():
                             
                             try:
                                 doc = fitz.open(pdf_path)
+                                
+                                # --- THIS IS THE NEW LOGIC ---
+                                chapter_number = extract_chapter_number_from_pdf(doc)
+                                if chapter_number is None:
+                                    print(f"    - Warning: Could not find real chapter number. Using fallback counter: {chapter_counter}")
+                                    chapter_number = chapter_counter
+                                else:
+                                    print(f"    - Success: Found real chapter number: {chapter_number}")
+
                                 full_chapter_text = get_full_text(doc, cache_path)
                                 topics_data = extract_topics_from_pdf(doc)
                                 doc.close()
