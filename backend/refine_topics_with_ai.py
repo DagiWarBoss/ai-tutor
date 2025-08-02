@@ -32,11 +32,25 @@ def get_db_connection():
         return None
 
 def preprocess_text(text):
-    """Cleans the raw text extracted from the PDF to make it easier for the LLM to parse."""
-    # Replace multiple newlines with a single one
-    text = re.sub(r'\n\s*\n', '\n', text)
-    # Join lines that are likely part of the same sentence
-    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text)
+    """A more advanced function to clean raw PDF text specifically for NCERT books."""
+    lines = text.split('\n')
+    cleaned_lines = []
+    for line in lines:
+        # Filter out common headers, footers, and page numbers
+        if re.search(r'Reprint \d{4}-\d{2}', line, re.IGNORECASE):
+            continue
+        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line, re.IGNORECASE):
+            continue
+        if re.search(r'Alcohols, Phenols and Ethers', line, re.IGNORECASE): # Example chapter title header
+            continue
+        if re.fullmatch(r'\s*\d+\s*', line): # Remove lines that are only numbers
+            continue
+        cleaned_lines.append(line)
+    
+    # Re-join the text and then perform sentence joining
+    text = '\n'.join(cleaned_lines)
+    text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple blank lines
+    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text) # Join lines that don't end in a period
     return text
 
 def get_structured_topics_from_ai(chapter_text, chapter_name):
