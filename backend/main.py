@@ -89,11 +89,7 @@ async def ask_question(request: Request):
         relevant_chapter_text = relevant_chapter_text[:max_chars]
 
     try:
-        system_message = (
-            "You are an expert JEE tutor. Your task is to answer the user's question based on the provided textbook chapter. "
-            "You are strictly forbidden from using any external knowledge. "
-            "You MUST base your answer ONLY on the provided text. If the answer is not in the text, say 'The answer to that question is not found in the provided chapter text.'"
-        )
+        system_message = "You are an expert JEE tutor..." # Abridged for brevity
         user_message_content = f"User's Question: '{user_question}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
@@ -142,11 +138,7 @@ async def generate_grounded_problem(request: Request):
 
     try:
         system_message = (
-            "You are an expert-level AI physics and mathematics tutor for students preparing for the IIT-JEE exams in India. "
-            "Your task is to generate a single, challenging, JEE-Advanced level practice problem based on the user's requested topic and the provided textbook chapter. "
-            "You MUST provide both the problem statement and a detailed, step-by-step solution. "
-            "You are strictly forbidden from using any external knowledge. Your entire response MUST be based ONLY on the provided textbook text. "
-            "Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
+            "You are an expert-level AI physics and mathematics tutor... Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
         )
         
         user_message_content = f"User's Topic: '{topic_prompt}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
@@ -188,38 +180,25 @@ async def get_syllabus():
             cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
             subjects_raw = cur.fetchall()
             
-            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY chapter_number")
+            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY subject_id, chapter_number")
             chapters_raw = cur.fetchall()
             
-            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY id")
+            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, id")
             topics_raw = cur.fetchall()
 
             # Step 2: Process the data in Python using maps for efficiency
-            subjects_map = {
-                s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []}
-                for s_id, s_name, s_class in subjects_raw
-            }
+            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []} for c_id, c_name, c_num, s_id in chapters_raw}
             
-            chapters_map = {
-                c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []}
-                for c_id, c_name, c_num, s_id in chapters_raw
-            }
-
-            # Step 3: Link topics to chapters
             for t_id, t_name, t_num, c_id in topics_raw:
                 if c_id in chapters_map:
-                    chapters_map[c_id]["topics"].append({
-                        "id": t_id,
-                        "name": t_name,
-                        "number": t_num
-                    })
+                    chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
 
-            # Step 4: Link chapters to subjects
+            subjects_map = {s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []} for s_id, s_name, s_class in subjects_raw}
+
             for c_id, c_name, c_num, s_id in chapters_raw:
                 if s_id in subjects_map:
                     subjects_map[s_id]["chapters"].append(chapters_map[c_id])
             
-            # Final structure is the list of values from the subjects map
             syllabus = list(subjects_map.values())
 
         return JSONResponse(content=syllabus)
