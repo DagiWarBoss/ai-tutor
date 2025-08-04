@@ -141,6 +141,7 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
+                # Iterate through our reliable mapping
                 for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
                     for class_level, chapter_files in classes.items():
                         if not chapter_files: continue
