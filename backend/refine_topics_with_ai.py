@@ -31,68 +31,34 @@ def get_db_connection():
         print(f"    - ERROR: Could not connect to database: {e}")
         return None
 
-def preprocess_text(text):
-    """A more advanced function to clean raw PDF text specifically for NCERT books."""
-    lines = text.split('\n')
-    cleaned_lines = []
-    for line in lines:
-        # Filter out common headers, footers, and page numbers
-        if re.search(r'Reprint \d{4}-\d{2}', line, re.IGNORECASE):
-            continue
-        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line, re.IGNORECASE):
-            continue
-        if re.search(r'Alcohols, Phenols and Ethers', line, re.IGNORECASE): # Example chapter title header
-            continue
-        if re.fullmatch(r'\s*\d+\s*', line): # Remove lines that are only numbers
-            continue
-        cleaned_lines.append(line)
-    
-    # Re-join the text and then perform sentence joining
-    text = '\n'.join(cleaned_lines)
-    text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple blank lines
-    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text) # Join lines that don't end in a period
-    return text
-
-def get_structured_topics_from_ai(chapter_text, chapter_name):
-    """Uses an LLM with a strict prompt on pre-processed text to generate a structured list of numbered topics."""
-    max_chars = 30000 
-    if len(chapter_text) > max_chars:
-        chapter_text = chapter_text[:max_chars]
-
+def get_topics_from_chunk(text_chunk):
+    """Uses an LLM on a small chunk of text to find topics."""
     try:
         system_message = (
-            "You are a meticulous data extraction expert specializing in the NCERT curriculum. Your task is to read the provided textbook chapter and extract a structured list of all its official, numbered topics and sub-topics."
-            "You MUST ONLY extract headings that are preceded by a number (e.g., '7.1', '7.1.1'). Ignore all other text, summaries, exercises, or unnumbered headings."
-            "Your entire response MUST be a single, valid JSON object with a single key: 'topics'."
-            "The value for 'topics' must be an array of objects. Each object must have 'topic_number' and 'topic_name'."
-            "EXAMPLE OUTPUT FORMAT:"
-            "{"
-            "  \"topics\": ["
-            "    { \"topic_number\": \"7.1\", \"topic_name\": \"Classification\" },"
-            "    { \"topic_number\": \"7.1.1\", \"topic_name\": \"Alcohols- Mono, Di, Tri or Polyhydric alcohols\" }"
-            "  ]"
-            "}"
+            "You are a data extraction expert. Your task is to read the provided text chunk and extract a list of all official, numbered topics and sub-topics. "
+            "You MUST ONLY extract headings that are preceded by a number (e.g., '7.1', '7.1.1'). Ignore all other text. "
+            "Your entire response MUST be a single, valid JSON object with a single key 'topics', which is an array of objects. "
+            "Each object must have 'topic_number' and 'topic_name'. If no topics are found, return an empty array."
         )
-        user_message_content = f"Please extract the numbered topics from the following chapter titled '{chapter_name}':\n\n--- TEXTBOOK CHAPTER START ---\n{chapter_text}\n--- TEXTBOOK CHAPTER END ---"
+        user_message_content = f"Please extract the numbered topics from the following text chunk:\n\n--- TEXT CHUNK START ---\n{text_chunk}\n--- TEXT CHUNK END ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
         response = llm_client.chat.completions.create(
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
             messages=messages,
-            max_tokens=3000,
+            max_tokens=1024,
             temperature=0.0,
             response_format={"type": "json_object"},
         )
         
         response_content = response.choices[0].message.content.strip()
-        return json.loads(response_content)
-
+        return json.loads(response_content).get('topics', [])
     except Exception as e:
-        print(f"    - ERROR: An unexpected error occurred with the AI model: {e}")
-        return None
+        print(f"    - ERROR: AI call failed for chunk: {e}")
+        return []
 
 def main():
-    """Fetches chapters, uses AI to generate structured topics, and updates the database."""
+    """Fetches chapters, processes them in chunks, and updates the database."""
     all_chapters = []
     conn = get_db_connection()
     if conn:
@@ -116,26 +82,41 @@ def main():
             print("    - Warning: Chapter has no text. Skipping.")
             continue
 
-        # --- THIS IS THE NEW STEP ---
-        print("    - Pre-processing text for AI...")
-        cleaned_text = preprocess_text(full_text)
+        # --- CHUNKING LOGIC ---
+        chunk_size = 4000  # Characters per chunk
+        overlap = 500      # Characters of overlap to avoid cutting off topics
+        text_chunks = [full_text[i:i+chunk_size] for i in range(0, len(full_text), chunk_size - overlap)]
         
-        structured_data = get_structured_topics_from_ai(cleaned_text, chapter_name)
+        print(f"    - Split chapter into {len(text_chunks)} chunks.")
+        all_found_topics = []
 
-        if structured_data and 'topics' in structured_data:
+        for j, chunk in enumerate(text_chunks):
+            print(f"      - Processing chunk {j+1}/{len(text_chunks)}...")
+            topics_in_chunk = get_topics_from_chunk(chunk)
+            if topics_in_chunk:
+                all_found_topics.extend(topics_in_chunk)
+            time.sleep(2) # Rate limit
+
+        # --- DEDUPLICATION AND SAVING ---
+        if all_found_topics:
+            seen_topics = set()
+            unique_topics = []
+            for topic in all_found_topics:
+                topic_tuple = (topic.get('topic_number'), topic.get('topic_name'))
+                if topic_tuple not in seen_topics:
+                    seen_topics.add(topic_tuple)
+                    unique_topics.append(topic)
+            
             update_conn = get_db_connection()
             if update_conn:
                 try:
                     with update_conn.cursor() as update_cur:
                         update_cur.execute("DELETE FROM topics WHERE chapter_id = %s", (chapter_id,))
-                        print(f"    - Deleted {update_cur.rowcount} old topics.")
-
-                        topics_to_insert = []
                         
-                        numbered_topics = structured_data.get('topics', [])
-                        for topic in numbered_topics:
-                            if topic.get('topic_number'):
-                                topics_to_insert.append((chapter_id, topic.get('topic_number'), topic.get('topic_name', ''), True))
+                        topics_to_insert = [
+                            (chapter_id, t.get('topic_number'), t.get('topic_name'), True)
+                            for t in unique_topics if t.get('topic_number')
+                        ]
 
                         if topics_to_insert:
                             psycopg2.extras.execute_values(
@@ -143,17 +124,17 @@ def main():
                                 "INSERT INTO topics (chapter_id, topic_number, name, is_primary_topic) VALUES %s",
                                 topics_to_insert
                             )
-                            print(f"    - Success: Inserted {len(topics_to_insert)} new AI-generated primary topics.")
+                            print(f"    - Success: Inserted {len(topics_to_insert)} unique AI-generated topics.")
                         else:
-                            print("    - Warning: AI did not return any numbered topics for this chapter.")
+                             print("    - Warning: No valid numbered topics found after processing all chunks.")
                     update_conn.commit()
                 except psycopg2.Error as e:
-                    print(f"    - ERROR: Database update failed for this chapter: {e}")
+                    print(f"    - ERROR: Database update failed: {e}")
                     update_conn.rollback()
                 finally:
                     update_conn.close()
-        
-        time.sleep(2)
+        else:
+            print("    - Warning: No topics found in any chunk for this chapter.")
 
     print("\n✅ All chapters have been processed and topics have been refined.")
     print("\nScript finished.")
