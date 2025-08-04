@@ -74,23 +74,25 @@ CHAPTER_ORDER_MAPPING = {
 
 
 def extract_topics_from_pdf(doc):
-    """A more flexible and robust topic extraction function."""
+    """A final, robust topic extraction function using a strict, intelligent regex."""
     try:
         topics = []
-        # =================================================================
-        # NEW, MORE FLEXIBLE REGEX
-        # This pattern is less strict about capitalization and length.
-        # =================================================================
-        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,120})$", re.MULTILINE)
+        # This regex is the core of the new logic. It looks for:
+        # ^\s* - Start of a new line, with optional leading spaces.
+        # (\d+[\.\d+]*) - A number pattern like 1.1 or 1.1.1 (captures this as group 1).
+        # \s+           - At least one space.
+        # (.{5,100}?)   - The topic title itself, between 5 and 100 characters (captures as group 2).
+        # \s*\n         - Optional trailing spaces and a newline, ensuring it's a heading on its own line.
+        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,100}?)\s*\n", re.MULTILINE)
         
-        for page_num in range(min(5, doc.page_count)):
+        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
                 topic_number = match[0]
                 topic_name = match[1].strip()
-                # Filter out lines that are likely not real topics
-                if topic_name.endswith('.') or topic_name.lower() == "notes":
+                # Final filter to remove lines that are clearly not topics
+                if topic_name.endswith('.') or topic_name.lower().startswith("after studying"):
                     continue
                 topics.append({"topic_number": topic_number, "topic_name": topic_name})
         
@@ -186,6 +188,8 @@ def main():
                                     print(f"    - Found {len(topics_data)} clean topics. Inserting...")
                                     topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
                                     psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                else:
+                                    print(f"    - Warning: No topics found for {chapter_name}.")
                             except Exception as e:
                                 print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
                                         
