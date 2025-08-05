@@ -76,18 +76,20 @@ def preprocess_text(text, chapter_name):
     """A more advanced function to clean raw PDF text specifically for NCERT books."""
     lines = text.split('\n')
     cleaned_lines = []
+    # Remove headers, footers, page numbers, and chapter titles that repeat on each page
     for line in lines:
-        # Filter out common headers, footers, and page numbers
-        if re.search(r'Reprint \d{4}-\d{2}', line, re.IGNORECASE): continue
-        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line, re.IGNORECASE): continue
-        if line.strip().lower() == chapter_name.lower(): continue # Remove chapter title headers
-        if re.fullmatch(r'\s*\d+\s*', line): continue # Remove lines that are only page numbers
+        line_stripped = line.strip()
+        if re.search(r'Reprint \d{4}-\d{2}', line_stripped, re.IGNORECASE): continue
+        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line_stripped, re.IGNORECASE): continue
+        if line_stripped.lower() == chapter_name.lower(): continue
+        if re.fullmatch(r'\s*\d+\s*', line_stripped): continue
+        if re.match(r'^(Fig|Table)\.\s*\d+', line_stripped, re.IGNORECASE): continue
         cleaned_lines.append(line)
     
     # Re-join the text and then perform sentence joining
     text = '\n'.join(cleaned_lines)
     text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple blank lines
-    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text) # Join lines that don't end in a period
+    text = re.sub(r'(?<![.:\?])\n(?!\s*[\d\.]+\s|[A-Z])', ' ', text) # Join lines that don't end in punctuation and are not followed by a heading
     return text
 
 def extract_topics_from_text(cleaned_text):
