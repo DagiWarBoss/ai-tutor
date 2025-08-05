@@ -22,7 +22,7 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TXT_CACHE_FOLDER = "txt_outputs"
 
 # =================================================================
-# FINALIZED CHAPTER ORDER MAPPING (Updated to match your exact filenames)
+# FINALIZED CHAPTER ORDER MAPPING (Based on your exact filenames)
 # =================================================================
 CHAPTER_ORDER_MAPPING = {
     "Chemistry": {
@@ -72,29 +72,38 @@ CHAPTER_ORDER_MAPPING = {
     }
 }
 
+def preprocess_text(text, chapter_name):
+    """A more advanced function to clean raw PDF text specifically for NCERT books."""
+    lines = text.split('\n')
+    cleaned_lines = []
+    for line in lines:
+        # Filter out common headers, footers, and page numbers
+        if re.search(r'Reprint \d{4}-\d{2}', line, re.IGNORECASE): continue
+        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line, re.IGNORECASE): continue
+        if line.strip().lower() == chapter_name.lower(): continue # Remove chapter title headers
+        if re.fullmatch(r'\s*\d+\s*', line): continue # Remove lines that are only page numbers
+        cleaned_lines.append(line)
+    
+    # Re-join the text and then perform sentence joining
+    text = '\n'.join(cleaned_lines)
+    text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple blank lines
+    text = re.sub(r'(?<!\.)\n(?!\s*[\d\.]+\s)', ' ', text) # Join lines that don't end in a period
+    return text
 
-def extract_topics_from_pdf(doc):
-    """A final, robust topic extraction function using a strict, intelligent regex."""
+def extract_topics_from_text(cleaned_text):
+    """A final, robust topic extraction function using a strict, intelligent regex on CLEANED text."""
     try:
         topics = []
-        # This regex is the core of the new logic. It looks for:
-        # ^\s* - Start of a new line, with optional leading spaces.
-        # (\d+[\.\d+]*) - A number pattern like 1.1 or 1.1.1 (captures this as group 1).
-        # \s+           - At least one space.
-        # (.{5,100}?)   - The topic title itself, between 5 and 100 characters (captures as group 2).
-        # \s*\n         - Optional trailing spaces and a newline, ensuring it's a heading on its own line.
-        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,100}?)\s*\n", re.MULTILINE)
-        
-        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
-            page_text = doc[page_num].get_text()
-            matches = topic_pattern.findall(page_text)
-            for match in matches:
-                topic_number = match[0]
-                topic_name = match[1].strip()
-                # Final filter to remove lines that are clearly not topics
-                if topic_name.endswith('.') or topic_name.lower().startswith("after studying"):
-                    continue
-                topics.append({"topic_number": topic_number, "topic_name": topic_name})
+        # This regex is the core of the logic. It looks for a numbered heading on its own line.
+        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,100}?)$", re.MULTILINE)
+        matches = topic_pattern.findall(cleaned_text)
+        for match in matches:
+            topic_number = match[0]
+            topic_name = match[1].strip()
+            # Final filter to remove lines that are clearly not topics
+            if topic_name.endswith('.') or topic_name.lower().startswith("after studying"):
+                continue
+            topics.append({"topic_number": topic_number, "topic_name": topic_name})
         
         seen_topics = set()
         unique_topics = []
@@ -104,7 +113,7 @@ def extract_topics_from_pdf(doc):
                 unique_topics.append(topic)
         return unique_topics
     except Exception as e:
-        print(f"    - Error processing TOC for {os.path.basename(doc.name)}: {e}")
+        print(f"    - Error processing TOC: {e}")
         return []
 
 def get_full_text(doc, cache_path):
@@ -141,17 +150,12 @@ def main():
         ) as conn:
             print("✅ Successfully connected to the database.")
             with conn.cursor() as cur:
-                # Iterate through our reliable mapping
                 for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
                     for class_level, chapter_files in classes.items():
                         if not chapter_files: continue
-
                         print(f"\n===== Processing Subject: '{subject_name}' (Class {class_level}) =====")
                         
-                        upsert_subject_query = """
-                            WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id)
-                            SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;
-                        """
+                        upsert_subject_query = "WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id) SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;"
                         cur.execute(upsert_subject_query, (subject_name, class_level, subject_name, class_level))
                         subject_id = cur.fetchone()[0]
                         print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
@@ -165,23 +169,26 @@ def main():
                                 continue
 
                             print(f"  -> Processing Chapter {chapter_number}: {chapter_name}")
-
                             pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
                             if not os.path.exists(pdf_path):
-                                print(f"    - ❌ ERROR: File not found at {pdf_path}. Please check filename. Skipping.")
+                                print(f"    - ❌ ERROR: File not found at {pdf_path}. Skipping.")
                                 continue
 
                             cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
                             
                             try:
                                 doc = fitz.open(pdf_path)
-                                full_chapter_text = get_full_text(doc, cache_path)
-                                topics_data = extract_topics_from_pdf(doc)
+                                raw_text = get_full_text(doc, cache_path)
+                                
+                                print("    - Pre-processing text...")
+                                cleaned_text = preprocess_text(raw_text, chapter_name)
+                                
+                                topics_data = extract_topics_from_text(cleaned_text)
                                 doc.close()
 
                                 cur.execute(
                                     "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                    (subject_id, chapter_number, chapter_name, full_chapter_text),
+                                    (subject_id, chapter_number, chapter_name, raw_text), # Save the raw text
                                 )
                                 chapter_id = cur.fetchone()[0]
 
