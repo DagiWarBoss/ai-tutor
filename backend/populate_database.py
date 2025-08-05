@@ -1,9 +1,11 @@
 import os
-import fitz  # PyMuPDF
 import psycopg2
 import psycopg2.extras
 import re
 from dotenv import load_dotenv
+from llama_index.core.node_parser import HierarchicalNodeParser
+from llama_index.core.node_parser import get_leaf_nodes
+from llama_index.readers.file import PDFReader
 
 # --- Load Environment Variables ---
 script_dir = os.path.dirname(__file__)
@@ -19,7 +21,6 @@ DB_PORT = os.getenv("DB_PORT")
 
 # --- CONFIGURATION ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
-TXT_CACHE_FOLDER = "txt_outputs"
 
 # =================================================================
 # FINALIZED CHAPTER ORDER MAPPING (Based on your exact filenames)
@@ -72,79 +73,48 @@ CHAPTER_ORDER_MAPPING = {
     }
 }
 
-def preprocess_text(text, chapter_name):
-    """A more advanced function to clean raw PDF text specifically for NCERT books."""
-    lines = text.split('\n')
-    cleaned_lines = []
-    # Remove headers, footers, page numbers, and chapter titles that repeat on each page
-    for line in lines:
-        line_stripped = line.strip()
-        if re.search(r'Reprint \d{4}-\d{2}', line_stripped, re.IGNORECASE): continue
-        if re.search(r'(?:Chemistry|Physics|Mathematics)\s*\d+', line_stripped, re.IGNORECASE): continue
-        if line_stripped.lower() == chapter_name.lower(): continue
-        if re.fullmatch(r'\s*\d+\s*', line_stripped): continue
-        if re.match(r'^(Fig|Table)\.\s*\d+', line_stripped, re.IGNORECASE): continue
-        cleaned_lines.append(line)
-    
-    # Re-join the text and then perform sentence joining
-    text = '\n'.join(cleaned_lines)
-    text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple blank lines
-    text = re.sub(r'(?<![.:\?])\n(?!\s*[\d\.]+\s|[A-Z])', ' ', text) # Join lines that don't end in punctuation and are not followed by a heading
-    return text
-
-def extract_topics_from_text(cleaned_text):
-    """A final, robust topic extraction function using a strict, intelligent regex on CLEANED text."""
+def extract_structured_data(pdf_path):
+    """Uses a layout-aware parser to extract text and hierarchical topics."""
     try:
-        topics = []
-        # This regex is the core of the logic. It looks for a numbered heading on its own line.
-        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.{5,100}?)$", re.MULTILINE)
-        matches = topic_pattern.findall(cleaned_text)
-        for match in matches:
-            topic_number = match[0]
-            topic_name = match[1].strip()
-            # Final filter to remove lines that are clearly not topics
-            if topic_name.endswith('.') or topic_name.lower().startswith("after studying"):
-                continue
-            topics.append({"topic_number": topic_number, "topic_name": topic_name})
+        # Use the PDFReader with layout parsing enabled
+        reader = PDFReader()
+        documents = reader.load_data(file=pdf_path)
         
-        seen_topics = set()
-        unique_topics = []
-        for topic in topics:
-            if topic['topic_name'] not in seen_topics:
-                seen_topics.add(topic['topic_name'])
-                unique_topics.append(topic)
-        return unique_topics
-    except Exception as e:
-        print(f"    - Error processing TOC: {e}")
-        return []
+        # The full text is simply the content of the loaded documents
+        full_text = "\n".join([doc.get_content() for doc in documents])
 
-def get_full_text(doc, cache_path):
-    """Gets full text, using a cache to speed up subsequent runs."""
-    if os.path.exists(cache_path):
-        with open(cache_path, 'r', encoding='utf-8', errors='ignore') as f:
-            return f.read()
-    print(f"    - Cache miss. Extracting text from PDF...")
-    try:
-        full_text = ""
-        for page in doc:
-            full_text += page.get_text("text") + " "
-        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
-        with open(cache_path, 'w', encoding='utf-8') as f:
-            f.write(full_text)
-        print(f"    - Saved text to cache: '{os.path.basename(cache_path)}'")
-        return full_text.strip()
+        # Use the HierarchicalNodeParser to find headings
+        node_parser = HierarchicalNodeParser.from_defaults()
+        nodes = node_parser.get_nodes_from_documents(documents)
+        leaf_nodes = get_leaf_nodes(nodes)
+
+        topics = []
+        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)")
+
+        for node in leaf_nodes:
+            # We look for headings in the node metadata, which is where the parser puts them
+            if 'Header' in node.metadata:
+                header_text = node.metadata['Header']
+                match = topic_pattern.match(header_text)
+                if match:
+                    topic_number = match.group(1)
+                    topic_name = match.group(2).strip()
+                    topics.append({"topic_number": topic_number, "topic_name": topic_name})
+
+        return full_text, topics
+
     except Exception as e:
-        print(f"    - Error extracting full text from {os.path.basename(doc.name)}: {e}")
-        return ""
+        print(f"    - ❌ ERROR during layout-aware parsing of {os.path.basename(pdf_path)}: {e}")
+        return "", []
+
 
 def main():
-    """Walks through the folder structure using the mapping and populates the database."""
+    """Walks through the folder structure, uses layout-aware parsing, and populates the database."""
     if not all([DB_HOST, DB_PASSWORD, DB_USER, DB_PORT, DB_NAME]):
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
 
     pdf_root_full_path = os.path.join(script_dir, PDF_ROOT_FOLDER)
-    txt_cache_full_path = os.path.join(script_dir, TXT_CACHE_FOLDER)
 
     try:
         with psycopg2.connect(
@@ -155,12 +125,12 @@ def main():
                 for subject_name, classes in CHAPTER_ORDER_MAPPING.items():
                     for class_level, chapter_files in classes.items():
                         if not chapter_files: continue
+
                         print(f"\n===== Processing Subject: '{subject_name}' (Class {class_level}) =====")
                         
                         upsert_subject_query = "WITH ins AS (INSERT INTO subjects (name, class_level) VALUES (%s, %s) ON CONFLICT (name, class_level) DO NOTHING RETURNING id) SELECT id FROM ins UNION ALL SELECT id FROM subjects WHERE name = %s AND class_level = %s LIMIT 1;"
                         cur.execute(upsert_subject_query, (subject_name, class_level, subject_name, class_level))
                         subject_id = cur.fetchone()[0]
-                        print(f"  -> Subject '{subject_name}' (Class {class_level}) has ID: {subject_id}")
 
                         for chapter_number, filename in enumerate(chapter_files, 1):
                             chapter_name = os.path.splitext(filename)[0].strip()
@@ -171,45 +141,37 @@ def main():
                                 continue
 
                             print(f"  -> Processing Chapter {chapter_number}: {chapter_name}")
+
                             pdf_path = os.path.join(pdf_root_full_path, subject_name, f"Class {class_level}", filename)
                             if not os.path.exists(pdf_path):
                                 print(f"    - ❌ ERROR: File not found at {pdf_path}. Skipping.")
                                 continue
-
-                            cache_path = os.path.join(txt_cache_full_path, subject_name, f"Class {class_level}", f"{chapter_name}.txt")
                             
-                            try:
-                                doc = fitz.open(pdf_path)
-                                raw_text = get_full_text(doc, cache_path)
-                                
-                                print("    - Pre-processing text...")
-                                cleaned_text = preprocess_text(raw_text, chapter_name)
-                                
-                                topics_data = extract_topics_from_text(cleaned_text)
-                                doc.close()
+                            full_chapter_text, topics_data = extract_structured_data(pdf_path)
 
-                                cur.execute(
-                                    "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                    (subject_id, chapter_number, chapter_name, raw_text), # Save the raw text
-                                )
-                                chapter_id = cur.fetchone()[0]
+                            if not full_chapter_text:
+                                print(f"    - ❌ ERROR: Could not extract any text from {filename}. Skipping.")
+                                continue
 
-                                if topics_data:
-                                    print(f"    - Found {len(topics_data)} clean topics. Inserting...")
-                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                    psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
-                                else:
-                                    print(f"    - Warning: No topics found for {chapter_name}.")
-                            except Exception as e:
-                                print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
+                            cur.execute(
+                                "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                                (subject_id, chapter_number, chapter_name, full_chapter_text),
+                            )
+                            chapter_id = cur.fetchone()[0]
+
+                            if topics_data:
+                                print(f"    - Found {len(topics_data)} topics using layout parser. Inserting...")
+                                topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
+                                psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                            else:
+                                print(f"    - Warning: No topics found for {chapter_name} using layout parser.")
                                         
             print("\n✅ All data has been successfully inserted and committed.")
 
-    except FileNotFoundError:
-        print(f"❌ Error: The root folder '{pdf_root_full_path}' was not found. Please check the path.")
-    except psycopg2.Error as e:
-        print(f"❌ Database error: {e}")
-        print("  The transaction has been rolled back.")
+    except Exception as e:
+        print(f"❌ An unexpected error occurred: {e}")
+        if 'conn' in locals() and conn:
+            conn.rollback()
     finally:
         print("\nScript finished.")
 
