@@ -53,6 +53,9 @@ def get_candidate_headings(doc):
             for match in matches:
                 full_line = f"{match[0]} {match[1].strip()}"
                 candidate_headings.append(full_line)
+        print(f"    - DEBUG: Stage 1 found {len(candidate_headings)} raw candidates.")
+        for i, candidate in enumerate(candidate_headings):
+            print(f"      - Candidate {i+1}: {candidate}")
         return candidate_headings
     except Exception as e:
         print(f"    - ❌ ERROR during candidate extraction: {e}")
@@ -62,6 +65,8 @@ def refine_topics_with_ai(headings, chapter_name):
     """Stage 2: Sends candidate headings to an LLM for final structuring and cleaning."""
     if not headings: return []
     headings_text = "\n".join(headings)
+    print("    - DEBUG: Sending the following candidates to AI for refinement...")
+    print(headings_text)
     try:
         system_message = (
             "You are a meticulous data extraction expert for the NCERT curriculum. Your task is to analyze the following list of candidate headings extracted from a textbook chapter. "
@@ -77,6 +82,8 @@ def refine_topics_with_ai(headings, chapter_name):
             messages=messages, max_tokens=3000, temperature=0.0, response_format={"type": "json_object"}
         )
         response_content = response.choices[0].message.content.strip()
+        print("    - DEBUG: AI returned the following raw JSON:")
+        print(response_content)
         return json.loads(response_content).get('topics', [])
     except Exception as e:
         print(f"    - ❌ ERROR during AI refinement: {e}")
@@ -145,6 +152,7 @@ def main():
                                 if topics_data:
                                     # Final filter to remove the main chapter title from the topics list
                                     filtered_topics = [t for t in topics_data if chapter_name.lower() not in t.get('topic_name','').lower()]
+                                    print(f"    - DEBUG: After filtering out chapter title, {len(filtered_topics)} topics remain to be inserted.")
                                     print(f"    - ✅ Success: Inserted {len(filtered_topics)} AI-refined topics.")
                                     topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in filtered_topics]
                                     if topic_values:
