@@ -24,6 +24,10 @@ TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 # --- Initialize Together AI Client ---
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
+# --- CONFIGURATION ---
+# THIS IS THE MISSING LINE THAT HAS BEEN ADDED BACK
+PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
+
 def get_candidate_headings(doc):
     """Stage 1: Extracts potential headings based on visual cues (font size, weight)."""
     candidate_headings = []
