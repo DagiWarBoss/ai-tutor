@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 
@@ -50,6 +50,11 @@ export default function SyllabusExplorer() {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 setSyllabus(data);
+                // --- THIS IS THE FIX ---
+                // Automatically select the first subject once the data is loaded.
+                if (data && data.length > 0) {
+                    setSelectedSubject(data[0]);
+                }
             } catch (e) {
                 setError(e.message);
             } finally {
@@ -58,6 +63,19 @@ export default function SyllabusExplorer() {
         };
         fetchSyllabus();
     }, []); // Empty array ensures this runs only once
+
+    const handleSubjectClick = (subject) => {
+        setSelectedSubject(subject);
+        setSelectedChapter(null);
+        setSelectedTopic(null);
+        setExplanation('');
+    };
+
+    const handleChapterClick = (chapter) => {
+        setSelectedChapter(chapter);
+        setSelectedTopic(null);
+        setExplanation('');
+    };
 
     const handleTopicClick = async (topic) => {
         setSelectedTopic(topic);
@@ -108,7 +126,7 @@ export default function SyllabusExplorer() {
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Subjects</h2>
                         <ul>
                             {syllabus.map((subject) => (
-                                <li key={subject.id} onClick={() => { setSelectedSubject(subject); setSelectedChapter(null); setSelectedTopic(null); }}
+                                <li key={subject.id} onClick={() => handleSubjectClick(subject)}
                                     className={`p-2 rounded-md cursor-pointer text-sm ${selectedSubject?.id === subject.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>
                                     {subject.name} (Class {subject.class_level})
                                 </li>
@@ -121,7 +139,7 @@ export default function SyllabusExplorer() {
                         {selectedSubject ? (
                             <ul>
                                 {selectedSubject.chapters.map((chapter) => (
-                                    <li key={chapter.id} onClick={() => { setSelectedChapter(chapter); setSelectedTopic(null); }}
+                                    <li key={chapter.id} onClick={() => handleChapterClick(chapter)}
                                         className={`p-2 rounded-md cursor-pointer text-sm ${selectedChapter?.id === chapter.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>
                                         Ch. {chapter.number}: {chapter.name}
                                     </li>
