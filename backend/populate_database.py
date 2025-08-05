@@ -1,11 +1,10 @@
 import os
+import fitz  # PyMuPDF
 import psycopg2
 import psycopg2.extras
 import re
 from dotenv import load_dotenv
-from llama_index.core.node_parser import HierarchicalNodeParser
-from llama_index.core.node_parser import get_leaf_nodes
-from llama_index.readers.file import PDFReader
+from collections import Counter
 
 # --- Load Environment Variables ---
 script_dir = os.path.dirname(__file__)
@@ -73,39 +72,56 @@ CHAPTER_ORDER_MAPPING = {
     }
 }
 
-def extract_structured_data(pdf_path):
-    """Uses a layout-aware parser to extract text and hierarchical topics."""
+def extract_topics_from_pdf_visual(doc):
+    """
+    Extracts topics by analyzing the visual properties (font size, weight) of the text.
+    """
+    topics = []
+    topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)")
+
     try:
-        # Use the PDFReader which can understand layouts
-        reader = PDFReader()
-        documents = reader.load_data(file=pdf_path)
+        # Step 1: Determine the most common font size for body text
+        font_sizes = []
+        for page_num in range(min(2, doc.page_count)): # Analyze first 2 pages
+            page = doc[page_num]
+            blocks = page.get_text("dict")["blocks"]
+            for block in blocks:
+                if "lines" in block:
+                    for line in block["lines"]:
+                        for span in line["spans"]:
+                            font_sizes.append(round(span["size"]))
         
-        # The full text is simply the content of the loaded documents
-        full_text = "\n".join([doc.get_content() for doc in documents])
+        if not font_sizes:
+            return [] # Cannot determine base font size
 
-        # Use the HierarchicalNodeParser to find headings based on structure
-        node_parser = HierarchicalNodeParser.from_defaults(chunk_sizes=[2048, 512, 128])
-        nodes = node_parser.get_nodes_from_documents(documents)
-        leaf_nodes = get_leaf_nodes(nodes)
+        base_font_size = Counter(font_sizes).most_common(1)[0][0]
+        
+        # Step 2: Extract lines that are likely headings
+        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages for topics
+            page = doc[page_num]
+            blocks = page.get_text("dict")["blocks"]
+            for block in blocks:
+                if "lines" in block:
+                    for line in block["lines"]:
+                        # Combine spans to reconstruct the line's text
+                        line_text = "".join([span["text"] for span in line["spans"]]).strip()
+                        
+                        match = topic_pattern.match(line_text)
+                        if match:
+                            # Check if the line has heading-like properties
+                            is_heading = False
+                            span = line["spans"][0] # Check the first span of the line
+                            
+                            # A heading is likely larger or bold
+                            if round(span["size"]) > base_font_size:
+                                is_heading = True
+                            if "bold" in span["font"].lower():
+                                is_heading = True
 
-        topics = []
-        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)")
-
-        for node in leaf_nodes:
-            # The parser often puts headings in the metadata. We check for common keys.
-            header_keys = ['Header 1', 'Header 2', 'Header 3', 'Header 4', 'Header 5', 'Title']
-            header_text = None
-            for key in header_keys:
-                if key in node.metadata:
-                    header_text = node.metadata[key]
-                    break
-            
-            if header_text:
-                match = topic_pattern.match(header_text)
-                if match:
-                    topic_number = match.group(1)
-                    topic_name = match.group(2).strip()
-                    topics.append({"topic_number": topic_number, "topic_name": topic_name})
+                            if is_heading:
+                                topic_number = match.group(1)
+                                topic_name = match.group(2).strip()
+                                topics.append({"topic_number": topic_number, "topic_name": topic_name})
 
         # Deduplicate results
         seen_topics = set()
@@ -115,16 +131,27 @@ def extract_structured_data(pdf_path):
             if topic_tuple not in seen_topics:
                 seen_topics.add(topic_tuple)
                 unique_topics.append(topic)
-
-        return full_text, unique_topics
+        
+        return unique_topics
 
     except Exception as e:
-        print(f"    - ❌ ERROR during layout-aware parsing of {os.path.basename(pdf_path)}: {e}")
-        return "", []
+        print(f"    - ❌ ERROR during visual parsing of {os.path.basename(doc.name)}: {e}")
+        return []
 
+
+def get_full_text(doc):
+    """Gets the full text content from a PDF document."""
+    try:
+        full_text = ""
+        for page in doc:
+            full_text += page.get_text("text") + " "
+        return full_text.strip()
+    except Exception as e:
+        print(f"    - ❌ ERROR extracting full text from {os.path.basename(doc.name)}: {e}")
+        return ""
 
 def main():
-    """Walks through the folder structure, uses layout-aware parsing, and populates the database."""
+    """Walks through the folder structure, uses visual parsing, and populates the database."""
     if not all([DB_HOST, DB_PASSWORD, DB_USER, DB_PORT, DB_NAME]):
         print("❌ Error: Database credentials not found. Ensure .env file is correct.")
         return
@@ -162,24 +189,30 @@ def main():
                                 print(f"    - ❌ ERROR: File not found at {pdf_path}. Skipping.")
                                 continue
                             
-                            full_chapter_text, topics_data = extract_structured_data(pdf_path)
+                            try:
+                                doc = fitz.open(pdf_path)
+                                full_chapter_text = get_full_text(doc)
+                                topics_data = extract_topics_from_pdf_visual(doc)
+                                doc.close()
 
-                            if not full_chapter_text:
-                                print(f"    - ❌ ERROR: Could not extract any text from {filename}. Skipping.")
-                                continue
+                                if not full_chapter_text:
+                                    print(f"    - ❌ ERROR: Could not extract any text from {filename}. Skipping.")
+                                    continue
 
-                            cur.execute(
-                                "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
-                                (subject_id, chapter_number, chapter_name, full_chapter_text),
-                            )
-                            chapter_id = cur.fetchone()[0]
+                                cur.execute(
+                                    "INSERT INTO chapters (subject_id, chapter_number, name, full_text) VALUES (%s, %s, %s, %s) RETURNING id",
+                                    (subject_id, chapter_number, chapter_name, full_chapter_text),
+                                )
+                                chapter_id = cur.fetchone()[0]
 
-                            if topics_data:
-                                print(f"    - Found {len(topics_data)} topics using layout parser. Inserting...")
-                                topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
-                            else:
-                                print(f"    - Warning: No topics found for {chapter_name} using layout parser.")
+                                if topics_data:
+                                    print(f"    - Found {len(topics_data)} topics using visual analysis. Inserting...")
+                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
+                                    psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                else:
+                                    print(f"    - Warning: No topics found for {chapter_name} using visual analysis.")
+                            except Exception as e:
+                                print(f"  ❌ CRITICAL ERROR processing file {filename}: {e}")
                                         
             print("\n✅ All data has been successfully inserted and committed.")
 
