@@ -25,40 +25,28 @@ TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
 # --- CONFIGURATION ---
-# THIS IS THE MISSING LINE THAT HAS BEEN ADDED BACK
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 
 def get_candidate_headings(doc):
-    """Stage 1: Extracts potential headings based on visual cues (font size, weight)."""
+    """
+    Stage 1: A more lenient function to extract any line that looks like a potential heading.
+    """
     candidate_headings = []
     try:
-        font_sizes = []
-        for page_num in range(min(3, doc.page_count)): # Scan first 3 pages for font info
-            blocks = doc[page_num].get_text("dict")["blocks"]
-            for block in blocks:
-                if "lines" in block:
-                    for line in block["lines"]:
-                        for span in line["spans"]:
-                            font_sizes.append(round(span["size"]))
-        if not font_sizes: return []
-        base_font_size = Counter(font_sizes).most_common(1)[0][0]
-        print(f"    - DEBUG: Determined base font size to be: {base_font_size}")
+        # This regex is now much less strict. It just looks for a line starting with a number pattern.
+        topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)", re.MULTILINE)
 
-        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages for headings
-            blocks = doc[page_num].get_text("dict")["blocks"]
-            for block in blocks:
-                if "lines" in block:
-                    for line in block["lines"]:
-                        line_text = "".join([span["text"] for span in line["spans"]]).strip()
-                        if line_text:
-                            span = line["spans"][0]
-                            # A heading is likely larger OR bold
-                            is_heading = round(span["size"]) > base_font_size or "bold" in span["font"].lower()
-                            if is_heading:
-                                candidate_headings.append(line_text)
+        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
+            page_text = doc[page_num].get_text()
+            matches = topic_pattern.findall(page_text)
+            for match in matches:
+                # Reconstruct the full line to pass to the AI
+                full_line = f"{match[0]} {match[1].strip()}"
+                candidate_headings.append(full_line)
+        
         return candidate_headings
     except Exception as e:
-        print(f"    - ❌ ERROR during visual parsing: {e}")
+        print(f"    - ❌ ERROR during candidate extraction: {e}")
         return []
 
 def refine_topics_with_ai(headings, chapter_name):
@@ -70,7 +58,7 @@ def refine_topics_with_ai(headings, chapter_name):
         system_message = (
             "You are a meticulous data extraction expert for the NCERT curriculum. Your task is to analyze the following list of candidate headings extracted from a textbook chapter. "
             "Your job is to identify and structure only the official, numbered topics and sub-topics in their correct hierarchical order. "
-            "Ignore any text that is not a real topic, like 'Summary', 'Exercises', or page headers. "
+            "Ignore any text that is not a real topic, like 'Summary', 'Exercises', figure captions, or full sentences."
             "Your entire response MUST be a single, valid JSON object with a single key 'topics'. "
             "The value for 'topics' must be an array of objects, each with 'topic_number' and 'topic_name'."
         )
@@ -106,7 +94,7 @@ def main():
     try:
         doc = fitz.open(pdf_path)
         
-        print("\n--- STAGE 1: VISUAL ANALYSIS ---")
+        print("\n--- STAGE 1: CANDIDATE EXTRACTION (Less Rigid) ---")
         candidate_headings = get_candidate_headings(doc)
         print(f"\nFound {len(candidate_headings)} candidate headings:")
         for heading in candidate_headings:
