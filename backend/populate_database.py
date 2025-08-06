@@ -3,18 +3,18 @@ import fitz  # PyMuPDF
 import re
 from dotenv import load_dotenv
 
-# --- Load Environment Variables ---
+# --- Setup environment ---
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
-CHAPTER_NUMBER = "4"  # Set to "4" for this chapter
+CHAPTER_NUMBER = "4"  # Change this for each chapter as needed
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
-    # Regex: Match '4', '4.1', ..., '4.10.3.2' at start of line, up to five decimal levels
+    # Captures headings like 4, 4.1, ..., 4.9.2 etc., up to 5 sub-levels.
     topic_pattern = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.+)", re.MULTILINE)
     matches = []
     for page_num in range(doc.page_count):
@@ -29,8 +29,8 @@ def extract_chapter_headings(pdf_path, chapter_number):
 
 def post_filter(headings):
     """
-    Clean up: Remove entries like '4 22', '4 3' where text is only a number or very short,
-    or lines that are likely junk.
+    Remove entries where text is just a number or too short—cleans out
+    exercise numbers, page headers, and incomplete/broken lines.
     """
     cleaned = []
     for num, text in headings:
