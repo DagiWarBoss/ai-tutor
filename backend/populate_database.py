@@ -25,33 +25,44 @@ def extract_chapter_headings(pdf_path, chapter_number):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
-            num = match.group(1).strip()
-            text = match.group(2).strip()
-            # If text looks like just a section label (e.g. empty, short, or "(a)"), look ahead for real heading
-            if not text or len(text) < 2 or text.strip("()").isdigit():
-                lookahead = 1
-                while i + lookahead < len(lines):
-                    next_line = lines[i + lookahead].strip()
-                    # Find next non-empty, non-numeric line to use as heading
-                    if next_line and not next_line.isdigit() and not re.match(r'^\(?[a-zA-Z]\)?$', next_line):
+            num, text = match.group(1).strip(), match.group(2).strip()
+            # If line just number or text is tiny, look ahead
+            if not text or len(text.split()) < 2:
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
+                    if next_line and next_line[0].isupper() and not next_line.isdigit():
                         text = next_line
-                        i += lookahead  # Move pointer to the next used line
-                        break
-                    lookahead += 1
-            headings.append((num, text.strip()))
+                        i += 1
+            headings.append((num, text))
         i += 1
     doc.close()
     return headings
 
 def post_filter(headings):
-    """
-    Remove lines that are very short or where heading text is just a number.
-    """
     cleaned = []
+    BAD_STARTS = (
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
+        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+    )
+    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
     for num, text in headings:
-        if not text or text.strip().isdigit() or len(text.strip()) < 2:
+        t = text.strip()
+        words = t.split()
+        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+        if not t or not t[0].isupper():
             continue
-        cleaned.append((num, text.strip()))
+        if len(words) < 2 or len(words) > 9:
+            continue
+        # Exclude table, figure, exercises, etc.
+        if any(t.lower().startswith(bad) for bad in BAD_STARTS):
+            continue
+        if any(bad in t.lower() for bad in BAD_CONTAINS):
+            continue
+        # Don't allow headings ending with ":" (often captions) or "."
+        if t.endswith(':') or t.endswith('.'):
+            continue
+        cleaned.append((num, text))
     return cleaned
 
 if __name__ == '__main__':
