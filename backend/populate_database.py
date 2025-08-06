@@ -53,6 +53,12 @@ def get_candidate_headings(doc):
             for match in matches:
                 full_line = f"{match[0]} {match[1].strip()}"
                 candidate_headings.append(full_line)
+        
+        # --- DEBUG STATEMENT ---
+        print(f"    - DEBUG: Stage 1 found {len(candidate_headings)} raw candidates.")
+        for i, candidate in enumerate(candidate_headings):
+            print(f"      - Candidate {i+1}: {candidate}")
+            
         return candidate_headings
     except Exception as e:
         print(f"    - ❌ ERROR during candidate extraction: {e}")
@@ -62,8 +68,12 @@ def refine_topics_with_ai(headings, chapter_name):
     """Stage 2: Sends candidate headings to an LLM for final structuring and cleaning."""
     if not headings: return []
     headings_text = "\n".join(headings)
+    
+    # --- DEBUG STATEMENT ---
+    print("    - DEBUG: Sending the following candidates to AI for refinement...")
+    print(headings_text)
+    
     try:
-        # --- THIS IS THE NEW, STRICTER PROMPT ---
         system_message = (
             "You are a meticulous data extraction expert. Your task is to analyze the following list of candidate headings from a textbook. "
             "Your job is to identify only the official, numbered topics and sub-topics. "
@@ -80,6 +90,11 @@ def refine_topics_with_ai(headings, chapter_name):
             messages=messages, max_tokens=3000, temperature=0.0, response_format={"type": "json_object"}
         )
         response_content = response.choices[0].message.content.strip()
+        
+        # --- DEBUG STATEMENT ---
+        print("    - DEBUG: AI returned the following raw JSON:")
+        print(response_content)
+        
         return json.loads(response_content).get('topics', [])
     except Exception as e:
         print(f"    - ❌ ERROR during AI refinement: {e}")
@@ -132,7 +147,10 @@ def main():
                                 doc = fitz.open(pdf_path)
                                 full_chapter_text = get_full_text(doc)
                                 
+                                print("    - Stage 1: Extracting candidate headings...")
                                 candidate_headings = get_candidate_headings(doc)
+                                
+                                print(f"    - Stage 2: Refining {len(candidate_headings)} candidates with AI...")
                                 topics_data = refine_topics_with_ai(candidate_headings, chapter_name)
                                 doc.close()
 
@@ -143,9 +161,16 @@ def main():
                                 chapter_id = cur.fetchone()[0]
 
                                 if topics_data:
-                                    print(f"    - ✅ Success: Inserted {len(topics_data)} AI-refined topics.")
-                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in topics_data]
-                                    psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
+                                    # Final filter to remove the main chapter title from the topics list
+                                    filtered_topics = [t for t in topics_data if chapter_name.lower() not in t.get('topic_name','').lower()]
+                                    
+                                    # --- DEBUG STATEMENT ---
+                                    print(f"    - DEBUG: After filtering out chapter title, {len(filtered_topics)} topics remain to be inserted.")
+                                    
+                                    print(f"    - ✅ Success: Inserted {len(filtered_topics)} AI-refined topics.")
+                                    topic_values = [(chapter_id, topic['topic_number'], topic['topic_name']) for topic in filtered_topics]
+                                    if topic_values:
+                                        psycopg2.extras.execute_values(cur, "INSERT INTO topics (chapter_id, topic_number, name) VALUES %s", topic_values)
                                 else:
                                     print(f"    - ⚠️ Warning: No topics found for {chapter_name} after AI refinement.")
                             except Exception as e:
