@@ -18,15 +18,13 @@ llm_client = Together(api_key=TOGETHER_API_KEY)
 def filter_candidates(candidates):
     filtered = []
     for cand in candidates:
+        # Remove obvious non-headings: equations, single-word, math symbols
         if not cand.strip():
             continue
         parts = cand.strip().split(" ", 1)
-        if len(parts) != 2:
-            continue
+        if len(parts) != 2: continue
         num, text = parts
-        # Basic noise filter: skip pure equations, single-word lines, etc.
-        words = text.strip().split()
-        if len(words) < 2:
+        if len(text.strip().split()) < 2:
             continue
         if any(op in text for op in ['=', '+', '-', '*', '/', 'sin', 'cos', 'tan', 'π', 'roots']):
             continue
@@ -42,47 +40,51 @@ def get_candidate_headings(doc):
         for match in matches:
             number = match[0]
             name_stripped = match[1].strip()
-            cand = f"{number} {name_stripped}"
-            candidate_headings.append(cand)
-    filtered = filter_candidates(candidate_headings)
-    return filtered
+            candidate_headings.append(f"{number} {name_stripped}")
+    return filter_candidates(candidate_headings)
+
+def chunked(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i+n]
 
 def refine_topics_with_ai(headings, chapter_name):
-    if not headings:
-        print("[DEBUG] No candidate headings to send to LLM.")
-        return []
-    headings_text = "\n".join(headings)
-    try:
+    results = []
+    seen = set()
+    chunk_size = 15  # Test and adjust as needed for your LLM and chapter size
+    for chunk in chunked(headings, chunk_size):
+        headings_text = "\n".join(chunk)
         system_message = (
             "You are an expert at extracting textbook syllabus structures from NCERT material. "
-            "You will be given a list of numbered headings from a chapter. Your job is to return ONLY official topic and sub-topic headings as found in the book's Table of Contents. "
-            "Do NOT include exercise questions, end-of-chapter problems, instructions, questions, or anything not part of the actual syllabus, EVEN IF they are numbered. "
-            "If a heading is a question, instruction, or example, exclude it. Only include structured topics/subtopics actually present as syllabus entries or textbook sections."
-            "Return exactly this JSON: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}."
+            "Given a list of chapter-numbered headings, return ONLY the actual topics/subtopics that would appear in the book's Table of Contents. "
+            "DO NOT include any exercises, end-of-chapter questions, examples, or instructions—even if they appear numbered. "
+            "Include official syllabus headings for every topic or subtopic, at any depth (like 4.8, 4.9.2, etc). "
+            "Return only this JSON: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}."
         )
-        user_message_content = f"NCERT headings for chapter '{chapter_name}':\n---\n{headings_text}\n---"
+        user_message_content = f"Extract official syllabus headings for '{chapter_name}':\n---\n{headings_text}\n---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
-        response = llm_client.chat.completions.create(
-            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
-            messages=messages, max_tokens=1500, temperature=0.0,
-            response_format={"type": "json_object"}
-        )
-        response_content = response.choices[0].message.content.strip()
-        print(f"\n[DEBUG] LLM output:\n{response_content}\n")
-        topics = json.loads(response_content).get('topics', [])
-        filtered = []
-        for t in topics:
-            num = str(t.get('topic_number', ''))
-            name = str(t.get('topic_name', ''))
-            if num and name and 1 <= len(num) <= 10 and len(name.split()) >= 2:
-                filtered.append({'topic_number': num, 'topic_name': name})
-        return filtered
-    except Exception as e:
-        print(f"    - ❌ ERROR during LLM refinement: {e}")
-        return []
+        try:
+            response = llm_client.chat.completions.create(
+                model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                messages=messages,
+                max_tokens=1500,
+                temperature=0.0,
+                response_format={"type": "json_object"}
+            )
+            response_content = response.choices[0].message.content.strip()
+            topics = json.loads(response_content).get('topics', [])
+            for t in topics:
+                key = (t.get('topic_number', '').strip(), t.get('topic_name', '').strip())
+                if key not in seen and key[0] and key[1] and len(key[1].split()) >= 2:
+                    results.append({'topic_number': key[0], 'topic_name': key[1]})
+                    seen.add(key)
+            time.sleep(2)  # Rate limiting
+        except Exception as e:
+            print(f"    - ❌ ERROR during LLM chunk refinement: {e}")
+            continue
+    return results
 
 def main():
-    print("--- Starting All-Chapter NCERT Extraction with LLM Syllabus Focus ---")
+    print("--- NCERT Extraction with LLM (Always-updating code) ---")
     root = os.path.join(script_dir, PDF_ROOT_FOLDER)
     for subject_name in os.listdir(root):
         subject_path = os.path.join(root, subject_name)
@@ -98,7 +100,7 @@ def main():
                 try:
                     doc = fitz.open(pdf_path)
                     candidate_headings = get_candidate_headings(doc)
-                    print(f"\n[INFO] Filtered headings for {chapter_name}:")
+                    print(f"\n[INFO] Matched headings for {chapter_name}:")
                     for h in candidate_headings:
                         print(f"    - {h}")
                     refined_topics = refine_topics_with_ai(candidate_headings, chapter_name)
@@ -106,7 +108,6 @@ def main():
                     for topic in refined_topics:
                         print(f"    - Number: {topic['topic_number']} | Name: {topic['topic_name']}")
                     doc.close()
-                    time.sleep(2.0)
                 except Exception as e:
                     print(f"  ❌ ERROR processing file {filename}: {e}")
     print("\n--- SCRIPT FINISHED ---")
