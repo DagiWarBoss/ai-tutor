@@ -3,6 +3,7 @@ import fitz  # PyMuPDF
 import re
 from dotenv import load_dotenv
 
+# --- Load Environment Variables ---
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
@@ -18,7 +19,7 @@ def extract_chapter_headings(pdf_path, chapter_number):
         lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
     i = 0
-    # This version matches "4", "4.8", "4.8.2", etc., and avoids truncation.
+    # KEY CHANGE: Allow ANY number of .digit groups after chapter (eg. 4, 4.7, 4.7.3...) not just up to 5.
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+)*)(?:[\s\.:;\-)]+)(.*)$")
     while i < len(lines):
         line = lines[i].strip()
@@ -26,10 +27,11 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num = match.group(1).strip()
             text = match.group(2).strip()
-            # If heading text is blank/tiny, try to use next line if meaningful
+            # If line just number or text is tiny, look ahead
             if not text or len(text.split()) < 2:
                 if i + 1 < len(lines):
                     next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
                         text = next_line
                         i += 1
@@ -39,7 +41,6 @@ def extract_chapter_headings(pdf_path, chapter_number):
     return headings
 
 def post_filter(headings):
-    # No changes needed here, preserve your existing post-filter
     cleaned = []
     BAD_STARTS = (
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
@@ -49,14 +50,17 @@ def post_filter(headings):
     for num, text in headings:
         t = text.strip()
         words = t.split()
+        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
         if not t or not t[0].isupper():
             continue
         if len(words) < 2 or len(words) > 9:
             continue
+        # Exclude table, figure, exercises, etc.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
+        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
         cleaned.append((num, text))
