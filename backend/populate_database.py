@@ -9,7 +9,7 @@ load_dotenv(dotenv_path=dotenv_path)
 
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
-CHAPTER_NUMBER = "4"  # Change per chapter
+CHAPTER_NUMBER = "4"  # Change as appropriate
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
@@ -24,7 +24,7 @@ def extract_chapter_headings(pdf_path, chapter_number):
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If text is very short, try to join with next line (looking for Title Case start)
+            # If text is very short, try to join with next line if it's title case
             if not text or len(text.split()) < 2:
                 if i + 1 < len(lines):
                     next_line = lines[i + 1].strip()
@@ -37,23 +37,20 @@ def extract_chapter_headings(pdf_path, chapter_number):
     return headings
 
 def is_title_case(text):
-    # Return True if every word is capitalized and alphabetic (like NCERT headings)
     words = text.split()
-    return all(w[0].isupper() and w[1:].islower() and w.isalpha() for w in words if len(w) > 1)
+    # At least 2 words, and EVERY word is Title Case (not shouty case)
+    # E.g. "Octet Rule", "Bond Parameters", "Molecular Orbital Theory"
+    return all(w[0].isupper() and (w[1:].islower() or w[1:] == w[1:].lower()) and w.isalpha() for w in words if len(w) > 1)
 
 def post_filter(headings):
     cleaned = []
-    MIN_WORDS = 2
-    MAX_WORDS = 10
     for num, text in headings:
-        stripped = text.strip()
-        words = stripped.split()
-        if len(words) < MIN_WORDS or len(words) > MAX_WORDS:
+        words = text.strip().split()
+        if len(words) < 2 or len(words) > 10:
             continue
-        # True NCERT headings are Title Case (every word capitalized)
-        if not is_title_case(stripped):
+        if not is_title_case(text.strip()):
             continue
-        cleaned.append((num, stripped))
+        cleaned.append((num, text.strip()))
     return cleaned
 
 if __name__ == '__main__':
