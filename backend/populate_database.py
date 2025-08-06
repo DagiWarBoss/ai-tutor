@@ -15,6 +15,11 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
+QUESTION_PREFIXES = [
+    "write", "define", "explain", "describe", "what", "how", "why", "calculate", "draw",
+    "compare", "arrange", "distinguish", "find", "show", "state", "discuss", "which", "give", "name"
+]
+
 def filter_candidates(candidates):
     filtered = []
     for cand in candidates:
@@ -24,34 +29,39 @@ def filter_candidates(candidates):
         if len(parts) != 2:
             continue
         num, text = parts
-        # Skip if number is likely a page number/year/common junk
+        # Numeric noise filter: page numbers, years, etc.
         try:
             if num.isdigit():
                 n = int(num)
-                if n > 50 and n < 3000:  # Probable page numbers
+                if n > 50 and n < 3000:  # Skip probable page/question numbers
                     continue
-                if 1900 < n < 2100:     # Probable years
+                if 1900 < n < 2100:     # Skip probable years
                     continue
         except ValueError:
             pass
         lowtext = text.strip().lower()
+        # Remove single-section-headings
         if lowtext in ["chemistry", "physics", "mathematics"]:
             continue
-        # Remove lines with less than 2 words or that look like math expressions/equations
-        if len(text.strip().split()) < 2:
+        # Remove lines with less than 2 words or clear equations
+        words = text.strip().split()
+        if len(words) < 2:
             continue
-        if any(op in text for op in ['=', '+', '-', '*', '/', 'sin', 'cos', 'tan']):
+        if any(op in text for op in ['=', '+', '-', '*', '/', 'sin', 'cos', 'tan', 'π', 'roots']):
+            continue
+        # Remove questions/verbs lines (at beginning)
+        first_word = words[0].lower()
+        if first_word in QUESTION_PREFIXES:
+            continue
+        if any(text.lower().startswith(q) for q in QUESTION_PREFIXES):
             continue
         filtered.append(cand)
     return filtered
 
 def get_candidate_headings(doc):
-    """
-    Debug version: shows page text, raw matches, filtering.
-    """
     candidate_headings = []
-    # Relaxed regex: any line with "numbers.something" at start
-    topic_pattern = re.compile(r"^\s*(\d{1,3}(\.\d+){0,3})[\s\.:;-]+(.{2,80})", re.MULTILINE)
+    # Any line with "number dot text" style
+    topic_pattern = re.compile(r"^\s*(\d{1,3}(?:\.\d+){0,3})[\s\.:;-]+(.{2,80})", re.MULTILINE)
     for page_num in range(doc.page_count):
         page_text = doc[page_num].get_text()
         print(f"\n----- PAGE {page_num+1} (first 100 chars) -----")
@@ -60,7 +70,7 @@ def get_candidate_headings(doc):
         print(f"[DEBUG] Found {len(matches)} regex matches on page {page_num+1}.")
         for match in matches:
             number = match[0]
-            name_stripped = match[2].strip()
+            name_stripped = match[1].strip()
             cand = f"{number} {name_stripped}"
             candidate_headings.append(cand)
             print(f"  [RAW] {cand}")
@@ -74,9 +84,6 @@ def get_candidate_headings(doc):
     return filtered
 
 def refine_topics_with_ai(headings, chapter_name):
-    """
-    Calls LLM to refine candidate list (returns structured output or nothing if broken).
-    """
     if not headings:
         print("[DEBUG] No candidate headings to send to LLM.")
         return []
@@ -85,9 +92,9 @@ def refine_topics_with_ai(headings, chapter_name):
         system_message = (
             "You are an NCERT syllabus data extractor. Given candidate headings, "
             "return only genuine hierarchical topics/subtopics (numbered like X, X.X, X.X.X). "
-            "Ignore headings that are just page numbers, years, math expressions, or single words. "
+            "Ignore headings that are just page numbers, years, math expressions, single words, or questions. "
             "Return strict JSON: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}"
-            "Skip exercises, summary, tables, figure captions, or incomplete lines."
+            "Skip exercises, summary, tables, figure captions, or incomplete/question lines."
         )
         user_message_content = f"Refine candidate headings for '{chapter_name}':\n---\n{headings_text}\n---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
@@ -99,7 +106,6 @@ def refine_topics_with_ai(headings, chapter_name):
         response_content = response.choices[0].message.content.strip()
         print(f"\n[DEBUG] LLM output:\n{response_content}\n")
         topics = json.loads(response_content).get('topics', [])
-        # Final check: topic_number <= 10 chars, name at least 2 words
         filtered = []
         for t in topics:
             num = str(t.get('topic_number', ''))
@@ -112,7 +118,7 @@ def refine_topics_with_ai(headings, chapter_name):
         return []
 
 def main():
-    print("--- Starting All-Chapter NCERT Debug Extraction (Noise-Reduced) ---")
+    print("--- Starting All-Chapter NCERT Debug Extraction (Questions-Reduced) ---")
     root = os.path.join(script_dir, PDF_ROOT_FOLDER)
     for subject_name in os.listdir(root):
         subject_path = os.path.join(root, subject_name)
