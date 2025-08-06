@@ -1,4 +1,4 @@
-import os
+]import os
 import fitz  # PyMuPDF
 import re
 import json
@@ -15,38 +15,61 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
+def filter_candidates(candidates):
+    filtered = []
+    for cand in candidates:
+        if not cand.strip():
+            continue
+        parts = cand.strip().split(" ", 1)
+        if len(parts) != 2:
+            continue
+        num, text = parts
+        # Skip numbers that are likely page numbers, years, etc.
+        try:
+            if num.isdigit():
+                n = int(num)
+                if n > 50 and n < 3000:  # Filters typical page numbers or spurious numerics
+                    continue
+                if 1900 < n < 2100:  # Filters years
+                    continue
+        except ValueError:
+            pass
+        # Skip common section headers/non-topic fillers
+        lowtext = text.strip().lower()
+        if lowtext in ["chemistry","physics","mathematics"]:
+            continue
+        if len(text.strip().split()) < 2:
+            continue
+        filtered.append(cand)
+    return filtered
+
 def get_candidate_headings(doc):
     """
-    Debug version: shows page text, raw matches, skip/exclude reasons.
+    Debug version: shows page text, raw matches, filtering.
     """
     candidate_headings = []
-    # Relaxed regex: any line starting with outline type numbers (1, 1.1, 1.2.3)
+    # Relaxed regex: any line starting with outline type numbers (1, 1.1, 1.2.3...)
     topic_pattern = re.compile(r"^\s*(\d+(\.\d+){0,3})[\s\.:;-]+(.{2,80})", re.MULTILINE)
-    EXCLUDE_KEYWORDS = ['table', 'figure', 'exercise', 'summary', 'activity', 'example']
-
     for page_num in range(doc.page_count):
         page_text = doc[page_num].get_text()
-        print(f"\n----- PAGE {page_num+1} (first 250 chars) -----")
-        print(page_text[:250], "\n")
+        print(f"\n----- PAGE {page_num+1} (first 150 chars) -----")
+        print(page_text[:150], "\n")
         matches = topic_pattern.findall(page_text)
         print(f"[DEBUG] Found {len(matches)} regex matches on page {page_num+1}.")
-
         for match in matches:
             number = match[0]
             name_stripped = match[2].strip()
-            if any(kw in name_stripped.lower() for kw in EXCLUDE_KEYWORDS):
-                print(f"  [SKIP: keyword] {number} {name_stripped}")
-                continue
-            if not (2 <= len(name_stripped.split()) <= 18):
-                print(f"  [SKIP: length] {number} {name_stripped}")
-                continue
-            candidate_headings.append(f"{number} {name_stripped}")
-            print(f"  [CANDIDATE] {number} {name_stripped}")
-
-    print(f"\n[DEBUG] Total candidate headings found: {len(candidate_headings)}")
-    if not candidate_headings:
-        print("[DEBUG] WARNING: No headings found. Review regex/PDF.")
-    return candidate_headings
+            cand = f"{number} {name_stripped}"
+            candidate_headings.append(cand)
+            print(f"  [RAW] {cand}")
+    print(f"\n[DEBUG] Total raw candidate headings found: {len(candidate_headings)}")
+    filtered = filter_candidates(candidate_headings)
+    print(f"[DEBUG] Filtered candidates to {len(filtered)} lines that look like real topics.")
+    for h in filtered:
+        print(f"  [CANDIDATE] {h}")
+    if not filtered:
+        print("[DEBUG] WARNING: No viable headings after filtering. Tune your regex/filters!")
+    return filtered
 
 def refine_topics_with_ai(headings, chapter_name):
     """
@@ -58,10 +81,11 @@ def refine_topics_with_ai(headings, chapter_name):
     headings_text = "\n".join(headings)
     try:
         system_message = (
-            "You are an NCERT syllabus data extractor. Given the following candidate headings, "
-            "return only real official topics/subtopics (numbered like 1.1, 2, 2.2.3). "
-            "Your JSON format must be: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}"
-            "Skip exercises, summary, sentences or anything that is not a curricular topic!"
+            "You are an NCERT syllabus data extractor. Given a list of candidate headings, "
+            "return only genuine hierarchical topics/subtopics (numbered X, X.X, X.X.X). "
+            "Ignore any headings that look like page numbers, years, or single words. "
+            "Return strict JSON: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}"
+            "Skip exercises, summaries, tables, figure captions, or incomplete lines."
         )
         user_message_content = f"Refine candidate headings for '{chapter_name}':\n---\n{headings_text}\n---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
@@ -71,13 +95,14 @@ def refine_topics_with_ai(headings, chapter_name):
             response_format={"type": "json_object"}
         )
         response_content = response.choices[0].message.content.strip()
-        print(f"\n[DEBUG] LLM raw output:\n{response_content}\n")
+        print(f"\n[DEBUG] LLM output:\n{response_content}\n")
         topics = json.loads(response_content).get('topics', [])
+        # Final check: topic number <= 10 chars, name at least 2 words
         filtered = []
         for t in topics:
             num = str(t.get('topic_number', ''))
             name = str(t.get('topic_name', ''))
-            if num and name and 1 <= len(num) <= 8 and len(name.split()) >= 2:
+            if num and name and 1 <= len(num) <= 10 and len(name.split()) >= 2:
                 filtered.append({'topic_number': num, 'topic_name': name})
         return filtered
     except Exception as e:
@@ -85,7 +110,7 @@ def refine_topics_with_ai(headings, chapter_name):
         return []
 
 def main():
-    print("--- Starting All-Chapter NCERT Debug Extraction ---")
+    print("--- Starting All-Chapter NCERT Debug Extraction (Noise-Reduced) ---")
     root = os.path.join(script_dir, PDF_ROOT_FOLDER)
     for subject_name in os.listdir(root):
         subject_path = os.path.join(root, subject_name)
@@ -101,18 +126,18 @@ def main():
                 try:
                     doc = fitz.open(pdf_path)
                     candidate_headings = get_candidate_headings(doc)
-                    print(f"\n[INFO] Candidate headings for {chapter_name}:")
+                    print(f"\n[INFO] Filtered headings for {chapter_name}:")
                     for h in candidate_headings:
                         print(f"    - {h}")
                     refined_topics = refine_topics_with_ai(candidate_headings, chapter_name)
-                    print(f"[INFO] AI returned {len(refined_topics)} clean topics:")
+                    print(f"[INFO] AI returned {len(refined_topics)} syllabus topics:")
                     for topic in refined_topics:
                         print(f"    - Number: {topic['topic_number']} | Name: {topic['topic_name']}")
                     doc.close()
-                    time.sleep(1.7)  # stay within API limits
+                    time.sleep(2.0)  # stay within API limits
                 except Exception as e:
                     print(f"  ❌ ERROR processing file {filename}: {e}")
-    print("\n--- DEBUG SCRIPT FINISHED ---")
+    print("\n--- SCRIPT FINISHED ---")
 
 if __name__ == '__main__':
     main()
