@@ -9,7 +9,7 @@ load_dotenv(dotenv_path=dotenv_path)
 
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
-CHAPTER_NUMBER = "4"  # Change as appropriate
+CHAPTER_NUMBER = "4"  # Change as needed
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
@@ -24,8 +24,8 @@ def extract_chapter_headings(pdf_path, chapter_number):
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If text is very short, try to join with next line if it's title case
-            if not text or len(text.split()) < 2:
+            # If text is tiny, look ahead (for split headings)
+            if not text or len(text.split()) < 1:
                 if i + 1 < len(lines):
                     next_line = lines[i + 1].strip()
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
@@ -36,21 +36,19 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc.close()
     return headings
 
-def is_title_case(text):
-    words = text.split()
-    # At least 2 words, and EVERY word is Title Case (not shouty case)
-    # E.g. "Octet Rule", "Bond Parameters", "Molecular Orbital Theory"
-    return all(w[0].isupper() and (w[1:].islower() or w[1:] == w[1:].lower()) and w.isalpha() for w in words if len(w) > 1)
+def is_true_topic(text):
+    # TRUE if all (non-trivial) words are Title Case and alphabetic (e.g. "Bond Order", "Octet Rule", "Hydrogen Bonding")
+    words = [w for w in text.split() if w.isalpha()]
+    return words and all(w[0].isupper() and w[1:].islower() for w in words)
 
 def post_filter(headings):
     cleaned = []
     for num, text in headings:
-        words = text.strip().split()
-        if len(words) < 2 or len(words) > 10:
+        stripped = text.strip()
+        # True topic if all words are Title Case and alphabetic (single word ALLOWED!)
+        if not is_true_topic(stripped):
             continue
-        if not is_title_case(text.strip()):
-            continue
-        cleaned.append((num, text.strip()))
+        cleaned.append((num, stripped))
     return cleaned
 
 if __name__ == '__main__':
