@@ -24,21 +24,23 @@ def filter_candidates(candidates):
         if len(parts) != 2:
             continue
         num, text = parts
-        # Skip numbers that are likely page numbers, years, etc.
+        # Skip if number is likely a page number/year/common junk
         try:
             if num.isdigit():
                 n = int(num)
-                if n > 50 and n < 3000:  # Filters typical page numbers or spurious numerics
+                if n > 50 and n < 3000:  # Probable page numbers
                     continue
-                if 1900 < n < 2100:  # Filters years
+                if 1900 < n < 2100:     # Probable years
                     continue
         except ValueError:
             pass
-        # Skip common section headers/non-topic fillers
         lowtext = text.strip().lower()
-        if lowtext in ["chemistry","physics","mathematics"]:
+        if lowtext in ["chemistry", "physics", "mathematics"]:
             continue
+        # Remove lines with less than 2 words or that look like math expressions/equations
         if len(text.strip().split()) < 2:
+            continue
+        if any(op in text for op in ['=', '+', '-', '*', '/', 'sin', 'cos', 'tan']):
             continue
         filtered.append(cand)
     return filtered
@@ -48,12 +50,12 @@ def get_candidate_headings(doc):
     Debug version: shows page text, raw matches, filtering.
     """
     candidate_headings = []
-    # Relaxed regex: any line starting with outline type numbers (1, 1.1, 1.2.3...)
-    topic_pattern = re.compile(r"^\s*(\d+(\.\d+){0,3})[\s\.:;-]+(.{2,80})", re.MULTILINE)
+    # Relaxed regex: any line with "numbers.something" at start
+    topic_pattern = re.compile(r"^\s*(\d{1,3}(\.\d+){0,3})[\s\.:;-]+(.{2,80})", re.MULTILINE)
     for page_num in range(doc.page_count):
         page_text = doc[page_num].get_text()
-        print(f"\n----- PAGE {page_num+1} (first 150 chars) -----")
-        print(page_text[:150], "\n")
+        print(f"\n----- PAGE {page_num+1} (first 100 chars) -----")
+        print(page_text[:100], "\n")
         matches = topic_pattern.findall(page_text)
         print(f"[DEBUG] Found {len(matches)} regex matches on page {page_num+1}.")
         for match in matches:
@@ -73,7 +75,7 @@ def get_candidate_headings(doc):
 
 def refine_topics_with_ai(headings, chapter_name):
     """
-    Calls LLM to refine candidate list (returns good structure or nothing if broken).
+    Calls LLM to refine candidate list (returns structured output or nothing if broken).
     """
     if not headings:
         print("[DEBUG] No candidate headings to send to LLM.")
@@ -81,11 +83,11 @@ def refine_topics_with_ai(headings, chapter_name):
     headings_text = "\n".join(headings)
     try:
         system_message = (
-            "You are an NCERT syllabus data extractor. Given a list of candidate headings, "
-            "return only genuine hierarchical topics/subtopics (numbered X, X.X, X.X.X). "
-            "Ignore any headings that look like page numbers, years, or single words. "
+            "You are an NCERT syllabus data extractor. Given candidate headings, "
+            "return only genuine hierarchical topics/subtopics (numbered like X, X.X, X.X.X). "
+            "Ignore headings that are just page numbers, years, math expressions, or single words. "
             "Return strict JSON: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}"
-            "Skip exercises, summaries, tables, figure captions, or incomplete lines."
+            "Skip exercises, summary, tables, figure captions, or incomplete lines."
         )
         user_message_content = f"Refine candidate headings for '{chapter_name}':\n---\n{headings_text}\n---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
@@ -97,7 +99,7 @@ def refine_topics_with_ai(headings, chapter_name):
         response_content = response.choices[0].message.content.strip()
         print(f"\n[DEBUG] LLM output:\n{response_content}\n")
         topics = json.loads(response_content).get('topics', [])
-        # Final check: topic number <= 10 chars, name at least 2 words
+        # Final check: topic_number <= 10 chars, name at least 2 words
         filtered = []
         for t in topics:
             num = str(t.get('topic_number', ''))
@@ -134,7 +136,7 @@ def main():
                     for topic in refined_topics:
                         print(f"    - Number: {topic['topic_number']} | Name: {topic['topic_name']}")
                     doc.close()
-                    time.sleep(2.0)  # stay within API limits
+                    time.sleep(2.0)  # API limits
                 except Exception as e:
                     print(f"  ❌ ERROR processing file {filename}: {e}")
     print("\n--- SCRIPT FINISHED ---")
