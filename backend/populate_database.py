@@ -24,10 +24,10 @@ def extract_chapter_headings(pdf_path, chapter_number):
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If text is tiny, look ahead (for split headings)
-            if not text or len(text.split()) < 1:
+            # Handle split headings (number then title on next line)
+            if not text or not any(c.isalpha() for c in text):
                 if i + 1 < len(lines):
-                    next_line = lines[i + 1].strip()
+                    next_line = lines[i+1].strip()
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
                         text = next_line
                         i += 1
@@ -37,15 +37,14 @@ def extract_chapter_headings(pdf_path, chapter_number):
     return headings
 
 def is_true_topic(text):
-    # TRUE if all (non-trivial) words are Title Case and alphabetic (e.g. "Bond Order", "Octet Rule", "Hydrogen Bonding")
     words = [w for w in text.split() if w.isalpha()]
-    return words and all(w[0].isupper() and w[1:].islower() for w in words)
+    # Accept heading if every word is title-case: starts uppercase and rest lowercase (or a single capital letter)
+    return words and all(w[0].isupper() and (w[1:].islower() or len(w) == 1) for w in words)
 
 def post_filter(headings):
     cleaned = []
     for num, text in headings:
         stripped = text.strip()
-        # True topic if all words are Title Case and alphabetic (single word ALLOWED!)
         if not is_true_topic(stripped):
             continue
         cleaned.append((num, stripped))
