@@ -3,13 +3,14 @@ import fitz  # PyMuPDF
 import re
 from dotenv import load_dotenv
 
+# --- Load Environment Variables ---
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
-CHAPTER_NUMBER = "4"  # Change as needed
+CHAPTER_NUMBER = "4"  # Change per chapter
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
@@ -18,16 +19,18 @@ def extract_chapter_headings(pdf_path, chapter_number):
         lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
     i = 0
+    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # Handle split headings (number then title on next line)
-            if not text or not any(c.isalpha() for c in text):
+            # If line just number or text is tiny, look ahead
+            if not text or len(text.split()) < 2:
                 if i + 1 < len(lines):
-                    next_line = lines[i+1].strip()
+                    next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
                         text = next_line
                         i += 1
@@ -36,18 +39,30 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc.close()
     return headings
 
-def is_true_topic(text):
-    words = [w for w in text.split() if w.isalpha()]
-    # Accept heading if every word is title-case: starts uppercase and rest lowercase (or a single capital letter)
-    return words and all(w[0].isupper() and (w[1:].islower() or len(w) == 1) for w in words)
-
 def post_filter(headings):
     cleaned = []
+    BAD_STARTS = (
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
+        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+    )
+    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
     for num, text in headings:
-        stripped = text.strip()
-        if not is_true_topic(stripped):
+        t = text.strip()
+        words = t.split()
+        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+        if not t or not t[0].isupper():
             continue
-        cleaned.append((num, stripped))
+        if len(words) < 2 or len(words) > 9:
+            continue
+        # Exclude table, figure, exercises, etc.
+        if any(t.lower().startswith(bad) for bad in BAD_STARTS):
+            continue
+        if any(bad in t.lower() for bad in BAD_CONTAINS):
+            continue
+        # Don't allow headings ending with ":" (often captions) or "."
+        if t.endswith(':') or t.endswith('.'):
+            continue
+        cleaned.append((num, text))
     return cleaned
 
 if __name__ == '__main__':
