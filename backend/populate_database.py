@@ -14,58 +14,53 @@ CHAPTER_NUMBER = "4"  # Change per chapter
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
-    lines_by_page = []
+    lines = []
     for page_num in range(doc.page_count):
-        lines_by_page.extend(doc[page_num].get_text().split('\n'))
-    i = 0
+        lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
-    # Pattern catches e.g. 4, 4.1, 4.9.2, ... then some text (flexible, not only line-start)
-    pat = re.compile(rf"\b{chapter_number}(?:\.\d+){{0,5}}\b[\s\.:;\-)]+(.*)$")
-    while i < len(lines_by_page):
-        line = lines_by_page[i].strip()
-        match = pat.search(line)
+    i = 0
+    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
+    while i < len(lines):
+        line = lines[i].strip()
+        match = pat.match(line)
         if match:
-            num = re.search(rf"{chapter_number}(?:\.\d+){{0,5}}", line).group()
-            text = match.group(1).strip()
-
-            # If text is empty/short, try to join with next line (if next line is title cased)
-            if (not text or len(text.split()) < 2) and i + 1 < len(lines_by_page):
-                next_line = lines_by_page[i+1].strip()
-                if next_line and next_line[0].isupper() and not next_line.isdigit():
-                    text = next_line.strip()
-                    i += 1  # consume both lines
-
+            num, text = match.group(1).strip(), match.group(2).strip()
+            # If line just number or text is tiny, look ahead
+            if not text or len(text.split()) < 2:
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
+                    if next_line and next_line[0].isupper() and not next_line.isdigit():
+                        text = next_line
+                        i += 1
             headings.append((num, text))
         i += 1
     doc.close()
     return headings
 
 def post_filter(headings):
-    """
-    Keep only lines likely to be real topics.
-    """
     cleaned = []
     BAD_STARTS = (
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
-        'why', 'define', 'explain', 'formation of', 'formation', 'summary', 'state', 'discuss'
+        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
     )
-    BAD_WORDS = ('molecule', 'atom', '(', ')', 'calculate', 'determine')
-    MAX_WORDS = 8
-    MIN_WORDS = 2
-
+    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        if not t or not t[0].isupper():       # must start with uppercase
+        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+        if not t or not t[0].isupper():
             continue
-        if len(words) < MIN_WORDS or len(words) > MAX_WORDS:
+        if len(words) < 2 or len(words) > 9:
             continue
-        if t.lower().startswith(BAD_STARTS):
+        # Exclude table, figure, exercises, etc.
+        if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
-        if any(bad in t.lower() for bad in BAD_WORDS):
+        if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-        # Remove lines ending in '.' (likely sentences, not topics)
-        if t.endswith('.'):
+        # Don't allow headings ending with ":" (often captions) or "."
+        if t.endswith(':') or t.endswith('.'):
             continue
         cleaned.append((num, text))
     return cleaned
