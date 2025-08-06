@@ -29,14 +29,15 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 
 def get_candidate_headings(doc):
     """
-    Stage 1: A more lenient function to extract any line that looks like a potential heading.
+    Stage 1: A lenient function to extract any line that looks like a potential heading from the entire document.
     """
     candidate_headings = []
     try:
         # This regex is now much less strict. It just looks for a line starting with a number pattern.
         topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)", re.MULTILINE)
 
-        for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
+        # --- THIS IS THE FIX: We now loop through the entire document ---
+        for page_num in range(doc.page_count): # Scan ALL pages
             page_text = doc[page_num].get_text()
             matches = topic_pattern.findall(page_text)
             for match in matches:
@@ -94,7 +95,7 @@ def main():
     try:
         doc = fitz.open(pdf_path)
         
-        print("\n--- STAGE 1: CANDIDATE EXTRACTION (Less Rigid) ---")
+        print("\n--- STAGE 1: CANDIDATE EXTRACTION (Less Rigid, Full Chapter) ---")
         candidate_headings = get_candidate_headings(doc)
         print(f"\nFound {len(candidate_headings)} candidate headings:")
         for heading in candidate_headings:
