@@ -72,7 +72,10 @@ if __name__ == '__main__':
     )
     headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
     filtered_headings = post_filter(headings)
-    print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
-    for num, text in filtered_headings:
-        print(f"  - {num} {text}")
+    # <<== THIS IS THE KEY OUTPUT FORMAT FOR LLM/POSTPROCESSING ==>>
+    with open("candidate_topics.txt", "w", encoding="utf-8") as f:
+        for num, text in filtered_headings:
+            line = f"{num} {text}".strip()
+            f.write(f"{line}\n")
+            print(line)
     print(f"\nTotal filtered matches: {len(filtered_headings)}")
