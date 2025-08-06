@@ -15,42 +15,73 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
-def get_candidate_headings(doc):
-    topic_pattern = re.compile(r"^\s*(\d+[\.\d+]*)\s+(.*)", re.MULTILINE)
+def is_plausible_topic_number(num, chapter_number):
+    """
+    Only accepts topic numbers in the form N, N.N, N.N.N where N matches the chapter_number.
+    e.g., for chapter 3, accepts 3, 3.1, 3.2.1, etc.
+    """
+    if not num: return False
+    # Accepts 1, 1.1, 1.2 etc. for chapter 1; also filters things like "1869"
+    patt = fr"^{chapter_number}(?:\.\d+)*$"
+    return bool(re.match(patt, num))
+
+def get_candidate_headings(doc, chapter_num_str):
+    """
+    Extract lines like '1 Some Chapter', '1.1 Topic', up to 3 levels, and filter further.
+    """
     candidate_headings = []
-    for page_num in range(min(5, doc.page_count)): # Scan first 5 pages
+    # Improved regex: Match lines that BEGIN a line, with chapter number (not any number)
+    topic_pattern = re.compile(fr"^\s*({chapter_num_str}(?:\.\d{{1,2}})*)\s+(.*)", re.MULTILINE)
+    EXCLUDE_KEYWORDS = ['table', 'figure', 'exercise', 'summary', 'activity', 'example']
+    for page_num in range(min(7, doc.page_count)): # Optionally, scan ~7 pages to get nested topics
         page_text = doc[page_num].get_text()
-        matches = topic_pattern.findall(page_text)
-        for match in matches:
-            full_line = f"{match[0]} {match[1].strip()}"
-            candidate_headings.append(full_line)
+        for match in topic_pattern.finditer(page_text):
+            number, name = match.groups()
+            name_stripped = name.strip()
+            # Skip headings that contain EXCLUDE keywords or are too long/short
+            if any(kw in name_stripped.lower() for kw in EXCLUDE_KEYWORDS):
+                continue
+            if not (2 <= len(name_stripped.split()) <= 12):
+                continue
+            candidate_headings.append(f"{number} {name_stripped}")
     return candidate_headings
 
 def refine_topics_with_ai(headings, chapter_name):
-    if not headings: return []
+    if not headings:
+        return []
     headings_text = "\n".join(headings)
     try:
         system_message = (
-            "You are a meticulous data extraction expert for the NCERT curriculum. Your task is to analyze the following list of candidate headings extracted from a textbook chapter. "
-            "Your job is to identify and structure only the official, numbered topics and sub-topics in their correct hierarchical order. "
-            "Ignore any text that is not a real topic, like 'Summary', 'Exercises', figure captions, or full sentences."
-            "Your entire response MUST be a single, valid JSON object with a single key 'topics'. "
-            "The value for 'topics' must be an array of objects, each with 'topic_number' and 'topic_name'."
+            "You are an expert data extractor for the NCERT curriculum. Analyze this candidate list of numbered headings from a chapter. "
+            "Return only OFFICIAL, real, syllabus-like topics and subtopics (ignore 'Exercises', 'Summary', plain sentences, tables, random numbers, or page numbers). "
+            "All topic numbers must be hierarchical (like 3, 3.1, 3.2.1)."
+            "Your result MUST be a single, valid JSON object: {\"topics\": [{\"topic_number\": string, \"topic_name\": string}, ...]}"
         )
-        user_message_content = f"Please refine the following candidate headings for the chapter '{chapter_name}':\n\n--- CANDIDATE HEADINGS ---\n{headings_text}\n--- END OF HEADINGS ---"
+        user_message_content = f"Refine the candidate headings for the chapter '{chapter_name}':\n\n--- CANDIDATE HEADINGS ---\n{headings_text}\n--- END OF HEADINGS ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
         response = llm_client.chat.completions.create(
             model="mistralai/Mixtral-8x7B-Instruct-v0.1",
-            messages=messages, max_tokens=3000, temperature=0.0, response_format={"type": "json_object"}
+            messages=messages, max_tokens=1800, temperature=0.0,
+            response_format={"type": "json_object"}
         )
         response_content = response.choices[0].message.content.strip()
-        return json.loads(response_content).get('topics', [])
+        topics = json.loads(response_content).get('topics', [])
+        # Post-process (optional): Remove weird numbers, filter by chapter prefix
+        filtered_topics = []
+        chapter_prefix = chapter_name.strip().split()[0]   # "3" for "3. Chemical Bonding...", etc.
+        for t in topics:
+            num = str(t.get('topic_number', '')).strip()
+            name = str(t.get('topic_name', '')).strip()
+            if is_plausible_topic_number(num, chapter_prefix):
+                if len(name) > 2 and not any(k in name.lower() for k in ['table', 'summary', 'exercise']):
+                    filtered_topics.append({'topic_number': num, 'topic_name': name})
+        return filtered_topics
     except Exception as e:
         print(f"    - ❌ ERROR during AI refinement: {e}")
         return []
 
 def main():
-    print("--- Starting Bulk Chapter Processing with Hybrid Pipeline ---")
+    print("--- Starting Refined Bulk Chapter Processing ---")
     root = os.path.join(script_dir, PDF_ROOT_FOLDER)
     for subject_name in os.listdir(root):
         subject_path = os.path.join(root, subject_name)
@@ -64,21 +95,22 @@ def main():
                 if not filename.lower().endswith(".pdf"):
                     continue
                 chapter_name = os.path.splitext(filename)[0]
+                chapter_num_str = chapter_name.split()[0]  # assumes "3.2 Thermodynamics" etc.
                 pdf_path = os.path.join(class_path, filename)
                 print(f"\nProcessing {subject_name} / {class_folder} / {filename}")
                 try:
                     doc = fitz.open(pdf_path)
-                    candidate_headings = get_candidate_headings(doc)
-                    print(f"Found {len(candidate_headings)} candidate headings.")
+                    candidate_headings = get_candidate_headings(doc, chapter_num_str)
+                    print(f"Found {len(candidate_headings)} tightly-filtered candidate headings.")
                     refined_topics = refine_topics_with_ai(candidate_headings, chapter_name)
-                    print(f"AI returned {len(refined_topics)} refined topics:")
+                    print(f"AI returned {len(refined_topics)} clean, syllabus topics:")
                     for topic in refined_topics:
                         print(f"  - Number: {topic.get('topic_number', 'N/A')}, Name: {topic.get('topic_name', 'N/A')}")
                     doc.close()
-                    time.sleep(1.5)  # Rate limit AI calls
+                    time.sleep(2)  # Rate limit for API
                 except Exception as e:
                     print(f"  ❌ ERROR processing file {filename}: {e}")
-    print("\n--- Bulk processing finished ---")
+    print("\n--- Processing finished ---")
 
 if __name__ == '__main__':
     main()
