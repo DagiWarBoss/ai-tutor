@@ -14,6 +14,7 @@ CHAPTER_NUMBER = "4"  # Set to "4" for this chapter
 
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
+    # Regex: Match '4', '4.1', ..., '4.10.3.2' at start of line, up to five decimal levels
     topic_pattern = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.+)", re.MULTILINE)
     matches = []
     for page_num in range(doc.page_count):
@@ -26,13 +27,28 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc.close()
     return matches
 
+def post_filter(headings):
+    """
+    Clean up: Remove entries like '4 22', '4 3' where text is only a number or very short,
+    or lines that are likely junk.
+    """
+    cleaned = []
+    for num, text in headings:
+        if text.strip().isdigit():
+            continue
+        if len(text.strip()) < 3:
+            continue
+        cleaned.append((num, text))
+    return cleaned
+
 if __name__ == '__main__':
     pdf_path = os.path.join(
         script_dir, PDF_ROOT_FOLDER,
         "Chemistry", "Class 11", TARGET_CHAPTER
     )
     headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
+    filtered_headings = post_filter(headings)
     print(f"\nMatched candidate headings for '{TARGET_CHAPTER}':")
-    for num, text in headings:
+    for num, text in filtered_headings:
         print(f"  - {num} {text}")
-    print(f"\nTotal matched: {len(headings)}")
+    print(f"\nTotal filtered matches: {len(filtered_headings)}")
