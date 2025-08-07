@@ -12,14 +12,19 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
 CHAPTER_NUMBER = "4"  # Change per chapter
 
+def looks_like_section(line, chapter_number):
+    # e.g., "4", "4.1", "4.1.1"
+    pat = re.compile(rf"^\s*{chapter_number}(?:\.\d+)*[\s\.:;\-)]+")
+    return bool(pat.match(line))
+
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
         lines.extend(doc[page_num].get_text().split('\n'))
+
     headings = []
     i = 0
-    # KEY CHANGE: Allow ANY number of .digit groups after chapter (eg. 4, 4.7, 4.7.3...) not just up to 5.
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+)*)(?:[\s\.:;\-)]+)(.*)$")
     while i < len(lines):
         line = lines[i].strip()
@@ -27,16 +32,26 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num = match.group(1).strip()
             text = match.group(2).strip()
-            # If line just number or text is tiny, look ahead
-            if not text or len(text.split()) < 2:
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1].strip()
-                    # Require next line to start with uppercase & not digits
-                    if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        text = next_line
-                        i += 1
-            headings.append((num, text))
-        i += 1
+            # If text is empty or short, grab next one(s) until heading appears complete
+            j = i + 1
+            while True:
+                # If next line looks like a new numbered topic, OR is blank, OR is clearly table/figure/example, stop.
+                if j >= len(lines):
+                    break
+                next_line = lines[j].strip()
+                if not next_line:
+                    break
+                if looks_like_section(next_line, chapter_number):
+                    break
+                if next_line.lower().startswith(("table", "figure", "exercise", "problem", "example")):
+                    break
+                # Otherwise, treat as part of this heading
+                text = text + " " + next_line
+                j += 1
+            headings.append((num, text.strip()))
+            i = j  # Move to after heading
+        else:
+            i += 1
     doc.close()
     return headings
 
@@ -50,17 +65,14 @@ def post_filter(headings):
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 9:
+        if len(words) < 2 or len(words) > 15:
             continue
-        # Exclude table, figure, exercises, etc.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
         cleaned.append((num, text))
