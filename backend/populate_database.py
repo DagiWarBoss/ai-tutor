@@ -28,7 +28,7 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
 
-            # --- Robust multiline collector ---
+            # --- Greedy multiline collector ---
             j = i + 1
             while j < len(lines):
                 next_line = lines[j].strip()
@@ -37,13 +37,18 @@ def extract_chapter_headings(pdf_path, chapter_number):
                 if re.match(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+", next_line):
                     break
 
-                if next_line:
-                    text += " " + next_line
-                    if len(text.split()) >= 6 and text[-1] not in (':', '.', ';', '-', 'and'):
-                        break
+                if not next_line:
+                    j += 1
+                    continue
+
+                text += " " + next_line
+
+                # Stop if sentence looks complete
+                if len(text.split()) >= 6 and text[-1] not in (':', '.', ';', '-', 'and'):
+                    break
 
                 j += 1
-            i = j - 1  # Skip processed lines
+            i = j - 1
 
             headings.append((num, text))
         i += 1
@@ -55,24 +60,26 @@ def extract_chapter_headings(pdf_path, chapter_number):
 def post_filter(headings):
     cleaned = []
     BAD_STARTS = (
-        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
-        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw',
+        'how', 'why', 'define', 'explain', 'formation of', 'solution',
+        'calculate', 'find', 'discuss',
     )
-    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
+
     for num, text in headings:
         t = text.strip()
         words = t.split()
+
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 12:
+        if len(words) < 2 or len(words) > 15:
             continue
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
-        if any(bad in t.lower() for bad in BAD_CONTAINS):
-            continue
         if t.endswith(':') or t.endswith('.'):
             continue
+
         cleaned.append((num, text))
+
     return cleaned
 
 
