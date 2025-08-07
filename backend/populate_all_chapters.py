@@ -1057,10 +1057,22 @@ def populate_all_chapters():
             'headings': [
                 ("13", "Limits and Derivatives"),
                 ("13.1", "Introduction"),
+                ("13.1.1", "What are Limits"),
+                ("13.1.2", "What are Derivatives"),
                 ("13.2", "Intuitive Idea of Derivatives"),
+                ("13.2.1", "Rate of Change"),
+                ("13.2.2", "Slope of Tangent"),
                 ("13.3", "Limits"),
+                ("13.3.1", "Left Hand Limit"),
+                ("13.3.2", "Right Hand Limit"),
+                ("13.3.3", "Existence of Limit"),
                 ("13.4", "Limits of Trigonometric Functions"),
+                ("13.4.1", "Standard Limits"),
+                ("13.4.2", "Applications"),
                 ("13.5", "Derivatives"),
+                ("13.5.1", "Definition of Derivative"),
+                ("13.5.2", "Derivative Rules"),
+                ("13.5.3", "Applications"),
             ]
         },
         {
