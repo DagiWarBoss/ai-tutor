@@ -4,7 +4,6 @@ import re
 from dotenv import load_dotenv
 
 # --- Load Environment Variables ---
-# Adjusted to handle cases where __file__ might not be defined
 script_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else '.'
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
@@ -17,54 +16,77 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
-        lines.extend(doc[page_num].get_text().split('\n'))
+        lines.extend(doc[page_num].get_text("text", sort=True).split('\n'))
+
+    # --- FIX #1: Find where the exercises start to avoid extracting them ---
+    exercises_start_index = len(lines)
+    for idx, line_text in enumerate(lines):
+        if line_text.strip() == "EXERCISES":
+            exercises_start_index = idx
+            break
+
     headings = []
     i = 0
-    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
-    while i < len(lines):
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
+
+    # The loop now correctly stops before reaching the exercises section
+    while i < exercises_start_index:
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If line just number or text is tiny, look ahead
-            if not text or len(text.split()) < 2:
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1].strip()
-                    # Require next line to start with uppercase & not digits
-                    if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        # --- FIX 1: Appending text from the next line instead of replacing it. ---
-                        text += " " + next_line
-                        i += 1
-            headings.append((num, text))
+
+            # --- FIX #2: Properly combine multi-line headings ---
+            # This new loop correctly appends text instead of replacing it.
+            j = i + 1
+            while j < exercises_start_index:
+                next_line = lines[j].strip()
+                # A good continuation is short and starts with a capital letter
+                is_plausible_continuation = (
+                    next_line
+                    and next_line[0].isupper()
+                    and len(next_line.split()) < 7
+                )
+                if pat.match(next_line) or not is_plausible_continuation:
+                    break
+                text += " " + next_line
+                j += 1
+            
+            headings.append((num, text.strip()))
+            i = j - 1
+
         i += 1
+        
     doc.close()
     return headings
 
 def post_filter(headings):
     cleaned = []
+    # This list is relaxed to avoid filtering valid topics
     BAD_STARTS = (
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
-        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+        'why', 'define', 'calculate', 'find', 'discuss',
     )
-    # --- FIX 2: Removed 'molecule' and 'atom' to prevent filtering valid topics. ---
-    BAD_CONTAINS = ('(', ')', 'equation', 'value', 'show', 'number', 'reason')
+    # --- FIX #3: Removed overly strict "bad words" ---
+    BAD_CONTAINS = ('(', ')', 'equation', 'value', 'show', 'reason')
+    
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+
+        # Word count is increased to allow for longer, valid headings
+        if len(words) < 2 or len(words) > 15:
+            continue
+
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 9:
-            continue
-        # Exclude table, figure, exercises, etc.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
+            
         cleaned.append((num, text))
     return cleaned
 
@@ -77,9 +99,13 @@ if __name__ == '__main__':
         headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
         filtered_headings = post_filter(headings)
         
+        print(f"\n--- FINAL RESULTS ---")
         print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
-        for num, text in filtered_headings:
-            print(f"  - {num} {text}")
+        if not filtered_headings:
+            print("  - No headings found that match the filter criteria.")
+        else:
+            for num, text in filtered_headings:
+                print(f"  - {num} {text}")
         
         print(f"\nTotal filtered matches: {len(filtered_headings)}")
 
