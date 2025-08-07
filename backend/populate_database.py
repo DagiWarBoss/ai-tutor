@@ -19,22 +19,37 @@ def extract_chapter_headings(pdf_path, chapter_number):
         lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
     i = 0
+    
     # Pattern: Allow up to 5 decimals, but only at line start (not mid)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
+    
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If line just number or text is tiny, look ahead
+            
+            # If text is empty or very short, look ahead for continuation
             if not text or len(text.split()) < 2:
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1].strip()
-                    # Require next line to start with uppercase & not digits
-                    if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        text = next_line
-                        i += 1
-            headings.append((num, text))
+                # Look ahead up to 2 lines for continuation
+                for look_ahead in range(1, 3):
+                    if i + look_ahead < len(lines):
+                        next_line = lines[i + look_ahead].strip()
+                        # Skip empty lines and lines that start with numbers (likely new headings)
+                        if next_line and not re.match(r'^\d+', next_line):
+                            # If next line starts with uppercase and doesn't look like a new heading
+                            if next_line and next_line[0].isupper():
+                                # Combine current text with next line
+                                if text:
+                                    text = text + " " + next_line
+                                else:
+                                    text = next_line
+                                i += look_ahead
+                                break
+            
+            # Only add if we have meaningful text
+            if text and len(text.strip()) > 0:
+                headings.append((num, text.strip()))
         i += 1
     doc.close()
     return headings
@@ -45,23 +60,37 @@ def post_filter(headings):
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
         'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
     )
-    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
+    # Reduced BAD_CONTAINS to be less aggressive
+    BAD_CONTAINS = ('equation', 'value', 'show', 'number', 'reason')
+    
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+        
+        # Skip if no text or doesn't start with uppercase
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 9:
+            
+        # More lenient word count - allow 2-15 words instead of 2-9
+        if len(words) < 2 or len(words) > 15:
             continue
+            
         # Exclude table, figure, exercises, etc.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
+            
+        # Less aggressive BAD_CONTAINS filtering
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
+            
         # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
+            
+        # Additional check: skip if the heading is just the number
+        if t.lower() == num.lower():
+            continue
+            
         cleaned.append((num, text))
     return cleaned
 
