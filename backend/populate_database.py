@@ -4,7 +4,7 @@ import re
 from dotenv import load_dotenv
 
 # --- Load Environment Variables ---
-# NOTE: Adjusted to handle cases where __file__ might not be defined (e.g., in a notebook)
+# Adjusted to handle cases where __file__ might not be defined
 script_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else '.'
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
@@ -18,34 +18,27 @@ def extract_chapter_headings(pdf_path, chapter_number):
     lines = []
     for page_num in range(doc.page_count):
         lines.extend(doc[page_num].get_text().split('\n'))
-    
-    print("--- [DEBUG] Starting Heading Extraction ---")
     headings = []
     i = 0
+    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
-    
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
-            # --- DEBUG STATEMENT ADDED ---
-            print(f"\n[DEBUG] Regex Matched Line: '{line}'")
             num, text = match.group(1).strip(), match.group(2).strip()
-            
+            # If line just number or text is tiny, look ahead
             if not text or len(text.split()) < 2:
                 if i + 1 < len(lines):
                     next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        # --- DEBUG STATEMENT ADDED ---
-                        print(f"[DEBUG] Heading text is short. Looking at next line: '{next_line}'")
-                        print(f"[DEBUG] ERROR POINT: Replacing '{text}' with '{next_line}' instead of combining.")
-                        text = next_line
+                        # --- FIX 1: Appending text from the next line instead of replacing it. ---
+                        text += " " + next_line
                         i += 1
             headings.append((num, text))
         i += 1
-        
     doc.close()
-    print("--- [DEBUG] Finished Heading Extraction ---")
     return headings
 
 def post_filter(headings):
@@ -54,48 +47,25 @@ def post_filter(headings):
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
         'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
     )
-    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
-    
-    print("\n--- [DEBUG] Starting Post-Filter ---")
+    # --- FIX 2: Removed 'molecule' and 'atom' to prevent filtering valid topics. ---
+    BAD_CONTAINS = ('(', ')', 'equation', 'value', 'show', 'number', 'reason')
     for num, text in headings:
-        print(f"\n[DEBUG] Filtering -> '{num} {text}'")
         t = text.strip()
         words = t.split()
-        
-        # --- DEBUG STATEMENTS ADDED FOR EACH RULE ---
+        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
         if not t or not t[0].isupper():
-            print(f"  └─ REJECTED: Does not start with an uppercase letter.")
             continue
-            
         if len(words) < 2 or len(words) > 9:
-            print(f"  └─ REJECTED: Word count is {len(words)} (must be 2-9).")
             continue
-            
-        rejected = False
-        for bad in BAD_STARTS:
-            if t.lower().startswith(bad):
-                print(f"  └─ REJECTED: Starts with banned word '{bad}'.")
-                rejected = True
-                break
-        if rejected:
+        # Exclude table, figure, exercises, etc.
+        if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
-
-        for bad in BAD_CONTAINS:
-            if bad in t.lower():
-                print(f"  └─ REJECTED: ERROR POINT -> Contains banned word '{bad}'.")
-                rejected = True
-                break
-        if rejected:
+        if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-            
+        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
-            print(f"  └─ REJECTED: Ends with ':' or '.'.")
             continue
-        
-        print("  └─ ACCEPTED: Heading passed all filters.")
         cleaned.append((num, text))
-        
-    print("\n--- [DEBUG] Post-Filter Finished ---")
     return cleaned
 
 if __name__ == '__main__':
@@ -107,13 +77,9 @@ if __name__ == '__main__':
         headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
         filtered_headings = post_filter(headings)
         
-        print(f"\n--- FINAL RESULTS ---")
         print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
-        if not filtered_headings:
-            print("  - No headings found that match the filter criteria.")
-        else:
-            for num, text in filtered_headings:
-                print(f"  - {num} {text}")
+        for num, text in filtered_headings:
+            print(f"  - {num} {text}")
         
         print(f"\nTotal filtered matches: {len(filtered_headings)}")
 
