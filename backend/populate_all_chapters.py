@@ -1103,7 +1103,7 @@ def populate_all_chapters():
                 ("15.6.2", "Ungrouped Data"),
             ]
         },
-        {
+                {
             'subject': 'Maths',
             'class': 'Class 11',
             'chapter_file': 'Probability.pdf',
@@ -1111,11 +1111,22 @@ def populate_all_chapters():
             'headings': [
                 ("16", "Probability"),
                 ("16.1", "Introduction"),
+                ("16.1.1", "What is Probability"),
+                ("16.1.2", "Applications"),
                 ("16.2", "Random Experiments"),
+                ("16.2.1", "Definition of Random Experiment"),
+                ("16.2.2", "Sample Space"),
+                ("16.2.3", "Outcomes"),
                 ("16.3", "Event"),
+                ("16.3.1", "Definition of Event"),
+                ("16.3.2", "Types of Events"),
+                ("16.3.3", "Complementary Events"),
                 ("16.4", "Axiomatic Approach to Probability"),
+                ("16.4.1", "Probability Axioms"),
+                ("16.4.2", "Properties of Probability"),
+                ("16.4.3", "Applications"),
             ]
-                 },
+        },
          
          # Chemistry Class 12
          {
