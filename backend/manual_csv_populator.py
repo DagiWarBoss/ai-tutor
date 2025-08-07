@@ -49,6 +49,9 @@ def populate_chemical_bonding_headings():
         ("4.7.4", "Energy Level Diagram for Molecular Orbitals"),
         ("4.7.5", "Electronic Configuration and Molecular Behaviour"),
         
+        ("4.8.1", "Intermolecular Forces"),
+        ("4.8.2", "Types of Intermolecular Forces"),
+        
         ("4.9.1", "Cause of Formation of Hydrogen Bond"),
         ("4.9.2", "Types of H-Bonds"),
     ]
