@@ -19,21 +19,27 @@ def extract_chapter_headings(pdf_path, chapter_number):
         lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
     i = 0
-    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-            # If line just number or text is tiny, look ahead
-            if not text or len(text.split()) < 2:
-                if i + 1 < len(lines):
-                    next_line = lines[i + 1].strip()
-                    # Require next line to start with uppercase & not digits
+
+            # --- UPDATED: Combine multiline headings ---
+            if not text or len(text.split()) < 3:
+                j = i + 1
+                while j < len(lines):
+                    next_line = lines[j].strip()
                     if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        text = next_line
-                        i += 1
+                        text += " " + next_line
+                        j += 1
+                        if len(text.split()) >= 4 and not text.endswith((':', '.', ';')):
+                            break
+                    else:
+                        break
+                i = j - 1  # Skip the lines we've already consumed
+
             headings.append((num, text))
         i += 1
     doc.close()
@@ -49,17 +55,14 @@ def post_filter(headings):
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
         if not t or not t[0].isupper():
             continue
         if len(words) < 2 or len(words) > 9:
             continue
-        # Exclude table, figure, exercises, etc.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
         cleaned.append((num, text))
