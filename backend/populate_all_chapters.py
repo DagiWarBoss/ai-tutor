@@ -965,7 +965,7 @@ def populate_all_chapters():
             ]
         },
         {
-            'subject 'Maths',
+            'subject': 'Maths',
             'class': 'Class 11',
             'chapter_file': 'Straight Lines.pdf',
             'chapter_number': '10',
