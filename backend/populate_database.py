@@ -12,7 +12,7 @@ load_dotenv(dotenv_path=dotenv_path)
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
-OUTPUT_CSV_FILE = "extracted_headings_final.csv"
+OUTPUT_CSV_FILE = "extracted_headings_all_subjects.csv"
 
 def get_most_common_font_info(doc):
     """Finds the font size and bold status of the main body text."""
@@ -30,88 +30,66 @@ def get_most_common_font_info(doc):
     return font_counts.most_common(1)[0][0]
 
 def find_chapter_number(doc):
-    """Automatically finds the chapter number from the first page of the PDF."""
+    """
+    Scans the first page of a PDF to find the chapter number automatically.
+    This version is updated to work with different subject codes (CH, PH, MA, etc.).
+    """
     first_page_text = doc[0].get_text()
+    
+    # Looks for patterns like "UNIT 4" (case-insensitive)
     unit_match = re.search(r"UNIT\s+(\d+)", first_page_text, re.IGNORECASE)
     if unit_match:
         return unit_match.group(1)
-    code_match = re.search(r"CH(\d{2})", first_page_text)
+        
+    # --- IMPROVEMENT ---
+    # Looks for generic NCERT codes like "CH04", "PH01", "MA12", etc.
+    # [A-Z]{2} matches any two capital letters for the subject code.
+    code_match = re.search(r"[A-Z]{2}(\d{2})", first_page_text)
     if code_match:
+        # Converts "04" to "4"
         return str(int(code_match.group(1)))
+
     return None
 
-def extract_headings_hybrid(doc, chapter_number):
+def extract_headings_by_style(doc, chapter_number):
     """
-    --- The definitive hybrid extraction logic ---
-    1. Finds heading starts using font style (bold/larger).
-    2. Looks ahead to combine multi-line headings.
+    Extracts headings by identifying text that is either larger or bolder than the body text.
     """
     body_font_size, body_is_bold = get_most_common_font_info(doc)
     headings = []
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
-    
-    # Extract all lines with metadata first
-    all_lines = []
+
     for page in doc:
         blocks = page.get_text("dict")["blocks"]
         for b in blocks:
             if "lines" in b:
                 for l in b["lines"]:
-                    all_lines.append(l)
+                    line_text = "".join(s["text"] for s in l["spans"]).strip()
+                    match = pat.match(line_text)
+                    
+                    if match:
+                        first_span = l["spans"][0]
+                        span_size = round(first_span["size"])
+                        span_is_bold = "bold" in first_span["font"].lower()
 
-    i = 0
-    while i < len(all_lines):
-        line = all_lines[i]
-        line_text = "".join(s["text"] for s in line["spans"]).strip()
-        match = pat.match(line_text)
-        
-        if match:
-            first_span = line["spans"][0]
-            span_size = round(first_span["size"])
-            span_is_bold = "bold" in first_span["font"].lower()
-            is_heading_start = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+                        is_heading = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
 
-            if is_heading_start:
-                num, text = match.group(1).strip(), match.group(2).strip()
-                
-                # --- Intelligent look-ahead loop ---
-                # After finding a heading start, check the next lines for continuations.
-                j = i + 1
-                while j < len(all_lines):
-                    next_line = all_lines[j]
-                    next_line_text = "".join(s["text"] for s in next_line["spans"]).strip()
-                    
-                    # A continuation must not be a new heading itself
-                    if pat.match(next_line_text):
-                        break
-                    
-                    # A good continuation is short and starts with a capital letter
-                    is_plausible_continuation = (
-                        next_line_text
-                        and (next_line_text[0].isupper() or next_line_text[0].isdigit())
-                        and len(next_line_text.split()) < 7
-                    )
-                    
-                    if is_plausible_continuation:
-                        text += " " + next_line_text
-                        j += 1 # Consume this line
-                    else:
-                        break # Stop looking ahead
-                
-                headings.append((num, ' '.join(text.split())))
-                i = j - 1 # Skip the main loop ahead
-        i += 1
-        
+                        if is_heading:
+                            num, text = match.group(1).strip(), match.group(2).strip()
+                            clean_text = ' '.join(text.split())
+                            headings.append((num, clean_text))
     return headings
 
 if __name__ == '__main__':
     all_headings_data = []
 
+    # The os.walk function will automatically go through all subjects and classes
     for root, dirs, files in sorted(os.walk(PDF_ROOT_FOLDER)):
         for filename in sorted(files):
             if filename.lower().endswith(".pdf"):
                 pdf_path = os.path.join(root, filename)
-                print(f"\nProcessing: {pdf_path}")
+                print(f"\n\n=======================================================")
+                print(f"Processing File: {filename}")
                 
                 try:
                     doc = fitz.open(pdf_path)
@@ -119,7 +97,7 @@ if __name__ == '__main__':
                     
                     if chapter_num:
                         print(f"  [INFO] Detected Chapter Number: {chapter_num}")
-                        final_headings = extract_headings_hybrid(doc, chapter_num)
+                        final_headings = extract_headings_by_style(doc, chapter_num)
                         
                         if not final_headings:
                             print("  [INFO] No headings found for this chapter.")
