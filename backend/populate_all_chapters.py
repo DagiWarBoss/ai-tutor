@@ -886,9 +886,22 @@ def populate_all_chapters():
             'headings': [
                 ("7", "Permutations and Combinations"),
                 ("7.1", "Introduction"),
+                ("7.1.1", "Counting Principles"),
+                ("7.1.2", "Applications"),
                 ("7.2", "Fundamental Principle of Counting"),
+                ("7.2.1", "Multiplication Principle"),
+                ("7.2.2", "Addition Principle"),
+                ("7.2.3", "Applications of Counting Principles"),
                 ("7.3", "Permutations"),
+                ("7.3.1", "Permutation Formula"),
+                ("7.3.2", "Permutations with Repetition"),
+                ("7.3.3", "Circular Permutations"),
+                ("7.3.4", "Permutations with Restrictions"),
                 ("7.4", "Combinations"),
+                ("7.4.1", "Combination Formula"),
+                ("7.4.2", "Properties of Combinations"),
+                ("7.4.3", "Applications of Combinations"),
+                ("7.4.4", "Combinations with Repetition"),
             ]
         },
         {
