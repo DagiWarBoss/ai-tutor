@@ -21,29 +21,33 @@ def extract_chapter_headings(pdf_path, chapter_number):
     headings = []
     i = 0
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
+
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
 
-            # --- Aggressive multiline fix ---
-            if not text or len(text.split()) < 4:
-                j = i + 1
-                while j < len(lines):
-                    next_line = lines[j].strip()
-                    # Stop if new heading begins
-                    if re.match(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+", next_line):
+            # --- Robust multiline collector ---
+            j = i + 1
+            while j < len(lines):
+                next_line = lines[j].strip()
+
+                # Stop if next line looks like a new heading
+                if re.match(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+", next_line):
+                    break
+
+                if next_line:
+                    text += " " + next_line
+                    if len(text.split()) >= 6 and text[-1] not in (':', '.', ';', '-', 'and'):
                         break
-                    if next_line:
-                        text += " " + next_line
-                    if len(text.split()) >= 5:
-                        break
-                    j += 1
-                i = j - 1  # Skip processed lines
+
+                j += 1
+            i = j - 1  # Skip processed lines
 
             headings.append((num, text))
         i += 1
+
     doc.close()
     return headings
 
@@ -60,7 +64,7 @@ def post_filter(headings):
         words = t.split()
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 9:
+        if len(words) < 2 or len(words) > 12:
             continue
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
@@ -79,6 +83,7 @@ if __name__ == '__main__':
     )
     headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
     filtered_headings = post_filter(headings)
+
     print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
     for num, text in filtered_headings:
         print(f"  - {num} {text}")
