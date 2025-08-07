@@ -771,9 +771,21 @@ def populate_all_chapters():
             'headings': [
                 ("2", "Relations and Functions"),
                 ("2.1", "Introduction"),
+                ("2.1.1", "Ordered Pairs"),
+                ("2.1.2", "Cartesian Product"),
                 ("2.2", "Cartesian Products of Sets"),
+                ("2.2.1", "Definition of Cartesian Product"),
+                ("2.2.2", "Properties of Cartesian Product"),
+                ("2.2.3", "Graphical Representation"),
                 ("2.3", "Relations"),
+                ("2.3.1", "Definition of Relation"),
+                ("2.3.2", "Domain and Range"),
+                ("2.3.3", "Types of Relations"),
                 ("2.4", "Functions"),
+                ("2.4.1", "Definition of Function"),
+                ("2.4.2", "Domain and Codomain"),
+                ("2.4.3", "Types of Functions"),
+                ("2.4.4", "Composition of Functions"),
             ]
         },
         {
