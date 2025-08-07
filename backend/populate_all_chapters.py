@@ -965,17 +965,30 @@ def populate_all_chapters():
             ]
         },
         {
-            'subject': 'Maths',
+            'subject 'Maths',
             'class': 'Class 11',
             'chapter_file': 'Straight Lines.pdf',
             'chapter_number': '10',
             'headings': [
                 ("10", "Straight Lines"),
                 ("10.1", "Introduction"),
+                ("10.1.1", "Coordinate Geometry"),
+                ("10.1.2", "Equation of a Line"),
                 ("10.2", "Slope of a Line"),
+                ("10.2.1", "Definition of Slope"),
+                ("10.2.2", "Slope Formula"),
+                ("10.2.3", "Angle of Inclination"),
                 ("10.3", "Various Forms of the Equation of a Line"),
+                ("10.3.1", "Point-Slope Form"),
+                ("10.3.2", "Two-Point Form"),
+                ("10.3.3", "Slope-Intercept Form"),
+                ("10.3.4", "Intercept Form"),
                 ("10.4", "General Equation of a Line"),
+                ("10.4.1", "Standard Form"),
+                ("10.4.2", "Converting Between Forms"),
                 ("10.5", "Distance of a Point From a Line"),
+                ("10.5.1", "Distance Formula"),
+                ("10.5.2", "Applications"),
             ]
         },
         {
