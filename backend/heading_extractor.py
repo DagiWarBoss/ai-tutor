@@ -91,12 +91,12 @@ class HeadingExtractor:
             Filtered list of headings
         """
         cleaned = []
-        # Much more conservative BAD_STARTS - only remove obvious non-headings
+        # Remove obvious non-headings
         BAD_STARTS = (
             'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw',
         )
-        # Very minimal BAD_CONTAINS - only remove obvious non-headings
-        BAD_CONTAINS = ('equation', 'value')
+        # Remove obvious non-headings
+        BAD_CONTAINS = ('equation', 'value', 'define', 'distinguish', 'write', 'calculate')
         
         for num, text in headings:
             t = text.strip()
@@ -106,8 +106,16 @@ class HeadingExtractor:
             if not t:
                 continue
                 
-            # More lenient word count - allow 1-20 words
-            if len(words) < 1 or len(words) > 20:
+            # Skip if too short or too long
+            if len(words) < 2 or len(words) > 15:
+                continue
+                
+            # Skip if it's just a number (like "4 1", "4 2", etc.)
+            if len(words) == 1 and words[0].isdigit():
+                continue
+                
+            # Skip if it looks like a question (starts with question words)
+            if any(t.lower().startswith(q) for q in ['define', 'distinguish', 'write', 'calculate', 'explain', 'how', 'why', 'what']):
                 continue
                 
             # Only exclude very obvious non-headings
@@ -124,6 +132,10 @@ class HeadingExtractor:
                 
             # Additional check: skip if the heading is just the number
             if t.lower() == num.lower():
+                continue
+                
+            # Skip if it's just a number followed by nothing meaningful
+            if len(words) == 2 and words[0].isdigit() and len(words[1]) < 3:
                 continue
                 
             cleaned.append((num, text))
