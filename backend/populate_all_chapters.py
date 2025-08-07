@@ -912,8 +912,18 @@ def populate_all_chapters():
             'headings': [
                 ("8", "Binomial Theorem"),
                 ("8.1", "Introduction"),
+                ("8.1.1", "History of Binomial Theorem"),
+                ("8.1.2", "Applications"),
                 ("8.2", "Binomial Theorem for Positive Integral Indices"),
+                ("8.2.1", "Statement of Binomial Theorem"),
+                ("8.2.2", "Binomial Coefficients"),
+                ("8.2.3", "Pascal's Triangle"),
+                ("8.2.4", "Properties of Binomial Coefficients"),
                 ("8.3", "General and Middle Terms"),
+                ("8.3.1", "General Term"),
+                ("8.3.2", "Middle Term"),
+                ("8.3.3", "Applications of Binomial Theorem"),
+                ("8.3.4", "Approximations"),
             ]
         },
         {
