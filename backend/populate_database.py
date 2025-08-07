@@ -4,6 +4,7 @@ import re
 from dotenv import load_dotenv
 
 # --- Load Environment Variables ---
+# NOTE: Adjusted to handle cases where __file__ might not be defined (e.g., in a notebook)
 script_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else '.'
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
@@ -16,71 +17,85 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
-        lines.extend(doc[page_num].get_text("text", sort=True).split('\n'))
+        lines.extend(doc[page_num].get_text().split('\n'))
     
-    # --- CHANGE 1: Find where the exercises start to avoid extracting them ---
-    exercises_start_index = len(lines) # Default to end of doc
-    for idx, line_text in enumerate(lines):
-        # Stop processing when we hit the main "EXERCISES" header
-        if line_text.strip() == "EXERCISES":
-            exercises_start_index = idx
-            print(f"--- Found 'EXERCISES' section at line {idx}, processing will stop there. ---")
-            break
-
+    print("--- [DEBUG] Starting Heading Extraction ---")
     headings = []
     i = 0
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
-
-    # The loop now stops before the exercises section
-    while i < exercises_start_index:
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
+    
+    while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
+            # --- DEBUG STATEMENT ADDED ---
+            print(f"\n[DEBUG] Regex Matched Line: '{line}'")
             num, text = match.group(1).strip(), match.group(2).strip()
-
-            # --- CHANGE 2: Smarter loop to capture full, multi-line topic names ---
-            j = i + 1
-            while j < exercises_start_index:
-                next_line = lines[j].strip()
-
-                is_plausible_continuation = (
-                    next_line
-                    and next_line[0].isupper()
-                    and len(next_line.split()) < 7 # Prevents grabbing full paragraphs
-                )
-
-                if pat.match(next_line) or not is_plausible_continuation:
-                    break
-                
-                text += " " + next_line
-                j += 1
             
-            headings.append((num, text.strip()))
-            i = j - 1
-            # --- End of Changes ---
-
+            if not text or len(text.split()) < 2:
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1].strip()
+                    if next_line and next_line[0].isupper() and not next_line.isdigit():
+                        # --- DEBUG STATEMENT ADDED ---
+                        print(f"[DEBUG] Heading text is short. Looking at next line: '{next_line}'")
+                        print(f"[DEBUG] ERROR POINT: Replacing '{text}' with '{next_line}' instead of combining.")
+                        text = next_line
+                        i += 1
+            headings.append((num, text))
         i += 1
         
     doc.close()
+    print("--- [DEBUG] Finished Heading Extraction ---")
     return headings
 
 def post_filter(headings):
-    # This filter is adjusted to work with the improved extractor
     cleaned = []
-    BAD_STARTS = ('table', 'fig', 'problem', 'example')
+    BAD_STARTS = (
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
+        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+    )
+    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
     
+    print("\n--- [DEBUG] Starting Post-Filter ---")
     for num, text in headings:
-        # Rule 1: Must be shorter than a long sentence (e.g., 12 words)
-        if len(text.split()) > 12:
+        print(f"\n[DEBUG] Filtering -> '{num} {text}'")
+        t = text.strip()
+        words = t.split()
+        
+        # --- DEBUG STATEMENTS ADDED FOR EACH RULE ---
+        if not t or not t[0].isupper():
+            print(f"  └─ REJECTED: Does not start with an uppercase letter.")
             continue
-        # Rule 2: Exclude lines that start with junk words
-        if text.lower().startswith(BAD_STARTS):
+            
+        if len(words) < 2 or len(words) > 9:
+            print(f"  └─ REJECTED: Word count is {len(words)} (must be 2-9).")
             continue
-        # Rule 3: Must contain at least one letter
-        if not any(char.isalpha() for char in text):
+            
+        rejected = False
+        for bad in BAD_STARTS:
+            if t.lower().startswith(bad):
+                print(f"  └─ REJECTED: Starts with banned word '{bad}'.")
+                rejected = True
+                break
+        if rejected:
             continue
 
+        for bad in BAD_CONTAINS:
+            if bad in t.lower():
+                print(f"  └─ REJECTED: ERROR POINT -> Contains banned word '{bad}'.")
+                rejected = True
+                break
+        if rejected:
+            continue
+            
+        if t.endswith(':') or t.endswith('.'):
+            print(f"  └─ REJECTED: Ends with ':' or '.'.")
+            continue
+        
+        print("  └─ ACCEPTED: Heading passed all filters.")
         cleaned.append((num, text))
+        
+    print("\n--- [DEBUG] Post-Filter Finished ---")
     return cleaned
 
 if __name__ == '__main__':
