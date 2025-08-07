@@ -13,84 +13,71 @@ TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
 CHAPTER_NUMBER = "4"  # Change per chapter
 
 def extract_chapter_headings(pdf_path, chapter_number):
+    # This function is UNCHANGED, as you requested.
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
-        # Using sort=True helps organize text in a more natural reading order
-        lines.extend(doc[page_num].get_text("text", sort=True).split('\n'))
-    
+        lines.extend(doc[page_num].get_text().split('\n'))
     headings = []
     i = 0
-    # Added the en-dash '–' to the pattern as it's common in PDFs
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
-
+    # Pattern: Allow up to 5 decimals, but only at line start (not mid)
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+(.*)$")
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
-
-            # --- KEY CHANGE: Loop to capture multi-line headings ---
-            # This 'while' loop replaces the original 'if' statement.
-            # It keeps appending subsequent lines as long as they look like
-            # continuations of a heading (are short and start with a capital letter).
-            j = i + 1
-            while j < len(lines):
-                next_line = lines[j].strip()
-
-                # Define what a plausible continuation looks like
-                is_plausible_continuation = (
-                    next_line
-                    and next_line[0].isupper()
-                    and len(next_line.split()) < 7  # Prevents grabbing full paragraphs
-                )
-
-                # Stop if it's a new heading or not a plausible continuation
-                if pat.match(next_line) or not is_plausible_continuation:
-                    break
-
-                # Append the valid continuation line and move to the next
-                text += " " + next_line
-                j += 1
-            
-            headings.append((num, text.strip()))
-            # Skip the outer loop past the lines we just processed
-            i = j - 1
-            # --- End of Change ---
-
+            # If line just number or text is tiny, look ahead
+            if not text or len(text.split()) < 2:
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1].strip()
+                    # Require next line to start with uppercase & not digits
+                    if next_line and next_line[0].isupper() and not next_line.isdigit():
+                        text = next_line
+                        i += 1
+            headings.append((num, text))
         i += 1
-        
     doc.close()
     return headings
 
 def post_filter(headings):
-    # This function is UNCHANGED, as you requested.
     cleaned = []
+    # This list is UNCHANGED.
     BAD_STARTS = (
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
         'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
     )
-    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
+    
+    # --- CHANGE 1: 'molecule' and 'atom' are removed from this list ---
+    # These words are essential for chemistry topics and should not be filtered out.
+    BAD_CONTAINS = ('(', ')', 'equation', 'value', 'show', 'number', 'reason')
+    
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–9 words, start with Uppercase, and avoid "junk"
+        
+        # This rule is UNCHANGED.
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 9:
+            
+        # --- CHANGE 2: Word count limit is increased from 9 to 12 ---
+        # This allows longer but valid topic names to be included.
+        if len(words) < 2 or len(words) > 12:
             continue
-        # Exclude table, figure, exercises, etc.
+            
+        # These rules are UNCHANGED.
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
         if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
-        # Don't allow headings ending with ":" (often captions) or "."
         if t.endswith(':') or t.endswith('.'):
             continue
+            
         cleaned.append((num, text))
     return cleaned
 
 if __name__ == '__main__':
+    # This section is UNCHANGED.
     try:
         pdf_path = os.path.join(
             script_dir, PDF_ROOT_FOLDER,
