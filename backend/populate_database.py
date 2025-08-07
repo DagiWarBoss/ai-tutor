@@ -31,25 +31,29 @@ def get_most_common_font_info(doc):
 
 def find_chapter_number(doc):
     """
-    Scans the first page of a PDF to find the chapter number automatically.
-    This version is updated to work with different subject codes (CH, PH, MA, etc.).
+    --- UPGRADED FUNCTION ---
+    Scans the first 3 pages of a PDF to find the chapter number using multiple patterns.
     """
-    first_page_text = doc[0].get_text()
-    
-    # Looks for patterns like "UNIT 4" (case-insensitive)
-    unit_match = re.search(r"UNIT\s+(\d+)", first_page_text, re.IGNORECASE)
-    if unit_match:
-        return unit_match.group(1)
+    # Search the first 3 pages of the document
+    for page_num in range(min(3, doc.page_count)):
+        page_text = doc[page_num].get_text()
         
-    # --- IMPROVEMENT ---
-    # Looks for generic NCERT codes like "CH04", "PH01", "MA12", etc.
-    # [A-Z]{2} matches any two capital letters for the subject code.
-    code_match = re.search(r"[A-Z]{2}(\d{2})", first_page_text)
-    if code_match:
-        # Converts "04" to "4"
-        return str(int(code_match.group(1)))
+        # Pattern 1: "CHAPTER X" (Most reliable for many books)
+        chapter_match = re.search(r"CHAPTER\s+(\d{1,2})", page_text, re.IGNORECASE)
+        if chapter_match:
+            return chapter_match.group(1)
 
-    return None
+        # Pattern 2: "UNIT X"
+        unit_match = re.search(r"UNIT\s+(\d+)", page_text, re.IGNORECASE)
+        if unit_match:
+            return unit_match.group(1)
+        
+        # Pattern 3: NCERT codes like "CH04", "PH01", "MA12"
+        code_match = re.search(r"[A-Z]{2}(\d{2})", page_text)
+        if code_match:
+            return str(int(code_match.group(1))) # Converts "04" to "4"
+            
+    return None # Return None if no pattern is matched in the first 3 pages
 
 def extract_headings_by_style(doc, chapter_number):
     """
@@ -83,7 +87,6 @@ def extract_headings_by_style(doc, chapter_number):
 if __name__ == '__main__':
     all_headings_data = []
 
-    # The os.walk function will automatically go through all subjects and classes
     for root, dirs, files in sorted(os.walk(PDF_ROOT_FOLDER)):
         for filename in sorted(files):
             if filename.lower().endswith(".pdf"):
