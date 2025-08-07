@@ -38,9 +38,9 @@ class HeadingExtractor:
                 num, text = match.group(1).strip(), match.group(2).strip()
                 
                 # If text is empty or very short, look ahead for continuation
-                if not text or len(text.split()) < 2:
-                    # Look ahead up to 3 lines for continuation
-                    for look_ahead in range(1, 4):
+                if not text or len(text.split()) < 3:
+                    # Look ahead up to 4 lines for continuation
+                    for look_ahead in range(1, 5):
                         if i + look_ahead < len(lines):
                             next_line = lines[i + look_ahead].strip()
                             # Skip empty lines and lines that start with numbers (likely new headings)
@@ -51,7 +51,7 @@ class HeadingExtractor:
                                     words = next_line.split()
                                     
                                     # If it's short and doesn't start with common explanatory words
-                                    if len(words) <= 8 and not any(word.lower() in ['the', 'and', 'of', 'in', 'to', 'for', 'with', 'by', 'is', 'are', 'was', 'were'] for word in words[:2]):
+                                    if len(words) <= 10 and not any(word.lower() in ['the', 'and', 'of', 'in', 'to', 'for', 'with', 'by', 'is', 'are', 'was', 'were'] for word in words[:2]):
                                         if text:
                                             text = text + " " + next_line
                                         else:
@@ -65,7 +65,7 @@ class HeadingExtractor:
                                 # Also check if next line continues the current text (lowercase continuation)
                                 elif next_line and next_line[0].islower() and text:
                                     # Only add if it's a short continuation (likely part of the heading)
-                                    if len(next_line.split()) <= 4:
+                                    if len(next_line.split()) <= 5:
                                         text = text + " " + next_line
                                         i += look_ahead
                                         break
