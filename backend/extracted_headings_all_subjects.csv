@@ -437,3 +437,1664 @@ Maths,Class 11,Probability.pdf,16,16.1,Introduction
 Maths,Class 11,Probability.pdf,16,16.2,Random Experiments
 Maths,Class 11,Probability.pdf,16,16.3,Event
 Maths,Class 11,Probability.pdf,16,16.4,Axiomatic Approach to Probability
+Chemistry,Class 12,Solutions.pdf,2,2,Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.1,Types of Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.2,Expressing Concentration of Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.3,Solubility
+Chemistry,Class 12,Solutions.pdf,2,2.4,Vapour Pressure of Liquid Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.5,Ideal and Non-ideal Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.6,Colligative Properties and Determination of Molar Mass
+Chemistry,Class 12,Solutions.pdf,2,2.7,Abnormal Molar Masses
+Chemistry,Class 12,Solutions.pdf,2,2.1.1,Solid Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.1.2,Liquid Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.1.3,Gaseous Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.2.1,Mass Percentage
+Chemistry,Class 12,Solutions.pdf,2,2.2.2,Volume Percentage
+Chemistry,Class 12,Solutions.pdf,2,2.2.3,Mole Fraction
+Chemistry,Class 12,Solutions.pdf,2,2.2.4,Molarity
+Chemistry,Class 12,Solutions.pdf,2,2.2.5,Molality
+Chemistry,Class 12,Solutions.pdf,2,2.3.1,Factors Affecting Solubility
+Chemistry,Class 12,Solutions.pdf,2,2.3.2,Solubility of Gases in Liquids
+Chemistry,Class 12,Solutions.pdf,2,2.3.3,Solubility of Solids in Liquids
+Chemistry,Class 12,Solutions.pdf,2,2.4.1,Vapour Pressure of Pure Liquid
+Chemistry,Class 12,Solutions.pdf,2,2.4.2,Vapour Pressure of Solution
+Chemistry,Class 12,Solutions.pdf,2,2.4.3,Raoult's Law
+Chemistry,Class 12,Solutions.pdf,2,2.5.1,Ideal Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.5.2,Non-ideal Solutions
+Chemistry,Class 12,Solutions.pdf,2,2.5.3,Positive Deviation
+Chemistry,Class 12,Solutions.pdf,2,2.5.4,Negative Deviation
+Chemistry,Class 12,Solutions.pdf,2,2.6.1,Relative Lowering of Vapour Pressure
+Chemistry,Class 12,Solutions.pdf,2,2.6.2,Elevation of Boiling Point
+Chemistry,Class 12,Solutions.pdf,2,2.6.3,Depression of Freezing Point
+Chemistry,Class 12,Solutions.pdf,2,2.6.4,Osmotic Pressure
+Chemistry,Class 12,Solutions.pdf,2,2.7.1,Association of Solute
+Chemistry,Class 12,Solutions.pdf,2,2.7.2,Dissociation of Solute
+Chemistry,Class 12,Solutions.pdf,2,2.7.3,Van't Hoff Factor
+Chemistry,Class 12,Electrochemistry.pdf,3,3,Electrochemistry
+Chemistry,Class 12,Electrochemistry.pdf,3,3.1,Electrochemical Cells
+Chemistry,Class 12,Electrochemistry.pdf,3,3.2,Galvanic Cells
+Chemistry,Class 12,Electrochemistry.pdf,3,3.3,Nernst Equation
+Chemistry,Class 12,Electrochemistry.pdf,3,3.4,Conductance of Electrolytic Solutions
+Chemistry,Class 12,Electrochemistry.pdf,3,3.5,Electrolytic Cells and Electrolysis
+Chemistry,Class 12,Electrochemistry.pdf,3,3.6,Batteries
+Chemistry,Class 12,Electrochemistry.pdf,3,3.7,Fuel Cells
+Chemistry,Class 12,Electrochemistry.pdf,3,3.8,Corrosion
+Chemistry,Class 12,Electrochemistry.pdf,3,3.1.1,Electrochemical Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.1.2,Electrode Potential
+Chemistry,Class 12,Electrochemistry.pdf,3,3.1.3,Standard Electrode Potential
+Chemistry,Class 12,Electrochemistry.pdf,3,3.2.1,Construction of Galvanic Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.2.2,Working of Galvanic Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.2.3,Cell Potential
+Chemistry,Class 12,Electrochemistry.pdf,3,3.3.1,Nernst Equation Derivation
+Chemistry,Class 12,Electrochemistry.pdf,3,3.3.2,Applications of Nernst Equation
+Chemistry,Class 12,Electrochemistry.pdf,3,3.3.3,Concentration Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.4.1,Conductance
+Chemistry,Class 12,Electrochemistry.pdf,3,3.4.2,Molar Conductivity
+Chemistry,Class 12,Electrochemistry.pdf,3,3.4.3,Equivalent Conductivity
+Chemistry,Class 12,Electrochemistry.pdf,3,3.4.4,Kohlrausch's Law
+Chemistry,Class 12,Electrochemistry.pdf,3,3.5.1,Electrolytic Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.5.2,Electrolysis
+Chemistry,Class 12,Electrochemistry.pdf,3,3.5.3,Faraday's Laws of Electrolysis
+Chemistry,Class 12,Electrochemistry.pdf,3,3.6.1,Primary Batteries
+Chemistry,Class 12,Electrochemistry.pdf,3,3.6.2,Secondary Batteries
+Chemistry,Class 12,Electrochemistry.pdf,3,3.6.3,Lead Storage Battery
+Chemistry,Class 12,Electrochemistry.pdf,3,3.6.4,Nickel-Cadmium Battery
+Chemistry,Class 12,Electrochemistry.pdf,3,3.7.1,Fuel Cell Construction
+Chemistry,Class 12,Electrochemistry.pdf,3,3.7.2,Hydrogen-Oxygen Fuel Cell
+Chemistry,Class 12,Electrochemistry.pdf,3,3.7.3,Applications of Fuel Cells
+Chemistry,Class 12,Electrochemistry.pdf,3,3.8.1,Types of Corrosion
+Chemistry,Class 12,Electrochemistry.pdf,3,3.8.2,Prevention of Corrosion
+Chemistry,Class 12,Electrochemistry.pdf,3,3.8.3,Electrochemical Theory of Corrosion
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4,Chemical Kinetics
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.1,Rate of a Chemical Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2,Factors Influencing Rate of a Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.3,Dependence of Rate on Concentration
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.4,Integrated Rate Equations
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.5,Pseudo First Order Reactions
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.6,Temperature Dependence of the Rate of a Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.7,Effect of Catalyst
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.8,Collision Theory of Chemical Reactions
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.1.1,Average Rate of Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.1.2,Instantaneous Rate of Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.1.3,Rate of Disappearance
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.1.4,Rate of Appearance
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2.1,Nature of Reactants
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2.2,Concentration of Reactants
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2.3,Temperature
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2.4,Catalyst
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.2.5,Surface Area
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.3.1,Rate Law
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.3.2,Order of Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.3.3,Molecularity
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.4.1,Zero Order Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.4.2,First Order Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.4.3,Second Order Reaction
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.5.1,Acid Hydrolysis of Ethyl Acetate
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.5.2,Inversion of Cane Sugar
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.6.1,Arrhenius Equation
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.6.2,Activation Energy
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.6.3,Effect of Temperature on Rate Constant
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.7.1,Homogeneous Catalysis
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.7.2,Heterogeneous Catalysis
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.7.3,Enzyme Catalysis
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.8.1,Collision Theory
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.8.2,Activation Energy Barrier
+Chemistry,Class 12,Chemical Kinetics.pdf,4,4.8.3,Effective Collisions
+Chemistry,Class 12,Surface Chemistry.pdf,5,5,Surface Chemistry
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.1,Adsorption
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.2,Catalysis
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.3,Colloids
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.4,Emulsions
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.1.1,Physical Adsorption
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.1.2,Chemical Adsorption
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.1.3,Factors Affecting Adsorption
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.1.4,Adsorption Isotherms
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.2.1,Homogeneous Catalysis
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.2.2,Heterogeneous Catalysis
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.2.3,Enzyme Catalysis
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.2.4,Catalyst Selectivity
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.3.1,Types of Colloids
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.3.2,Preparation of Colloids
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.3.3,Purification of Colloids
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.3.4,Properties of Colloids
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.4.1,Types of Emulsions
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.4.2,Emulsifying Agents
+Chemistry,Class 12,Surface Chemistry.pdf,5,5.4.3,Applications of Emulsions
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6,General Principles and Processes of Isolation of Elements
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.1,Occurrence of Metals
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.2,Concentration of Ores
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.3,Extraction of Crude Metal from Concentrated Ore
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.4,Thermodynamic Principles of Metallurgy
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.5,Electrochemical Principles of Metallurgy
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.6,Oxidation and Reduction
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7,Refining
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.1.1,Native State
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.1.2,Combined State
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.1.3,Minerals and Ores
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.2.1,Hydraulic Washing
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.2.2,Magnetic Separation
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.2.3,Froth Floatation
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.2.4,Leaching
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.3.1,Calcination
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.3.2,Roasting
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.3.3,Smelting
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.4.1,Ellingham Diagram
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.4.2,Reduction of Metal Oxides
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.4.3,Reduction of Metal Sulphides
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.5.1,Electrolytic Reduction
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.5.2,Electrolytic Refining
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.6.1,Oxidation
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.6.2,Reduction
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.6.3,Redox Reactions
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7.1,Distillation
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7.2,Liquation
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7.3,Zone Refining
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7.4,Vapour Phase Refining
+Chemistry,Class 12,General Principles and Processes of Isolation of Elements.pdf,6,6.7.5,Electrolytic Refining
+Chemistry,Class 12,The p-Block Elements.pdf,7,7,The p-Block Elements
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1,Group 15 Elements
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.2,Dinitrogen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.3,Ammonia
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.4,Oxides of Nitrogen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.5,Nitric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.6,Phosphorus – Allotropic Forms
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.7,Phosphine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.8,Phosphorus Halides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.9,Phosphorus Oxides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.10,Phosphoric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11,Group 16 Elements
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.12,Dioxygen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.13,Simple Oxides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.14,Ozone
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.15,Sulphur – Allotropic Forms
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.16,Sulphur Dioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.17,Oxoacids of Sulphur
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.18,Sulphuric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19,Group 17 Elements
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.20,Chlorine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.21,Hydrogen Chloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.22,Oxoacids of Halogens
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.23,Interhalogen Compounds
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24,Group 18 Elements
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.1,Electronic Configuration
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.2,Atomic and Ionic Radii
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.3,Ionization Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.4,Electron Gain Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.5,Electronegativity
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.6,Physical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.1.7,Chemical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.2.1,Preparation of Dinitrogen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.2.2,Properties of Dinitrogen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.2.3,Uses of Dinitrogen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.3.1,Preparation of Ammonia
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.3.2,Properties of Ammonia
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.3.3,Uses of Ammonia
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.4.1,Nitric Oxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.4.2,Nitrogen Dioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.4.3,Dinitrogen Pentoxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.5.1,Preparation of Nitric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.5.2,Properties of Nitric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.5.3,Uses of Nitric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.6.1,White Phosphorus
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.6.2,Red Phosphorus
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.6.3,Black Phosphorus
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.7.1,Preparation of Phosphine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.7.2,Properties of Phosphine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.7.3,Uses of Phosphine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.8.1,Phosphorus Trichloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.8.2,Phosphorus Pentachloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.9.1,Phosphorus Trioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.9.2,Phosphorus Pentoxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.10.1,Preparation of Phosphoric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.10.2,Properties of Phosphoric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.10.3,Uses of Phosphoric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.1,Electronic Configuration
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.2,Atomic and Ionic Radii
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.3,Ionization Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.4,Electron Gain Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.5,Electronegativity
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.6,Physical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.11.7,Chemical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.12.1,Preparation of Dioxygen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.12.2,Properties of Dioxygen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.12.3,Uses of Dioxygen
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.13.1,Simple Oxides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.13.2,Mixed Oxides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.13.3,Peroxides
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.14.1,Preparation of Ozone
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.14.2,Properties of Ozone
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.14.3,Uses of Ozone
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.15.1,Rhombic Sulphur
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.15.2,Monoclinic Sulphur
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.15.3,Plastic Sulphur
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.16.1,Preparation of Sulphur Dioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.16.2,Properties of Sulphur Dioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.16.3,Uses of Sulphur Dioxide
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.17.1,Sulphurous Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.17.2,Sulphuric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.17.3,Peroxodisulphuric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.18.1,Contact Process
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.18.2,Properties of Sulphuric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.18.3,Uses of Sulphuric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.1,Electronic Configuration
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.2,Atomic and Ionic Radii
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.3,Ionization Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.4,Electron Gain Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.5,Electronegativity
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.6,Physical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.19.7,Chemical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.20.1,Preparation of Chlorine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.20.2,Properties of Chlorine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.20.3,Uses of Chlorine
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.21.1,Preparation of Hydrogen Chloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.21.2,Properties of Hydrogen Chloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.21.3,Uses of Hydrogen Chloride
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.22.1,Hypochlorous Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.22.2,Chlorous Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.22.3,Chloric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.22.4,Perchloric Acid
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.23.1,Types of Interhalogen Compounds
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.23.2,Preparation of Interhalogen Compounds
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.23.3,Properties of Interhalogen Compounds
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.1,Electronic Configuration
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.2,Atomic and Ionic Radii
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.3,Ionization Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.4,Electron Gain Enthalpy
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.5,Physical Properties
+Chemistry,Class 12,The p-Block Elements.pdf,7,7.24.6,Chemical Properties
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8,The d and f Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.1,Position in the Periodic Table
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.2,Electronic Configurations of the d-Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3,General Properties of the Transition Elements (d-Block)
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4,Some Important Compounds of Transition Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5,The Lanthanoids
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6,The Actinoids
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.7,Some Applications of d and f Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.1.1,d-Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.1.2,f-Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.1.3,Position in Periodic Table
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.2.1,General Electronic Configuration
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.2.2,Electronic Configuration of 3d Series
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.2.3,Electronic Configuration of 4d Series
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.2.4,Electronic Configuration of 5d Series
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.1,Physical Properties
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.2,Atomic and Ionic Sizes
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.3,Ionization Enthalpies
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.4,Oxidation States
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.5,Trends in the M2+/M Standard Electrode Potentials
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.6,Trends in the M3+/M2+ Standard Electrode Potentials
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.7,Trends in Stability of Higher Oxidation States
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.8,Chemical Reactivity and E° Values
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.9,Magnetic Properties
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.10,Formation of Coloured Ions
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.11,Formation of Complex Compounds
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.12,Catalytic Properties
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.13,Formation of Interstitial Compounds
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.3.14,Alloy Formation
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4.1,Oxides and Oxoanions of Metals
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4.2,Potassium Dichromate K2Cr2O7
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4.3,Potassium Permanganate KMnO4
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4.4,Oxides of 3d Series
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.4.5,Oxoanions of 3d Series
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5.1,Electronic Configurations
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5.2,Atomic and Ionic Sizes
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5.3,Oxidation States
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5.4,General Characteristics
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.5.5,Chemical Reactivity
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6.1,Electronic Configurations
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6.2,Atomic and Ionic Sizes
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6.3,Oxidation States
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6.4,General Characteristics
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.6.5,Chemical Reactivity
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.7.1,Applications of d-Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.7.2,Applications of f-Block Elements
+Chemistry,Class 12,The d and f Block Elements.pdf,8,8.7.3,Industrial Applications
+Chemistry,Class 12,Coordination Compounds.pdf,9,9,Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.1,Werner's Theory of Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2,Definitions of Some Important Terms Pertaining to Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.3,Nomenclature of Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4,Isomerism in Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.5,Bonding in Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.6,Bonding in Metal Carbonyls
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.7,Stability of Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.8,Importance and Applications of Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.1.1,Postulates of Werner's Theory
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.1.2,Primary Valency
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.1.3,Secondary Valency
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.1.4,Limitations of Werner's Theory
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.1,Coordination Entity
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.2,Central Atom/Ion
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.3,Ligands
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.4,Coordination Number
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.5,Coordination Sphere
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.6,Counter Ions
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.7,Coordination Polyhedron
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.8,Oxidation Number of Central Atom
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.2.9,Homoleptic and Heteroleptic Complexes
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.3.1,Naming of Coordination Compounds
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.3.2,Naming of Ligands
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.3.3,Naming of Central Atom
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.3.4,Naming of Counter Ions
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.1,Geometrical Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.2,Optical Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.3,Linkage Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.4,Coordination Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.5,Ionisation Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.4.6,Solvate Isomerism
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.5.1,Valence Bond Theory
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.5.2,Crystal Field Theory
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.5.3,Ligand Field Theory
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.6.1,Formation of Metal Carbonyls
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.6.2,Bonding in Metal Carbonyls
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.6.3,Properties of Metal Carbonyls
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.7.1,Stability Constants
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.7.2,Factors Affecting Stability
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.7.3,Chelate Effect
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.8.1,Applications in Analytical Chemistry
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.8.2,Applications in Medicine
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.8.3,Applications in Industry
+Chemistry,Class 12,Coordination Compounds.pdf,9,9.8.4,Applications in Biology
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10,Haloalkanes and Haloarenes
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1,Classification
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.2,Nomenclature
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.3,Nature of C–X Bond
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4,Methods of Preparation
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.5,Physical Properties
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6,Chemical Reactions
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1.1,Alkyl Halides or Haloalkanes (R–X)
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1.2,Allylic Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1.3,Benzylic Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1.4,Vinylic Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.1.5,Aryl Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.2.1,Common Names
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.2.2,IUPAC Names
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.2.3,Naming of Haloalkanes
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.2.4,Naming of Haloarenes
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.3.1,Bond Length
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.3.2,Bond Strength
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.3.3,Bond Polarity
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4.1,From Alcohols
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4.2,From Hydrocarbons
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4.3,Halogen Exchange
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4.4,From Alkenes
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.4.5,From Arenes
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.5.1,Physical State
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.5.2,Boiling Points
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.5.3,Density
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.5.4,Solubility
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.1,Nucleophilic Substitution Reactions
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.2,Elimination Reactions
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.3,Reaction with Metals
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.4,Reduction
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.5,Reaction with Aryl Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.6,Wurtz Reaction
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.7,Fittig Reaction
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.8,Wurtz-Fittig Reaction
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.9,Reaction with Aryl Halides
+Chemistry,Class 12,Haloalkanes And Haloarenes.pdf,10,10.6.10,Reaction with Aryl Halides
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11,"Alcohols, Phenols and Ethers"
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.1,Classification
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.2,Nomenclature
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.3,Structures of Functional Groups
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.4,Alcohols and Phenols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.5,Some Commercially Important Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.6,Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.1.1,Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.1.2,Phenols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.1.3,Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.2.1,Naming of Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.2.2,Naming of Phenols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.2.3,Naming of Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.3.1,Structure of Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.3.2,Structure of Phenols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.3.3,Structure of Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.4.1,Preparation of Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.4.2,Preparation of Phenols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.4.3,Physical Properties
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.4.4,Chemical Reactions
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.5.1,Methanol
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.5.2,Ethanol
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.5.3,Uses of Alcohols
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.6.1,Preparation of Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.6.2,Physical Properties of Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.6.3,Chemical Reactions of Ethers
+Chemistry,Class 12,Alcohol Phenols Ethers.pdf,11,11.6.4,Uses of Ethers
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12,"Aldehydes, Ketones and Carboxylic Acids"
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.1,Nomenclature and Structure of Carbonyl Group
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2,Preparation of Aldehydes and Ketones
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.3,Physical Properties
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4,Chemical Reactions
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.5,Uses of Aldehydes and Ketones
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.6,Nomenclature and Structure of Carboxyl Group
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7,Methods of Preparation of Carboxylic Acids
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.8,Physical Properties
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.9,Chemical Reactions
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.10,Uses of Carboxylic Acids
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.1.1,Naming of Aldehydes
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.1.2,Naming of Ketones
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.1.3,Structure of Carbonyl Group
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2.1,From Alcohols
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2.2,From Hydrocarbons
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2.3,From Acid Chlorides
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2.4,From Nitriles
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.2.5,From Esters
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.3.1,Physical State
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.3.2,Boiling Points
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.3.3,Solubility
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4.1,Nucleophilic Addition Reactions
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4.2,Reduction
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4.3,Oxidation
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4.4,Reactions Due to α-Hydrogen
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.4.5,Other Reactions
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.5.1,Uses of Aldehydes
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.5.2,Uses of Ketones
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.6.1,Naming of Carboxylic Acids
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.6.2,Structure of Carboxyl Group
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.1,From Primary Alcohols
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.2,From Aldehydes
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.3,From Alkylbenzenes
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.4,From Nitriles
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.5,From Grignard Reagents
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.7.6,From Esters
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.8.1,Physical State
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.8.2,Boiling Points
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.8.3,Solubility
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.9.1,Reactions Involving Cleavage of O–H Bond
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.9.2,Reactions Involving Cleavage of C–OH Bond
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.9.3,Reactions Involving –COOH Group
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.9.4,Substitution Reactions in the Hydrocarbon Part
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.10.1,Uses of Carboxylic Acids
+Chemistry,Class 12,"Aldehydes, Ketones And Carboxylic Acid.pdf",12,12.10.2,Industrial Applications
+Chemistry,Class 12,Amines.pdf,13,13,Amines
+Chemistry,Class 12,Amines.pdf,13,13.1,Structure of Amines
+Chemistry,Class 12,Amines.pdf,13,13.2,Classification
+Chemistry,Class 12,Amines.pdf,13,13.3,Nomenclature
+Chemistry,Class 12,Amines.pdf,13,13.4,Preparation of Amines
+Chemistry,Class 12,Amines.pdf,13,13.5,Physical Properties
+Chemistry,Class 12,Amines.pdf,13,13.6,Chemical Reactions
+Chemistry,Class 12,Amines.pdf,13,13.7,Method of Preparation of Diazonium Salts
+Chemistry,Class 12,Amines.pdf,13,13.8,Physical Properties
+Chemistry,Class 12,Amines.pdf,13,13.9,Chemical Reactions
+Chemistry,Class 12,Amines.pdf,13,13.10,Importance of Diazonium Salts in Synthesis of Aromatic Compounds
+Chemistry,Class 12,Amines.pdf,13,13.1.1,Structure of Amines
+Chemistry,Class 12,Amines.pdf,13,13.1.2,Hybridisation
+Chemistry,Class 12,Amines.pdf,13,13.1.3,Bond Angles
+Chemistry,Class 12,Amines.pdf,13,13.2.1,Primary Amines
+Chemistry,Class 12,Amines.pdf,13,13.2.2,Secondary Amines
+Chemistry,Class 12,Amines.pdf,13,13.2.3,Tertiary Amines
+Chemistry,Class 12,Amines.pdf,13,13.2.4,Aromatic Amines
+Chemistry,Class 12,Amines.pdf,13,13.3.1,Common Names
+Chemistry,Class 12,Amines.pdf,13,13.3.2,IUPAC Names
+Chemistry,Class 12,Amines.pdf,13,13.3.3,Naming of Amines
+Chemistry,Class 12,Amines.pdf,13,13.4.1,Reduction of Nitro Compounds
+Chemistry,Class 12,Amines.pdf,13,13.4.2,Ammonolysis of Alkyl Halides
+Chemistry,Class 12,Amines.pdf,13,13.4.3,Reduction of Nitriles
+Chemistry,Class 12,Amines.pdf,13,13.4.4,Reduction of Amides
+Chemistry,Class 12,Amines.pdf,13,13.4.5,Gabriel Phthalimide Synthesis
+Chemistry,Class 12,Amines.pdf,13,13.4.6,Hofmann Bromamide Degradation
+Chemistry,Class 12,Amines.pdf,13,13.5.1,Physical State
+Chemistry,Class 12,Amines.pdf,13,13.5.2,Boiling Points
+Chemistry,Class 12,Amines.pdf,13,13.5.3,Solubility
+Chemistry,Class 12,Amines.pdf,13,13.6.1,Basic Character of Amines
+Chemistry,Class 12,Amines.pdf,13,13.6.2,Reaction with Acids
+Chemistry,Class 12,Amines.pdf,13,13.6.3,Alkylation
+Chemistry,Class 12,Amines.pdf,13,13.6.4,Acylation
+Chemistry,Class 12,Amines.pdf,13,13.6.5,Carbylamine Reaction
+Chemistry,Class 12,Amines.pdf,13,13.6.6,Reaction with Nitrous Acid
+Chemistry,Class 12,Amines.pdf,13,13.6.7,Reaction with Aryl Sulphonyl Chloride
+Chemistry,Class 12,Amines.pdf,13,13.6.8,Electrophilic Substitution
+Chemistry,Class 12,Amines.pdf,13,13.7.1,Diazotisation
+Chemistry,Class 12,Amines.pdf,13,13.7.2,Preparation of Diazonium Salts
+Chemistry,Class 12,Amines.pdf,13,13.8.1,Physical State
+Chemistry,Class 12,Amines.pdf,13,13.8.2,Solubility
+Chemistry,Class 12,Amines.pdf,13,13.8.3,Stability
+Chemistry,Class 12,Amines.pdf,13,13.9.1,Replacement Reactions
+Chemistry,Class 12,Amines.pdf,13,13.9.2,Coupling Reactions
+Chemistry,Class 12,Amines.pdf,13,13.9.3,Reduction
+Chemistry,Class 12,Amines.pdf,13,13.10.1,Sandmeyer Reaction
+Chemistry,Class 12,Amines.pdf,13,13.10.2,Gattermann Reaction
+Chemistry,Class 12,Amines.pdf,13,13.10.3,Balz-Schiemann Reaction
+Chemistry,Class 12,Amines.pdf,13,13.10.4,Coupling Reactions
+Chemistry,Class 12,Biomolecules.pdf,14,14,Biomolecules
+Chemistry,Class 12,Biomolecules.pdf,14,14.1,Carbohydrates
+Chemistry,Class 12,Biomolecules.pdf,14,14.2,Proteins
+Chemistry,Class 12,Biomolecules.pdf,14,14.3,Enzymes
+Chemistry,Class 12,Biomolecules.pdf,14,14.4,Vitamins
+Chemistry,Class 12,Biomolecules.pdf,14,14.5,Nucleic Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.6,Hormones
+Chemistry,Class 12,Biomolecules.pdf,14,14.1.1,Classification of Carbohydrates
+Chemistry,Class 12,Biomolecules.pdf,14,14.1.2,Monosaccharides
+Chemistry,Class 12,Biomolecules.pdf,14,14.1.3,Disaccharides
+Chemistry,Class 12,Biomolecules.pdf,14,14.1.4,Polysaccharides
+Chemistry,Class 12,Biomolecules.pdf,14,14.1.5,Importance of Carbohydrates
+Chemistry,Class 12,Biomolecules.pdf,14,14.2.1,Amino Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.2.2,Structure of Proteins
+Chemistry,Class 12,Biomolecules.pdf,14,14.2.3,Classification of Proteins
+Chemistry,Class 12,Biomolecules.pdf,14,14.2.4,Denaturation of Proteins
+Chemistry,Class 12,Biomolecules.pdf,14,14.2.5,Importance of Proteins
+Chemistry,Class 12,Biomolecules.pdf,14,14.3.1,Mechanism of Enzyme Action
+Chemistry,Class 12,Biomolecules.pdf,14,14.3.2,Factors Affecting Enzyme Activity
+Chemistry,Class 12,Biomolecules.pdf,14,14.3.3,Classification of Enzymes
+Chemistry,Class 12,Biomolecules.pdf,14,14.3.4,Importance of Enzymes
+Chemistry,Class 12,Biomolecules.pdf,14,14.4.1,Classification of Vitamins
+Chemistry,Class 12,Biomolecules.pdf,14,14.4.2,Fat-soluble Vitamins
+Chemistry,Class 12,Biomolecules.pdf,14,14.4.3,Water-soluble Vitamins
+Chemistry,Class 12,Biomolecules.pdf,14,14.4.4,Importance of Vitamins
+Chemistry,Class 12,Biomolecules.pdf,14,14.5.1,Types of Nucleic Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.5.2,Chemical Composition of Nucleic Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.5.3,Structure of Nucleic Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.5.4,Biological Functions of Nucleic Acids
+Chemistry,Class 12,Biomolecules.pdf,14,14.6.1,Classification of Hormones
+Chemistry,Class 12,Biomolecules.pdf,14,14.6.2,Mechanism of Hormone Action
+Chemistry,Class 12,Biomolecules.pdf,14,14.6.3,Importance of Hormones
+Chemistry,Class 12,Polymers.pdf,15,15,Polymers
+Chemistry,Class 12,Polymers.pdf,15,15.1,Classification of Polymers
+Chemistry,Class 12,Polymers.pdf,15,15.2,Types of Polymerisation Reactions
+Chemistry,Class 12,Polymers.pdf,15,15.3,Molecular Mass of Polymers
+Chemistry,Class 12,Polymers.pdf,15,15.4,Biodegradable Polymers
+Chemistry,Class 12,Polymers.pdf,15,15.5,Polymers of Commercial Importance
+Chemistry,Class 12,Polymers.pdf,15,15.1.1,Classification Based on Source
+Chemistry,Class 12,Polymers.pdf,15,15.1.2,Classification Based on Structure
+Chemistry,Class 12,Polymers.pdf,15,15.1.3,Classification Based on Mode of Polymerisation
+Chemistry,Class 12,Polymers.pdf,15,15.1.4,Classification Based on Molecular Forces
+Chemistry,Class 12,Polymers.pdf,15,15.1.5,Classification Based on Growth Polymerisation
+Chemistry,Class 12,Polymers.pdf,15,15.2.1,Addition Polymerisation
+Chemistry,Class 12,Polymers.pdf,15,15.2.2,Condensation Polymerisation
+Chemistry,Class 12,Polymers.pdf,15,15.2.3,Copolymerisation
+Chemistry,Class 12,Polymers.pdf,15,15.3.1,Number Average Molecular Mass
+Chemistry,Class 12,Polymers.pdf,15,15.3.2,Weight Average Molecular Mass
+Chemistry,Class 12,Polymers.pdf,15,15.3.3,Polydispersity Index
+Chemistry,Class 12,Polymers.pdf,15,15.4.1,Poly β-hydroxybutyrate-co-β-hydroxy valerate (PHBV)
+Chemistry,Class 12,Polymers.pdf,15,15.4.2,Nylon 2–nylon 6
+Chemistry,Class 12,Polymers.pdf,15,15.4.3,Polyglycolic Acid
+Chemistry,Class 12,Polymers.pdf,15,15.4.4,Polylactic Acid
+Chemistry,Class 12,Polymers.pdf,15,15.5.1,Natural Rubber
+Chemistry,Class 12,Polymers.pdf,15,15.5.2,Synthetic Rubber
+Chemistry,Class 12,Polymers.pdf,15,15.5.3,Polyethylene
+Chemistry,Class 12,Polymers.pdf,15,15.5.4,Polyvinyl Chloride
+Chemistry,Class 12,Polymers.pdf,15,15.5.5,Polystyrene
+Chemistry,Class 12,Polymers.pdf,15,15.5.6,Polyacrylonitrile
+Chemistry,Class 12,Polymers.pdf,15,15.5.7,Teflon
+Chemistry,Class 12,Polymers.pdf,15,15.5.8,Nylon
+Chemistry,Class 12,Polymers.pdf,15,15.5.9,Polyesters
+Chemistry,Class 12,Polymers.pdf,15,15.5.10,Phenol Formaldehyde
+Chemistry,Class 12,Polymers.pdf,15,15.5.11,Urea Formaldehyde
+Chemistry,Class 12,Polymers.pdf,15,15.5.12,Melamine Formaldehyde
+Chemistry,Class 12,Polymers.pdf,15,15.5.13,Bakelite
+Chemistry,Class 12,Polymers.pdf,15,15.5.14,Glyptal
+Chemistry,Class 12,Polymers.pdf,15,15.5.15,Polyurethane
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16,Chemistry in Everyday Life
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1,Drugs and their Classification
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2,Drug-Target Interaction
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3,Therapeutic Action of Different Classes of Drugs
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4,Chemicals in Food
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.5,Cleansing Agents
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.1,Classification of Drugs
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.2,Drugs Acting on Central Nervous System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.3,Drugs Acting on Peripheral Nervous System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.4,Drugs Acting on Cardiovascular System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.5,Drugs Acting on Gastrointestinal Tract
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.6,Drugs Acting on Respiratory System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.7,Drugs Acting on Endocrine System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.8,Drugs Acting on Reproductive System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.9,Drugs Acting on Immune System
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.10,Drugs Acting on Skin
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.11,Drugs Acting on Eyes
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.12,Drugs Acting on Ears
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.13,Drugs Acting on Nose
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.14,Drugs Acting on Mouth
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.1.15,Drugs Acting on Throat
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2.1,Enzymes as Drug Targets
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2.2,Receptors as Drug Targets
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2.3,Ion Channels as Drug Targets
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2.4,Transport Proteins as Drug Targets
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.2.5,Nucleic Acids as Drug Targets
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3.1,Antacids
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3.2,Antihistamines
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3.3,Neurologically Active Drugs
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3.4,Antimicrobials
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.3.5,Antifertility Drugs
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.1,Food Additives
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.2,Artificial Sweetening Agents
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.3,Food Preservatives
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.4,Antioxidants
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.5,Edible Colours
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.4.6,Flavouring Agents
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.5.1,Soaps
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.5.2,Synthetic Detergents
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.5.3,Classification of Synthetic Detergents
+Chemistry,Class 12,Chemistry in Everyday Life.pdf,16,16.5.4,Cleansing Action of Soaps and Detergents
+Physics,Class 12,Electric Charges And Fields.pdf,1,1,Electric Charges and Fields
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.1,Introduction
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.2,Electric Charges
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.3,Conductors and Insulators
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.4,Charging by Induction
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.5,Basic Properties of Electric Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.6,Coulomb's Law
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.7,Forces between Multiple Charges
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.8,Electric Field
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.9,Electric Field Lines
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.10,Electric Flux
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.11,Electric Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.12,Dipole in a Uniform External Field
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.13,Continuous Charge Distribution
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.14,Gauss's Law
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.15,Applications of Gauss's Law
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.1.1,Electric Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.1.2,Types of Electric Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.1.3,Conservation of Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.2.1,Positive and Negative Charges
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.2.2,Quantization of Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.2.3,Conservation of Electric Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.3.1,Conductors
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.3.2,Insulators
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.3.3,Semiconductors
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.4.1,Charging by Induction
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.4.2,Electrostatic Induction
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.4.3,Charging by Contact
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.5.1,Additivity of Charges
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.5.2,Quantization of Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.5.3,Conservation of Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.6.1,Coulomb's Law Statement
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.6.2,Coulomb's Law Formula
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.6.3,Coulomb's Law in Vector Form
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.6.4,Relative Permittivity
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.7.1,Superposition Principle
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.7.2,Forces between Multiple Charges
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.7.3,Resultant Force
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.8.1,Electric Field Definition
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.8.2,Electric Field Due to Point Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.8.3,Electric Field Lines
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.8.4,Electric Field Intensity
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.9.1,Properties of Electric Field Lines
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.9.2,Electric Field Lines for Different Charge Configurations
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.9.3,Electric Field Lines for Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.10.1,Electric Flux Definition
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.10.2,Electric Flux Formula
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.10.3,Electric Flux for Different Surfaces
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.11.1,Electric Dipole Definition
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.11.2,Electric Dipole Moment
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.11.3,Electric Field Due to Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.12.1,Torque on Electric Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.12.2,Potential Energy of Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.12.3,Work Done on Dipole
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.13.1,Linear Charge Distribution
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.13.2,Surface Charge Distribution
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.13.3,Volume Charge Distribution
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.14.1,Gauss's Law Statement
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.14.2,Gauss's Law Formula
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.14.3,Applications of Gauss's Law
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.15.1,Electric Field Due to Infinite Plane Sheet
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.15.2,Electric Field Due to Infinite Line of Charge
+Physics,Class 12,Electric Charges And Fields.pdf,1,1.15.3,Electric Field Due to Spherical Shell
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2,Electrostatic Potential and Capacitance
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.1,Introduction
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.2,Electrostatic Potential
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.3,Potential due to a Point Charge
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.4,Potential due to an Electric Dipole
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.5,Potential due to a System of Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.6,Equipotential Surfaces
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.7,Potential Energy of a System of Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.8,Potential Energy in an External Field
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.9,Electrostatics of Conductors
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.10,Dielectrics and Polarisation
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.11,Capacitors and Capacitance
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.12,The Parallel Plate Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.13,Effect of Dielectric on Capacitance
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.14,Combination of Capacitors
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.15,Energy Stored in a Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.16,Van de Graaff Generator
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.1.1,Electrostatic Potential
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.1.2,Potential Difference
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.1.3,Electric Potential Energy
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.2.1,Definition of Electrostatic Potential
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.2.2,Potential Due to Point Charge
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.2.3,Potential Due to System of Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.3.1,Potential Due to Point Charge
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.3.2,Potential at Infinity
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.3.3,Potential Due to Multiple Point Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.4.1,Potential Due to Electric Dipole
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.4.2,Potential on Axial Line
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.4.3,Potential on Equatorial Line
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.5.1,Superposition Principle
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.5.2,Potential Due to System of Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.5.3,Continuous Charge Distribution
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.6.1,Definition of Equipotential Surfaces
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.6.2,Properties of Equipotential Surfaces
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.6.3,Equipotential Surfaces for Different Charge Configurations
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.7.1,Potential Energy of Two Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.7.2,Potential Energy of System of Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.7.3,Work Done in Assembling Charges
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.8.1,Potential Energy in External Field
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.8.2,Potential Energy of Dipole
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.8.3,Work Done on Dipole
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.9.1,Electrostatics of Conductors
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.9.2,Electric Field Inside Conductor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.9.3,Electric Field on Surface of Conductor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.10.1,Dielectrics
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.10.2,Polarisation
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.10.3,Dielectric Constant
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.11.1,Capacitor Definition
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.11.2,Capacitance Definition
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.11.3,Factors Affecting Capacitance
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.12.1,Parallel Plate Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.12.2,Capacitance of Parallel Plate Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.12.3,Energy Stored in Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.13.1,Effect of Dielectric
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.13.2,Dielectric Constant
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.13.3,Polarisation of Dielectric
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.14.1,Capacitors in Series
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.14.2,Capacitors in Parallel
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.14.3,Combination of Capacitors
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.15.1,Energy Stored in Capacitor
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.15.2,Energy Density
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.15.3,Energy in Electric Field
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.16.1,Van de Graaff Generator
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.16.2,Principle of Van de Graaff Generator
+Physics,Class 12,Electrostatic Potential And Capacitance.pdf,2,2.16.3,Applications of Van de Graaff Generator
+Physics,Class 12,Current Electricity.pdf,3,3,Current Electricity
+Physics,Class 12,Current Electricity.pdf,3,3.1,Introduction
+Physics,Class 12,Current Electricity.pdf,3,3.2,Electric Current
+Physics,Class 12,Current Electricity.pdf,3,3.3,Electric Currents in Conductors
+Physics,Class 12,Current Electricity.pdf,3,3.4,Ohm's Law
+Physics,Class 12,Current Electricity.pdf,3,3.5,Drift of Electrons and the Origin of Resistivity
+Physics,Class 12,Current Electricity.pdf,3,3.6,Limitations of Ohm's Law
+Physics,Class 12,Current Electricity.pdf,3,3.7,Resistivity of Various Materials
+Physics,Class 12,Current Electricity.pdf,3,3.8,Temperature Dependence of Resistivity
+Physics,Class 12,Current Electricity.pdf,3,3.9,"Electrical Energy, Power"
+Physics,Class 12,Current Electricity.pdf,3,3.10,Combination of Resistors – Series and Parallel
+Physics,Class 12,Current Electricity.pdf,3,3.11,"Cells, emf, Internal Resistance"
+Physics,Class 12,Current Electricity.pdf,3,3.12,Cells in Series and in Parallel
+Physics,Class 12,Current Electricity.pdf,3,3.13,Kirchhoff's Rules
+Physics,Class 12,Current Electricity.pdf,3,3.14,Wheatstone Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.15,Meter Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.16,Potentiometer
+Physics,Class 12,Current Electricity.pdf,3,3.1.1,Electric Current
+Physics,Class 12,Current Electricity.pdf,3,3.1.2,Current Density
+Physics,Class 12,Current Electricity.pdf,3,3.1.3,Drift Velocity
+Physics,Class 12,Current Electricity.pdf,3,3.2.1,Definition of Electric Current
+Physics,Class 12,Current Electricity.pdf,3,3.2.2,Unit of Electric Current
+Physics,Class 12,Current Electricity.pdf,3,3.2.3,Direction of Electric Current
+Physics,Class 12,Current Electricity.pdf,3,3.3.1,Electric Current in Conductors
+Physics,Class 12,Current Electricity.pdf,3,3.3.2,Free Electrons in Conductors
+Physics,Class 12,Current Electricity.pdf,3,3.3.3,Motion of Electrons in Electric Field
+Physics,Class 12,Current Electricity.pdf,3,3.4.1,Ohm's Law Statement
+Physics,Class 12,Current Electricity.pdf,3,3.4.2,Ohm's Law Formula
+Physics,Class 12,Current Electricity.pdf,3,3.4.3,Resistance
+Physics,Class 12,Current Electricity.pdf,3,3.4.4,Resistivity
+Physics,Class 12,Current Electricity.pdf,3,3.5.1,Drift Velocity
+Physics,Class 12,Current Electricity.pdf,3,3.5.2,Relaxation Time
+Physics,Class 12,Current Electricity.pdf,3,3.5.3,Mobility
+Physics,Class 12,Current Electricity.pdf,3,3.5.4,Origin of Resistivity
+Physics,Class 12,Current Electricity.pdf,3,3.6.1,Limitations of Ohm's Law
+Physics,Class 12,Current Electricity.pdf,3,3.6.2,Non-ohmic Conductors
+Physics,Class 12,Current Electricity.pdf,3,3.6.3,Examples of Non-ohmic Conductors
+Physics,Class 12,Current Electricity.pdf,3,3.7.1,Resistivity of Metals
+Physics,Class 12,Current Electricity.pdf,3,3.7.2,Resistivity of Alloys
+Physics,Class 12,Current Electricity.pdf,3,3.7.3,Resistivity of Insulators
+Physics,Class 12,Current Electricity.pdf,3,3.7.4,Resistivity of Semiconductors
+Physics,Class 12,Current Electricity.pdf,3,3.8.1,Temperature Dependence of Resistivity
+Physics,Class 12,Current Electricity.pdf,3,3.8.2,Temperature Coefficient of Resistance
+Physics,Class 12,Current Electricity.pdf,3,3.8.3,Variation of Resistivity with Temperature
+Physics,Class 12,Current Electricity.pdf,3,3.9.1,Electrical Energy
+Physics,Class 12,Current Electricity.pdf,3,3.9.2,Electrical Power
+Physics,Class 12,Current Electricity.pdf,3,3.9.3,Joule's Law of Heating
+Physics,Class 12,Current Electricity.pdf,3,3.10.1,Resistors in Series
+Physics,Class 12,Current Electricity.pdf,3,3.10.2,Resistors in Parallel
+Physics,Class 12,Current Electricity.pdf,3,3.10.3,Equivalent Resistance
+Physics,Class 12,Current Electricity.pdf,3,3.11.1,Electromotive Force
+Physics,Class 12,Current Electricity.pdf,3,3.11.2,Internal Resistance
+Physics,Class 12,Current Electricity.pdf,3,3.11.3,Terminal Voltage
+Physics,Class 12,Current Electricity.pdf,3,3.12.1,Cells in Series
+Physics,Class 12,Current Electricity.pdf,3,3.12.2,Cells in Parallel
+Physics,Class 12,Current Electricity.pdf,3,3.12.3,Mixed Grouping of Cells
+Physics,Class 12,Current Electricity.pdf,3,3.13.1,Kirchhoff's First Law
+Physics,Class 12,Current Electricity.pdf,3,3.13.2,Kirchhoff's Second Law
+Physics,Class 12,Current Electricity.pdf,3,3.13.3,Applications of Kirchhoff's Rules
+Physics,Class 12,Current Electricity.pdf,3,3.14.1,Wheatstone Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.14.2,Principle of Wheatstone Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.14.3,Applications of Wheatstone Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.15.1,Meter Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.15.2,Principle of Meter Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.15.3,Applications of Meter Bridge
+Physics,Class 12,Current Electricity.pdf,3,3.16.1,Potentiometer
+Physics,Class 12,Current Electricity.pdf,3,3.16.2,Principle of Potentiometer
+Physics,Class 12,Current Electricity.pdf,3,3.16.3,Applications of Potentiometer
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4,Moving Charges and Magnetism
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.1,Introduction
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.2,Magnetic Force
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.3,Motion in a Magnetic Field
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.4,Motion in Combined Electric and Magnetic Fields
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.5,"Magnetic Field Due to a Current Element, Biot-Savart Law"
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.6,Magnetic Field on the Axis of a Circular Current Loop
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.7,Ampere's Circuital Law
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.8,The Solenoid and the Toroid
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.9,"Force between Two Parallel Currents, the Ampere"
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.10,"Torque on Current Loop, Magnetic Dipole"
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.11,The Moving Coil Galvanometer
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.1.1,Magnetic Field
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.1.2,Magnetic Force
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.1.3,Lorentz Force
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.2.1,Magnetic Force on Moving Charge
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.2.2,Magnetic Force on Current Carrying Conductor
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.2.3,Direction of Magnetic Force
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.3.1,Motion in Uniform Magnetic Field
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.3.2,Circular Motion
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.3.3,Helical Motion
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.4.1,Motion in Combined Fields
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.4.2,Velocity Selector
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.4.3,Mass Spectrometer
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.4.4,Cyclotron
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.5.1,Biot-Savart Law
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.5.2,Magnetic Field Due to Current Element
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.5.3,Applications of Biot-Savart Law
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.6.1,Magnetic Field on Axis of Circular Loop
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.6.2,Magnetic Field at Centre of Loop
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.6.3,Magnetic Field at Any Point on Axis
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.7.1,Ampere's Circuital Law
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.7.2,Applications of Ampere's Law
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.7.3,Magnetic Field Due to Long Straight Conductor
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.8.1,Solenoid
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.8.2,Toroid
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.8.3,Magnetic Field Inside Solenoid
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.8.4,Magnetic Field Inside Toroid
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.9.1,Force between Parallel Currents
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.9.2,Definition of Ampere
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.9.3,Force per Unit Length
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.10.1,Torque on Current Loop
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.10.2,Magnetic Dipole Moment
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.10.3,Potential Energy of Magnetic Dipole
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.11.1,Moving Coil Galvanometer
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.11.2,Principle of Galvanometer
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.11.3,Current Sensitivity
+Physics,Class 12,Moving Charges And Magnetism.pdf,4,4.11.4,Voltage Sensitivity
+Physics,Class 12,Magnetism And Matter.pdf,5,5,Magnetism and Matter
+Physics,Class 12,Magnetism And Matter.pdf,5,5.1,Introduction
+Physics,Class 12,Magnetism And Matter.pdf,5,5.2,The Bar Magnet
+Physics,Class 12,Magnetism And Matter.pdf,5,5.3,Magnetism and Gauss's Law
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4,The Earth's Magnetism
+Physics,Class 12,Magnetism And Matter.pdf,5,5.5,Magnetisation and Magnetic Intensity
+Physics,Class 12,Magnetism And Matter.pdf,5,5.6,Magnetic Properties of Materials
+Physics,Class 12,Magnetism And Matter.pdf,5,5.7,Permanent Magnets and Electromagnets
+Physics,Class 12,Magnetism And Matter.pdf,5,5.1.1,Magnetic Field
+Physics,Class 12,Magnetism And Matter.pdf,5,5.1.2,Magnetic Lines of Force
+Physics,Class 12,Magnetism And Matter.pdf,5,5.1.3,Magnetic Poles
+Physics,Class 12,Magnetism And Matter.pdf,5,5.2.1,Bar Magnet
+Physics,Class 12,Magnetism And Matter.pdf,5,5.2.2,Magnetic Field Lines
+Physics,Class 12,Magnetism And Matter.pdf,5,5.2.3,Magnetic Dipole
+Physics,Class 12,Magnetism And Matter.pdf,5,5.2.4,Magnetic Dipole Moment
+Physics,Class 12,Magnetism And Matter.pdf,5,5.3.1,Gauss's Law for Magnetism
+Physics,Class 12,Magnetism And Matter.pdf,5,5.3.2,Magnetic Flux
+Physics,Class 12,Magnetism And Matter.pdf,5,5.3.3,Applications of Gauss's Law
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4.1,Earth's Magnetic Field
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4.2,Magnetic Elements
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4.3,Declination
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4.4,Dip or Inclination
+Physics,Class 12,Magnetism And Matter.pdf,5,5.4.5,Horizontal Component
+Physics,Class 12,Magnetism And Matter.pdf,5,5.5.1,Magnetisation
+Physics,Class 12,Magnetism And Matter.pdf,5,5.5.2,Magnetic Intensity
+Physics,Class 12,Magnetism And Matter.pdf,5,5.5.3,Magnetic Susceptibility
+Physics,Class 12,Magnetism And Matter.pdf,5,5.5.4,Magnetic Permeability
+Physics,Class 12,Magnetism And Matter.pdf,5,5.6.1,Diamagnetic Materials
+Physics,Class 12,Magnetism And Matter.pdf,5,5.6.2,Paramagnetic Materials
+Physics,Class 12,Magnetism And Matter.pdf,5,5.6.3,Ferromagnetic Materials
+Physics,Class 12,Magnetism And Matter.pdf,5,5.6.4,Hysteresis
+Physics,Class 12,Magnetism And Matter.pdf,5,5.7.1,Permanent Magnets
+Physics,Class 12,Magnetism And Matter.pdf,5,5.7.2,Electromagnets
+Physics,Class 12,Magnetism And Matter.pdf,5,5.7.3,Applications of Magnets
+Physics,Class 12,Electromagnetic Induction.pdf,6,6,Electromagnetic Induction
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.1,Introduction
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.2,The Experiments of Faraday and Henry
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.3,Magnetic Flux
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.4,Faraday's Law of Induction
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.5,Lenz's Law and Conservation of Energy
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.6,Motional Electromotive Force
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.7,Energy Consideration: A Quantitative Study
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.8,Eddy Currents
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.9,Inductance
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.10,AC Generator
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.11,Transformer
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.1.1,Electromagnetic Induction
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.1.2,Induced emf
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.1.3,Induced Current
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.2.1,Faraday's Experiments
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.2.2,Henry's Experiments
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.2.3,Factors Affecting Induction
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.3.1,Magnetic Flux Definition
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.3.2,Magnetic Flux Formula
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.3.3,Change in Magnetic Flux
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.4.1,Faraday's Law Statement
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.4.2,Faraday's Law Formula
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.4.3,Applications of Faraday's Law
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.5.1,Lenz's Law Statement
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.5.2,Lenz's Law and Conservation of Energy
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.5.3,Applications of Lenz's Law
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.6.1,Motional emf
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.6.2,Motional emf Formula
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.6.3,Applications of Motional emf
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.7.1,Energy Considerations
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.7.2,Work Done Against Magnetic Force
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.7.3,Power Dissipated
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.8.1,Eddy Currents
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.8.2,Applications of Eddy Currents
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.8.3,Disadvantages of Eddy Currents
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.9.1,Self Inductance
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.9.2,Mutual Inductance
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.9.3,Inductance of Solenoid
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.10.1,AC Generator
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.10.2,Principle of AC Generator
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.10.3,Construction of AC Generator
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.11.1,Transformer
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.11.2,Principle of Transformer
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.11.3,Step-up Transformer
+Physics,Class 12,Electromagnetic Induction.pdf,6,6.11.4,Step-down Transformer
+Physics,Class 12,Alternating Current.pdf,7,7,Alternating Current
+Physics,Class 12,Alternating Current.pdf,7,7.1,Introduction
+Physics,Class 12,Alternating Current.pdf,7,7.2,AC Voltage Applied to a Resistor
+Physics,Class 12,Alternating Current.pdf,7,7.3,Representation of AC Current and Voltage by Rotating Vectors – Phasors
+Physics,Class 12,Alternating Current.pdf,7,7.4,AC Voltage Applied to an Inductor
+Physics,Class 12,Alternating Current.pdf,7,7.5,AC Voltage Applied to a Capacitor
+Physics,Class 12,Alternating Current.pdf,7,7.6,AC Voltage Applied to a Series LCR Circuit
+Physics,Class 12,Alternating Current.pdf,7,7.7,Power in AC Circuit: The Power Factor
+Physics,Class 12,Alternating Current.pdf,7,7.8,LC Oscillations
+Physics,Class 12,Alternating Current.pdf,7,7.9,Transformers
+Physics,Class 12,Alternating Current.pdf,7,7.1.1,Alternating Current
+Physics,Class 12,Alternating Current.pdf,7,7.1.2,AC vs DC
+Physics,Class 12,Alternating Current.pdf,7,7.1.3,Advantages of AC
+Physics,Class 12,Alternating Current.pdf,7,7.2.1,AC Voltage Applied to Resistor
+Physics,Class 12,Alternating Current.pdf,7,7.2.2,Current in Resistor
+Physics,Class 12,Alternating Current.pdf,7,7.2.3,Power in Resistor
+Physics,Class 12,Alternating Current.pdf,7,7.3.1,Phasor Representation
+Physics,Class 12,Alternating Current.pdf,7,7.3.2,Rotating Vectors
+Physics,Class 12,Alternating Current.pdf,7,7.3.3,Phase Difference
+Physics,Class 12,Alternating Current.pdf,7,7.4.1,AC Voltage Applied to Inductor
+Physics,Class 12,Alternating Current.pdf,7,7.4.2,Current in Inductor
+Physics,Class 12,Alternating Current.pdf,7,7.4.3,Inductive Reactance
+Physics,Class 12,Alternating Current.pdf,7,7.5.1,AC Voltage Applied to Capacitor
+Physics,Class 12,Alternating Current.pdf,7,7.5.2,Current in Capacitor
+Physics,Class 12,Alternating Current.pdf,7,7.5.3,Capacitive Reactance
+Physics,Class 12,Alternating Current.pdf,7,7.6.1,Series LCR Circuit
+Physics,Class 12,Alternating Current.pdf,7,7.6.2,Impedance
+Physics,Class 12,Alternating Current.pdf,7,7.6.3,Resonance
+Physics,Class 12,Alternating Current.pdf,7,7.7.1,Power in AC Circuit
+Physics,Class 12,Alternating Current.pdf,7,7.7.2,Power Factor
+Physics,Class 12,Alternating Current.pdf,7,7.7.3,Average Power
+Physics,Class 12,Alternating Current.pdf,7,7.8.1,LC Oscillations
+Physics,Class 12,Alternating Current.pdf,7,7.8.2,Natural Frequency
+Physics,Class 12,Alternating Current.pdf,7,7.8.3,Energy in LC Circuit
+Physics,Class 12,Alternating Current.pdf,7,7.9.1,Transformer
+Physics,Class 12,Alternating Current.pdf,7,7.9.2,Step-up Transformer
+Physics,Class 12,Alternating Current.pdf,7,7.9.3,Step-down Transformer
+Physics,Class 12,Alternating Current.pdf,7,7.9.4,Efficiency of Transformer
+Physics,Class 12,Electromagnetic Waves.pdf,8,8,Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.1,Introduction
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.2,Displacement Current
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.3,Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4,Electromagnetic Spectrum
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.5,Electromagnetic Waves and their Characteristics
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6,Electromagnetic Waves and their Properties
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.1.1,Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.1.2,Maxwell's Equations
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.1.3,Electromagnetic Spectrum
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.2.1,Displacement Current
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.2.2,Ampere-Maxwell Law
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.2.3,Continuity Equation
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.3.1,Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.3.2,Properties of Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.3.3,Speed of Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.1,Electromagnetic Spectrum
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.2,Radio Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.3,Microwaves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.4,Infrared Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.5,Visible Light
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.6,Ultraviolet Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.7,X-rays
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.4.8,Gamma Rays
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.5.1,Characteristics of Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.5.2,Transverse Nature
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.5.3,Speed in Vacuum
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.5.4,Energy and Momentum
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.1,Properties of Electromagnetic Waves
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.2,Reflection
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.3,Refraction
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.4,Interference
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.5,Diffraction
+Physics,Class 12,Electromagnetic Waves.pdf,8,8.6.6,Polarisation
+Physics,Class 12,Ray Optics.pdf,9,9,Ray Optics and Optical Instruments
+Physics,Class 12,Ray Optics.pdf,9,9.1,Introduction
+Physics,Class 12,Ray Optics.pdf,9,9.2,Reflection of Light by Spherical Mirrors
+Physics,Class 12,Ray Optics.pdf,9,9.3,Refraction
+Physics,Class 12,Ray Optics.pdf,9,9.4,Total Internal Reflection
+Physics,Class 12,Ray Optics.pdf,9,9.5,Refraction at Spherical Surfaces and by Lenses
+Physics,Class 12,Ray Optics.pdf,9,9.6,Refraction through a Prism
+Physics,Class 12,Ray Optics.pdf,9,9.7,Some Natural Phenomena due to Sunlight
+Physics,Class 12,Ray Optics.pdf,9,9.8,Optical Instruments
+Physics,Class 12,Ray Optics.pdf,9,9.1.1,Ray Optics
+Physics,Class 12,Ray Optics.pdf,9,9.1.2,Geometrical Optics
+Physics,Class 12,Ray Optics.pdf,9,9.1.3,Wave Optics
+Physics,Class 12,Ray Optics.pdf,9,9.2.1,Reflection of Light
+Physics,Class 12,Ray Optics.pdf,9,9.2.2,Spherical Mirrors
+Physics,Class 12,Ray Optics.pdf,9,9.2.3,Concave Mirror
+Physics,Class 12,Ray Optics.pdf,9,9.2.4,Convex Mirror
+Physics,Class 12,Ray Optics.pdf,9,9.2.5,Mirror Formula
+Physics,Class 12,Ray Optics.pdf,9,9.2.6,Magnification
+Physics,Class 12,Ray Optics.pdf,9,9.3.1,Refraction of Light
+Physics,Class 12,Ray Optics.pdf,9,9.3.2,Snell's Law
+Physics,Class 12,Ray Optics.pdf,9,9.3.3,Refractive Index
+Physics,Class 12,Ray Optics.pdf,9,9.3.4,Critical Angle
+Physics,Class 12,Ray Optics.pdf,9,9.4.1,Total Internal Reflection
+Physics,Class 12,Ray Optics.pdf,9,9.4.2,Conditions for Total Internal Reflection
+Physics,Class 12,Ray Optics.pdf,9,9.4.3,Applications of Total Internal Reflection
+Physics,Class 12,Ray Optics.pdf,9,9.5.1,Refraction at Spherical Surfaces
+Physics,Class 12,Ray Optics.pdf,9,9.5.2,Lens Formula
+Physics,Class 12,Ray Optics.pdf,9,9.5.3,Power of Lens
+Physics,Class 12,Ray Optics.pdf,9,9.5.4,Combination of Lenses
+Physics,Class 12,Ray Optics.pdf,9,9.6.1,Refraction through Prism
+Physics,Class 12,Ray Optics.pdf,9,9.6.2,Angle of Deviation
+Physics,Class 12,Ray Optics.pdf,9,9.6.3,Minimum Deviation
+Physics,Class 12,Ray Optics.pdf,9,9.6.4,Dispersion
+Physics,Class 12,Ray Optics.pdf,9,9.7.1,Rainbow
+Physics,Class 12,Ray Optics.pdf,9,9.7.2,Scattering of Light
+Physics,Class 12,Ray Optics.pdf,9,9.7.3,Blue Sky
+Physics,Class 12,Ray Optics.pdf,9,9.7.4,Red Sunset
+Physics,Class 12,Ray Optics.pdf,9,9.8.1,Optical Instruments
+Physics,Class 12,Ray Optics.pdf,9,9.8.2,Simple Microscope
+Physics,Class 12,Ray Optics.pdf,9,9.8.3,Compound Microscope
+Physics,Class 12,Ray Optics.pdf,9,9.8.4,Telescope
+Physics,Class 12,Ray Optics.pdf,9,9.8.5,Human Eye
+Physics,Class 12,Wave Optics.pdf,10,10,Wave Optics
+Physics,Class 12,Wave Optics.pdf,10,10.1,Introduction
+Physics,Class 12,Wave Optics.pdf,10,10.2,Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.3,Refraction and Reflection of Plane Waves using Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.4,Coherent and Incoherent Addition of Waves
+Physics,Class 12,Wave Optics.pdf,10,10.5,Interference of Light Waves and Young's Experiment
+Physics,Class 12,Wave Optics.pdf,10,10.6,Diffraction
+Physics,Class 12,Wave Optics.pdf,10,10.7,Polarisation
+Physics,Class 12,Wave Optics.pdf,10,10.1.1,Wave Optics
+Physics,Class 12,Wave Optics.pdf,10,10.1.2,Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.1.3,Wavefront
+Physics,Class 12,Wave Optics.pdf,10,10.2.1,Huygens Principle Statement
+Physics,Class 12,Wave Optics.pdf,10,10.2.2,Secondary Wavelets
+Physics,Class 12,Wave Optics.pdf,10,10.2.3,Applications of Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.3.1,Refraction using Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.3.2,Reflection using Huygens Principle
+Physics,Class 12,Wave Optics.pdf,10,10.3.3,Laws of Reflection and Refraction
+Physics,Class 12,Wave Optics.pdf,10,10.4.1,Coherent Waves
+Physics,Class 12,Wave Optics.pdf,10,10.4.2,Incoherent Waves
+Physics,Class 12,Wave Optics.pdf,10,10.4.3,Superposition of Waves
+Physics,Class 12,Wave Optics.pdf,10,10.5.1,Interference of Light
+Physics,Class 12,Wave Optics.pdf,10,10.5.2,Young's Double Slit Experiment
+Physics,Class 12,Wave Optics.pdf,10,10.5.3,Fringe Width
+Physics,Class 12,Wave Optics.pdf,10,10.5.4,Conditions for Interference
+Physics,Class 12,Wave Optics.pdf,10,10.6.1,Diffraction of Light
+Physics,Class 12,Wave Optics.pdf,10,10.6.2,Single Slit Diffraction
+Physics,Class 12,Wave Optics.pdf,10,10.6.3,Diffraction Grating
+Physics,Class 12,Wave Optics.pdf,10,10.6.4,Resolving Power
+Physics,Class 12,Wave Optics.pdf,10,10.7.1,Polarisation of Light
+Physics,Class 12,Wave Optics.pdf,10,10.7.2,Polarised Light
+Physics,Class 12,Wave Optics.pdf,10,10.7.3,Unpolarised Light
+Physics,Class 12,Wave Optics.pdf,10,10.7.4,Methods of Polarisation
+Physics,Class 12,Wave Optics.pdf,10,10.7.5,Applications of Polarisation
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11,Dual Nature of Radiation and Matter
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.1,Introduction
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.2,Electron Emission
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.3,Photoelectric Effect
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.4,Experimental Study of Photoelectric Effect
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.5,Photoelectric Effect and Wave Theory of Light
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.6,Einstein's Photoelectric Equation: Energy Quantum of Radiation
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.7,Particle Nature of Light: The Photon
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.8,Wave Nature of Matter
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.9,Davisson and Germer Experiment
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.1.1,Dual Nature
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.1.2,Wave-Particle Duality
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.1.3,Quantum Theory
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.2.1,Electron Emission
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.2.2,Work Function
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.2.3,Threshold Frequency
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.3.1,Photoelectric Effect
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.3.2,Photoelectric Current
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.3.3,Stopping Potential
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.4.1,Experimental Setup
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.4.2,Observations
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.4.3,Results
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.5.1,Wave Theory Predictions
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.5.2,Experimental Results
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.5.3,Failure of Wave Theory
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.6.1,Einstein's Equation
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.6.2,Energy Quantum
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.6.3,Planck's Constant
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.7.1,Photon
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.7.2,Energy of Photon
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.7.3,Momentum of Photon
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.8.1,de Broglie Hypothesis
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.8.2,de Broglie Wavelength
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.8.3,Wave Nature of Matter
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.9.1,Davisson-Germer Experiment
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.9.2,Experimental Setup
+Physics,Class 12,Dual Nature Of Radiation And Matter.pdf,11,11.9.3,Results and Verification
+Physics,Class 12,Atoms.pdf,12,12,Atoms
+Physics,Class 12,Atoms.pdf,12,12.1,Introduction
+Physics,Class 12,Atoms.pdf,12,12.2,Alpha-particle Scattering and Rutherford's Nuclear Model of Atom
+Physics,Class 12,Atoms.pdf,12,12.3,Atomic Spectra
+Physics,Class 12,Atoms.pdf,12,12.4,Bohr Model of the Hydrogen Atom
+Physics,Class 12,Atoms.pdf,12,12.5,The Line Spectra of the Hydrogen Atom
+Physics,Class 12,Atoms.pdf,12,12.6,De Broglie's Explanation of Bohr's Second Postulate of Quantisation
+Physics,Class 12,Atoms.pdf,12,12.1.1,Atom
+Physics,Class 12,Atoms.pdf,12,12.1.2,Atomic Structure
+Physics,Class 12,Atoms.pdf,12,12.1.3,Nuclear Model
+Physics,Class 12,Atoms.pdf,12,12.2.1,Alpha-particle Scattering
+Physics,Class 12,Atoms.pdf,12,12.2.2,Rutherford's Experiment
+Physics,Class 12,Atoms.pdf,12,12.2.3,Nuclear Model of Atom
+Physics,Class 12,Atoms.pdf,12,12.2.4,Limitations of Rutherford's Model
+Physics,Class 12,Atoms.pdf,12,12.3.1,Atomic Spectra
+Physics,Class 12,Atoms.pdf,12,12.3.2,Emission Spectra
+Physics,Class 12,Atoms.pdf,12,12.3.3,Absorption Spectra
+Physics,Class 12,Atoms.pdf,12,12.3.4,Line Spectra
+Physics,Class 12,Atoms.pdf,12,12.4.1,Bohr's Model
+Physics,Class 12,Atoms.pdf,12,12.4.2,Bohr's Postulates
+Physics,Class 12,Atoms.pdf,12,12.4.3,Energy Levels
+Physics,Class 12,Atoms.pdf,12,12.4.4,Orbits
+Physics,Class 12,Atoms.pdf,12,12.5.1,Line Spectra of Hydrogen
+Physics,Class 12,Atoms.pdf,12,12.5.2,Balmer Series
+Physics,Class 12,Atoms.pdf,12,12.5.3,Lyman Series
+Physics,Class 12,Atoms.pdf,12,12.5.4,Paschen Series
+Physics,Class 12,Atoms.pdf,12,12.5.5,Brackett Series
+Physics,Class 12,Atoms.pdf,12,12.5.6,Pfund Series
+Physics,Class 12,Atoms.pdf,12,12.6.1,de Broglie's Explanation
+Physics,Class 12,Atoms.pdf,12,12.6.2,Standing Waves
+Physics,Class 12,Atoms.pdf,12,12.6.3,Quantisation of Angular Momentum
+Physics,Class 12,Nuclei.pdf,13,13,Nuclei
+Physics,Class 12,Nuclei.pdf,13,13.1,Introduction
+Physics,Class 12,Nuclei.pdf,13,13.2,Atomic Masses and Composition of Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.3,Size of the Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.4,Mass-Energy and Nuclear Binding Energy
+Physics,Class 12,Nuclei.pdf,13,13.5,Nuclear Force
+Physics,Class 12,Nuclei.pdf,13,13.6,Radioactivity
+Physics,Class 12,Nuclei.pdf,13,13.7,Nuclear Energy
+Physics,Class 12,Nuclei.pdf,13,13.1.1,Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.1.2,Nuclear Physics
+Physics,Class 12,Nuclei.pdf,13,13.1.3,Nuclear Reactions
+Physics,Class 12,Nuclei.pdf,13,13.2.1,Atomic Masses
+Physics,Class 12,Nuclei.pdf,13,13.2.2,Composition of Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.2.3,Protons and Neutrons
+Physics,Class 12,Nuclei.pdf,13,13.2.4,Mass Number
+Physics,Class 12,Nuclei.pdf,13,13.2.5,Atomic Number
+Physics,Class 12,Nuclei.pdf,13,13.3.1,Size of Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.3.2,Nuclear Radius
+Physics,Class 12,Nuclei.pdf,13,13.3.3,Nuclear Density
+Physics,Class 12,Nuclei.pdf,13,13.4.1,Mass-Energy Equivalence
+Physics,Class 12,Nuclei.pdf,13,13.4.2,Nuclear Binding Energy
+Physics,Class 12,Nuclei.pdf,13,13.4.3,Binding Energy per Nucleon
+Physics,Class 12,Nuclei.pdf,13,13.4.4,Mass Defect
+Physics,Class 12,Nuclei.pdf,13,13.5.1,Nuclear Force
+Physics,Class 12,Nuclei.pdf,13,13.5.2,Properties of Nuclear Force
+Physics,Class 12,Nuclei.pdf,13,13.5.3,Range of Nuclear Force
+Physics,Class 12,Nuclei.pdf,13,13.6.1,Radioactivity
+Physics,Class 12,Nuclei.pdf,13,13.6.2,Alpha Decay
+Physics,Class 12,Nuclei.pdf,13,13.6.3,Beta Decay
+Physics,Class 12,Nuclei.pdf,13,13.6.4,Gamma Decay
+Physics,Class 12,Nuclei.pdf,13,13.6.5,Half-life
+Physics,Class 12,Nuclei.pdf,13,13.6.6,Mean Life
+Physics,Class 12,Nuclei.pdf,13,13.7.1,Nuclear Energy
+Physics,Class 12,Nuclei.pdf,13,13.7.2,Nuclear Fission
+Physics,Class 12,Nuclei.pdf,13,13.7.3,Nuclear Fusion
+Physics,Class 12,Nuclei.pdf,13,13.7.4,Nuclear Power Plants
+Physics,Class 12,SemiConductor Electronics.pdf,14,14,"Semiconductor Electronics: Materials, Devices and Simple Circuits"
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.1,Introduction
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.2,"Classification of Metals, Conductors and Semiconductors"
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3,Intrinsic Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4,Extrinsic Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.5,p-n Junction
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.6,Semiconductor Diode
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.7,Application of Junction Diode as a Rectifier
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8,Special Purpose p-n Junction Diodes
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.9,Junction Transistor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.10,Basic Transistor Circuit Configurations and Transistor Characteristics
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11,Digital Electronics and Logic Gates
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.1.1,Semiconductor Electronics
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.1.2,Electronic Devices
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.1.3,Simple Circuits
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.2.1,Classification of Materials
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.2.2,Metals
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.2.3,Insulators
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.2.4,Semiconductors
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3.1,Intrinsic Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3.2,Energy Bands
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3.3,Conduction Band
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3.4,Valence Band
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.3.5,Band Gap
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4.1,Extrinsic Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4.2,n-type Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4.3,p-type Semiconductor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4.4,Donor Impurities
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.4.5,Acceptor Impurities
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.5.1,p-n Junction
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.5.2,Formation of p-n Junction
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.5.3,Depletion Layer
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.5.4,Barrier Potential
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.6.1,Semiconductor Diode
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.6.2,Forward Bias
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.6.3,Reverse Bias
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.6.4,I-V Characteristics
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.7.1,Rectifier
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.7.2,Half-wave Rectifier
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.7.3,Full-wave Rectifier
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.7.4,Bridge Rectifier
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8.1,Special Purpose Diodes
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8.2,Zener Diode
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8.3,Light Emitting Diode
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8.4,Photodiode
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.8.5,Solar Cell
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.9.1,Junction Transistor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.9.2,Types of Transistors
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.9.3,npn Transistor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.9.4,pnp Transistor
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.10.1,Transistor Configurations
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.10.2,Common Base Configuration
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.10.3,Common Emitter Configuration
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.10.4,Common Collector Configuration
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.1,Digital Electronics
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.2,Logic Gates
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.3,AND Gate
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.4,OR Gate
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.5,NOT Gate
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.6,NAND Gate
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.7,NOR Gate
+Physics,Class 12,SemiConductor Electronics.pdf,14,14.11.8,XOR Gate
+Maths,Class 12,Relations And Functions.pdf,1,1,Relations and Functions
+Maths,Class 12,Relations And Functions.pdf,1,1.1,Introduction
+Maths,Class 12,Relations And Functions.pdf,1,1.2,Types of Relations
+Maths,Class 12,Relations And Functions.pdf,1,1.3,Types of Functions
+Maths,Class 12,Relations And Functions.pdf,1,1.4,Composition of Functions and Invertible Function
+Maths,Class 12,Relations And Functions.pdf,1,1.1.1,Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.1.2,Function
+Maths,Class 12,Relations And Functions.pdf,1,1.1.3,Domain and Range
+Maths,Class 12,Relations And Functions.pdf,1,1.2.1,Empty Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.2,Universal Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.3,Identity Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.4,Reflexive Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.5,Symmetric Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.6,Transitive Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.2.7,Equivalence Relation
+Maths,Class 12,Relations And Functions.pdf,1,1.3.1,One-One Function
+Maths,Class 12,Relations And Functions.pdf,1,1.3.2,Onto Function
+Maths,Class 12,Relations And Functions.pdf,1,1.3.3,Bijective Function
+Maths,Class 12,Relations And Functions.pdf,1,1.3.4,Constant Function
+Maths,Class 12,Relations And Functions.pdf,1,1.3.5,Identity Function
+Maths,Class 12,Relations And Functions.pdf,1,1.4.1,Composition of Functions
+Maths,Class 12,Relations And Functions.pdf,1,1.4.2,Invertible Function
+Maths,Class 12,Relations And Functions.pdf,1,1.4.3,Inverse Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2,Inverse Trigonometric Functions
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.1,Introduction
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2,Basic Concepts
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.3,Properties of Inverse Trigonometric Functions
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.1.1,Inverse Trigonometric Functions
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.1.2,Principal Value
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.1.3,Domain and Range
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.1,Inverse Sine Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.2,Inverse Cosine Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.3,Inverse Tangent Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.4,Inverse Cosecant Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.5,Inverse Secant Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.2.6,Inverse Cotangent Function
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.3.1,Properties of Inverse Functions
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.3.2,Principal Value Branches
+Maths,Class 12,Inverse Trigonometric Functions.pdf,2,2.3.3,Graphs of Inverse Functions
+Maths,Class 12,Matrices.pdf,3,3,Matrices
+Maths,Class 12,Matrices.pdf,3,3.1,Introduction
+Maths,Class 12,Matrices.pdf,3,3.2,Matrix
+Maths,Class 12,Matrices.pdf,3,3.3,Types of Matrices
+Maths,Class 12,Matrices.pdf,3,3.4,Operations on Matrices
+Maths,Class 12,Matrices.pdf,3,3.5,Transpose of a Matrix
+Maths,Class 12,Matrices.pdf,3,3.6,Symmetric and Skew Symmetric Matrices
+Maths,Class 12,Matrices.pdf,3,3.7,Elementary Operation (Transformation) of a Matrix
+Maths,Class 12,Matrices.pdf,3,3.8,Invertible Matrices
+Maths,Class 12,Matrices.pdf,3,3.1.1,Matrix Definition
+Maths,Class 12,Matrices.pdf,3,3.1.2,Order of Matrix
+Maths,Class 12,Matrices.pdf,3,3.1.3,Elements of Matrix
+Maths,Class 12,Matrices.pdf,3,3.2.1,Matrix Notation
+Maths,Class 12,Matrices.pdf,3,3.2.2,Matrix Representation
+Maths,Class 12,Matrices.pdf,3,3.2.3,Matrix Operations
+Maths,Class 12,Matrices.pdf,3,3.3.1,Row Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.2,Column Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.3,Zero Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.4,Square Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.5,Diagonal Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.6,Scalar Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.7,Identity Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.8,Upper Triangular Matrix
+Maths,Class 12,Matrices.pdf,3,3.3.9,Lower Triangular Matrix
+Maths,Class 12,Matrices.pdf,3,3.4.1,Addition of Matrices
+Maths,Class 12,Matrices.pdf,3,3.4.2,Subtraction of Matrices
+Maths,Class 12,Matrices.pdf,3,3.4.3,Multiplication of Matrix by Scalar
+Maths,Class 12,Matrices.pdf,3,3.4.4,Multiplication of Matrices
+Maths,Class 12,Matrices.pdf,3,3.5.1,Transpose of Matrix
+Maths,Class 12,Matrices.pdf,3,3.5.2,Properties of Transpose
+Maths,Class 12,Matrices.pdf,3,3.5.3,Applications of Transpose
+Maths,Class 12,Matrices.pdf,3,3.6.1,Symmetric Matrix
+Maths,Class 12,Matrices.pdf,3,3.6.2,Skew Symmetric Matrix
+Maths,Class 12,Matrices.pdf,3,3.6.3,Properties of Symmetric and Skew Symmetric Matrices
+Maths,Class 12,Matrices.pdf,3,3.7.1,Elementary Row Operations
+Maths,Class 12,Matrices.pdf,3,3.7.2,Elementary Column Operations
+Maths,Class 12,Matrices.pdf,3,3.7.3,Equivalent Matrices
+Maths,Class 12,Matrices.pdf,3,3.8.1,Invertible Matrix
+Maths,Class 12,Matrices.pdf,3,3.8.2,Inverse of Matrix
+Maths,Class 12,Matrices.pdf,3,3.8.3,Properties of Inverse
+Maths,Class 12,Determinants.pdf,4,4,Determinants
+Maths,Class 12,Determinants.pdf,4,4.1,Introduction
+Maths,Class 12,Determinants.pdf,4,4.2,Determinant
+Maths,Class 12,Determinants.pdf,4,4.3,Properties of Determinants
+Maths,Class 12,Determinants.pdf,4,4.4,Area of a Triangle
+Maths,Class 12,Determinants.pdf,4,4.5,Minors and Cofactors
+Maths,Class 12,Determinants.pdf,4,4.6,Adjoint and Inverse of a Matrix
+Maths,Class 12,Determinants.pdf,4,4.7,Applications of Determinants and Matrices
+Maths,Class 12,Determinants.pdf,4,4.1.1,Determinant Definition
+Maths,Class 12,Determinants.pdf,4,4.1.2,Order of Determinant
+Maths,Class 12,Determinants.pdf,4,4.1.3,Value of Determinant
+Maths,Class 12,Determinants.pdf,4,4.2.1,Determinant of Order 1
+Maths,Class 12,Determinants.pdf,4,4.2.2,Determinant of Order 2
+Maths,Class 12,Determinants.pdf,4,4.2.3,Determinant of Order 3
+Maths,Class 12,Determinants.pdf,4,4.2.4,Determinant of Order n
+Maths,Class 12,Determinants.pdf,4,4.3.1,Property 1
+Maths,Class 12,Determinants.pdf,4,4.3.2,Property 2
+Maths,Class 12,Determinants.pdf,4,4.3.3,Property 3
+Maths,Class 12,Determinants.pdf,4,4.3.4,Property 4
+Maths,Class 12,Determinants.pdf,4,4.3.5,Property 5
+Maths,Class 12,Determinants.pdf,4,4.3.6,Property 6
+Maths,Class 12,Determinants.pdf,4,4.3.7,Property 7
+Maths,Class 12,Determinants.pdf,4,4.4.1,Area of Triangle Using Determinants
+Maths,Class 12,Determinants.pdf,4,4.4.2,Condition for Collinearity
+Maths,Class 12,Determinants.pdf,4,4.4.3,Applications in Geometry
+Maths,Class 12,Determinants.pdf,4,4.5.1,Minor of Element
+Maths,Class 12,Determinants.pdf,4,4.5.2,Cofactor of Element
+Maths,Class 12,Determinants.pdf,4,4.5.3,Expansion of Determinant
+Maths,Class 12,Determinants.pdf,4,4.6.1,Adjoint of Matrix
+Maths,Class 12,Determinants.pdf,4,4.6.2,Inverse of Matrix
+Maths,Class 12,Determinants.pdf,4,4.6.3,Properties of Adjoint
+Maths,Class 12,Determinants.pdf,4,4.7.1,Solution of System of Linear Equations
+Maths,Class 12,Determinants.pdf,4,4.7.2,Consistency of System
+Maths,Class 12,Determinants.pdf,4,4.7.3,Applications in Physics
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5,Continuity and Differentiability
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.1,Introduction
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2,Continuity
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.3,Differentiability
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.4,Exponential and Logarithmic Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.5,Logarithmic Differentiation
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.6,Derivatives of Functions in Parametric Forms
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.7,Second Order Derivative
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.8,Mean Value Theorem
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.1.1,Continuity
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.1.2,Differentiability
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.1.3,Derivatives
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2.1,Continuity at a Point
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2.2,Continuity in an Interval
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2.3,Types of Discontinuity
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2.4,Removable Discontinuity
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.2.5,Non-removable Discontinuity
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.3.1,Differentiability at a Point
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.3.2,Differentiability in an Interval
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.3.3,Relation between Continuity and Differentiability
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.4.1,Exponential Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.4.2,Logarithmic Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.4.3,Derivatives of Exponential Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.4.4,Derivatives of Logarithmic Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.5.1,Logarithmic Differentiation
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.5.2,Applications of Logarithmic Differentiation
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.5.3,Examples of Logarithmic Differentiation
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.6.1,Parametric Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.6.2,Derivatives of Parametric Functions
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.6.3,Applications of Parametric Differentiation
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.7.1,Second Order Derivative
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.7.2,Physical Significance
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.7.3,Applications of Second Order Derivative
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.8.1,Rolle's Theorem
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.8.2,Lagrange's Mean Value Theorem
+Maths,Class 12,Contunuity And Differentiability.pdf,5,5.8.3,Cauchy's Mean Value Theorem
+Maths,Class 12,Application Of Derivatives.pdf,6,6,Application of Derivatives
+Maths,Class 12,Application Of Derivatives.pdf,6,6.1,Introduction
+Maths,Class 12,Application Of Derivatives.pdf,6,6.2,Rate of Change of Quantities
+Maths,Class 12,Application Of Derivatives.pdf,6,6.3,Increasing and Decreasing Functions
+Maths,Class 12,Application Of Derivatives.pdf,6,6.4,Tangents and Normals
+Maths,Class 12,Application Of Derivatives.pdf,6,6.5,Approximations
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6,Maxima and Minima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.1.1,Applications of Derivatives
+Maths,Class 12,Application Of Derivatives.pdf,6,6.1.2,Rate of Change
+Maths,Class 12,Application Of Derivatives.pdf,6,6.1.3,Maxima and Minima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.2.1,Rate of Change of Quantities
+Maths,Class 12,Application Of Derivatives.pdf,6,6.2.2,Related Rates
+Maths,Class 12,Application Of Derivatives.pdf,6,6.2.3,Applications in Physics
+Maths,Class 12,Application Of Derivatives.pdf,6,6.3.1,Increasing Functions
+Maths,Class 12,Application Of Derivatives.pdf,6,6.3.2,Decreasing Functions
+Maths,Class 12,Application Of Derivatives.pdf,6,6.3.3,Monotonic Functions
+Maths,Class 12,Application Of Derivatives.pdf,6,6.3.4,Test for Monotonicity
+Maths,Class 12,Application Of Derivatives.pdf,6,6.4.1,Tangent to a Curve
+Maths,Class 12,Application Of Derivatives.pdf,6,6.4.2,Normal to a Curve
+Maths,Class 12,Application Of Derivatives.pdf,6,6.4.3,Equation of Tangent
+Maths,Class 12,Application Of Derivatives.pdf,6,6.4.4,Equation of Normal
+Maths,Class 12,Application Of Derivatives.pdf,6,6.5.1,Approximations
+Maths,Class 12,Application Of Derivatives.pdf,6,6.5.2,Differential
+Maths,Class 12,Application Of Derivatives.pdf,6,6.5.3,Applications of Approximations
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.1,Local Maxima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.2,Local Minima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.3,Global Maxima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.4,Global Minima
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.5,First Derivative Test
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.6,Second Derivative Test
+Maths,Class 12,Application Of Derivatives.pdf,6,6.6.7,Applications of Maxima and Minima
+Maths,Class 12,Integrals.pdf,7,7,Integrals
+Maths,Class 12,Integrals.pdf,7,7.1,Introduction
+Maths,Class 12,Integrals.pdf,7,7.2,Integration as an Inverse Process of Differentiation
+Maths,Class 12,Integrals.pdf,7,7.3,Methods of Integration
+Maths,Class 12,Integrals.pdf,7,7.4,Integrals of Some Particular Functions
+Maths,Class 12,Integrals.pdf,7,7.5,Integration by Partial Fractions
+Maths,Class 12,Integrals.pdf,7,7.6,Integration by Parts
+Maths,Class 12,Integrals.pdf,7,7.7,Definite Integral
+Maths,Class 12,Integrals.pdf,7,7.8,Fundamental Theorem of Calculus
+Maths,Class 12,Integrals.pdf,7,7.9,Evaluation of Definite Integrals by Substitution
+Maths,Class 12,Integrals.pdf,7,7.10,Some Properties of Definite Integrals
+Maths,Class 12,Integrals.pdf,7,7.1.1,Integration
+Maths,Class 12,Integrals.pdf,7,7.1.2,Antiderivative
+Maths,Class 12,Integrals.pdf,7,7.1.3,Indefinite Integral
+Maths,Class 12,Integrals.pdf,7,7.2.1,Integration as Inverse of Differentiation
+Maths,Class 12,Integrals.pdf,7,7.2.2,Standard Integrals
+Maths,Class 12,Integrals.pdf,7,7.2.3,Properties of Indefinite Integrals
+Maths,Class 12,Integrals.pdf,7,7.3.1,Integration by Substitution
+Maths,Class 12,Integrals.pdf,7,7.3.2,Integration by Parts
+Maths,Class 12,Integrals.pdf,7,7.3.3,Integration by Partial Fractions
+Maths,Class 12,Integrals.pdf,7,7.4.1,Integrals of Particular Functions
+Maths,Class 12,Integrals.pdf,7,7.4.2,Integrals of Trigonometric Functions
+Maths,Class 12,Integrals.pdf,7,7.4.3,Integrals of Exponential Functions
+Maths,Class 12,Integrals.pdf,7,7.4.4,Integrals of Logarithmic Functions
+Maths,Class 12,Integrals.pdf,7,7.5.1,Partial Fractions
+Maths,Class 12,Integrals.pdf,7,7.5.2,Types of Partial Fractions
+Maths,Class 12,Integrals.pdf,7,7.5.3,Integration by Partial Fractions
+Maths,Class 12,Integrals.pdf,7,7.6.1,Integration by Parts
+Maths,Class 12,Integrals.pdf,7,7.6.2,ILATE Rule
+Maths,Class 12,Integrals.pdf,7,7.6.3,Applications of Integration by Parts
+Maths,Class 12,Integrals.pdf,7,7.7.1,Definite Integral
+Maths,Class 12,Integrals.pdf,7,7.7.2,Properties of Definite Integrals
+Maths,Class 12,Integrals.pdf,7,7.7.3,Evaluation of Definite Integrals
+Maths,Class 12,Integrals.pdf,7,7.8.1,Fundamental Theorem of Calculus
+Maths,Class 12,Integrals.pdf,7,7.8.2,First Fundamental Theorem
+Maths,Class 12,Integrals.pdf,7,7.8.3,Second Fundamental Theorem
+Maths,Class 12,Integrals.pdf,7,7.9.1,Evaluation by Substitution
+Maths,Class 12,Integrals.pdf,7,7.9.2,Change of Variables
+Maths,Class 12,Integrals.pdf,7,7.9.3,Applications of Substitution
+Maths,Class 12,Integrals.pdf,7,7.10.1,Properties of Definite Integrals
+Maths,Class 12,Integrals.pdf,7,7.10.2,Property 1
+Maths,Class 12,Integrals.pdf,7,7.10.3,Property 2
+Maths,Class 12,Integrals.pdf,7,7.10.4,Property 3
+Maths,Class 12,Integrals.pdf,7,7.10.5,Property 4
+Maths,Class 12,Integrals.pdf,7,7.10.6,Property 5
+Maths,Class 12,Integrals.pdf,7,7.10.7,Property 6
+Maths,Class 12,Integrals.pdf,7,7.10.8,Property 7
+Maths,Class 12,Integrals.pdf,7,7.10.9,Property 8
+Maths,Class 12,Integrals.pdf,7,7.10.10,Property 9
+Maths,Class 12,Integrals.pdf,7,7.10.11,Property 10
+Maths,Class 12,Integrals.pdf,7,7.10.12,Property 11
+Maths,Class 12,Integrals.pdf,7,7.10.13,Property 12
+Maths,Class 12,Application Of Integrals.pdf,8,8,Application of Integrals
+Maths,Class 12,Application Of Integrals.pdf,8,8.1,Introduction
+Maths,Class 12,Application Of Integrals.pdf,8,8.2,Area under Simple Curves
+Maths,Class 12,Application Of Integrals.pdf,8,8.3,Area between Two Curves
+Maths,Class 12,Application Of Integrals.pdf,8,8.1.1,Applications of Integrals
+Maths,Class 12,Application Of Integrals.pdf,8,8.1.2,Area
+Maths,Class 12,Application Of Integrals.pdf,8,8.1.3,Volume
+Maths,Class 12,Application Of Integrals.pdf,8,8.2.1,Area under Simple Curves
+Maths,Class 12,Application Of Integrals.pdf,8,8.2.2,Area bounded by Curve and Axes
+Maths,Class 12,Application Of Integrals.pdf,8,8.2.3,Area bounded by Curve and Lines
+Maths,Class 12,Application Of Integrals.pdf,8,8.2.4,Area in Different Quadrants
+Maths,Class 12,Application Of Integrals.pdf,8,8.3.1,Area between Two Curves
+Maths,Class 12,Application Of Integrals.pdf,8,8.3.2,Area bounded by Two Curves
+Maths,Class 12,Application Of Integrals.pdf,8,8.3.3,Area bounded by Curves and Lines
+Maths,Class 12,Application Of Integrals.pdf,8,8.3.4,Applications in Physics
+Maths,Class 12,Differential Equations.pdf,9,9,Differential Equations
+Maths,Class 12,Differential Equations.pdf,9,9.1,Introduction
+Maths,Class 12,Differential Equations.pdf,9,9.2,Basic Concepts
+Maths,Class 12,Differential Equations.pdf,9,9.3,General and Particular Solutions of a Differential Equation
+Maths,Class 12,Differential Equations.pdf,9,9.4,Formation of Differential Equation whose General Solution is Given
+Maths,Class 12,Differential Equations.pdf,9,9.5,"Methods of Solving First Order, First Degree Differential Equations"
+Maths,Class 12,Differential Equations.pdf,9,9.1.1,Differential Equation
+Maths,Class 12,Differential Equations.pdf,9,9.1.2,Order of Differential Equation
+Maths,Class 12,Differential Equations.pdf,9,9.1.3,Degree of Differential Equation
+Maths,Class 12,Differential Equations.pdf,9,9.2.1,Basic Concepts
+Maths,Class 12,Differential Equations.pdf,9,9.2.2,Variables
+Maths,Class 12,Differential Equations.pdf,9,9.2.3,Constants
+Maths,Class 12,Differential Equations.pdf,9,9.2.4,Parameters
+Maths,Class 12,Differential Equations.pdf,9,9.3.1,General Solution
+Maths,Class 12,Differential Equations.pdf,9,9.3.2,Particular Solution
+Maths,Class 12,Differential Equations.pdf,9,9.3.3,Arbitrary Constants
+Maths,Class 12,Differential Equations.pdf,9,9.4.1,Formation of Differential Equation
+Maths,Class 12,Differential Equations.pdf,9,9.4.2,Elimination of Arbitrary Constants
+Maths,Class 12,Differential Equations.pdf,9,9.4.3,Examples of Formation
+Maths,Class 12,Differential Equations.pdf,9,9.5.1,Variable Separable Method
+Maths,Class 12,Differential Equations.pdf,9,9.5.2,Homogeneous Differential Equations
+Maths,Class 12,Differential Equations.pdf,9,9.5.3,Linear Differential Equations
+Maths,Class 12,Differential Equations.pdf,9,9.5.4,Exact Differential Equations
+Maths,Class 12,Vector Algebra.pdf,10,10,Vector Algebra
+Maths,Class 12,Vector Algebra.pdf,10,10.1,Introduction
+Maths,Class 12,Vector Algebra.pdf,10,10.2,Some Basic Concepts
+Maths,Class 12,Vector Algebra.pdf,10,10.3,Types of Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.4,Addition of Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.5,Multiplication of a Vector by a Scalar
+Maths,Class 12,Vector Algebra.pdf,10,10.6,Product of Two Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.1.1,Vector
+Maths,Class 12,Vector Algebra.pdf,10,10.1.2,Scalar
+Maths,Class 12,Vector Algebra.pdf,10,10.1.3,Vector Algebra
+Maths,Class 12,Vector Algebra.pdf,10,10.2.1,Basic Concepts
+Maths,Class 12,Vector Algebra.pdf,10,10.2.2,Magnitude
+Maths,Class 12,Vector Algebra.pdf,10,10.2.3,Direction
+Maths,Class 12,Vector Algebra.pdf,10,10.2.4,Position Vector
+Maths,Class 12,Vector Algebra.pdf,10,10.3.1,Zero Vector
+Maths,Class 12,Vector Algebra.pdf,10,10.3.2,Unit Vector
+Maths,Class 12,Vector Algebra.pdf,10,10.3.3,Coinitial Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.3.4,Collinear Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.3.5,Equal Vectors
+Maths,Class 12,Vector Algebra.pdf,10,10.3.6,Negative of a Vector
+Maths,Class 12,Vector Algebra.pdf,10,10.4.1,Triangle Law
+Maths,Class 12,Vector Algebra.pdf,10,10.4.2,Parallelogram Law
+Maths,Class 12,Vector Algebra.pdf,10,10.4.3,Polygon Law
+Maths,Class 12,Vector Algebra.pdf,10,10.4.4,Properties of Vector Addition
+Maths,Class 12,Vector Algebra.pdf,10,10.5.1,Multiplication by Scalar
+Maths,Class 12,Vector Algebra.pdf,10,10.5.2,Properties of Scalar Multiplication
+Maths,Class 12,Vector Algebra.pdf,10,10.5.3,Applications of Scalar Multiplication
+Maths,Class 12,Vector Algebra.pdf,10,10.6.1,Scalar Product
+Maths,Class 12,Vector Algebra.pdf,10,10.6.2,Vector Product
+Maths,Class 12,Vector Algebra.pdf,10,10.6.3,Properties of Products
+Maths,Class 12,Vector Algebra.pdf,10,10.6.4,Applications of Products
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11,Three Dimensional Geometry
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.1,Introduction
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.2,Direction Cosines and Direction Ratios of a Line
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.3,Equation of a Line in Space
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.4,Angle between Two Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.5,Shortest Distance between Two Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.6,Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.7,Coplanarity of Two Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.8,Angle between Two Planes
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.9,Distance of a Point from a Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.10,Angle between a Line and a Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.1.1,Three Dimensional Geometry
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.1.2,Coordinate System
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.1.3,Space
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.2.1,Direction Cosines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.2.2,Direction Ratios
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.2.3,Relation between Direction Cosines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.2.4,Relation between Direction Cosines and Direction Ratios
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.3.1,Equation of Line in Space
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.3.2,Vector Form
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.3.3,Cartesian Form
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.3.4,Symmetric Form
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.4.1,Angle between Two Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.4.2,Condition for Perpendicularity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.4.3,Condition for Parallelism
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.5.1,Shortest Distance
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.5.2,Skew Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.5.3,Parallel Lines
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.6.1,Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.6.2,Equation of Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.6.3,Normal Form
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.6.4,Intercept Form
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.7.1,Coplanarity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.7.2,Condition for Coplanarity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.7.3,Applications of Coplanarity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.8.1,Angle between Two Planes
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.8.2,Condition for Perpendicularity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.8.3,Condition for Parallelism
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.9.1,Distance of Point from Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.9.2,Formula for Distance
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.9.3,Applications of Distance
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.10.1,Angle between Line and Plane
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.10.2,Condition for Perpendicularity
+Maths,Class 12,Three Dimensional Geometry.pdf,11,11.10.3,Condition for Parallelism
+Maths,Class 12,Linear Programming.pdf,12,12,Linear Programming
+Maths,Class 12,Linear Programming.pdf,12,12.1,Introduction
+Maths,Class 12,Linear Programming.pdf,12,12.2,Linear Programming Problem and its Mathematical Formulation
+Maths,Class 12,Linear Programming.pdf,12,12.3,Different Types of Linear Programming Problems
+Maths,Class 12,Linear Programming.pdf,12,12.1.1,Linear Programming
+Maths,Class 12,Linear Programming.pdf,12,12.1.2,Optimization
+Maths,Class 12,Linear Programming.pdf,12,12.1.3,Objective Function
+Maths,Class 12,Linear Programming.pdf,12,12.2.1,Linear Programming Problem
+Maths,Class 12,Linear Programming.pdf,12,12.2.2,Mathematical Formulation
+Maths,Class 12,Linear Programming.pdf,12,12.2.3,Objective Function
+Maths,Class 12,Linear Programming.pdf,12,12.2.4,Constraints
+Maths,Class 12,Linear Programming.pdf,12,12.2.5,Feasible Region
+Maths,Class 12,Linear Programming.pdf,12,12.2.6,Optimal Solution
+Maths,Class 12,Linear Programming.pdf,12,12.3.1,Manufacturing Problems
+Maths,Class 12,Linear Programming.pdf,12,12.3.2,Diet Problems
+Maths,Class 12,Linear Programming.pdf,12,12.3.3,Transportation Problems
+Maths,Class 12,Linear Programming.pdf,12,12.3.4,Assignment Problems
+Maths,Class 12,Linear Programming.pdf,12,12.3.5,Blending Problems
+Maths,Class 12,Probability.pdf,13,13,Probability
+Maths,Class 12,Probability.pdf,13,13.1,Introduction
+Maths,Class 12,Probability.pdf,13,13.2,Conditional Probability
+Maths,Class 12,Probability.pdf,13,13.3,Multiplication Theorem on Probability
+Maths,Class 12,Probability.pdf,13,13.4,Independent Events
+Maths,Class 12,Probability.pdf,13,13.5,Bayes' Theorem
+Maths,Class 12,Probability.pdf,13,13.6,Random Variables and its Probability Distributions
+Maths,Class 12,Probability.pdf,13,13.7,Bernoulli Trials and Binomial Distribution
+Maths,Class 12,Probability.pdf,13,13.1.1,Probability
+Maths,Class 12,Probability.pdf,13,13.1.2,Random Experiment
+Maths,Class 12,Probability.pdf,13,13.1.3,Sample Space
+Maths,Class 12,Probability.pdf,13,13.1.4,Event
+Maths,Class 12,Probability.pdf,13,13.2.1,Conditional Probability
+Maths,Class 12,Probability.pdf,13,13.2.2,Formula for Conditional Probability
+Maths,Class 12,Probability.pdf,13,13.2.3,Properties of Conditional Probability
+Maths,Class 12,Probability.pdf,13,13.3.1,Multiplication Theorem
+Maths,Class 12,Probability.pdf,13,13.3.2,Multiplication Theorem for Independent Events
+Maths,Class 12,Probability.pdf,13,13.3.3,Applications of Multiplication Theorem
+Maths,Class 12,Probability.pdf,13,13.4.1,Independent Events
+Maths,Class 12,Probability.pdf,13,13.4.2,Condition for Independence
+Maths,Class 12,Probability.pdf,13,13.4.3,Properties of Independent Events
+Maths,Class 12,Probability.pdf,13,13.5.1,Bayes' Theorem
+Maths,Class 12,Probability.pdf,13,13.5.2,Statement of Bayes' Theorem
+Maths,Class 12,Probability.pdf,13,13.5.3,Applications of Bayes' Theorem
+Maths,Class 12,Probability.pdf,13,13.6.1,Random Variable
+Maths,Class 12,Probability.pdf,13,13.6.2,Discrete Random Variable
+Maths,Class 12,Probability.pdf,13,13.6.3,Continuous Random Variable
+Maths,Class 12,Probability.pdf,13,13.6.4,Probability Distribution
+Maths,Class 12,Probability.pdf,13,13.6.5,Mean of Random Variable
+Maths,Class 12,Probability.pdf,13,13.6.6,Variance of Random Variable
+Maths,Class 12,Probability.pdf,13,13.7.1,Bernoulli Trials
+Maths,Class 12,Probability.pdf,13,13.7.2,Binomial Distribution
+Maths,Class 12,Probability.pdf,13,13.7.3,Mean and Variance of Binomial Distribution
+Maths,Class 12,Probability.pdf,13,13.7.4,Applications of Binomial Distribution
