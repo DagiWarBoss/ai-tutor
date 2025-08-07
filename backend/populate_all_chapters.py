@@ -1031,10 +1031,22 @@ def populate_all_chapters():
             'headings': [
                 ("12", "Introduction to Three Dimensional Geometry"),
                 ("12.1", "Introduction"),
+                ("12.1.1", "Three Dimensional Space"),
+                ("12.1.2", "Coordinate System"),
                 ("12.2", "Coordinate Axes and Coordinate Planes in Three Dimensional Space"),
+                ("12.2.1", "X, Y, Z Axes"),
+                ("12.2.2", "Coordinate Planes"),
+                ("12.2.3", "Octants"),
                 ("12.3", "Coordinates of a Point in Space"),
+                ("12.3.1", "Ordered Triplet"),
+                ("12.3.2", "Sign Convention"),
                 ("12.4", "Distance between Two Points"),
+                ("12.4.1", "Distance Formula"),
+                ("12.4.2", "Applications"),
                 ("12.5", "Section Formula"),
+                ("12.5.1", "Internal Division"),
+                ("12.5.2", "External Division"),
+                ("12.5.3", "Midpoint Formula"),
             ]
         },
         {
