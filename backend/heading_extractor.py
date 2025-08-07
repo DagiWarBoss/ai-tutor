@@ -91,35 +91,35 @@ class HeadingExtractor:
             Filtered list of headings
         """
         cleaned = []
+        # Much more conservative BAD_STARTS - only remove obvious non-headings
         BAD_STARTS = (
-            'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
-            'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+            'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw',
         )
-        # Reduced BAD_CONTAINS to be less aggressive
-        BAD_CONTAINS = ('equation', 'value', 'show', 'number', 'reason')
+        # Very minimal BAD_CONTAINS - only remove obvious non-headings
+        BAD_CONTAINS = ('equation', 'value')
         
         for num, text in headings:
             t = text.strip()
             words = t.split()
             
-            # Skip if no text or doesn't start with uppercase
-            if not t or not t[0].isupper():
+            # Skip if no text
+            if not t:
                 continue
                 
-            # More lenient word count - allow 2-15 words instead of 2-9
-            if len(words) < 2 or len(words) > 15:
+            # More lenient word count - allow 1-20 words
+            if len(words) < 1 or len(words) > 20:
                 continue
                 
-            # Exclude table, figure, exercises, etc.
+            # Only exclude very obvious non-headings
             if any(t.lower().startswith(bad) for bad in BAD_STARTS):
                 continue
                 
-            # Less aggressive BAD_CONTAINS filtering
+            # Very minimal BAD_CONTAINS filtering
             if any(bad in t.lower() for bad in BAD_CONTAINS):
                 continue
                 
-            # Don't allow headings ending with ":" (often captions) or "."
-            if t.endswith(':') or t.endswith('.'):
+            # Don't allow headings ending with ":" (often captions)
+            if t.endswith(':'):
                 continue
                 
             # Additional check: skip if the heading is just the number
