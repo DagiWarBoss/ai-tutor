@@ -12,6 +12,7 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
 CHAPTER_NUMBER = "4"  # Change per chapter
 
+
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
@@ -26,24 +27,26 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
 
-            # --- UPDATED: Combine multiline headings ---
-            if not text or len(text.split()) < 3:
+            # --- Aggressive multiline fix ---
+            if not text or len(text.split()) < 4:
                 j = i + 1
                 while j < len(lines):
                     next_line = lines[j].strip()
-                    if next_line and next_line[0].isupper() and not next_line.isdigit():
-                        text += " " + next_line
-                        j += 1
-                        if len(text.split()) >= 4 and not text.endswith((':', '.', ';')):
-                            break
-                    else:
+                    # Stop if new heading begins
+                    if re.match(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-)]+", next_line):
                         break
-                i = j - 1  # Skip the lines we've already consumed
+                    if next_line:
+                        text += " " + next_line
+                    if len(text.split()) >= 5:
+                        break
+                    j += 1
+                i = j - 1  # Skip processed lines
 
             headings.append((num, text))
         i += 1
     doc.close()
     return headings
+
 
 def post_filter(headings):
     cleaned = []
@@ -67,6 +70,7 @@ def post_filter(headings):
             continue
         cleaned.append((num, text))
     return cleaned
+
 
 if __name__ == '__main__':
     pdf_path = os.path.join(
