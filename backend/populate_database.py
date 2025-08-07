@@ -31,18 +31,19 @@ def extract_chapter_headings(pdf_path, chapter_number):
             
             # If text is empty or very short, look ahead for continuation
             if not text or len(text.split()) < 2:
-                # Look ahead up to 2 lines for continuation
-                for look_ahead in range(1, 3):
+                # Look ahead up to 3 lines for continuation
+                for look_ahead in range(1, 4):
                     if i + look_ahead < len(lines):
                         next_line = lines[i + look_ahead].strip()
                         # Skip empty lines and lines that start with numbers (likely new headings)
                         if next_line and not re.match(r'^\d+', next_line):
                             # If next line starts with uppercase and doesn't look like a new heading
                             if next_line and next_line[0].isupper():
-                                # Only add if the next line looks like a proper heading continuation
-                                # (not too long, doesn't contain explanatory words)
+                                # Check if this looks like a heading continuation or explanatory text
                                 words = next_line.split()
-                                if len(words) <= 6 and not any(word.lower() in ['is', 'are', 'the', 'and', 'of', 'in', 'to', 'for', 'with', 'by'] for word in words[:2]):
+                                
+                                # If it's short and doesn't start with common explanatory words
+                                if len(words) <= 8 and not any(word.lower() in ['the', 'and', 'of', 'in', 'to', 'for', 'with', 'by', 'is', 'are', 'was', 'were'] for word in words[:2]):
                                     if text:
                                         text = text + " " + next_line
                                     else:
@@ -56,7 +57,7 @@ def extract_chapter_headings(pdf_path, chapter_number):
                             # Also check if next line continues the current text (lowercase continuation)
                             elif next_line and next_line[0].islower() and text:
                                 # Only add if it's a short continuation (likely part of the heading)
-                                if len(next_line.split()) <= 3:
+                                if len(next_line.split()) <= 4:
                                     text = text + " " + next_line
                                     i += look_ahead
                                     break
