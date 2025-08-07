@@ -32,10 +32,8 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num = match.group(1).strip()
             text = match.group(2).strip()
-            # If text is empty or short, grab next one(s) until heading appears complete
             j = i + 1
             while True:
-                # If next line looks like a new numbered topic, OR is blank, OR is clearly table/figure/example, stop.
                 if j >= len(lines):
                     break
                 next_line = lines[j].strip()
@@ -45,11 +43,10 @@ def extract_chapter_headings(pdf_path, chapter_number):
                     break
                 if next_line.lower().startswith(("table", "figure", "exercise", "problem", "example")):
                     break
-                # Otherwise, treat as part of this heading
-                text = text + " " + next_line
+                text += " " + next_line
                 j += 1
             headings.append((num, text.strip()))
-            i = j  # Move to after heading
+            i = j
         else:
             i += 1
     doc.close()
@@ -65,9 +62,10 @@ def post_filter(headings):
     for num, text in headings:
         t = text.strip()
         words = t.split()
+        # Real headings are 2–40 words
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 15:
+        if len(words) < 2 or len(words) > 40:
             continue
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
             continue
