@@ -1,8 +1,10 @@
+4.1 KÖssel-Lewis Approach to Chemical Bonding
 4.1.1 Octet Rule Kössel and Lewis in 1916 developed an
 4.1.2 Covalent Bond Langmuir (1919) refined the Lewis
 4.1.3 Lewis Representation of Simple
 4.1.4 Formal Charge Lewis dot structures, in general, do not
 4.1.5 Limitations of the Octet Rule
+4.2 Ionic or Electrovalent Bond
 4.2.1 Lattice Enthalpy The Lattice Enthalpy of an ionic solid
 4.3 Bond Parameters
 4.3.1 Bond Length Bond length is defined as the equilibrium
@@ -11,20 +13,42 @@
 4.3.4 Bond Order In the Lewis description of covalent bond,
 4.3.5 Resonance Structures It is often observed that a single Lewis structure
 4.3.6 Polarity of Bonds The existence of a hundred percent ionic or
+4.4 The Valence Shell Electron
+4.5 Valence Bond Theory As we know that Lewis approach helps in
 4.5.1 Orbital Overlap Concept In the formation of hydrogen molecule,
 4.5.2 Directional Properties of Bonds
 4.5.3 Overlapping of Atomic Orbitals
 4.5.4 Types of Overlapping and Nature of
 4.5.5 Strength of Sigma and pi Bonds
+4.6 Hybridisation In order to explain the characteristic
 4 These hybrid orbitals are directed in
 4.6.1 Types of Hybridisation There are various types of hybridisation
 4.6.2 Other Examples of sp3, sp2 and sp
-4.6.3 Hybridisation of Elements
+4.6.3 Hybridisation of Elements involving d Orbitals
+4.7 Molecular Orbital Theory Molecular orbital (MO) theory was developed
 4.7.2 Conditions for the Combination of
 4.7.3 Types of Molecular Orbitals
 4.7.4 Energy Level Diagram for Molecular
 4.7.5 Electronic Configuration and Molecular Behaviour
+4.8 BONDING IN SOME HOMONUCLEAR
 4 Carbon molecule (C2 ): The electronic
 4.9 Hydrogen Bonding Nitrogen, oxygen and fluorine are the highly
 4.9.1 Cause of Formation of Hydrogen
 4.9.2 Types of H-Bonds There are two types of H-bonds
+4.8 Although geometries of NH3 and H2O molecules are distorted tetrahedral, bond angle
+4.12 H3PO3 can be represented by structures 1 and 2 shown below. Can these two
+4.14 Use Lewis symbols to show electron transfer between the following atoms to form
+4.15 Although both CO2 and H2O are triatomic molecules, the shape of H2O molecule is
+4.19 Arrange the bonds in order of increasing ionic character in the molecules: LiF, K2O,
+4.20 The skeletal structure of CH3COOH as shown below is correct, but some of the bonds
+4.21 Apart from tetrahedral geometry, another possible geometry for CH4 is square planar
+4.23 Which out of NH3 and NF3 has higher dipole moment and why ?
+4.24 What is meant by hybridisation of atomic orbitals? Describe the shapes of sp, sp2,
+4.26 Is there any change in the hybridisation of B and N atoms as a result of the following
+4.28 What is the total number of sigma and pi bonds in the following molecules?
+4.29 Considering x-axis as the internuclear axis which out of the following will
+4.30 Which hybrid orbitals are used by carbon atoms in the following molecules?
+4.31 What do you understand by bond pairs and lone pairs of electrons? Illustrate by
+4.36 Compare the relative stability of the following species and indicate their magnetic
+4.38 Describe the hybridisation in case of PCl5. Why are the axial bonds longer as compared
+4.40 What is meant by the term bond order? Calculate the bond order of : N2, O2, O2
