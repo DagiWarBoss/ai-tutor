@@ -30,9 +30,9 @@ def extract_chapter_headings(pdf_path, chapter_number):
             num, text = match.group(1).strip(), match.group(2).strip()
             
             # If text is empty or very short, look ahead for continuation
-            if not text or len(text.split()) < 2:
-                # Look ahead up to 2 lines for continuation
-                for look_ahead in range(1, 3):
+            if not text or len(text.split()) < 3:  # Increased minimum word requirement
+                # Look ahead up to 3 lines for continuation
+                for look_ahead in range(1, 4):
                     if i + look_ahead < len(lines):
                         next_line = lines[i + look_ahead].strip()
                         # Skip empty lines and lines that start with numbers (likely new headings)
@@ -44,6 +44,12 @@ def extract_chapter_headings(pdf_path, chapter_number):
                                     text = text + " " + next_line
                                 else:
                                     text = next_line
+                                i += look_ahead
+                                break
+                            
+                            # Also check if next line continues the current text (lowercase continuation)
+                            elif next_line and next_line[0].islower() and text:
+                                text = text + " " + next_line
                                 i += look_ahead
                                 break
             
