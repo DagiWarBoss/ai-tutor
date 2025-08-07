@@ -16,12 +16,10 @@ def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
-        # Using sort=True helps maintain a logical reading order
         lines.extend(doc[page_num].get_text("text", sort=True).split('\n'))
     
     headings = []
     i = 0
-    # The regex is slightly improved to catch different dash types, but the logic is the same.
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
 
     while i < len(lines):
@@ -30,26 +28,30 @@ def extract_chapter_headings(pdf_path, chapter_number):
         if match:
             num, text = match.group(1).strip(), match.group(2).strip()
 
-            # --- KEY CHANGE: Loop to capture multi-line headings ---
-            # This 'while' loop replaces the previous single 'if' statement.
-            # It will keep adding subsequent lines to the 'text' variable
-            # as long as they appear to be continuations of the topic name.
+            # --- KEY FIX: Smarter look-ahead loop ---
+            # This loop now has stricter rules for what counts as a heading continuation.
             j = i + 1
             while j < len(lines):
                 next_line = lines[j].strip()
 
-                # Stop appending if the next line is a new topic, is empty, or doesn't look like text.
-                if pat.match(next_line) or not next_line or not next_line[0].isalpha():
+                # A valid continuation line must be short and start with an uppercase letter.
+                # It cannot be a new heading itself or be an empty line.
+                is_plausible_continuation = (
+                    next_line 
+                    and next_line[0].isupper() 
+                    and len(next_line.split()) < 7 # Prevents grabbing full sentences
+                )
+
+                if pat.match(next_line) or not is_plausible_continuation:
                     break
 
-                # Add the continuation line to the current heading text.
+                # Append the valid continuation line
                 text += " " + next_line
                 j += 1
             
             headings.append((num, text.strip()))
-            # Skip the outer loop ahead to where we finished reading.
-            i = j - 1
-            # --- End of Change ---
+            i = j - 1  # Skip ahead past the lines we just processed
+            # --- End of Fix ---
 
         i += 1
         
@@ -57,7 +59,7 @@ def extract_chapter_headings(pdf_path, chapter_number):
     return headings
 
 def post_filter(headings):
-    # This function remains unchanged, as per your request.
+    # This function is UNCHANGED. The problem was in the extraction.
     cleaned = []
     BAD_STARTS = (
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
@@ -88,10 +90,16 @@ if __name__ == '__main__':
         )
         headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
         filtered_headings = post_filter(headings)
+        
         print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
-        for num, text in filtered_headings:
-            print(f"  - {num} {text}")
+        if not filtered_headings:
+            print("  - No headings found that match the filter criteria.")
+        else:
+            for num, text in filtered_headings:
+                print(f"  - {num} {text}")
+        
         print(f"\nTotal filtered matches: {len(filtered_headings)}")
+
     except FileNotFoundError:
         print(f"Error: The file was not found at the specified path: {pdf_path}")
     except Exception as e:
