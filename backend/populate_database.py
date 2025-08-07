@@ -2,10 +2,9 @@ import os
 import fitz  # PyMuPDF
 import re
 from dotenv import load_dotenv
-from collections import Counter
 
 # --- Load Environment Variables ---
-script_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else '.'
+script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -13,86 +12,71 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
 CHAPTER_NUMBER = "4"  # Change per chapter
 
-def get_most_common_font_size(doc):
-    """
-    Scans the document to find the most common font size, likely the body text.
-    """
-    font_sizes = []
-    for page in doc:
-        blocks = page.get_text("dict")["blocks"]
-        for b in blocks:
-            if "lines" in b:
-                for l in b["lines"]:
-                    for s in l["spans"]:
-                        font_sizes.append(round(s["size"]))
-    
-    if not font_sizes:
-        return 10.0 # Return a default body size if none found
-
-    # Find the most common font size (the mode)
-    return Counter(font_sizes).most_common(1)[0][0]
-
-
-def extract_headings_by_font(pdf_path, chapter_number):
-    """
-    Extracts headings by identifying text with a larger font size than the body.
-    This is a much more reliable method than the previous line-based logic.
-    """
+def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
-    
-    # 1. Determine the font size of the main body text
-    body_font_size = get_most_common_font_size(doc)
-    print(f"--- [INFO] Determined main body font size to be ~{body_font_size} ---")
+    lines = []
+    for page_num in range(doc.page_count):
+        lines.extend(doc[page_num].get_text().split('\n'))
 
     headings = []
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
+    # Pattern matches section numbers like 4, 4.1, 4.2.3, etc.
+    pat = re.compile(rf'^\s*({chapter_number}(?:\.\d+)*)(?:[\s\.:;\-)]+)?(.*)$')
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        match = pat.match(line)
+        if match:
+            num = match.group(1).strip()
+            text = match.group(2).strip()
+            collected = text
 
-    # 2. Iterate through the document's text blocks
-    for page_num, page in enumerate(doc):
-        blocks = page.get_text("dict")["blocks"]
-        for b in blocks:
-            if "lines" in b:
-                for l in b["lines"]:
-                    # Combine all text spans in a line to get the full line text
-                    line_text = "".join(s["text"] for s in l["spans"]).strip()
-                    
-                    # Check if this line matches our heading number pattern
-                    match = pat.match(line_text)
-                    if match:
-                        # Get the font size of the first part of the line
-                        span_font_size = round(l["spans"][0]["size"])
-
-                        # 3. A heading must have a font size larger than the body text
-                        if span_font_size > body_font_size:
-                            num, text = match.group(1).strip(), match.group(2).strip()
-                            # Clean up any residual newlines or extra spaces
-                            clean_text = ' '.join(text.split())
-                            headings.append((num, clean_text))
-
+            # If text after number is missing or too short, check next 1-2 lines as possible heading continuation
+            lookforward = 0
+            while (not collected or len(collected.split()) < 4) and (i + 1 + lookforward) < len(lines) and lookforward < 2:
+                next_line = lines[i + 1 + lookforward].strip()
+                # Only join if next line starts with uppercase/lowercase letter and is not another section
+                if next_line and not pat.match(next_line) and not next_line[0].isdigit():
+                    collected += ' ' + next_line
+                    lookforward += 1
+                else:
+                    break
+            headings.append((num, collected.strip()))
+            i += lookforward  # skip any merged lines
+        i += 1
     doc.close()
     return headings
 
+def post_filter(headings):
+    cleaned = []
+    BAD_STARTS = (
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
+        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+    )
+    # Only filter headings that are empty, not capitalized, or suspiciously short/long
+    for num, text in headings:
+        t = text.strip()
+        words = t.split()
+        if not t or not t[0].isupper():
+            continue
+        if len(words) < 2 or len(words) > 18:
+            continue
+        if any(t.lower().startswith(bad) for bad in BAD_STARTS):
+            continue
+        if t.endswith(':') or t.endswith('.'):
+            continue
+        cleaned.append((num, text))
+    return cleaned
 
 if __name__ == '__main__':
-    try:
-        pdf_path = os.path.join(
-            script_dir, PDF_ROOT_FOLDER,
-            "Chemistry", "Class 11", TARGET_CHAPTER
-        )
-        # Call the new, more reliable function
-        final_headings = extract_headings_by_font(pdf_path, CHAPTER_NUMBER)
-        
-        print(f"\n--- FINAL RESULTS ---")
-        print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
-        if not final_headings:
-            print("  - No headings found.")
-        else:
-            for num, text in final_headings:
-                print(f"  - {num} {text}")
-        
-        print(f"\nTotal final matches: {len(final_headings)}")
-
-    except FileNotFoundError:
-        print(f"Error: The file was not found at the specified path: {pdf_path}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+    pdf_path = os.path.join(
+        script_dir, PDF_ROOT_FOLDER,
+        "Chemistry", "Class 11", TARGET_CHAPTER
+    )
+    headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
+    filtered_headings = post_filter(headings)
+    with open("candidate_topics.txt", "w", encoding="utf-8") as f:
+        for num, text in filtered_headings:
+            line = f"{num} {text}".strip()
+            f.write(f"{line}\n")
+            print(line)
+    print(f"\nTotal filtered matches: {len(filtered_headings)}")
