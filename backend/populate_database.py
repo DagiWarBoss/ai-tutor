@@ -19,50 +19,51 @@ def extract_chapter_headings(pdf_path, chapter_number):
         lines.extend(doc[page_num].get_text().split('\n'))
 
     headings = []
-    # Pattern matches section numbers like 4, 4.1, 4.2.3, etc.
-    pat = re.compile(rf'^\s*({chapter_number}(?:\.\d+)*)(?:[\s\.:;\-)]+)?(.*)$')
     i = 0
+
+    # Matches things like 4, 4.1, 4.1.2 etc.
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+)*)[\s\.:;\-)]+(.*)$")
+
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
+
         if match:
             num = match.group(1).strip()
             text = match.group(2).strip()
-            collected = text
 
-            # If text after number is missing or too short, check next 1-2 lines as possible heading continuation
-            lookforward = 0
-            while (not collected or len(collected.split()) < 4) and (i + 1 + lookforward) < len(lines) and lookforward < 2:
-                next_line = lines[i + 1 + lookforward].strip()
-                # Only join if next line starts with uppercase/lowercase letter and is not another section
-                if next_line and not pat.match(next_line) and not next_line[0].isdigit():
-                    collected += ' ' + next_line
-                    lookforward += 1
-                else:
-                    break
-            headings.append((num, collected.strip()))
-            i += lookforward  # skip any merged lines
+            # Greedily append more lines if heading looks incomplete
+            j = i + 1
+            while j < len(lines):
+                next_line = lines[j].strip()
+                if re.match(rf"^\s*{chapter_number}(?:\.\d+)*[\s\.:;\-)]+", next_line):
+                    break  # next heading
+                if next_line and next_line[0].isupper():
+                    text += " " + next_line
+                j += 1
+            i = j - 1  # move i to before next heading
+
+            headings.append((num, text))
         i += 1
+
     doc.close()
     return headings
 
 def post_filter(headings):
     cleaned = []
     BAD_STARTS = (
-        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
-        'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
+        'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw',
+        'how', 'why', 'define', 'explain', 'calculate', 'find', 'discuss',
     )
-    # Only filter headings that are empty, not capitalized, or suspiciously short/long
+
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        if not t or not t[0].isupper():
+        if not t:
             continue
-        if len(words) < 2 or len(words) > 18:
+        if len(words) < 1 or len(words) > 20:
             continue
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
-            continue
-        if t.endswith(':') or t.endswith('.'):
             continue
         cleaned.append((num, text))
     return cleaned
@@ -74,9 +75,8 @@ if __name__ == '__main__':
     )
     headings = extract_chapter_headings(pdf_path, CHAPTER_NUMBER)
     filtered_headings = post_filter(headings)
-    with open("candidate_topics.txt", "w", encoding="utf-8") as f:
-        for num, text in filtered_headings:
-            line = f"{num} {text}".strip()
-            f.write(f"{line}\n")
-            print(line)
+
+    print(f"\nMatched clean candidate headings for '{TARGET_CHAPTER}':")
+    for num, text in filtered_headings:
+        print(f"  - {num} {text}")
     print(f"\nTotal filtered matches: {len(filtered_headings)}")
