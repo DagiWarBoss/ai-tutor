@@ -12,43 +12,30 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 TARGET_CHAPTER = "Chemical Bonding And Molecular Structure.pdf"
 CHAPTER_NUMBER = "4"  # Change per chapter
 
-def looks_like_section(line, chapter_number):
-    # e.g., "4", "4.1", "4.1.1"
-    pat = re.compile(rf"^\s*{chapter_number}(?:\.\d+)*[\s\.:;\-)]+")
-    return bool(pat.match(line))
-
 def extract_chapter_headings(pdf_path, chapter_number):
     doc = fitz.open(pdf_path)
     lines = []
     for page_num in range(doc.page_count):
         lines.extend(doc[page_num].get_text().split('\n'))
-
     headings = []
+    pat = re.compile(rf'^\s*({chapter_number}(?:\.\d+)*)([\s\.:;\-)]+)(.+)$')
+
     i = 0
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+)*)(?:[\s\.:;\-)]+)(.*)$")
     while i < len(lines):
         line = lines[i].strip()
         match = pat.match(line)
         if match:
             num = match.group(1).strip()
-            text = match.group(2).strip()
-            j = i + 1
-            while True:
-                if j >= len(lines):
-                    break
-                next_line = lines[j].strip()
-                if not next_line:
-                    break
-                if looks_like_section(next_line, chapter_number):
-                    break
-                if next_line.lower().startswith(("table", "figure", "exercise", "problem", "example")):
-                    break
-                text += " " + next_line
-                j += 1
-            headings.append((num, text.strip()))
-            i = j
-        else:
-            i += 1
+            text = match.group(3).strip()
+            # Try to merge one extra line if heading looks clipped (less than 4 words)
+            if len(text.split()) < 4 and i+1 < len(lines):
+                next_line = lines[i+1].strip()
+                # Only merge if next line starts with uppercase and no digit
+                if next_line and next_line[0].isupper() and not next_line[:2].isdigit():
+                    text = text + " " + next_line
+                    i += 1
+            headings.append((num, text))
+        i += 1
     doc.close()
     return headings
 
@@ -58,18 +45,15 @@ def post_filter(headings):
         'table', 'fig', 'exercise', 'problem', 'example', 'write', 'draw', 'how',
         'why', 'define', 'explain', 'formation of', 'solution', 'calculate', 'find', 'discuss',
     )
-    BAD_CONTAINS = ('molecule', 'atom', '(', ')', 'equation', 'value', 'show', 'number', 'reason')
+    # Only filter headings that are empty, not capitalized, or suspiciously short/long
     for num, text in headings:
         t = text.strip()
         words = t.split()
-        # Real headings are 2–40 words
         if not t or not t[0].isupper():
             continue
-        if len(words) < 2 or len(words) > 40:
+        if len(words) < 2 or len(words) > 15:
             continue
         if any(t.lower().startswith(bad) for bad in BAD_STARTS):
-            continue
-        if any(bad in t.lower() for bad in BAD_CONTAINS):
             continue
         if t.endswith(':') or t.endswith('.'):
             continue
