@@ -33,6 +33,9 @@ def populate_chemical_bonding_headings():
         ("4.3.5", "Resonance Structures"),
         ("4.3.6", "Polarity of Bonds"),
         
+        ("4.4.1", "Valence Bond Theory Introduction"),
+        ("4.4.2", "Overlap of Atomic Orbitals"),
+        
         ("4.5.1", "Orbital Overlap Concept"),
         ("4.5.2", "Directional Properties of Bonds"),
         ("4.5.3", "Overlapping of Atomic Orbitals"),
