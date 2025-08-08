@@ -25,10 +25,7 @@ def get_most_common_font_info(doc):
     return font_counts.most_common(1)[0][0]
 
 def find_chapter_number(doc):
-    """
-    --- THIS IS THE UPGRADED FUNCTION ---
-    Scans the first 3 pages of a PDF to find the chapter number automatically.
-    """
+    """Scans the first 3 pages of a PDF to find the chapter number automatically."""
     for page_num in range(min(3, doc.page_count)):
         page_text = doc[page_num].get_text()
         chapter_match = re.search(r"CHAPTER\s+(\d{1,2})", page_text, re.IGNORECASE)
@@ -42,33 +39,47 @@ def find_chapter_number(doc):
 def extract_text_and_headings_with_location(doc, chapter_number):
     """Extracts all text blocks and identifies headings by style, keeping their location."""
     body_font_size, body_is_bold = get_most_common_font_info(doc)
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+.*$")
+    print(f"  [DEBUG] Body style: size ~{body_font_size}, bold: {body_is_bold}")
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
     headings, all_text_blocks = [], []
 
     for page_num, page in enumerate(doc):
-        # First, get all text blocks with their positions
+        # Get all text blocks with their positions
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             block_text, y_pos = b[4].strip(), b[1]
             if block_text:
                 all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y_pos})
         
-        # Then, analyze the styled text to identify which blocks are headings
+        # Analyze the styled text to identify which blocks are headings
         styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
         for b in styled_blocks:
             if "lines" in b:
                 for l in b["lines"]:
                     line_text = "".join(s["text"] for s in l["spans"]).strip()
-                    if pat.match(line_text):
+                    match = pat.match(line_text)
+                    
+                    # --- START OF DEBUG BLOCK ---
+                    if match:
                         first_span = l["spans"][0]
                         span_size = round(first_span["size"])
-                        span_is_bold = "bold" in first_span["font"].lower()
-                        is_heading = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
-                        if is_heading:
-                            y_pos = b['bbox'][1] # Get vertical position of the block
+                        span_font = first_span["font"]
+                        span_is_bold = "bold" in span_font.lower()
+                        
+                        is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+                        
+                        print(f"\n[DEBUG] Regex Matched Line: '{line_text}'")
+                        print(f"  - Font: {span_font}, Size: {span_size}")
+                        print(f"  - Is Bold: {span_is_bold}")
+                        
+                        if is_heading_style:
+                            print("  - VERDICT: ACCEPTED as a heading.")
+                            y_pos = b['bbox'][1]
                             headings.append({'text': line_text, 'page': page_num, 'y': y_pos})
+                        else:
+                            print("  - VERDICT: REJECTED due to font style/size not matching heading criteria.")
+                    # --- END OF DEBUG BLOCK ---
                             
-    # Remove duplicate headings that might be detected
     unique_headings = list({h['text']: h for h in headings}.values())
     return unique_headings, all_text_blocks
 
@@ -120,10 +131,13 @@ def main():
             
         doc = fitz.open(pdf_path)
         
-        # --- LOGIC UPDATED TO USE THE NEW FUNCTION ---
         chapter_num = find_chapter_number(doc)
+        if not chapter_num:
+            print("  [INFO] Auto-detection failed. Checking fallback map...")
+            chapter_num = CHAPTER_NUMBER_FALLBACK_MAP.get(pdf_filename)
 
         if chapter_num:
+            print(f"  [INFO] Using Chapter Number: {chapter_num}")
             headings, all_text = extract_text_and_headings_with_location(doc, chapter_num)
             topic_content_map = map_text_to_headings(headings, all_text)
             
@@ -138,7 +152,7 @@ def main():
                         (content, chapter_id, topic_num)
                     )
         else:
-            print("  [ERROR] Could not determine chapter number from PDF. Skipping.")
+            print(f"  [ERROR] Could not determine chapter number for '{pdf_filename}'. Skipping.")
         
         doc.close()
     
