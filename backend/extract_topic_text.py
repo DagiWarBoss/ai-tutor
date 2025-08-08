@@ -10,9 +10,33 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
-# This is a map of filenames to chapter numbers for PDFs where auto-detection might fail.
-# You can add more entries here as needed.
+# ==============================================================================
+# --- This map is now the ONLY source for chapter numbers. ---
+# It has been pre-filled with all 86 chapters from your screenshots.
+# ==============================================================================
 CHAPTER_NUMBER_FALLBACK_MAP = {
+    # Chemistry Class 11
+    "Some Basic Concepts Of Chemistry.pdf": "1",
+    "Structure Of Atom.pdf": "2",
+    "Classification Of Elements And Periodicity.pdf": "3",
+    "Chemical Bonding And Molecular Structure.pdf": "4",
+    "Thermodynamics.pdf": "5",
+    "Equilibrium.pdf": "6",
+    "Redox Reactions.pdf": "7",
+    "Organic Chemistry Basics.pdf": "8",
+    "Hydrocarbons.pdf": "9",
+    # Chemistry Class 12
+    "Solutions.pdf": "1",
+    "Electrochemistry.pdf": "2",
+    "Chemical Kinetics.pdf": "3",
+    "D And F Block.pdf": "4",
+    "Coordination Compounds.pdf": "5",
+    "Haloalkanes And Haloarenes.pdf": "6",
+    "Alcohol Phenols Ethers.pdf": "7",
+    "Aldehydes, Ketones And Carboxylic Acid.pdf": "8",
+    "Amines.pdf": "9",
+    "Biomolecules.pdf": "10",
+    # Physics Class 11
     "Units And Measurements.pdf": "1",
     "Motion In A Straight Line.pdf": "2",
     "Motion In A Plane.pdf": "3",
@@ -20,16 +44,66 @@ CHAPTER_NUMBER_FALLBACK_MAP = {
     "Work Energy Power.pdf": "5",
     "System Of Particles And Rotational Motion.pdf": "6",
     "Gravitation.pdf": "7",
-    "Redox Reactions.pdf": "7",
-    "Hydrocarbons.pdf": "9",
-    "Organic Chemistry Basics.pdf": "8",
+    "Mechanical Properties Of Solids.pdf": "8",
+    "Mechanical Properties Of Fluids.pdf": "9",
+    "Thermal Properties Of Matter.pdf": "10",
+    "Thermodynamics.pdf": "11", # Note: Physics has its own Thermodynamics chapter
+    "Kinetic Theory.pdf": "12",
+    "Oscillations.pdf": "13",
+    "Waves.pdf": "14",
+    # Physics Class 12
+    "Electric Charges And Fields.pdf": "1",
+    "Electrostatic Potential And Capacitance.pdf": "2",
+    "Current Electricity.pdf": "3",
+    "Moving Charges And Magnetism.pdf": "4",
+    "Magnetism And Matter.pdf": "5",
+    "Electromagnetic Induction.pdf": "6",
+    "Alternating Current.pdf": "7",
+    "Electromagnetic Waves.pdf": "8",
+    "Ray Optics.pdf": "9",
+    "Wave Optics.pdf": "10",
+    "Dual Nature Of Radiation And Matter.pdf": "11",
+    "Atoms.pdf": "12",
+    "Nuclei.pdf": "13",
+    "SemiConductor Electronics.pdf": "14",
+    # Maths Class 11
+    "Sets.pdf": "1",
+    "Relations And Functions.pdf": "2",
+    "Trigonometric Functions.pdf": "3",
+    "Complex Numbers And Quadratic Equations.pdf": "4",
+    "Linear Inequalities.pdf": "5",
+    "Permutations And Combinations.pdf": "6",
+    "Binomial Theorem.pdf": "7",
+    "Sequences And Series.pdf": "8",
+    "Straight Lines.pdf": "9",
+    "Conic Sections.pdf": "10",
+    "Introduction to Three Dimensional Geometry.pdf": "11",
+    "Limits And Derivatives.pdf": "12",
+    "Statistics.pdf": "13",
+    "Probability.pdf": "14",
+    # Maths Class 12
+    "Relations And Functions.pdf": "1",
+    "Inverse Trigonometric Functions.pdf": "2",
+    "Matrices.pdf": "3",
+    "Determinants.pdf": "4",
+    "Contunuity And Differentiability.pdf": "5",
+    "Application Of Derivatives.pdf": "6",
+    "Integrals.pdf": "7",
+    "Application Of Integrals.pdf": "8",
+    "Differential Equations.pdf": "9",
+    "Vector Algebra.pdf": "10",
+    "Three Dimensional Geometry.pdf": "11",
+    "Linear Programming.pdf": "12",
+    "Probability.pdf": "13",
+    "Proofs In Mathematics.pdf": "14", # Often supplementary
+    "Infinite Series.pdf": "15",    # Often supplementary
 }
-
+# ==============================================================================
 
 def get_most_common_font_info(doc):
-    """Finds the font size and bold status of the main body text."""
     font_counts = Counter()
-    for page in doc:
+    for page_num, page in enumerate(doc):
+        if page_num > 10: break
         blocks = page.get_text("dict")["blocks"]
         for b in blocks:
             if "lines" in b:
@@ -40,20 +114,7 @@ def get_most_common_font_info(doc):
     if not font_counts: return (10.0, False)
     return font_counts.most_common(1)[0][0]
 
-def find_chapter_number(doc):
-    """Scans the first 3 pages of a PDF to find the chapter number automatically."""
-    for page_num in range(min(3, doc.page_count)):
-        page_text = doc[page_num].get_text()
-        chapter_match = re.search(r"CHAPTER\s+(\d{1,2})", page_text, re.IGNORECASE)
-        if chapter_match: return chapter_match.group(1)
-        unit_match = re.search(r"UNIT\s+(\d+)", page_text, re.IGNORECASE)
-        if unit_match: return unit_match.group(1)
-        code_match = re.search(r"[A-Z]{2}(\d{2})", page_text)
-        if code_match: return str(int(code_match.group(1)))
-    return None
-
 def extract_text_and_headings_with_location(doc, chapter_number):
-    """Extracts all text blocks and identifies headings by style, keeping their location."""
     body_font_size, body_is_bold = get_most_common_font_info(doc)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+([A-Za-z].*)$")
     headings, all_text_blocks = [], []
@@ -61,7 +122,7 @@ def extract_text_and_headings_with_location(doc, chapter_number):
     for page_num, page in enumerate(doc):
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
-            block_text, y_pos = b[4].strip(), b[1]
+            block_text, y_pos = b[4].strip().replace('\n', ' '), b[1]
             if block_text:
                 all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y_pos})
         
@@ -83,7 +144,6 @@ def extract_text_and_headings_with_location(doc, chapter_number):
     return unique_headings, all_text_blocks
 
 def map_text_to_headings(headings, all_text_blocks):
-    """Assigns text blocks to the heading they fall under."""
     topic_content = {}
     sorted_headings = sorted(headings, key=lambda h: (h['page'], h['y']))
     
@@ -130,13 +190,11 @@ def main():
             
         doc = fitz.open(pdf_path)
         
-        chapter_num = find_chapter_number(doc)
-        if not chapter_num:
-            print("  [INFO] Auto-detection failed. Checking fallback map...")
-            chapter_num = CHAPTER_NUMBER_FALLBACK_MAP.get(pdf_filename)
+        # --- LOGIC UPDATED to ONLY use the hardcoded map ---
+        chapter_num = CHAPTER_NUMBER_FALLBACK_MAP.get(pdf_filename)
 
         if chapter_num:
-            print(f"  [INFO] Using Chapter Number: {chapter_num}")
+            print(f"  [INFO] Using Chapter Number from map: {chapter_num}")
             headings, all_text = extract_text_and_headings_with_location(doc, chapter_num)
             topic_content_map = map_text_to_headings(headings, all_text)
             
@@ -151,7 +209,7 @@ def main():
                         (content, chapter_id, topic_num)
                     )
         else:
-            print(f"  [ERROR] Could not determine chapter number for '{pdf_filename}'. Skipping.")
+            print(f"  [ERROR] Filename '{pdf_filename}' not found in the hardcoded map. Please add it. Skipping.")
         
         doc.close()
     
