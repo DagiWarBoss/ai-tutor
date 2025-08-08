@@ -24,75 +24,74 @@ def get_most_common_font_info(doc):
     if not font_counts: return (10.0, False)
     return font_counts.most_common(1)[0][0]
 
+def find_chapter_number(doc):
+    """
+    --- THIS IS THE UPGRADED FUNCTION ---
+    Scans the first 3 pages of a PDF to find the chapter number automatically.
+    """
+    for page_num in range(min(3, doc.page_count)):
+        page_text = doc[page_num].get_text()
+        chapter_match = re.search(r"CHAPTER\s+(\d{1,2})", page_text, re.IGNORECASE)
+        if chapter_match: return chapter_match.group(1)
+        unit_match = re.search(r"UNIT\s+(\d+)", page_text, re.IGNORECASE)
+        if unit_match: return unit_match.group(1)
+        code_match = re.search(r"[A-Z]{2}(\d{2})", page_text)
+        if code_match: return str(int(code_match.group(1)))
+    return None
+
 def extract_text_and_headings_with_location(doc, chapter_number):
-    """
-    Extracts all text blocks and identifies headings by style, keeping their location.
-    """
+    """Extracts all text blocks and identifies headings by style, keeping their location."""
     body_font_size, body_is_bold = get_most_common_font_info(doc)
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+.*$")
-    
-    headings = []
-    all_text_blocks = []
-    
+    headings, all_text_blocks = [], []
+
     for page_num, page in enumerate(doc):
-        blocks = page.get_text("blocks", sort=True) # Get blocks with coordinates
+        # First, get all text blocks with their positions
+        blocks = page.get_text("blocks", sort=True)
         for b in blocks:
-            block_text = b[4].strip()
-            block_y_pos = b[1] # The vertical position of the block
-            
-            if not block_text: continue
-            
-            all_text_blocks.append({'text': block_text, 'page': page_num, 'y': block_y_pos})
-            
-            # Check if this block is a heading using font style analysis
-            text_instances = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
-            for inst_b in text_instances:
-                if "lines" in inst_b:
-                    for l in inst_b["lines"]:
-                        line_text = "".join(s["text"] for s in l["spans"]).strip()
-                        if line_text.startswith(block_text[:20]): # Match block to its styled version
-                            first_span = l["spans"][0]
-                            span_size = round(first_span["size"])
-                            span_is_bold = "bold" in first_span["font"].lower()
-                            is_heading = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+            block_text, y_pos = b[4].strip(), b[1]
+            if block_text:
+                all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y_pos})
+        
+        # Then, analyze the styled text to identify which blocks are headings
+        styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
+        for b in styled_blocks:
+            if "lines" in b:
+                for l in b["lines"]:
+                    line_text = "".join(s["text"] for s in l["spans"]).strip()
+                    if pat.match(line_text):
+                        first_span = l["spans"][0]
+                        span_size = round(first_span["size"])
+                        span_is_bold = "bold" in first_span["font"].lower()
+                        is_heading = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+                        if is_heading:
+                            y_pos = b['bbox'][1] # Get vertical position of the block
+                            headings.append({'text': line_text, 'page': page_num, 'y': y_pos})
                             
-                            if is_heading and pat.match(line_text):
-                                headings.append({'text': line_text, 'page': page_num, 'y': block_y_pos})
-                                break
-                    
-    return headings, all_text_blocks
+    # Remove duplicate headings that might be detected
+    unique_headings = list({h['text']: h for h in headings}.values())
+    return unique_headings, all_text_blocks
 
 def map_text_to_headings(headings, all_text_blocks):
     """Assigns text blocks to the heading they fall under."""
     topic_content = {}
-    
-    # Sort headings by their position in the document
     sorted_headings = sorted(headings, key=lambda h: (h['page'], h['y']))
     
     for i, heading in enumerate(sorted_headings):
-        heading_text = heading['text']
         content = []
-        
-        # Define the start and end boundaries for this heading's content
-        start_page = heading['page']
-        start_y = heading['y']
-        
+        start_page, start_y = heading['page'], heading['y']
         end_page = sorted_headings[i+1]['page'] if i + 1 < len(sorted_headings) else float('inf')
         end_y = sorted_headings[i+1]['y'] if i + 1 < len(sorted_headings) else float('inf')
 
-        # Find all text blocks that fall between the current heading and the next one
         for block in all_text_blocks:
             is_after_start = block['page'] > start_page or (block['page'] == start_page and block['y'] > start_y)
             is_before_end = block['page'] < end_page or (block['page'] == end_page and block['y'] < end_y)
-
             if is_after_start and is_before_end:
-                # Make sure we don't include other headings in the content
                 is_a_heading = any(h['text'] == block['text'] for h in sorted_headings)
                 if not is_a_heading:
                     content.append(block['text'])
         
-        topic_content[heading_text] = "\n".join(content)
-        
+        topic_content[heading['text']] = "\n".join(content)
     return topic_content
 
 def main():
@@ -103,11 +102,8 @@ def main():
         print(f"[ERROR] Could not connect to Supabase: {e}")
         return
         
-    # Get all chapters from the database
     cursor.execute("SELECT id, name, class_number, subject_id FROM chapters")
     chapters_to_process = cursor.fetchall()
-    
-    # Get all subjects to build the file path
     cursor.execute("SELECT id, name FROM subjects")
     subjects = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
 
@@ -124,31 +120,25 @@ def main():
             
         doc = fitz.open(pdf_path)
         
-        # Find the chapter number from the topics table to build the regex
-        cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s LIMIT 1", (chapter_id,))
-        first_topic = cursor.fetchone()
-        if not first_topic:
-            print("  [WARNING] No topics found for this chapter. Skipping.")
-            doc.close()
-            continue
+        # --- LOGIC UPDATED TO USE THE NEW FUNCTION ---
+        chapter_num = find_chapter_number(doc)
+
+        if chapter_num:
+            headings, all_text = extract_text_and_headings_with_location(doc, chapter_num)
+            topic_content_map = map_text_to_headings(headings, all_text)
             
-        chapter_num_from_topic = first_topic[0].split('.')[0]
+            print(f"  - Found {len(topic_content_map)} topics with text to update.")
 
-        headings, all_text = extract_text_and_headings_with_location(doc, chapter_num_from_topic)
-        topic_content_map = map_text_to_headings(headings, all_text)
-        
-        print(f"  - Found {len(topic_content_map)} topics with text to update.")
-
-        # Update each topic in the database with its full text
-        for heading_full, content in topic_content_map.items():
-            match = re.match(r"^\s*([\d\.]+)\s*[\s\.:;\-–]+(.*)$", heading_full)
-            if match and content:
-                topic_num = match.group(1)
-                
-                cursor.execute(
-                    "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-                    (content, chapter_id, topic_num)
-                )
+            for heading_full, content in topic_content_map.items():
+                match = re.match(r"^\s*([\d\.]+)\s*[\s\.:;\-–]+(.*)$", heading_full)
+                if match and content:
+                    topic_num = match.group(1)
+                    cursor.execute(
+                        "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
+                        (content, chapter_id, topic_num)
+                    )
+        else:
+            print("  [ERROR] Could not determine chapter number from PDF. Skipping.")
         
         doc.close()
     
