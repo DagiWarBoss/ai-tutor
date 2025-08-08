@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 import re
 
 # --- Configuration ---
-# Make sure your CSV file is named this, or change the name here
 CSV_FILE = "extracted_headings_all_subjects.csv" 
 DATABASE_FILE = "tutor_database.db"
 load_dotenv()
@@ -26,6 +25,7 @@ def create_database_tables(cursor):
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
             class_number TEXT NOT NULL,
+            chapter_number TEXT NOT NULL, -- Ensure this column exists and is NOT NULL
             source_file TEXT NOT NULL,
             subject_id INTEGER REFERENCES subjects(id)
         )
@@ -83,34 +83,37 @@ def main():
             print(f"[INFO] Reading data from {CSV_FILE}...")
             
             for row in reader:
-                # --- FIX: Using the correct column names from your CSV file ---
                 subject_name = row['subject']
-                class_name = row['class'] # e.g., "Class 11"
+                class_name = row['class']
                 source_file = row['chapter_file']
                 topic_number = row['heading_number']
                 topic_name = row['heading_text']
+                # --- FIX 1: Read the chapter_number from the CSV row ---
+                chapter_number = row['chapter_number']
                 
-                # Clean up chapter name from filename
                 chapter_name = os.path.splitext(source_file)[0]
                 
-                # Get or create IDs for subject and chapter to avoid duplicates
                 subject_id = get_or_create_id(cursor, 'subjects', 'name', subject_name)
+                # --- FIX 2: Pass the chapter_number when creating the chapter ---
                 chapter_id = get_or_create_id(cursor, 'chapters', 'name', chapter_name, 
-                                              {'class_number': class_name, 'subject_id': subject_id, 'source_file': source_file})
+                                              {
+                                                  'class_number': class_name, 
+                                                  'subject_id': subject_id, 
+                                                  'source_file': source_file,
+                                                  'chapter_number': chapter_number
+                                              })
                 
-                # Insert the topic into the database
                 cursor.execute(
                     "INSERT INTO topics (topic_number, name, chapter_id) VALUES (%s, %s, %s)",
                     (topic_number, topic_name, chapter_id)
                 )
 
     except FileNotFoundError:
-        print(f"[ERROR] The file '{CSV_FILE}' was not found. Please make sure its name matches.")
+        print(f"[ERROR] The file '{CSV_FILE}' was not found.")
         conn.close()
         return
     except KeyError as e:
         print(f"[ERROR] A column name in your CSV does not match the script. Missing key: {e}")
-        print("Please ensure your CSV header row is: subject,class,chapter_file,chapter_number,heading_number,heading_text")
         conn.close()
         return
         
