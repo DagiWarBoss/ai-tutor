@@ -10,6 +10,22 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
+# This is a map of filenames to chapter numbers for PDFs where auto-detection might fail.
+# You can add more entries here as needed.
+CHAPTER_NUMBER_FALLBACK_MAP = {
+    "Units And Measurements.pdf": "1",
+    "Motion In A Straight Line.pdf": "2",
+    "Motion In A Plane.pdf": "3",
+    "Laws Of Motion.pdf": "4",
+    "Work Energy Power.pdf": "5",
+    "System Of Particles And Rotational Motion.pdf": "6",
+    "Gravitation.pdf": "7",
+    "Redox Reactions.pdf": "7",
+    "Hydrocarbons.pdf": "9",
+    "Organic Chemistry Basics.pdf": "8",
+}
+
+
 def get_most_common_font_info(doc):
     """Finds the font size and bold status of the main body text."""
     font_counts = Counter()
@@ -39,46 +55,29 @@ def find_chapter_number(doc):
 def extract_text_and_headings_with_location(doc, chapter_number):
     """Extracts all text blocks and identifies headings by style, keeping their location."""
     body_font_size, body_is_bold = get_most_common_font_info(doc)
-    print(f"  [DEBUG] Body style: size ~{body_font_size}, bold: {body_is_bold}")
-    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+(.*)$")
+    pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+([A-Za-z].*)$")
     headings, all_text_blocks = [], []
 
     for page_num, page in enumerate(doc):
-        # Get all text blocks with their positions
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             block_text, y_pos = b[4].strip(), b[1]
             if block_text:
                 all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y_pos})
         
-        # Analyze the styled text to identify which blocks are headings
         styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
         for b in styled_blocks:
             if "lines" in b:
                 for l in b["lines"]:
                     line_text = "".join(s["text"] for s in l["spans"]).strip()
-                    match = pat.match(line_text)
-                    
-                    # --- START OF DEBUG BLOCK ---
-                    if match:
+                    if pat.match(line_text):
                         first_span = l["spans"][0]
                         span_size = round(first_span["size"])
-                        span_font = first_span["font"]
-                        span_is_bold = "bold" in span_font.lower()
-                        
-                        is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
-                        
-                        print(f"\n[DEBUG] Regex Matched Line: '{line_text}'")
-                        print(f"  - Font: {span_font}, Size: {span_size}")
-                        print(f"  - Is Bold: {span_is_bold}")
-                        
-                        if is_heading_style:
-                            print("  - VERDICT: ACCEPTED as a heading.")
+                        span_is_bold = "bold" in first_span["font"].lower()
+                        is_heading = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+                        if is_heading:
                             y_pos = b['bbox'][1]
                             headings.append({'text': line_text, 'page': page_num, 'y': y_pos})
-                        else:
-                            print("  - VERDICT: REJECTED due to font style/size not matching heading criteria.")
-                    # --- END OF DEBUG BLOCK ---
                             
     unique_headings = list({h['text']: h for h in headings}.values())
     return unique_headings, all_text_blocks
