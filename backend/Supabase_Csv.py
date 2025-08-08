@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 import re
 
 # --- Configuration ---
-CSV_FILE = "extracted_headings_all_subjects.csv"
-PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
+# Make sure your CSV file is named this, or change the name here
+CSV_FILE = "extracted_headings_all_subjects.csv" 
+DATABASE_FILE = "tutor_database.db"
 load_dotenv()
 
 # Get the connection string from your .env file
@@ -14,24 +15,21 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
 def create_database_tables(cursor):
     """Creates the database schema (tables) in Supabase if they don't already exist."""
-    # Table for subjects (e.g., Chemistry, Physics)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS subjects (
             id SERIAL PRIMARY KEY,
             name TEXT UNIQUE NOT NULL
         )
     ''')
-    # Table for chapters (e.g., Chemical Bonding, Wave Optics)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS chapters (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
-            class_number INTEGER NOT NULL,
+            class_number TEXT NOT NULL,
             source_file TEXT NOT NULL,
             subject_id INTEGER REFERENCES subjects(id)
         )
     ''')
-    # Table for all the topics and subtopics
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS topics (
             id SERIAL PRIMARY KEY,
@@ -43,10 +41,7 @@ def create_database_tables(cursor):
     print("[INFO] Database tables created or already exist in Supabase.")
 
 def get_or_create_id(cursor, table, name_column, name_value, other_cols={}):
-    """
-    Helper function to get an ID if it exists, or create the row and get the new ID.
-    This prevents creating duplicate subjects or chapters.
-    """
+    """Helper function to get an ID if it exists, or create the row and get the new ID."""
     select_query = f'SELECT id FROM {table} WHERE "{name_column}" = %s'
     params = (name_value,)
     
@@ -58,7 +53,7 @@ def get_or_create_id(cursor, table, name_column, name_value, other_cols={}):
     result = cursor.fetchone()
     
     if result:
-        return result[0] # Return existing ID
+        return result[0]
     else:
         all_cols = {name_column: name_value, **other_cols}
         columns_str = ', '.join(f'"{k}"' for k in all_cols.keys())
@@ -66,7 +61,7 @@ def get_or_create_id(cursor, table, name_column, name_value, other_cols={}):
         
         insert_query = f"INSERT INTO {table} ({columns_str}) VALUES ({placeholders_str}) RETURNING id"
         cursor.execute(insert_query, tuple(all_cols.values()))
-        return cursor.fetchone()[0] # Return the new ID
+        return cursor.fetchone()[0]
 
 def main():
     if not SUPABASE_URI:
@@ -88,34 +83,34 @@ def main():
             print(f"[INFO] Reading data from {CSV_FILE}...")
             
             for row in reader:
-                source_file = row['source_file']
-                topic_number = row['topic_number']
-                topic_name = row['extracted_name']
+                # --- FIX: Using the correct column names from your CSV file ---
+                subject_name = row['subject']
+                class_name = row['class'] # e.g., "Class 11"
+                source_file = row['chapter_file']
+                topic_number = row['heading_number']
+                topic_name = row['heading_text']
                 
-                # Logic to find Subject and Class from the filename remains the same
-                match = re.search(r"[\\/]([^\\/]+)[\\/]Class (\d+)", root + "\\" + source_file, re.IGNORECASE)
+                # Clean up chapter name from filename
+                chapter_name = os.path.splitext(source_file)[0]
                 
-                if match:
-                    subject_name = match.group(1)
-                    class_number = int(match.group(2))
-                    chapter_name = os.path.splitext(source_file)[0]
-                else:
-                    print(f"[WARNING] Could not determine Subject/Class for '{source_file}'. Using placeholders.")
-                    subject_name = "Unknown Subject"
-                    class_number = 0
-                    chapter_name = os.path.splitext(source_file)[0]
-                
+                # Get or create IDs for subject and chapter to avoid duplicates
                 subject_id = get_or_create_id(cursor, 'subjects', 'name', subject_name)
                 chapter_id = get_or_create_id(cursor, 'chapters', 'name', chapter_name, 
-                                              {'class_number': class_number, 'subject_id': subject_id, 'source_file': source_file})
+                                              {'class_number': class_name, 'subject_id': subject_id, 'source_file': source_file})
                 
+                # Insert the topic into the database
                 cursor.execute(
                     "INSERT INTO topics (topic_number, name, chapter_id) VALUES (%s, %s, %s)",
                     (topic_number, topic_name, chapter_id)
                 )
 
     except FileNotFoundError:
-        print(f"[ERROR] The file '{CSV_FILE}' was not found.")
+        print(f"[ERROR] The file '{CSV_FILE}' was not found. Please make sure its name matches.")
+        conn.close()
+        return
+    except KeyError as e:
+        print(f"[ERROR] A column name in your CSV does not match the script. Missing key: {e}")
+        print("Please ensure your CSV header row is: subject,class,chapter_file,chapter_number,heading_number,heading_text")
         conn.close()
         return
         
