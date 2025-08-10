@@ -1,11 +1,11 @@
 import os
 import re
 import csv
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass
 from typing import List, Tuple, Dict, Optional, Set
 
-# ========== THIRD-PARTY ==========
+# Third-party
 import fitz  # PyMuPDF
 import psycopg2
 from dotenv import load_dotenv
@@ -19,25 +19,29 @@ try:
 except Exception:
     HAVE_FUZZ = False
 
-# ========== CONFIG ==========
+# =========================
+# Configuration
+# =========================
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 CSV_PATH = "extracted_headings_all_subjects.csv"
 
+# Safety: no risky content moves
 DRY_RUN = False
-FALLBACK_TO_PARENT = False         # disabled
-AUTO_FILL_FROM_PARENT = False      # disabled
+FALLBACK_TO_PARENT = False
+AUTO_FILL_FROM_PARENT = False
 
-# Optional: set Tesseract exe if not on PATH (Windows example)
-TESSERACT_EXE = None  # r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-# OCR settings
-OCR_MIN_HEADINGS_THRESHOLD = 3     # if text-layer yields <3 topics, trigger OCR
-OCR_ZOOM = 4.0                     # 72dpi * zoom => 288dpi
+# OCR fallback settings
+OCR_MIN_HEADINGS_THRESHOLD = 3     # if text-layer finds less than this, trigger OCR
+OCR_ZOOM = 4.0                     # 72dpi * 4 => ~288dpi
 OCR_LANG = "eng"
-OCR_FUZZY_THRESHOLD = 85
+OCR_FUZZY_THRESHOLD = 85           # child title matching threshold
 
-# Regex for numbered heading
+# Tesseract path (None if in PATH; set full path on Windows if needed)
+TESSERACT_EXE = None  # e.g., r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+# Regex
 HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){1,5})\b[^\w]*(.*)$")
+SPACE_RE = re.compile(r"\s+")
 
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
@@ -58,7 +62,9 @@ class HeadingAnchor:
     bold: bool
 
 
-# ========== CSV HELPERS ==========
+# =========================
+# CSV helpers
+# =========================
 def load_authoritative_topics(csv_path: str) -> Dict[Tuple[str, str, str], List[Tuple[str, str]]]:
     topics_map: Dict[Tuple[str, str, str], List[Tuple[str, str]]] = {}
     if not os.path.exists(csv_path):
@@ -78,7 +84,20 @@ def load_authoritative_topics(csv_path: str) -> Dict[Tuple[str, str, str], List[
     return topics_map
 
 
-# ========== DB HELPERS ==========
+def build_csv_children_map(csv_list: List[Tuple[str, Optional[str]]]) -> Dict[str, List[Tuple[str, Optional[str]]]]:
+    by_parent: Dict[str, List[Tuple[str, Optional[str]]]] = {}
+    for n, t in csv_list:
+        if not n:
+            continue
+        parent = ".".join(n.split(".")[:-1])
+        if parent:
+            by_parent.setdefault(parent, []).append((n, t))
+    return by_parent
+
+
+# =========================
+# DB helpers
+# =========================
 def connect_db():
     log("[INFO] Connecting to Supabase/Postgres...")
     conn = psycopg2.connect(SUPABASE_URI)
@@ -129,6 +148,9 @@ def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) 
 
 def diagnose_topic_numbers(cursor, chapter_id: int) -> List[str]:
     cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
+    rows = cursor.fetchall)
+    # Fix: fetchall() needs to be called
+    cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
     rows = cursor.fetchall()
     nums = [r[0] for r in rows]
     log(f"[DIAG] Existing topic_numbers in DB for chapter_id={chapter_id}: {nums[:50]}{' ...' if len(nums)>50 else ''}")
@@ -141,7 +163,9 @@ def list_missing_topics(db_topic_numbers: Set[str], updated_topic_numbers: Set[s
     return sorted(db_topic_numbers - updated_topic_numbers, key=key_num)
 
 
-# ========== TEXT-LAYER EXTRACTOR ==========
+# =========================
+# Text-layer extractor
+# =========================
 def get_body_font(doc) -> Tuple[float, bool]:
     font_counts = Counter()
     for page_idx, page in enumerate(doc):
@@ -189,7 +213,8 @@ def toc_to_anchors(toc) -> List[HeadingAnchor]:
         if not num:
             continue
         page_idx = max(0, page1 - 1)
-        title_text = (HEADING_NUMBER_RE.match(title).group(2) or "").strip()
+        m = HEADING_NUMBER_RE.match(title)
+        title_text = (m.group(2) or "").strip() if m else ""
         anchors.append(HeadingAnchor(number=num, title=title_text, page=page_idx, y=0.0, x=0.0, size=12.0, bold=False))
     log(f"[INFO] TOC-derived anchors: {len(anchors)}")
     return anchors
@@ -210,13 +235,15 @@ def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) 
                 m = HEADING_NUMBER_RE.match(text)
                 if not m:
                     continue
+
                 first_span = spans[0]
                 size = float(first_span.get("size", 10.0))
                 font = first_span.get("font", "").lower()
                 bold = "bold" in font
                 x0, y0, x1, y1 = line.get("bbox", [0, 0, 0, 0])
+
                 title = (m.group(2) or "").strip()
-                is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold)) and len(title) >= 0
+                is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold))
                 if is_heading:
                     number = m.group(1).strip(". ")
                     anchors.append(HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold))
@@ -321,11 +348,12 @@ def extract_topic_texts_from_pdf(pdf_path: str) -> Dict[str, str]:
     return topic_text
 
 
-# ========== OCR FALLBACK (BUILT-IN) ==========
-SPACE_RE = re.compile(r"\s+")
-
+# =========================
+# OCR fallback (built-in)
+# =========================
 def _norm_spaces(s: str) -> str:
     return SPACE_RE.sub(" ", (s or "").strip())
+
 
 def _norm_text(s: str) -> str:
     s = _norm_spaces(s)
@@ -333,7 +361,8 @@ def _norm_text(s: str) -> str:
     s = s.replace("–", "-").replace("—", "-").replace("·", ".")
     return s.lower()
 
-def render_pages_with_pymupdf(pdf_path: str, zoom: float) -> List[Tuple[int, Image.Image]]:
+
+def ocr_render_pages(pdf_path: str, zoom: float) -> List[Tuple[int, Image.Image]]:
     doc = fitz.open(pdf_path)
     images = []
     for i in range(len(doc)):
@@ -345,9 +374,11 @@ def render_pages_with_pymupdf(pdf_path: str, zoom: float) -> List[Tuple[int, Ima
     doc.close()
     return images
 
-def ocr_page_hocr(pil_image: Image.Image, lang: str = "eng") -> str:
+
+def ocr_page_hocr(pil_image: Image.Image, lang: str) -> str:
     out = pytesseract.image_to_pdf_or_hocr(pil_image, extension="hocr", lang=lang)
     return out.decode("utf-8", errors="ignore") if isinstance(out, (bytes, bytearray)) else str(out)
+
 
 def hocr_to_lines(hocr_html: str, page_index: int) -> List[Dict]:
     soup = BeautifulSoup(hocr_html, "lxml")
@@ -366,7 +397,8 @@ def hocr_to_lines(hocr_html: str, page_index: int) -> List[Dict]:
     lines.sort(key=lambda r: (r["page"], r["y"], r["x"]))
     return lines
 
-def detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) -> List[Dict]:
+
+def ocr_detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) -> List[Dict]:
     anchors = []
     for ln in lines:
         m = HEADING_NUMBER_RE.match(ln["text"])
@@ -385,10 +417,11 @@ def detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) -> Lis
             uniq.append(a)
     return uniq
 
-def best_child_matches_in_window(window_lines: List[Dict],
-                                 csv_children: List[Tuple[str, str]],
-                                 left_margin_px: int = 300,
-                                 fuzzy_threshold: int = 85) -> List[Dict]:
+
+def ocr_best_child_matches_in_window(window_lines: List[Dict],
+                                     csv_children: List[Tuple[str, Optional[str]]],
+                                     left_margin_px: int = 300,
+                                     fuzzy_threshold: int = 85) -> List[Dict]:
     cands = [ln for ln in window_lines if ln["x"] <= left_margin_px]
     results = []
     for child_num, child_title in csv_children:
@@ -416,7 +449,8 @@ def best_child_matches_in_window(window_lines: List[Dict],
             uniq.append(a)
     return uniq
 
-def segment_window(lines_sorted: List[Dict], start_anchor: Dict, end_anchor: Optional[Dict], inner_anchors: List[Dict]) -> Dict[str, str]:
+
+def ocr_segment_window(lines_sorted: List[Dict], start_anchor: Dict, end_anchor: Optional[Dict], inner_anchors: List[Dict]) -> Dict[str, str]:
     anchors = inner_anchors[:]
     anchors.sort(key=lambda a: (a["page"], a["y"]))
     segments: Dict[str, str] = {}
@@ -459,25 +493,17 @@ def segment_window(lines_sorted: List[Dict], start_anchor: Dict, end_anchor: Opt
             segments[start_anchor["number"]] = merged
     return segments
 
-def build_csv_children_map(csv_list: List[Tuple[str, str]]) -> Dict[str, List[Tuple[str, str]]]:
-    children_map: Dict[str, List[Tuple[str, str]]] = {}
-    for n, t in csv_list:
-        if not n:
-            continue
-        parent = ".".join(n.split(".")[:-1])
-        if parent:
-            children_map.setdefault(parent, []).append((n, t))
-    return children_map
 
 def ocr_extract_topics(pdf_path: str,
-                       csv_children_map: Optional[Dict[str, List[Tuple[str, str]]]] = None,
+                       csv_children_map: Optional[Dict[str, List[Tuple[str, Optional[str]]]]] = None,
                        tesseract_bin: Optional[str] = None,
                        lang: str = "eng",
                        zoom: float = 4.0,
                        fuzzy_threshold: int = 85) -> Dict[str, str]:
     if tesseract_bin:
         pytesseract.pytesseract.tesseract_cmd = tesseract_bin
-    images = render_pages_with_pymupdf(pdf_path, zoom=zoom)
+
+    images = ocr_render_pages(pdf_path, zoom=zoom)
 
     all_lines: List[Dict] = []
     for page_index, img in images:
@@ -491,7 +517,7 @@ def ocr_extract_topics(pdf_path: str,
     if not all_lines:
         return {}
 
-    parents = detect_numbered_parents(all_lines)
+    parents = ocr_detect_numbered_parents(all_lines)
     if not parents:
         return {}
 
@@ -512,20 +538,22 @@ def ocr_extract_topics(pdf_path: str,
         child_specs = csv_children_map.get(parent["number"], []) if csv_children_map else []
         child_anchors = []
         if child_specs:
-            child_anchors = best_child_matches_in_window(
+            child_anchors = ocr_best_child_matches_in_window(
                 window_lines,
                 csv_children=child_specs,
                 left_margin_px=300,
                 fuzzy_threshold=fuzzy_threshold
             )
 
-        segs = segment_window(lines_sorted, parent, end_parent, child_anchors)
+        segs = ocr_segment_window(lines_sorted, parent, end_parent, child_anchors)
         segments.update(segs)
 
     return segments
 
 
-# ========== MAIN PIPELINE ==========
+# =========================
+# Main
+# =========================
 def main():
     if TESSERACT_EXE:
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_EXE
@@ -557,7 +585,7 @@ def main():
         log(f"\n[INFO] Chapter {chapter_id}: '{chapter_name}' | Class {class_number} | Subject '{subject_name}'")
         log(f"[INFO] PDF path: {pdf_path}")
 
-        # ensure topics from CSV exist
+        # Ensure topics exist per CSV
         csv_list = csv_topics.get(csv_key, [])
         csv_numbers = [num for num, _ in csv_list if num]
         csv_set = set(csv_numbers)
@@ -591,21 +619,26 @@ def main():
                     conn.rollback()
             log(f"[SYNC] Inserted {inserted} missing topics for chapter_id={chapter_id}")
 
-        # extract with text-layer
+        # Extract via text-layer
         topic_map = extract_topic_texts_from_pdf(pdf_path)
 
-        # OCR fallback if too few
+        # OCR fallback if too few headings were extracted
         if not topic_map or len(topic_map) < OCR_MIN_HEADINGS_THRESHOLD:
             log(f"[FALLBACK][OCR] Triggered for chapter_id={chapter_id} (text-layer extracted={len(topic_map) if topic_map else 0})")
             csv_children_map = build_csv_children_map(csv_list)
-            topic_map = ocr_extract_topics(pdf_path,
-                                           csv_children_map=csv_children_map,
-                                           tesseract_bin=TESSERACT_EXE,
-                                           lang=OCR_LANG,
-                                           zoom=OCR_ZOOM,
-                                           fuzzy_threshold=OCR_FUZZY_THRESHOLD)
+            ocr_map = ocr_extract_topics(
+                pdf_path,
+                csv_children_map=csv_children_map,
+                tesseract_bin=TESSERACT_EXE,
+                lang=OCR_LANG,
+                zoom=OCR_ZOOM,
+                fuzzy_threshold=OCR_FUZZY_THRESHOLD
+            )
+            # Use OCR results only if they add value
+            if ocr_map:
+                topic_map = ocr_map
 
-        # update DB
+        # Update DB
         updated = 0
         skipped = 0
         updated_topic_numbers: Set[str] = set()
@@ -627,27 +660,20 @@ def main():
                 rowcount = update_topic_text(cursor, chapter_id, db_number, content)
                 log(f"[DEBUG] Update chapter_id={chapter_id} topic={db_number} rows={rowcount} len={len(content)}")
 
-                successful_number = None
                 if rowcount > 0:
-                    successful_number = db_number
+                    updated_topic_numbers.add(db_number)
                 elif rowcount == 0 and FALLBACK_TO_PARENT:
                     pass  # disabled
-
-                if rowcount == 0 and successful_number is None:
+                else:
                     log(f"[DIAG] No rows updated for topic_number='{db_number}'. Listing DB topic_numbers for this chapter:")
                     diagnose_topic_numbers(cursor, chapter_id)
-
-                if successful_number is not None:
-                    updated_topic_numbers.add(successful_number)
-                elif rowcount > 0:
-                    updated_topic_numbers.add(db_number)
 
                 updated += rowcount
 
             except Exception as e:
                 log(f"[ERROR] Update failed for chapter_id={chapter_id}, topic={db_number}: {e}")
 
-        # missing report
+        # Missing report
         try:
             db_map = fetch_db_topics_map(cursor, chapter_id)
             db_topic_numbers = set(db_map.keys())
