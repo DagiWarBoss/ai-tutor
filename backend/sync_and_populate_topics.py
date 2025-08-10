@@ -1,560 +1,178 @@
-import os
+# ocr_fallback.py
+# Drop-in OCR helpers: render PDF pages -> Tesseract hOCR -> lines -> heading anchors -> segments
+# Requires: pytesseract, pillow, pymupdf, beautifulsoup4, lxml
+
 import re
-import csv
-from collections import Counter, defaultdict
-from dataclasses import dataclass
-from typing import List, Tuple, Dict, Optional, Set
-
+from typing import List, Dict, Tuple, Optional
 import fitz  # PyMuPDF
-import psycopg2
-from dotenv import load_dotenv
+from PIL import Image
+import pytesseract
+from bs4 import BeautifulSoup
 
-# =========================
-# Configuration
-# =========================
-PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
-CSV_PATH = "extracted_headings_all_subjects.csv"  # authoritative topic list
-
-# DRY_RUN: if True, no DB writes; only logs
-DRY_RUN = False
-
-# Turn OFF fallback behaviors (as requested)
-# When a leaf topic_number has no DB row (or update fails), do NOT write to parent.
-FALLBACK_TO_PARENT = False
-
-# After the updates for a chapter, do NOT copy the nearest updated parent's full_text
-# into DB topics that were not updated. This prevents wrong inheritance.
-AUTO_FILL_FROM_PARENT = False
-
-# Optional per-chapter remap (use sparingly for edition drifts)
-TOPIC_NUMBER_REMAP: Dict[int, Dict[str, str]] = {}
-
-load_dotenv()
-SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
-
-# Numbered heading like "4.3.2 Title"
-HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){1,5})\b[^\w]*(.*)$")
+HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){1,5})\b")
+SPACE_RE = re.compile(r"\s+")
 
 
-@dataclass
-class HeadingAnchor:
-    number: str
-    title: str
-    page: int
-    y: float
-    x: float
-    size: float
-    bold: bool
+def set_tesseract_path(binary_path: Optional[str] = None):
+    if binary_path:
+        pytesseract.pytesseract.tesseract_cmd = binary_path
 
 
-def log(msg: str):
-    print(msg, flush=True)
+def _normalize(s: str) -> str:
+    return SPACE_RE.sub(" ", (s or "").strip())
 
 
-# =========================
-# CSV (authoritative topics) helpers
-# =========================
-def load_authoritative_topics(csv_path: str) -> Dict[Tuple[str, str, str], List[Tuple[str, str]]]:
-    """
-    Return mapping: (subject, class, chapter_file) -> list of (heading_number, heading_text) in CSV order.
-    """
-    topics_map: Dict[Tuple[str, str, str], List[Tuple[str, str]]] = {}
-    if not os.path.exists(csv_path):
-        log(f"[ERROR] CSV not found at {csv_path}")
-        return topics_map
-    with open(csv_path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            subject = row["subject"]
-            class_ = row["class"]
-            chapter_file = row["chapter_file"]
-            heading_number = (row["heading_number"] or "").strip().strip(".")
-            heading_text = row.get("heading_text", None)
-            key = (subject, class_, chapter_file)
-            topics_map.setdefault(key, []).append((heading_number, heading_text))
-    log(f"[INFO] Loaded authoritative topics from CSV for {len(topics_map)} chapters")
-    return topics_map
+def render_pages_with_pymupdf(pdf_path: str, zoom: float = 4.0) -> List[Tuple[int, Image.Image]]:
+    doc = fitz.open(pdf_path)
+    images = []
+    for i in range(len(doc)):
+        page = doc.load_page(i)
+        mat = fitz.Matrix(zoom, zoom)  # 72dpi * zoom => 288dpi at zoom=4.0
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        images.append((i, img))
+    doc.close()
+    return images
 
 
-# =========================
-# DB helpers
-# =========================
-def connect_db():
-    log("[INFO] Connecting to Supabase/Postgres...")
-    conn = psycopg2.connect(SUPABASE_URI)
-    conn.autocommit = False
-    return conn, conn.cursor()
+def ocr_page_hocr(pil_image: Image.Image, lang: str = "eng") -> str:
+    out = pytesseract.image_to_pdf_or_hocr(pil_image, extension="hocr", lang=lang)
+    return out.decode("utf-8", errors="ignore") if isinstance(out, (bytes, bytearray)) else str(out)
 
 
-def fetch_chapters_and_subjects(cursor):
-    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters ORDER BY id")
-    chapters = cursor.fetchall()
-    cursor.execute("SELECT id, name FROM subjects")
-    subjects = {sid: sname for sid, sname in cursor.fetchall()}
-    log(f"[INFO] Chapters to process: {len(chapters)}")
-    return chapters, subjects
+def hocr_to_lines(hocr_html: str, page_index: int) -> List[Dict]:
+    soup = BeautifulSoup(hocr_html, "lxml")
+    lines = []
+    for line in soup.find_all(class_="ocr_line"):
+        title = line.get("title", "")
+        m = re.search(r"bbox (\d+) (\d+) (\d+) (\d+)", title)
+        if not m:
+            continue
+        x0, y0, x1, y1 = map(int, m.groups())
+        words = [w.get_text(strip=True) for w in line.find_all(class_="ocrx_word")]
+        text = _normalize(" ".join(words))
+        if not text:
+            continue
+        lines.append({"page": page_index, "x": x0, "y": y0, "x1": x1, "y1": y1, "text": text})
+    lines.sort(key=lambda r: (r["page"], r["y"], r["x"]))
+    return lines
 
 
-def fetch_db_topics_map(cursor, chapter_id: int) -> Dict[str, int]:
-    """
-    Returns {topic_number -> id} for all topics in this chapter.
-    """
-    cursor.execute("SELECT id, topic_number FROM topics WHERE chapter_id = %s", (chapter_id,))
-    rows = cursor.fetchall()
-    return {row[1]: row[0] for row in rows}
-
-
-def fetch_db_topic_numbers(cursor, chapter_id: int) -> Set[str]:
-    cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s", (chapter_id,))
-    return {r[0] for r in cursor.fetchall()}
-
-
-def insert_topic(cursor, chapter_id: int, topic_number: str, title: Optional[str]):
-    """
-    Insert a topic row if not present. Try with name first; fallback to minimal if schema differs.
-    """
-    try:
-        cursor.execute(
-            "INSERT INTO topics (chapter_id, topic_number, name) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-            (chapter_id, topic_number, title),
-        )
-    except Exception:
-        cursor.execute(
-            "INSERT INTO topics (chapter_id, topic_number) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (chapter_id, topic_number),
-        )
-
-
-def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) -> int:
-    cursor.execute(
-        "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-        (content, chapter_id, topic_number),
-    )
-    return cursor.rowcount
-
-
-def diagnose_topic_numbers(cursor, chapter_id: int) -> List[str]:
-    cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
-    rows = cursor.fetchall()
-    nums = [r[0] for r in rows]
-    log(f"[DIAG] Existing topic_numbers in DB for chapter_id={chapter_id}: {nums[:50]}{' ...' if len(nums)>50 else ''}")
-    return nums
-
-
-def list_missing_topics(db_topic_numbers: Set[str], updated_topic_numbers: Set[str]) -> List[str]:
-    def key_num(s: str):
-        return [int(x) for x in s.split(".") if x.isdigit()]
-    return sorted(db_topic_numbers - updated_topic_numbers, key=key_num)
-
-
-# =========================
-# PDF parsing helpers
-# =========================
-def get_body_font(doc) -> Tuple[float, bool]:
-    font_counts = Counter()
-    for page_idx, page in enumerate(doc):
-        if page_idx > 10:
-            break
-        data = page.get_text("dict")
-        for block in data.get("blocks", []):
-            for line in block.get("lines", []):
-                for span in line.get("spans", []):
-                    size = round(span.get("size", 10))
-                    font = span.get("font", "").lower()
-                    key = (size, "bold" in font)
-                    font_counts[key] += len(span.get("text", ""))
-    if not font_counts:
-        log("[DEBUG] No font spans found; fallback body font size=10, bold=False")
-        return 10.0, False
-    (size, bold), _ = font_counts.most_common(1)[0]
-    log(f"[DEBUG] Body font detected: size={size}, bold={bold}")
-    return float(size), bool(bold)
-
-
-def read_toc(doc):
-    try:
-        toc = doc.get_toc(simple=True) or []
-        log(f"[INFO] TOC entries found: {len(toc)}")
-        return toc
-    except Exception as e:
-        log(f"[WARN] get_toc failed: {e}")
-        return []
-
-
-def normalize_topic_number_from_text(text: str) -> Optional[str]:
-    m = HEADING_NUMBER_RE.match(text)
-    if not m:
-        return None
-    return m.group(1).strip(". ")
-
-
-def toc_to_anchors(toc) -> List[HeadingAnchor]:
+def detect_headings_ocr(
+    lines: List[Dict],
+    csv_children: Optional[List[Tuple[str, str]]] = None,
+    left_margin_px: int = 250
+) -> List[Dict]:
     anchors = []
-    for level, title, page1 in toc:
-        if not isinstance(title, str):
-            continue
-        num = normalize_topic_number_from_text(title)
-        if not num:
-            continue
-        page_idx = max(0, page1 - 1)
-        title_text = (HEADING_NUMBER_RE.match(title).group(2) or "").strip()
-        anchors.append(
-            HeadingAnchor(number=num, title=title_text, page=page_idx, y=0.0, x=0.0, size=12.0, bold=False)
-        )
-    log(f"[INFO] TOC-derived anchors: {len(anchors)}")
-    return anchors
-
-
-def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) -> List[HeadingAnchor]:
-    anchors: List[HeadingAnchor] = []
-    for page_idx, page in enumerate(doc):
-        pdata = page.get_text("dict")
-        for block in pdata.get("blocks", []):
-            if "lines" not in block:
+    # Numbered headings
+    for ln in lines:
+        text = ln["text"]
+        m = HEADING_NUMBER_RE.match(text)
+        if m:
+            number = m.group(1).strip(".")
+            anchors.append({"type": "numbered", "number": number, "page": ln["page"], "y": ln["y"], "text": text})
+    # CSV-guided child subheads (match title substrings)
+    if csv_children:
+        norm = lambda s: _normalize(s).lower()
+        child_norms = [(num, norm(title or "")) for num, title in csv_children if num]
+        for t_num, t_title_norm in child_norms:
+            if not t_title_norm:
                 continue
-            for line in block["lines"]:
-                spans = line.get("spans", [])
-                if not spans:
-                    continue
-                text = "".join(s.get("text", "") for s in spans).strip()
-                m = HEADING_NUMBER_RE.match(text)
-                if not m:
-                    continue
-
-                first_span = spans[0]
-                size = float(first_span.get("size", 10.0))
-                font = first_span.get("font", "").lower()
-                bold = "bold" in font
-                x0, y0, x1, y1 = line.get("bbox", [0, 0, 0, 0])
-
-                title = (m.group(2) or "").strip()
-                is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold)) and len(title) >= 2
-                if is_heading:
-                    number = m.group(1).strip(". ")
-                    anchors.append(
-                        HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold)
-                    )
-                    log(f"[DEBUG] Heading candidate p{page_idx+1} y={y0:.1f} x={x0:.1f} size={size:.1f} bold={bold}: '{number} {title}'")
-    log(f"[INFO] Layout-derived anchors: {len(anchors)}")
-    return anchors
-
-
-def dedupe_and_sort_anchors(anchors: List[HeadingAnchor]) -> List[HeadingAnchor]:
-    seen = set()
-    uniq = []
+            for ln in lines:
+                if ln["x"] <= left_margin_px:
+                    lt = norm(ln["text"])
+                    if t_title_norm and t_title_norm in lt:
+                        anchors.append({"type": "csv_child", "number": t_num.strip("."), "page": ln["page"], "y": ln["y"], "text": ln["text"]})
+    # Sort and dedupe
+    anchors.sort(key=lambda a: (a["page"], a["y"]))
+    uniq, seen = [], set()
     for a in anchors:
-        key = (a.number, a.page, round(a.y, 1))
+        key = (a["number"], a["page"], int(a["y"] / 2))
         if key not in seen:
             seen.add(key)
             uniq.append(a)
-    uniq.sort(key=lambda h: (h.page, h.y))
-    log(f"[INFO] Unique anchors after de-dup: {len(uniq)}")
     return uniq
 
 
-def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str, str]:
-    """
-    Returns mapping number -> merged text between this anchor and the next numbered anchor.
-    Improvements:
-    - Do NOT drop numeric lines inside sections.
-    - INCLUDE 'quasi-subheads': bold, left-margin unnumbered lines as part of current section content.
-    """
-    topic_text: Dict[str, str] = {}
+def segment_by_anchors_ocr(lines: List[Dict], anchors: List[Dict]) -> Dict[str, str]:
     if not anchors:
-        return topic_text
-
-    # Collect block-level text (reading order) with positions
-    all_blocks = []
-    for page_idx, page in enumerate(doc):
-        blocks = page.get_text("blocks", sort=True)
-        for b in blocks:
-            try:
-                x0, y0, x1, y1, text = b[0], b[1], b[2], b[3], b[4]
-            except Exception:
-                text = b[4] if len(b) > 4 else ""
-                x0, y0 = b[0], b[1]
-            text = (text or "").strip().replace("\n", " ")
-            if not text:
-                continue
-            all_blocks.append({"page": page_idx, "x": x0, "y": y0, "text": text})
-
-    # Also collect span-level lines for bold/left detection
-    span_lines = []  # [{"page": int, "x": float, "y": float, "size": float, "bold": bool, "text": str}]
-    for page_idx, page in enumerate(doc):
-        pdata = page.get_text("dict")
-        for block in pdata.get("blocks", []):
-            if "lines" not in block:
-                continue
-            for line in block["lines"]:
-                spans = line.get("spans", [])
-                if not spans:
-                    continue
-                x0, y0, x1, y1 = line.get("bbox", [0, 0, 0, 0])
-                text = "".join(s.get("text", "") for s in spans).strip().replace("\n", " ")
-                if not text:
-                    continue
-                first_span = spans[0]
-                size = float(first_span.get("size", 10.0))
-                font = first_span.get("font", "").lower()
-                bold = "bold" in font
-                span_lines.append({"page": page_idx, "x": x0, "y": y0, "size": size, "bold": bold, "text": text})
-
-    log(f"[DEBUG] Total text blocks collected: {len(all_blocks)} | span-lines: {len(span_lines)}")
-
-    # Build heading number list for fast prefix check
-    heading_numbers = [a.number for a in anchors]
-
-    # Index span_lines by (page) and sorted by y
-    spans_by_page: Dict[int, List[dict]] = defaultdict(list)
-    for sl in span_lines:
-        spans_by_page[sl["page"]].append(sl)
-    for p in spans_by_page:
-        spans_by_page[p].sort(key=lambda r: r["y"])
-
-    def is_true_heading_line(text: str) -> bool:
-        return any(text.startswith(num) for num in heading_numbers)
-
-    # Quasi subhead detector (bold, left, not numbered) kept for future use if needed
-    def is_quasi_subhead(blk) -> bool:
-        page, y, x, text = blk["page"], blk["y"], blk["x"], blk["text"]
-        if is_true_heading_line(text):
-            return False
-        candidates = spans_by_page.get(page, [])
-        nearest = None
-        best_dy = 9999
-        for sl in candidates:
-            dy = abs(sl["y"] - y)
-            if dy < best_dy:
-                best_dy = dy
-                nearest = sl
-            if dy > 6.0 and sl["y"] > y:
-                break
-        if nearest is None:
-            return False
-        return (nearest["bold"] is True) and (nearest["x"] < 90) and (not is_true_heading_line(nearest["text"]))
-
+        return {}
+    segments: Dict[str, str] = {}
+    lines_sorted = sorted(lines, key=lambda r: (r["page"], r["y"], r["x"]))
     for i, a in enumerate(anchors):
-        start_page, start_y = a.page, a.y
-        if i + 1 < len(anchors):
-            b = anchors[i + 1]
-            end_page, end_y = b.page, b.y
-        else:
-            end_page, end_y = float("inf"), float("inf")
-
+        start = a
+        end = anchors[i + 1] if i + 1 < len(anchors) else None
         chunks = []
-        for blk in all_blocks:
-            after_start = blk["page"] > start_page or (blk["page"] == start_page and blk["y"] > start_y)
-            before_end = blk["page"] < end_page or (blk["page"] == end_page and blk["y"] < end_y)
-            if not (after_start and before_end):
-                continue
-
-            # Skip only true numbered heading lines
-            if is_true_heading_line(blk["text"]):
-                continue
-
-            chunks.append(blk["text"])
-
-        merged = "\n".join(chunks).strip()
-        topic_text[a.number] = merged
-        log(f"[DEBUG] Topic {a.number} content length: {len(merged)}")
-
-    return topic_text
-
-
-def extract_topic_texts_from_pdf(pdf_path: str) -> Dict[str, str]:
-    """
-    Returns mapping topic_number -> content extracted
-    """
-    if not os.path.exists(pdf_path):
-        log(f"[WARN] PDF not found, skipping: {pdf_path}")
-        return {}
-
-    try:
-        doc = fitz.open(pdf_path)
-    except Exception as e:
-        log(f"[ERROR] Could not open PDF '{pdf_path}': {e}")
-        return {}
-
-    log(f"[INFO] Processing PDF: {pdf_path}")
-    toc = read_toc(doc)
-    anchors: List[HeadingAnchor] = []
-
-    if toc:
-        anchors = toc_to_anchors(toc)
-        if len(anchors) < 2:
-            log("[WARN] TOC present but insufficient numbered anchors; using layout fallback.")
-            anchors = []
-
-    if not anchors:
-        body_size, body_bold = get_body_font(doc)
-        anchors = extract_numbered_headings_by_layout(doc, body_size, body_bold)
-
-    anchors = dedupe_and_sort_anchors(anchors)
-    if not anchors:
-        log("[ERROR] No numbered headings detected; cannot segment topics.")
-        doc.close()
-        return {}
-
-    topic_text = collect_text_between_anchors(doc, anchors)
-    doc.close()
-    return topic_text
-
-
-# =========================
-# Main pipeline
-# =========================
-def main():
-    # Load authoritative topics from CSV
-    csv_topics = load_authoritative_topics(CSV_PATH)
-
-    # DB connect
-    try:
-        conn, cursor = connect_db()
-    except Exception as e:
-        log(f"[ERROR] DB connection failed: {e}")
-        return
-
-    # Load chapters and subjects
-    try:
-        chapters, subjects = fetch_chapters_and_subjects(cursor)
-    except Exception as e:
-        log(f"[ERROR] Failed loading chapters/subjects: {e}")
-        cursor.close()
-        conn.close()
-        return
-
-    for chapter_id, chapter_name, class_number, subject_id in chapters:
-        subject_name = subjects.get(subject_id, "Unknown Subject")
-        pdf_filename = f"{chapter_name}.pdf"
-        csv_key = (subject_name, str(class_number), pdf_filename)
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, str(class_number), pdf_filename)
-
-        log(f"\n[INFO] Chapter {chapter_id}: '{chapter_name}' | Class {class_number} | Subject '{subject_name}'")
-        log(f"[INFO] PDF path: {pdf_path}")
-
-        # 1) Sync: ensure every topic in CSV exists in DB for this chapter
-        csv_list = csv_topics.get(csv_key, [])
-        csv_numbers = [num for num, _ in csv_list if num]
-        csv_set = set(csv_numbers)
-
-        try:
-            db_set = fetch_db_topic_numbers(cursor, chapter_id)
-        except Exception as e:
-            log(f"[ERROR] Could not fetch DB topics for chapter_id={chapter_id}: {e}")
-            continue
-
-        missing_in_db = sorted(
-            csv_set - db_set, key=lambda s: [int(x) for x in s.split(".") if x.isdigit()]
-        )
-        log(f"[SYNC] CSV topics={len(csv_set)} | In DB={len(db_set)} | Missing to insert={len(missing_in_db)}")
-
-        if missing_in_db and not DRY_RUN:
-            inserted = 0
-            csv_title_map = {n: t for n, t in csv_list}
-            for num in missing_in_db:
-                title = csv_title_map.get(num)
-                try:
-                    insert_topic(cursor, chapter_id, num, title)
-                    inserted += 1
-                except Exception as e:
-                    log(f"[ERROR] INSERT failed for chapter_id={chapter_id}, topic_number='{num}': {e}")
-            if inserted:
-                try:
-                    conn.commit()
-                except Exception as e:
-                    log(f"[ERROR] Commit after insert failed: {e}")
-                    conn.rollback()
-            log(f"[SYNC] Inserted {inserted} missing topics for chapter_id={chapter_id}")
-
-        # 2) Extract text from PDF
-        topic_map = extract_topic_texts_from_pdf(pdf_path)  # {number -> content}
-
-        # 3) Update DB full_text
-        updated = 0
-        skipped = 0
-        updated_topic_numbers: Set[str] = set()
-
-        for number, content in topic_map.items():
-            if not content or len(content.strip()) < 20:
-                skipped += 1
-                log(f"[WARN] Skipping topic {number}: empty/too short content (len={len(content or '')})")
-                continue
-
-            db_number = number.strip().strip(".")
-            # Optional remap
-            if chapter_id in TOPIC_NUMBER_REMAP and db_number in TOPIC_NUMBER_REMAP[chapter_id]:
-                db_number = TOPIC_NUMBER_REMAP[chapter_id][db_number]
-
-            try:
-                if DRY_RUN:
-                    log(f"[DRY-RUN] Would update chapter_id={chapter_id} topic_number='{db_number}' len={len(content)}")
-                    updated += 1
-                    updated_topic_numbers.add(db_number)
+        for ln in lines_sorted:
+            after = (ln["page"] > start["page"]) or (ln["page"] == start["page"] and ln["y"] > start["y"])
+            before = True
+            if end:
+                before = (ln["page"] < end["page"]) or (ln["page"] == end["page"] and ln["y"] < end["y"])
+            if after and before:
+                # skip any anchor line itself
+                if ln["page"] == start["page"] and abs(ln["y"] - start["y"]) < 3 and ln["text"] == start["text"]:
                     continue
+                if end and ln["page"] == end["page"] and abs(ln["y"] - end["y"]) < 3 and ln["text"] == end["text"]:
+                    continue
+                chunks.append(ln["text"])
+        merged = _normalize("\n".join(chunks))
+        segments[a["number"]] = merged
+    return segments
 
-                rowcount = update_topic_text(cursor, chapter_id, db_number, content)
-                log(f"[DEBUG] Update chapter_id={chapter_id} topic={db_number} rows={rowcount} len={len(content)}")
 
-                successful_number = None
-                if rowcount > 0:
-                    successful_number = db_number
-                elif rowcount == 0 and FALLBACK_TO_PARENT:
-                    # With FALLBACK_TO_PARENT=False, this block will never run.
-                    parent = ".".join(db_number.split(".")[:-1])
-                    while parent:
-                        log(f"[FALLBACK] Trying parent '{parent}' for chapter_id={chapter_id}")
-                        rowcount = update_topic_text(cursor, chapter_id, parent, content)
-                        if rowcount > 0:
-                            log(f"[FALLBACK] Updated parent '{parent}' rows={rowcount}")
-                            successful_number = parent
-                            break
-                        parent = ".".join(parent.split(".")[:-1])
+def ocr_extract_topics(
+    pdf_path: str,
+    csv_children_map: Optional[Dict[str, List[Tuple[str, str]]]] = None,
+    tesseract_bin: Optional[str] = None,
+    lang: str = "eng",
+    zoom: float = 4.0,
+) -> Dict[str, str]:
+    set_tesseract_path(tesseract_bin)
+    images = render_pages_with_pymupdf(pdf_path, zoom=zoom)
+    all_lines: List[Dict] = []
+    for page_index, img in images:
+        hocr = ocr_page_hocr(img, lang=lang)
+        lines = hocr_to_lines(hocr, page_index)
+        all_lines.extend(lines)
 
-                if rowcount == 0 and successful_number is None:
-                    log(f"[DIAG] No rows updated for topic_number='{db_number}'. Listing DB topic_numbers for this chapter:")
-                    diagnose_topic_numbers(cursor, chapter_id)
+    # Global anchors (numbered)
+    global_anchors = detect_headings_ocr(all_lines, csv_children=None)
 
-                if successful_number is not None:
-                    updated_topic_numbers.add(successful_number)
+    # If CSV map is provided, enrich anchors with children titles inside each parent's window
+    if csv_children_map:
+        enriched: List[Dict] = []
+        # Build quick index of anchors by page/y
+        for idx, anc in enumerate(global_anchors):
+            parent_num = anc["number"]
+            enriched.append(anc)
+            # find end window
+            end_anc = global_anchors[idx + 1] if idx + 1 < len(global_anchors) else None
+            children = csv_children_map.get(parent_num, [])
+            if not children:
+                continue
+            # collect lines inside window
+            window_lines = []
+            for ln in all_lines:
+                after = (ln["page"] > anc["page"]) or (ln["page"] == anc["page"] and ln["y"] > anc["y"])
+                before = True
+                if end_anc:
+                    before = (ln["page"] < end_anc["page"]) or (ln["page"] == end_anc["page"] and ln["y"] < end_anc["y"])
+                if after and before:
+                    window_lines.append(ln)
+            # detect child anchors in window
+            child_anchors = detect_headings_ocr(window_lines, csv_children=children)
+            enriched.extend(child_anchors)
+        # sort & dedupe again
+        enriched.sort(key=lambda a: (a["page"], a["y"]))
+        final_anchors, seen = [], set()
+        for a in enriched:
+            key = (a["number"], a["page"], int(a["y"] / 2))
+            if key not in seen:
+                seen.add(key)
+                final_anchors.append(a)
+        anchors = final_anchors
+    else:
+        anchors = global_anchors
 
-                updated += rowcount
-
-            except Exception as e:
-                log(f"[ERROR] Update failed for chapter_id={chapter_id}, topic={db_number}: {e}")
-
-        # 4) Report DB topics that did NOT get text in this run (strict — no auto-fill)
-        try:
-            db_map = fetch_db_topics_map(cursor, chapter_id)  # {topic_number: id}
-            db_topic_numbers = set(db_map.keys())
-            missing_after_update = list_missing_topics(db_topic_numbers, updated_topic_numbers)
-
-            if missing_after_update:
-                log(f"[MISSING] DB topics WITHOUT text update this run for chapter_id={chapter_id} ({chapter_name}):")
-                preview = ", ".join(missing_after_update[:100])
-                log(f"[MISSING] Count={len(missing_after_update)} | {preview}{' ...' if len(missing_after_update) > 100 else ''}")
-
-                # AUTO_FILL_FROM_PARENT is disabled; do nothing here.
-
-            else:
-                log(f"[MISSING] None — all DB topics for this chapter were updated this run (or already had content).")
-
-        except Exception as e:
-            log(f"[ERROR] Missing-topic report failed for chapter_id={chapter_id}: {e}")
-
-        log(f"[INFO] Chapter summary: updated={updated}, skipped={skipped}, extracted={len(topic_map)}")
-
-        if not DRY_RUN:
-            try:
-                conn.commit()
-            except Exception as e:
-                log(f"[ERROR] Commit failed: {e}")
-                conn.rollback()
-
-    cursor.close()
-    conn.close()
-    log("\n[SUCCESS] Sync + Populate pipeline completed (strict mode: no fallback, no auto-fill).")
-    log("Tip: Use the MISSING report as your QA list; only add logic to fill children when their subheads are actually detected.")
-    
-
-if __name__ == "__main__":
-    main()
+    segments = segment_by_anchors_ocr(all_lines, anchors)
+    return segments
