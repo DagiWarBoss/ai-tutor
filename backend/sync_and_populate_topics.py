@@ -1,7 +1,7 @@
 import os
 import re
 import csv
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import List, Tuple, Dict, Optional, Set
 
@@ -13,19 +13,20 @@ from dotenv import load_dotenv
 # Configuration
 # =========================
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
-CSV_PATH = "extracted_headings_all_subjects.csv"  # authoritative topic list you uploaded
+CSV_PATH = "extracted_headings_all_subjects.csv"  # authoritative topic list
 
 # DRY_RUN: if True, no DB writes; only logs
 DRY_RUN = False
 
-# FALLBACK_TO_PARENT: when a leaf topic_number is missing in DB, write to nearest parent (e.g., 1.3.4 -> 1.3 -> 1)
+# Parent fallback: when a leaf topic_number has no DB row (or update fails),
+# write content to its nearest parent (e.g., 1.3.4 -> 1.3 -> 1)
 FALLBACK_TO_PARENT = True
 
-# AUTO_FILL_FROM_PARENT: after a chapter finishes, copy nearest updated parent's full_text
-# into DB topics that exist but did not get text in this run (best-effort). Off by default.
-AUTO_FILL_FROM_PARENT = False
+# After the updates for a chapter, auto-fill any DB topics that were not updated
+# by copying the nearest updated parent's full_text. This ensures nothing remains empty.
+AUTO_FILL_FROM_PARENT = True
 
-# Optional: per-chapter remap for edition drifts (use sparingly)
+# Optional per-chapter remap (use sparingly for edition drifts)
 TOPIC_NUMBER_REMAP: Dict[int, Dict[str, str]] = {}
 
 load_dotenv()
@@ -61,16 +62,16 @@ def load_authoritative_topics(csv_path: str) -> Dict[Tuple[str, str, str], List[
     if not os.path.exists(csv_path):
         log(f"[ERROR] CSV not found at {csv_path}")
         return topics_map
-    with open(csv_path, newline='', encoding="utf-8") as f:
+    with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             subject = row["subject"]
             class_ = row["class"]
             chapter_file = row["chapter_file"]
-            heading_number = row["heading_number"]
-            heading_text = row["heading_text"]
+            heading_number = (row["heading_number"] or "").strip().strip(".")
+            heading_text = row.get("heading_text", None)
             key = (subject, class_, chapter_file)
-            topics_map.setdefault(key, []).append((heading_number.strip().strip("."), heading_text))
+            topics_map.setdefault(key, []).append((heading_number, heading_text))
     log(f"[INFO] Loaded authoritative topics from CSV for {len(topics_map)} chapters")
     return topics_map
 
@@ -110,24 +111,24 @@ def fetch_db_topic_numbers(cursor, chapter_id: int) -> Set[str]:
 
 def insert_topic(cursor, chapter_id: int, topic_number: str, title: Optional[str]):
     """
-    Insert a topic row if not present. We attempt with name column first; fallback to minimal if schema differs.
+    Insert a topic row if not present. Try with name first; fallback to minimal if schema differs.
     """
     try:
         cursor.execute(
             "INSERT INTO topics (chapter_id, topic_number, name) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-            (chapter_id, topic_number, title)
+            (chapter_id, topic_number, title),
         )
     except Exception:
         cursor.execute(
             "INSERT INTO topics (chapter_id, topic_number) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (chapter_id, topic_number)
+            (chapter_id, topic_number),
         )
 
 
 def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) -> int:
     cursor.execute(
         "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-        (content, chapter_id, topic_number)
+        (content, chapter_id, topic_number),
     )
     return cursor.rowcount
 
@@ -197,8 +198,9 @@ def toc_to_anchors(toc) -> List[HeadingAnchor]:
             continue
         page_idx = max(0, page1 - 1)
         title_text = (HEADING_NUMBER_RE.match(title).group(2) or "").strip()
-        anchors.append(HeadingAnchor(number=num, title=title_text, page=page_idx,
-                                     y=0.0, x=0.0, size=12.0, bold=False))
+        anchors.append(
+            HeadingAnchor(number=num, title=title_text, page=page_idx, y=0.0, x=0.0, size=12.0, bold=False)
+        )
     log(f"[INFO] TOC-derived anchors: {len(anchors)}")
     return anchors
 
@@ -218,6 +220,7 @@ def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) 
                 m = HEADING_NUMBER_RE.match(text)
                 if not m:
                     continue
+
                 first_span = spans[0]
                 size = float(first_span.get("size", 10.0))
                 font = first_span.get("font", "").lower()
@@ -228,7 +231,9 @@ def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) 
                 is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold)) and len(title) >= 2
                 if is_heading:
                     number = m.group(1).strip(". ")
-                    anchors.append(HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold))
+                    anchors.append(
+                        HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold)
+                    )
                     log(f"[DEBUG] Heading candidate p{page_idx+1} y={y0:.1f} x={x0:.1f} size={size:.1f} bold={bold}: '{number} {title}'")
     log(f"[INFO] Layout-derived anchors: {len(anchors)}")
     return anchors
@@ -249,14 +254,16 @@ def dedupe_and_sort_anchors(anchors: List[HeadingAnchor]) -> List[HeadingAnchor]
 
 def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str, str]:
     """
-    Returns number -> merged text between this anchor and the next numbered anchor.
-    Important: We DO NOT drop numeric lines inside sections anymore.
-    We only skip a block if it starts with any detected heading number.
+    Returns mapping number -> merged text between this anchor and the next numbered anchor.
+    Improvements:
+    - Do NOT drop numeric lines inside sections.
+    - INCLUDE 'quasi-subheads': bold, left-margin unnumbered lines as part of current section content.
     """
     topic_text: Dict[str, str] = {}
     if not anchors:
         return topic_text
 
+    # Collect block-level text (reading order) with positions
     all_blocks = []
     for page_idx, page in enumerate(doc):
         blocks = page.get_text("blocks", sort=True)
@@ -271,9 +278,61 @@ def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str,
                 continue
             all_blocks.append({"page": page_idx, "x": x0, "y": y0, "text": text})
 
-    log(f"[DEBUG] Total text blocks collected: {len(all_blocks)}")
+    # Also collect span-level lines for bold/left detection
+    span_lines = []  # [{"page": int, "x": float, "y": float, "size": float, "bold": bool, "text": str}]
+    for page_idx, page in enumerate(doc):
+        pdata = page.get_text("dict")
+        for block in pdata.get("blocks", []):
+            if "lines" not in block:
+                continue
+            for line in block["lines"]:
+                spans = line.get("spans", [])
+                if not spans:
+                    continue
+                x0, y0, x1, y1 = line.get("bbox", [0, 0, 0, 0])
+                text = "".join(s.get("text", "") for s in spans).strip().replace("\n", " ")
+                if not text:
+                    continue
+                first_span = spans[0]
+                size = float(first_span.get("size", 10.0))
+                font = first_span.get("font", "").lower()
+                bold = "bold" in font
+                span_lines.append({"page": page_idx, "x": x0, "y": y0, "size": size, "bold": bold, "text": text})
 
+    log(f"[DEBUG] Total text blocks collected: {len(all_blocks)} | span-lines: {len(span_lines)}")
+
+    # Build heading number list for fast prefix check
     heading_numbers = [a.number for a in anchors]
+
+    # Index span_lines by (page) and sorted by y
+    spans_by_page: Dict[int, List[dict]] = defaultdict(list)
+    for sl in span_lines:
+        spans_by_page[sl["page"]].append(sl)
+    for p in spans_by_page:
+        spans_by_page[p].sort(key=lambda r: r["y"])
+
+    def is_true_heading_line(text: str) -> bool:
+        return any(text.startswith(num) for num in heading_numbers)
+
+    # Quasi subhead detector (bold, left, not numbered)
+    def is_quasi_subhead(blk) -> bool:
+        page, y, x, text = blk["page"], blk["y"], blk["x"], blk["text"]
+        if is_true_heading_line(text):
+            return False
+        candidates = spans_by_page.get(page, [])
+        # Find nearest span-line by y within a small threshold
+        nearest = None
+        best_dy = 9999
+        for sl in candidates:
+            dy = abs(sl["y"] - y)
+            if dy < best_dy:
+                best_dy = dy
+                nearest = sl
+            if dy > 6.0 and sl["y"] > y:
+                break
+        if nearest is None:
+            return False
+        return (nearest["bold"] is True) and (nearest["x"] < 90) and (not is_true_heading_line(nearest["text"]))
 
     for i, a in enumerate(anchors):
         start_page, start_y = a.page, a.y
@@ -290,10 +349,11 @@ def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str,
             if not (after_start and before_end):
                 continue
 
-            # Skip only real heading lines (those that start with any known heading number)
-            if any(blk["text"].startswith(num) for num in heading_numbers):
+            # Skip only true numbered heading lines
+            if is_true_heading_line(blk["text"]):
                 continue
 
+            # Keep everything else, including quasi-subheads, inside the section
             chunks.append(blk["text"])
 
         merged = "\n".join(chunks).strip()
@@ -376,7 +436,7 @@ def main():
 
         # 1) Sync: ensure every topic in CSV exists in DB for this chapter
         csv_list = csv_topics.get(csv_key, [])
-        csv_numbers = [num for num, _ in csv_list]
+        csv_numbers = [num for num, _ in csv_list if num]
         csv_set = set(csv_numbers)
 
         try:
@@ -385,7 +445,9 @@ def main():
             log(f"[ERROR] Could not fetch DB topics for chapter_id={chapter_id}: {e}")
             continue
 
-        missing_in_db = sorted(csv_set - db_set, key=lambda s: [int(x) for x in s.split('.') if x.isdigit()])
+        missing_in_db = sorted(
+            csv_set - db_set, key=lambda s: [int(x) for x in s.split(".") if x.isdigit()]
+        )
         log(f"[SYNC] CSV topics={len(csv_set)} | In DB={len(db_set)} | Missing to insert={len(missing_in_db)}")
 
         if missing_in_db and not DRY_RUN:
@@ -461,7 +523,7 @@ def main():
             except Exception as e:
                 log(f"[ERROR] Update failed for chapter_id={chapter_id}, topic={db_number}: {e}")
 
-        # 4) Report DB topics that did NOT get text in this run
+        # 4) Report DB topics that did NOT get text in this run and (optionally) auto-fill from parent
         try:
             db_map = fetch_db_topics_map(cursor, chapter_id)  # {topic_number: id}
             db_topic_numbers = set(db_map.keys())
@@ -472,7 +534,6 @@ def main():
                 preview = ", ".join(missing_after_update[:100])
                 log(f"[MISSING] Count={len(missing_after_update)} | {preview}{' ...' if len(missing_after_update) > 100 else ''}")
 
-                # Optional auto-fill from nearest updated parent
                 if AUTO_FILL_FROM_PARENT and not DRY_RUN:
                     def nearest_updated_parent(num: str) -> Optional[str]:
                         parts = num.split(".")
@@ -491,15 +552,15 @@ def main():
                         try:
                             cursor.execute(
                                 "SELECT full_text FROM topics WHERE chapter_id = %s AND topic_number = %s",
-                                (chapter_id, parent)
+                                (chapter_id, parent),
                             )
                             row = cursor.fetchone()
                             parent_text = row[0] if row else None
-                            if not parent_text or len((parent_text or '').strip()) < 20:
+                            if not parent_text or len((parent_text or "").strip()) < 20:
                                 continue
                             cursor.execute(
                                 "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-                                (parent_text, chapter_id, miss)
+                                (parent_text, chapter_id, miss),
                             )
                             if cursor.rowcount > 0:
                                 filled += cursor.rowcount
