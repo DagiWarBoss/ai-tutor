@@ -18,13 +18,13 @@ CSV_PATH = "extracted_headings_all_subjects.csv"  # authoritative topic list
 # DRY_RUN: if True, no DB writes; only logs
 DRY_RUN = False
 
-# Parent fallback: when a leaf topic_number has no DB row (or update fails),
-# write content to its nearest parent (e.g., 1.3.4 -> 1.3 -> 1)
-FALLBACK_TO_PARENT = True
+# Turn OFF fallback behaviors (as requested)
+# When a leaf topic_number has no DB row (or update fails), do NOT write to parent.
+FALLBACK_TO_PARENT = False
 
-# After the updates for a chapter, auto-fill any DB topics that were not updated
-# by copying the nearest updated parent's full_text. This ensures nothing remains empty.
-AUTO_FILL_FROM_PARENT = True
+# After the updates for a chapter, do NOT copy the nearest updated parent's full_text
+# into DB topics that were not updated. This prevents wrong inheritance.
+AUTO_FILL_FROM_PARENT = False
 
 # Optional per-chapter remap (use sparingly for edition drifts)
 TOPIC_NUMBER_REMAP: Dict[int, Dict[str, str]] = {}
@@ -314,13 +314,12 @@ def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str,
     def is_true_heading_line(text: str) -> bool:
         return any(text.startswith(num) for num in heading_numbers)
 
-    # Quasi subhead detector (bold, left, not numbered)
+    # Quasi subhead detector (bold, left, not numbered) kept for future use if needed
     def is_quasi_subhead(blk) -> bool:
         page, y, x, text = blk["page"], blk["y"], blk["x"], blk["text"]
         if is_true_heading_line(text):
             return False
         candidates = spans_by_page.get(page, [])
-        # Find nearest span-line by y within a small threshold
         nearest = None
         best_dy = 9999
         for sl in candidates:
@@ -353,7 +352,6 @@ def collect_text_between_anchors(doc, anchors: List[HeadingAnchor]) -> Dict[str,
             if is_true_heading_line(blk["text"]):
                 continue
 
-            # Keep everything else, including quasi-subheads, inside the section
             chunks.append(blk["text"])
 
         merged = "\n".join(chunks).strip()
@@ -501,6 +499,7 @@ def main():
                 if rowcount > 0:
                     successful_number = db_number
                 elif rowcount == 0 and FALLBACK_TO_PARENT:
+                    # With FALLBACK_TO_PARENT=False, this block will never run.
                     parent = ".".join(db_number.split(".")[:-1])
                     while parent:
                         log(f"[FALLBACK] Trying parent '{parent}' for chapter_id={chapter_id}")
@@ -523,7 +522,7 @@ def main():
             except Exception as e:
                 log(f"[ERROR] Update failed for chapter_id={chapter_id}, topic={db_number}: {e}")
 
-        # 4) Report DB topics that did NOT get text in this run and (optionally) auto-fill from parent
+        # 4) Report DB topics that did NOT get text in this run (strict — no auto-fill)
         try:
             db_map = fetch_db_topics_map(cursor, chapter_id)  # {topic_number: id}
             db_topic_numbers = set(db_map.keys())
@@ -534,42 +533,8 @@ def main():
                 preview = ", ".join(missing_after_update[:100])
                 log(f"[MISSING] Count={len(missing_after_update)} | {preview}{' ...' if len(missing_after_update) > 100 else ''}")
 
-                if AUTO_FILL_FROM_PARENT and not DRY_RUN:
-                    def nearest_updated_parent(num: str) -> Optional[str]:
-                        parts = num.split(".")
-                        while len(parts) > 0:
-                            cand = ".".join(parts)
-                            if cand in updated_topic_numbers:
-                                return cand
-                            parts = parts[:-1]
-                        return None
+                # AUTO_FILL_FROM_PARENT is disabled; do nothing here.
 
-                    filled = 0
-                    for miss in missing_after_update:
-                        parent = nearest_updated_parent(miss)
-                        if not parent:
-                            continue
-                        try:
-                            cursor.execute(
-                                "SELECT full_text FROM topics WHERE chapter_id = %s AND topic_number = %s",
-                                (chapter_id, parent),
-                            )
-                            row = cursor.fetchone()
-                            parent_text = row[0] if row else None
-                            if not parent_text or len((parent_text or "").strip()) < 20:
-                                continue
-                            cursor.execute(
-                                "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-                                (parent_text, chapter_id, miss),
-                            )
-                            if cursor.rowcount > 0:
-                                filled += cursor.rowcount
-                                log(f"[AUTO-FILL] Copied parent '{parent}' content to missing '{miss}' (rows={cursor.rowcount})")
-                        except Exception as e:
-                            log(f"[AUTO-FILL][ERROR] chapter_id={chapter_id} miss='{miss}': {e}")
-
-                    if filled > 0:
-                        log(f"[AUTO-FILL] Filled {filled} missing topics from nearest updated parents for chapter_id={chapter_id}")
             else:
                 log(f"[MISSING] None — all DB topics for this chapter were updated this run (or already had content).")
 
@@ -587,9 +552,9 @@ def main():
 
     cursor.close()
     conn.close()
-    log("\n[SUCCESS] Sync + Populate pipeline completed.")
-    log("Tip: Re-run later if you adjust PDFs or the CSV; this script keeps DB aligned and reports any gaps.")
-
+    log("\n[SUCCESS] Sync + Populate pipeline completed (strict mode: no fallback, no auto-fill).")
+    log("Tip: Use the MISSING report as your QA list; only add logic to fill children when their subheads are actually detected.")
+    
 
 if __name__ == "__main__":
     main()
