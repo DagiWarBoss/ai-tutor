@@ -148,7 +148,7 @@ def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) 
 
 def diagnose_topic_numbers(cursor, chapter_id: int) -> List[str]:
     cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
-    rows = cursor.fetchall)
+    rows = cursor.fetchall
     # Fix: fetchall() needs to be called
     cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
     rows = cursor.fetchall()
