@@ -4,14 +4,24 @@ import re
 from dotenv import load_dotenv
 import psycopg2
 from collections import Counter
+import signal
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
+PAGE_PROCESS_TIMEOUT = 5  # Seconds to wait before skipping a complex page
+
+# --- Timeout handling ---
+class TimeoutException(Exception):
+    pass
+def timeout_handler(signum, frame):
+    raise TimeoutException()
+signal.signal(signal.SIGALRM, timeout_handler)
 
 # This map is the single source of truth for chapter numbers.
 CHAPTER_NUMBER_FALLBACK_MAP = {
+    # This map should be complete based on your CSV and files.
     "Some Basic Concepts Of Chemistry.pdf": "1", "Structure Of Atom.pdf": "2",
     "Classification Of Elements And Periodicity.pdf": "3", "Chemical Bonding And Molecular Structure.pdf": "4",
     "Thermodynamics.pdf": "5", "Equilibrium.pdf": "6", "Redox Reactions.pdf": "7",
@@ -30,20 +40,26 @@ CHAPTER_NUMBER_FALLBACK_MAP = {
     "Electromagnetic Induction.pdf": "6", "Alternating Current.pdf": "7", "Electromagnetic Waves.pdf": "8",
     "Ray Optics.pdf": "9", "Wave Optics.pdf": "10", "Dual Nature Of Radiation And Matter.pdf": "11",
     "Atoms.pdf": "12", "Nuclei.pdf": "13", "SemiConductor Electronics.pdf": "14",
-    # Add Maths chapters here if needed
 }
 
 def get_most_common_font_info(doc):
     font_counts = Counter()
     for page_num, page in enumerate(doc):
         if page_num > 5: break
-        blocks = page.get_text("dict")["blocks"]
-        for b in blocks:
-            if "lines" in b:
-                for l in b["lines"]:
-                    for s in l["spans"]:
-                        key = (round(s["size"]), "bold" in s["font"].lower())
-                        font_counts[key] += 1
+        try:
+            signal.alarm(PAGE_PROCESS_TIMEOUT)
+            blocks = page.get_text("dict")["blocks"]
+            signal.alarm(0)
+            for b in blocks:
+                if "lines" in b:
+                    for l in b["lines"]:
+                        for s in l["spans"]:
+                            key = (round(s["size"]), "bold" in s["font"].lower())
+                            font_counts[key] += 1
+        except TimeoutException:
+            print(f"    [WARNING] Font analysis on page {page_num+1} timed out.")
+            signal.alarm(0)
+            continue
     if not font_counts: return (10.0, False)
     return font_counts.most_common(1)[0][0]
 
@@ -54,40 +70,48 @@ def extract_text_and_headings_with_location(doc, chapter_number):
     headings, all_text_blocks = [], []
 
     for page_num, page in enumerate(doc):
-        page_height = page.rect.height
-        top_margin = page_height * 0.10
-        bottom_margin = page_height * 0.90
-        
-        blocks = page.get_text("blocks", sort=True)
-        for b in blocks:
-            x0, y0, x1, y1, block_text_raw, _, _ = b
-            block_text = block_text_raw.strip().replace('\n', ' ')
-            if block_text and (y0 < top_margin or y1 > bottom_margin):
-                continue
-            if block_text:
-                all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y0})
-        
-        styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
-        for b in styled_blocks:
-            if "lines" in b:
-                for l in b["lines"]:
-                    line_text = "".join(s["text"] for s in l["spans"]).strip()
-                    match = pat.match(line_text)
-                    if match:
-                        first_span = l["spans"][0]
-                        span_size = round(first_span["size"])
-                        span_font = first_span["font"]
-                        span_is_bold = "bold" in span_font.lower()
-                        is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
-                        
-                        print(f"\n    [DEBUG] Regex Matched Line: '{line_text}'")
-                        print(f"      - Font: {span_font}, Size: {span_size}")
-                        if is_heading_style:
-                            print("      - VERDICT: ACCEPTED as a heading.")
-                            y_pos = b['bbox'][1]
-                            headings.append({'text': line_text, 'page': page_num, 'y': y_pos})
-                        else:
-                            print("      - VERDICT: REJECTED (font style/size does not qualify as a heading).")
+        try:
+            signal.alarm(PAGE_PROCESS_TIMEOUT)
+            page_height = page.rect.height
+            top_margin = page_height * 0.10
+            bottom_margin = page_height * 0.90
+            
+            blocks = page.get_text("blocks", sort=True)
+            styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
+            signal.alarm(0)
+
+            for b in blocks:
+                x0, y0, x1, y1, block_text_raw, _, _ = b
+                block_text = block_text_raw.strip().replace('\n', ' ')
+                if block_text and (y0 < top_margin or y1 > bottom_margin):
+                    continue
+                if block_text:
+                    all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y0})
+            
+            for b in styled_blocks:
+                if "lines" in b:
+                    for l in b["lines"]:
+                        line_text = "".join(s["text"] for s in l["spans"]).strip()
+                        match = pat.match(line_text)
+                        if match:
+                            first_span = l["spans"][0]
+                            span_size = round(first_span["size"])
+                            span_font = first_span["font"]
+                            span_is_bold = "bold" in span_font.lower()
+                            is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
+                            
+                            print(f"\n    [DEBUG] Regex Matched Line: '{line_text}' on page {page_num+1}")
+                            print(f"      - Font: {span_font}, Size: {span_size}")
+                            if is_heading_style:
+                                print("      - VERDICT: ACCEPTED as a heading.")
+                                y_pos = b['bbox'][1]
+                                headings.append({'text': line_text, 'page': page_num, 'y': y_pos})
+                            else:
+                                print("      - VERDICT: REJECTED (font style/size does not qualify).")
+        except TimeoutException:
+            print(f"    [WARNING] Page {page_num+1} is too complex and timed out. Skipping page content.")
+            signal.alarm(0)
+            continue
                             
     unique_headings = list({h['text']: h for h in headings}.values())
     print(f"  [DEBUG] Total unique headings accepted: {len(unique_headings)}")
@@ -127,7 +151,6 @@ def main():
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name = subjects.get(subject_id, "Unknown Subject")
         pdf_filename = f"{chapter_name}.pdf"
-        # --- TYPO FIX: PDF_ROOT_FOLDER was misspelled ---
         pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
         
         print(f"\nProcessing: {pdf_path}")
@@ -148,7 +171,6 @@ def main():
                 match = re.match(r"^\s*([\d\.]+)\s*[\s\.:;\-–]+(.*)$", heading_full)
                 if match and content:
                     topic_num = match.group(1)
-                    print(f"    [DEBUG] Preparing to update DB for topic: {topic_num}")
                     cursor.execute(
                         "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
                         (content, chapter_id, topic_num)
