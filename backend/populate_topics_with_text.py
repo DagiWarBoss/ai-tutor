@@ -18,7 +18,7 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 # --- THIS IS THE TUNING KNOB ---
 # If the script is missing headings, try lowering this number (e.g., to 7 or 6).
 # If the script is including too much junk, try raising this number.
-SCORE_THRESHOLD = 8
+SCORE_THRESHOLD = 5
 # ==============================================================================
 
 def log(msg: str):
