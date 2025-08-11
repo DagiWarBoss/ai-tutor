@@ -14,36 +14,33 @@ CSV_PATH = "extracted_headings_all_subjects.csv"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
+# ==============================================================================
+# --- THIS IS THE TUNING KNOB ---
+# If the script is missing headings, try lowering this number (e.g., to 7 or 6).
+# If the script is including too much junk, try raising this number.
+SCORE_THRESHOLD = 8
+# ==============================================================================
+
 def log(msg: str):
     print(msg, flush=True)
 
 @dataclass
 class TopicAnchor:
-    topic_number: str
-    title: str
-    page: int
-    y: float
+    topic_number: str; title: str; page: int; y: float
     content: str = field(default="")
 
 def load_topics_from_csv(csv_path: str, chapter_file: str, subject: str, class_name: str) -> List[dict]:
-    """
-    --- THIS FUNCTION IS NOW FIXED ---
-    It now correctly filters by subject and class to avoid confusion between chapters
-    with the same name (like Thermodynamics).
-    """
     topics = []
     try:
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if row.get("chapter_file") == chapter_file and row.get("subject") == subject and row.get("class") == class_name:
+                if (row.get("chapter_file", "").strip() == chapter_file.strip() and 
+                    row.get("subject", "").strip() == subject.strip() and 
+                    row.get("class", "").strip() == class_name.strip()):
                     topics.append(row)
-    except FileNotFoundError:
-        log(f"[ERROR] CSV file not found at: {csv_path}")
-    
-    # Sort topics numerically based on the 'heading_number' key
-    if topics:
-        topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
+    except FileNotFoundError: log(f"[ERROR] CSV file not found at: {csv_path}")
+    if topics: topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
     return topics
 
 def get_most_common_font_info(doc: fitz.Document) -> tuple[float, bool]:
@@ -72,7 +69,6 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
             if "lines" in b:
                 for l in b["lines"]:
                     if not l["spans"]: continue
-                    
                     line_text = "".join(s["text"] for s in l["spans"]).strip()
                     first_span = l["spans"][0]
                     span_size = round(first_span["size"])
@@ -85,15 +81,15 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
                     score_margin = 1 if x_pos < 100 else 0
                     score = score_num + score_bold + score_size + score_margin
                     
-                    if score >= 5: # Print any line that at least matches the chapter number
+                    if score >= 5:
                         log(f"  [SCORE] Text: '{line_text[:80]}...'")
                         log(f"    - Score: {score} (Number: {score_num}, Bold: {score_bold}, Size: {score_size}, Margin: {score_margin})")
-                        if score >= 8:
-                            log("    - Verdict: ACCEPTED")
+                        if score >= SCORE_THRESHOLD:
+                            log(f"    - Verdict: ACCEPTED (Score >= {SCORE_THRESHOLD})")
                         else:
-                            log("    - Verdict: REJECTED (Score < 8)")
+                            log(f"    - Verdict: REJECTED (Score < {SCORE_THRESHOLD})")
                     
-                    if score >= 8:
+                    if score >= SCORE_THRESHOLD:
                         topic_num_match = re.match(r"^\s*([\d\.]+)", line_text)
                         if topic_num_match:
                             topic_num = topic_num_match.group(1).strip('.')
@@ -158,14 +154,12 @@ def main():
             log(f"  [WARNING] PDF file not found. Skipping.")
             continue
         
-        # Load the checklist of topics, now correctly filtered by subject and class
         topics_from_csv = load_topics_from_csv(CSV_PATH, pdf_filename, subject_name, class_number)
         if not topics_from_csv:
             log(f"  [WARNING] No topics found in CSV for this specific chapter. Skipping.")
             continue
             
         doc = fitz.open(pdf_path)
-        # Get the main chapter number from the first topic in the correctly filtered CSV
         chapter_num_from_csv = topics_from_csv[0]['heading_number'].split('.')[0]
         
         anchors = find_anchors_with_scoring(doc, chapter_num_from_csv)
