@@ -32,7 +32,7 @@ def render_pages_with_pymupdf(pdf_path: str, zoom: float = 4.0) -> List[Tuple[in
     images = []
     for i in range(len(doc)):
         page = doc.load_page(i)
-        mat = fitz.Matrix(zoom, zoom)  # 72dpi * zoom => ~288dpi
+        mat = fitz.Matrix(zoom, zoom)  # ~288dpi at 4.0
         pix = page.get_pixmap(matrix=mat, alpha=False)
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
         images.append((i, img))
@@ -79,12 +79,10 @@ def detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) -> Lis
             uniq.append(a)
     return uniq
 
-def best_child_matches_in_window(
-    window_lines: List[Dict],
-    csv_children: List[Tuple[str, str]],
-    left_margin_px: int = 300,
-    fuzzy_threshold: int = 85
-) -> List[Dict]:
+def best_child_matches_in_window(window_lines: List[Dict],
+                                 csv_children: List[Tuple[str, Optional[str]]],
+                                 left_margin_px: int = 300,
+                                 fuzzy_threshold: int = 85) -> List[Dict]:
     cands = [ln for ln in window_lines if ln["x"] <= left_margin_px]
     results = []
     for child_num, child_title in csv_children:
@@ -155,14 +153,12 @@ def segment_window(lines_sorted: List[Dict], start_anchor: Dict, end_anchor: Opt
             segments[start_anchor["number"]] = merged
     return segments
 
-def ocr_extract_topics(
-    pdf_path: str,
-    csv_children_map: Optional[Dict[str, List[Tuple[str, str]]]] = None,
-    tesseract_bin: Optional[str] = None,
-    lang: str = "eng",
-    zoom: float = 4.0,
-    fuzzy_threshold: int = 85
-) -> Dict[str, str]:
+def ocr_extract_topics(pdf_path: str,
+                       csv_children_map: Optional[Dict[str, List[Tuple[str, Optional[str]]]]] = None,
+                       tesseract_bin: Optional[str] = None,
+                       lang: str = "eng",
+                       zoom: float = 4.0,
+                       fuzzy_threshold: int = 85) -> Dict[str, str]:
     set_tesseract_path(tesseract_bin)
     images = render_pages_with_pymupdf(pdf_path, zoom=zoom)
 
@@ -199,12 +195,7 @@ def ocr_extract_topics(
         child_specs = csv_children_map.get(parent["number"], []) if csv_children_map else []
         child_anchors = []
         if child_specs:
-            child_anchors = best_child_matches_in_window(
-                window_lines,
-                csv_children=child_specs,
-                left_margin_px=300,
-                fuzzy_threshold=fuzzy_threshold
-            )
+            child_anchors = best_child_matches_in_window(window_lines, child_specs, left_margin_px=300, fuzzy_threshold=fuzzy_threshold)
 
         segs = segment_window(lines_sorted, parent, end_parent, child_anchors)
         segments.update(segs)
