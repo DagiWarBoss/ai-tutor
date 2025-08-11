@@ -29,14 +29,14 @@ TARGET_CHAPTER = "Some Basic Concepts Of Chemistry"
 # OCR fallback thresholds
 OCR_MIN_HEADINGS_THRESHOLD = 8          # if fewer than this from text-layer
 OCR_CHILD_MIN_FOUND = 2                 # if child slicing finds fewer than this, consider OCR
-OCR_ZOOM = 4.0                          # 72dpi * 4 => ~288dpi
+OCR_ZOOM = 4.0                          # ~288dpi
 OCR_LANG = "eng"
 OCR_FUZZY_THRESHOLD = 85
 
 # If Tesseract not on PATH, set full path
 TESSERACT_EXE = None  # e.g., r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){1,5})\b[^\w]*(.*)$")
+HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){0,5})\b[^\w]*(.*)$")
 SPACE_RE = re.compile(r"\s+")
 
 load_dotenv()
@@ -85,7 +85,6 @@ def build_children_by_parent(csv_list: List[Tuple[str, Optional[str]]]) -> Dict[
             parent = ".".join(parts[:-1]).strip(".")
             if parent:
                 by_parent.setdefault(parent, []).append((n, t))
-    # Keep stable order
     for k in by_parent:
         by_parent[k].sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
     return by_parent
@@ -324,12 +323,10 @@ def split_children_in_parent_window(window_lines: List[Dict], children_specs: Li
         if len(tnorm) < min_title_len:
             continue
         best = None
-        # first pass: contains
         for ln in cands:
             if tnorm in _norm_txt(ln["text"]):
                 best = ln
                 break
-        # fallback: startswith half
         if best is None:
             half = tnorm[: max(5, len(tnorm)//2)]
             for ln in cands:
@@ -530,11 +527,10 @@ def ocr_extract_topics(pdf_path: str, csv_children_map: Optional[Dict[str, List[
 
 # ---------------- main ----------------
 def main():
-    log("[BOOT] Fill single chapter with 3-pass pipeline (text-layer, span-slicing, OCR fallback)")
+    log("[BOOT] Fill single chapter (text-layer -> span-slicing -> OCR fallback)")
     if TESSERACT_EXE:
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_EXE
 
-    # Resolve chapter
     chapter_file = f"{TARGET_CHAPTER}.pdf"
     pdf_path = os.path.join(PDF_ROOT_FOLDER, TARGET_SUBJECT, TARGET_CLASS, chapter_file)
     log(f"[INFO] Target: {TARGET_SUBJECT} | {TARGET_CLASS} | {TARGET_CHAPTER}")
@@ -546,11 +542,9 @@ def main():
 
     # Load CSV for chapter
     csv_list = load_csv_for_chapter(CSV_PATH, TARGET_SUBJECT, TARGET_CLASS, chapter_file)
-    if not csv_list:
-        log("[WARN] No CSV rows found for this chapter.")
     children_map = build_children_by_parent(csv_list)
 
-    # DB connect and fetch chapter id
+    # DB connect and chapter resolve
     try:
         conn, cursor = connect_db()
     except Exception as e:
@@ -570,7 +564,7 @@ def main():
         cursor.close(); conn.close()
         return
 
-    # Fetch DB topic numbers
+    # DB key set
     try:
         db_set = fetch_db_topic_numbers(cursor, chapter_id)
         log(f"[INFO] DB has {len(db_set)} topics for this chapter.")
@@ -581,12 +575,12 @@ def main():
 
     # Pass 1: text-layer extraction
     topic_map, anchors = extract_textlayer_topics(pdf_path)
-    log(f"[P1] Text-layer extracted topics: {len(topic_map)} | anchors={len(anchors)}")
+    log(f"[P1] Text-layer extracted: {len(topic_map)} topics | anchors={len(anchors)}")
 
     updated_topic_numbers: Set[str] = set()
     updated = 0
 
-    # Write parent topics from pass 1
+    # Write parents from pass 1
     for num, content in topic_map.items():
         if not content or len(content.strip()) < 20:
             continue
@@ -595,6 +589,9 @@ def main():
             if rowcount > 0:
                 updated += 1
                 updated_topic_numbers.add(num.strip().strip("."))
+            else:
+                # Log diagnostic once per number
+                log(f"[P1][MISS] No row for topic_number='{num}'.")
         except Exception as e:
             log(f"[P1][ERROR] Update parent {num}: {e}")
 
@@ -606,26 +603,22 @@ def main():
             conn.rollback()
     log(f"[P1] Parent updates written: {updated}")
 
-    # Pass 2: span-based child slicing (no OCR)
+    # Pass 2: span-based child slicing
     child_updates = 0
     if anchors:
-        # Build parent windows
         parent_pts = [(a.number.strip("."), a.page, a.y) for a in anchors]
         parent_pts.sort(key=lambda t: (t[1], t[2]))
-        # Lines once
         all_lines = span_lines_for_doc(pdf_path)
         for idx, (pnum, ppage, py) in enumerate(parent_pts):
             child_specs = children_map.get(pnum, [])
             if not child_specs:
                 continue
-            # Only slice parents that got updated (have content)
             if pnum not in updated_topic_numbers:
                 continue
             if idx + 1 < len(parent_pts):
                 _, n_ppage, n_py = parent_pts[idx+1]
             else:
                 n_ppage, n_py = None, None
-            # collect lines in window
             window_lines = []
             for ln in all_lines:
                 after = (ln["page"] > ppage) or (ln["page"] == ppage and ln["y"] > py)
@@ -642,6 +635,8 @@ def main():
                         child_updates += 1
                         updated_topic_numbers.add(cnum)
                         log(f"[P2][SPLIT] child {cnum} <- parent {pnum} (len={len(content)})")
+                    else:
+                        log(f"[P2][MISS] No row for child {cnum}")
                 except Exception as e:
                     log(f"[P2][ERROR] child {cnum}: {e}")
         if child_updates:
@@ -652,7 +647,7 @@ def main():
                 conn.rollback()
     log(f"[P2] Child updates from span slicing: {child_updates}")
 
-    # Decide OCR fallback
+    # Fallback decision
     need_ocr = False
     if len(topic_map) < OCR_MIN_HEADINGS_THRESHOLD:
         log(f"[OCR] Trigger: text-layer extracted only {len(topic_map)} (<{OCR_MIN_HEADINGS_THRESHOLD})")
@@ -693,7 +688,7 @@ def main():
                 conn.rollback()
         log(f"[P3] OCR updates written: {ocr_updates}")
 
-    # Final missing list for this chapter
+    # Final missing list
     try:
         db_set_after = fetch_db_topic_numbers(cursor, chapter_id)
         missing = sorted(db_set_after - updated_topic_numbers, key=lambda s: [int(x) for x in s.split(".") if x.isdigit()])
