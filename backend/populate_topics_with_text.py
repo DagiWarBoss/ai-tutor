@@ -1,6 +1,6 @@
 import os
 import re
-import csv
+import pandas as pd  # Using pandas for robust CSV handling
 from dataclasses import dataclass, field
 from typing import List
 import fitz  # PyMuPDF
@@ -14,34 +14,17 @@ CSV_PATH = "extracted_headings_all_subjects.csv"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
+# --- This is the Tuning Knob ---
+# If the script is missing headings, try lowering this number (e.g., to 7 or 6).
+SCORE_THRESHOLD = 8
+
 def log(msg: str):
     print(msg, flush=True)
 
 @dataclass
 class TopicAnchor:
-    topic_number: str
-    title: str
-    page: int
-    y: float
+    topic_number: str; title: str; page: int; y: float
     content: str = field(default="")
-
-def load_topics_from_csv(csv_path: str, chapter_file: str, subject: str, class_name: str) -> List[dict]:
-    """Loads the ground-truth list of topics for a specific chapter from the master CSV."""
-    topics = []
-    try:
-        with open(csv_path, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if (row.get("chapter_file", "").strip() == chapter_file.strip() and 
-                    row.get("subject", "").strip() == subject.strip() and 
-                    row.get("class", "").strip() == class_name.strip()):
-                    topics.append(row)
-    except FileNotFoundError:
-        log(f"[ERROR] CSV file not found at: {csv_path}")
-    
-    if topics:
-        topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
-    return topics
 
 def get_most_common_font_info(doc: fitz.Document) -> tuple[float, bool]:
     font_counts = Counter()
@@ -69,7 +52,6 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
             if "lines" in b:
                 for l in b["lines"]:
                     if not l["spans"]: continue
-                    
                     line_text = "".join(s["text"] for s in l["spans"]).strip()
                     first_span = l["spans"][0]
                     span_size = round(first_span["size"])
@@ -85,12 +67,12 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
                     if score >= 5:
                         log(f"  [SCORE] Text: '{line_text[:80]}...'")
                         log(f"    - Score: {score} (Number: {score_num}, Bold: {score_bold}, Size: {score_size}, Margin: {score_margin})")
-                        if score >= 8:
-                            log("    - Verdict: ACCEPTED")
+                        if score >= SCORE_THRESHOLD:
+                            log(f"    - Verdict: ACCEPTED (Score >= {SCORE_THRESHOLD})")
                         else:
-                            log("    - Verdict: REJECTED (Score < 8)")
+                            log(f"    - Verdict: REJECTED (Score < {SCORE_THRESHOLD})")
                     
-                    if score >= 8:
+                    if score >= SCORE_THRESHOLD:
                         topic_num_match = re.match(r"^\s*([\d\.]+)", line_text)
                         if topic_num_match:
                             topic_num = topic_num_match.group(1).strip('.')
@@ -138,6 +120,15 @@ def main():
         log(f"[ERROR] Could not connect to Supabase: {e}")
         return
         
+    try:
+        # --- ROBUST CSV LOADING WITH PANDAS ---
+        log(f"[INFO] Loading master topic list from {CSV_PATH}...")
+        master_df = pd.read_csv(CSV_PATH)
+        master_df = master_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x) # Trim whitespace
+    except FileNotFoundError:
+        log(f"[ERROR] CSV file not found at: {CSV_PATH}")
+        return
+
     cursor.execute("SELECT id, name, class_number, subject_id FROM chapters")
     chapters_in_db = cursor.fetchall()
     cursor.execute("SELECT id, name FROM subjects")
@@ -155,15 +146,22 @@ def main():
             log(f"  [WARNING] PDF file not found. Skipping.")
             continue
         
-        # --- FIX: Changed 'class_name' to the correct variable 'class_number' ---
-        topics_from_csv = load_topics_from_csv(CSV_PATH, pdf_filename, subject_name, class_number)
+        # --- ROBUST TOPIC FILTERING WITH PANDAS ---
+        chapter_topics_df = master_df[
+            (master_df['chapter_file'] == pdf_filename) &
+            (master_df['subject'] == subject_name) &
+            (master_df['class'] == class_number)
+        ]
         
-        if not topics_from_csv:
+        if chapter_topics_df.empty:
             log(f"  [WARNING] No topics found in CSV for this specific chapter. Skipping.")
             continue
             
+        topics_from_csv = chapter_topics_df.to_dict('records')
+        
         doc = fitz.open(pdf_path)
-        chapter_num_from_csv = topics_from_csv[0]['heading_number'].split('.')[0]
+        chapter_num_from_csv = str(topics_from_csv[0]['chapter_number'])
+        log(f"  [DEBUG] Using chapter number '{chapter_num_from_csv}' for regex.")
         
         anchors = find_anchors_with_scoring(doc, chapter_num_from_csv)
         all_text_blocks = extract_all_text_blocks(doc)
