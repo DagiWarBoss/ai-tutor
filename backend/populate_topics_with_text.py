@@ -31,14 +31,18 @@ class TopicAnchor:
     y: float
     content: str = field(default="")
 
-def load_topics_from_csv(csv_path: str, chapter_file: str) -> List[Tuple[str, str]]:
+def load_topics_from_csv(csv_path: str, subject: str, class_name: str, chapter_file: str) -> List[Tuple[str, str]]:
     """Loads the ground-truth list of topics for a specific chapter from the master CSV."""
     topics = []
-    with open(csv_path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row["chapter_file"] == chapter_file:
-                topics.append((row["heading_number"], row["heading_text"]))
+    try:
+        with open(csv_path, newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row["subject"] == subject and row["class"] == class_name and row["chapter_file"] == chapter_file:
+                    topics.append((row["heading_number"], row["heading_text"]))
+    except FileNotFoundError:
+        log(f"[ERROR] CSV file not found at: {csv_path}")
+    
     # Sort topics numerically
     topics.sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
     return topics
@@ -53,6 +57,7 @@ def extract_all_text_blocks(doc: fitz.Document) -> List[TextBlock]:
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             x0, y0, x1, y1, block_text_raw, _, _ = b
+            # Filter out headers and footers based on position
             if y0 < top_margin or y1 > bottom_margin:
                 continue
             text = block_text_raw.strip().replace('\n', ' ')
@@ -67,7 +72,6 @@ def find_anchor_locations(topics_from_csv: List[Tuple[str, str]], all_blocks: Li
     
     for topic_num, topic_title in topics_from_csv:
         # Search for the best match for the topic title in all text blocks
-        # scorer=fuzz.WRatio is good for matching sentences
         best_match = process.extractOne(topic_title, block_texts, scorer=fuzz.WRatio, score_cutoff=85)
         
         if best_match:
@@ -91,15 +95,13 @@ def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextB
     """Assigns all text that appears between two anchors to the first anchor."""
     for i, current_anchor in enumerate(anchors):
         content_blocks = []
-        # Define the start and end boundaries for this anchor's content
         start_page, start_y = current_anchor.page, current_anchor.y
+        # Define the end boundary as the start of the next anchor
         end_page = anchors[i+1].page if i + 1 < len(anchors) else float('inf')
         end_y = anchors[i+1].y if i + 1 < len(anchors) else float('inf')
 
         for block in all_blocks:
-            # Check if the block is physically located after the current anchor...
             is_after_start = block.page > start_page or (block.page == start_page and block.y > start_y)
-            # ...and before the next anchor.
             is_before_end = block.page < end_page or (block.page == end_page and block.y < end_y)
 
             if is_after_start and is_before_end:
@@ -133,7 +135,7 @@ def main():
             log(f"  [WARNING] PDF file not found. Skipping.")
             continue
         
-        # 1. Load the ground-truth list of topics for this chapter
+        # 1. Load the ground-truth list of topics for this chapter from the master CSV
         topics_from_csv = load_topics_from_csv(CSV_PATH, subject_name, class_number, pdf_filename)
         if not topics_from_csv:
             log("  [WARNING] No topics found in CSV for this chapter. Skipping.")
