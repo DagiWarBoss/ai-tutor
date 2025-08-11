@@ -30,16 +30,7 @@ CHAPTER_NUMBER_FALLBACK_MAP = {
     "Electromagnetic Induction.pdf": "6", "Alternating Current.pdf": "7", "Electromagnetic Waves.pdf": "8",
     "Ray Optics.pdf": "9", "Wave Optics.pdf": "10", "Dual Nature Of Radiation And Matter.pdf": "11",
     "Atoms.pdf": "12", "Nuclei.pdf": "13", "SemiConductor Electronics.pdf": "14",
-    "Sets.pdf": "1", "Relations And Functions.pdf": "2", "Trigonometric Functions.pdf": "3",
-    "Complex Numbers And Quadratic Equations.pdf": "4", "Linear Inequalities.pdf": "5",
-    "Permutations And Combinations.pdf": "6", "Binomial Theorem.pdf": "7", "Sequences And Series.pdf": "8",
-    "Straight Lines.pdf": "9", "Conic Sections.pdf": "10", "Introduction to Three Dimensional Geometry.pdf": "11",
-    "Limits And Derivatives.pdf": "12", "Statistics.pdf": "13", "Probability.pdf": "14",
-    "Relations And Functions.pdf": "1", "Inverse Trigonometric Functions.pdf": "2", "Matrices.pdf": "3",
-    "Determinants.pdf": "4", "Contunuity And Differentiability.pdf": "5", "Application Of Derivatives.pdf": "6",
-    "Integrals.pdf": "7", "Application Of Integrals.pdf": "8", "Differential Equations.pdf": "9",
-    "Vector Algebra.pdf": "10", "Three Dimensional Geometry.pdf": "11", "Linear Programming.pdf": "12",
-    "Probability.pdf": "13", "Proofs In Mathematics.pdf": "14", "Infinite Series.pdf": "15",
+    # Add Maths chapters here if needed
 }
 
 def get_most_common_font_info(doc):
@@ -62,7 +53,6 @@ def extract_text_and_headings_with_location(doc, chapter_number):
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+([A-Za-z].*)$")
     headings, all_text_blocks = [], []
 
-    print("  [DEBUG] Scanning document pages for text blocks and potential headings...")
     for page_num, page in enumerate(doc):
         page_height = page.rect.height
         top_margin = page_height * 0.10
@@ -90,7 +80,6 @@ def extract_text_and_headings_with_location(doc, chapter_number):
                         span_is_bold = "bold" in span_font.lower()
                         is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
                         
-                        # --- DEBUG STATEMENTS FOR HEADING DETECTION ---
                         print(f"\n    [DEBUG] Regex Matched Line: '{line_text}'")
                         print(f"      - Font: {span_font}, Size: {span_size}")
                         if is_heading_style:
@@ -138,7 +127,9 @@ def main():
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name = subjects.get(subject_id, "Unknown Subject")
         pdf_filename = f"{chapter_name}.pdf"
-        pdf_path = os.path.join(PDF_ROOT_FLDER, subject_name, class_number, pdf_filename)
+        # --- TYPO FIX: PDF_ROOT_FOLDER was misspelled ---
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
+        
         print(f"\nProcessing: {pdf_path}")
         if not os.path.exists(pdf_path):
             print(f"  [WARNING] PDF file not found. Skipping.")
@@ -152,14 +143,18 @@ def main():
             topic_content_map = map_text_to_headings(headings, all_text)
             
             print(f"  - Found {len(topic_content_map)} topics with text to update.")
+            update_count = 0
             for heading_full, content in topic_content_map.items():
                 match = re.match(r"^\s*([\d\.]+)\s*[\s\.:;\-–]+(.*)$", heading_full)
                 if match and content:
                     topic_num = match.group(1)
+                    print(f"    [DEBUG] Preparing to update DB for topic: {topic_num}")
                     cursor.execute(
                         "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
                         (content, chapter_id, topic_num)
                     )
+                    update_count += 1
+            print(f"  [DEBUG] Sent {update_count} update commands to the database.")
         else:
             print(f"  [ERROR] Filename '{pdf_filename}' not found in the hardcoded map. Skipping.")
         doc.close()
