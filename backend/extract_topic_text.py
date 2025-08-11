@@ -19,9 +19,7 @@ def timeout_handler(signum, frame):
     raise TimeoutException()
 signal.signal(signal.SIGALRM, timeout_handler)
 
-# This map is the single source of truth for chapter numbers.
 CHAPTER_NUMBER_FALLBACK_MAP = {
-    # This map should be complete based on your CSV and files.
     "Some Basic Concepts Of Chemistry.pdf": "1", "Structure Of Atom.pdf": "2",
     "Classification Of Elements And Periodicity.pdf": "3", "Chemical Bonding And Molecular Structure.pdf": "4",
     "Thermodynamics.pdf": "5", "Equilibrium.pdf": "6", "Redox Reactions.pdf": "7",
@@ -57,7 +55,6 @@ def get_most_common_font_info(doc):
                             key = (round(s["size"]), "bold" in s["font"].lower())
                             font_counts[key] += 1
         except TimeoutException:
-            print(f"    [WARNING] Font analysis on page {page_num+1} timed out.")
             signal.alarm(0)
             continue
     if not font_counts: return (10.0, False)
@@ -73,9 +70,7 @@ def extract_text_and_headings_with_location(doc, chapter_number):
         try:
             signal.alarm(PAGE_PROCESS_TIMEOUT)
             page_height = page.rect.height
-            top_margin = page_height * 0.10
-            bottom_margin = page_height * 0.90
-            
+            top_margin, bottom_margin = page_height * 0.10, page_height * 0.90
             blocks = page.get_text("blocks", sort=True)
             styled_blocks = page.get_text("dict", flags=fitz.TEXT_INHIBIT_SPACES)["blocks"]
             signal.alarm(0)
@@ -83,10 +78,8 @@ def extract_text_and_headings_with_location(doc, chapter_number):
             for b in blocks:
                 x0, y0, x1, y1, block_text_raw, _, _ = b
                 block_text = block_text_raw.strip().replace('\n', ' ')
-                if block_text and (y0 < top_margin or y1 > bottom_margin):
-                    continue
-                if block_text:
-                    all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y0})
+                if block_text and (y0 < top_margin or y1 > bottom_margin): continue
+                if block_text: all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y0})
             
             for b in styled_blocks:
                 if "lines" in b:
@@ -147,12 +140,12 @@ def main():
     chapters_to_process = cursor.fetchall()
     cursor.execute("SELECT id, name FROM subjects")
     subjects = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
+    print(f"[DEBUG] Found {len(chapters_to_process)} chapters in the database to process.")
 
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name = subjects.get(subject_id, "Unknown Subject")
         pdf_filename = f"{chapter_name}.pdf"
         pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
-        
         print(f"\nProcessing: {pdf_path}")
         if not os.path.exists(pdf_path):
             print(f"  [WARNING] PDF file not found. Skipping.")
@@ -171,6 +164,7 @@ def main():
                 match = re.match(r"^\s*([\d\.]+)\s*[\s\.:;\-–]+(.*)$", heading_full)
                 if match and content:
                     topic_num = match.group(1)
+                    print(f"    [DEBUG] Preparing to update DB for topic: {topic_num}")
                     cursor.execute(
                         "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
                         (content, chapter_id, topic_num)
