@@ -42,7 +42,8 @@ def load_topics_from_csv(csv_path: str, chapter_file: str, subject: str, class_n
         log(f"[ERROR] CSV file not found at: {csv_path}")
     
     # Sort topics numerically based on the 'heading_number' key
-    topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
+    if topics:
+        topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
     return topics
 
 def get_most_common_font_info(doc: fitz.Document) -> tuple[float, bool]:
