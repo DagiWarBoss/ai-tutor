@@ -26,6 +26,11 @@ class TopicAnchor:
     content: str = field(default="")
 
 def load_topics_from_csv(csv_path: str, chapter_file: str, subject: str, class_name: str) -> List[dict]:
+    """
+    --- THIS FUNCTION IS NOW FIXED ---
+    It now correctly filters by subject and class to avoid confusion between chapters
+    with the same name (like Thermodynamics).
+    """
     topics = []
     try:
         with open(csv_path, newline="", encoding="utf-8") as f:
@@ -36,6 +41,7 @@ def load_topics_from_csv(csv_path: str, chapter_file: str, subject: str, class_n
     except FileNotFoundError:
         log(f"[ERROR] CSV file not found at: {csv_path}")
     
+    # Sort topics numerically based on the 'heading_number' key
     topics.sort(key=lambda t: [int(x) for x in t['heading_number'].split(".") if x.isdigit()])
     return topics
 
@@ -72,19 +78,13 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
                     span_is_bold = "bold" in first_span["font"].lower()
                     x_pos = l["bbox"][0]
 
-                    # --- Scoring System ---
-                    score = 0
-                    match = heading_num_pattern.match(line_text)
-                    
-                    score_num = 5 if match else 0
+                    score_num = 5 if heading_num_pattern.match(line_text) else 0
                     score_bold = 3 if span_is_bold and not body_is_bold else 0
                     score_size = 2 if span_size > body_font_size else 0
                     score_margin = 1 if x_pos < 100 else 0
                     score = score_num + score_bold + score_size + score_margin
                     
-                    # --- DEBUG BLOCK ---
-                    # Print scores for any line that gets at least some points to reduce noise
-                    if score >= 5:
+                    if score >= 5: # Print any line that at least matches the chapter number
                         log(f"  [SCORE] Text: '{line_text[:80]}...'")
                         log(f"    - Score: {score} (Number: {score_num}, Bold: {score_bold}, Size: {score_size}, Margin: {score_margin})")
                         if score >= 8:
@@ -92,7 +92,7 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
                         else:
                             log("    - Verdict: REJECTED (Score < 8)")
                     
-                    if score >= 8: # The threshold for a line to be considered a heading
+                    if score >= 8:
                         topic_num_match = re.match(r"^\s*([\d\.]+)", line_text)
                         if topic_num_match:
                             topic_num = topic_num_match.group(1).strip('.')
@@ -100,7 +100,6 @@ def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[T
                             y_pos = b['bbox'][1]
                             anchors.append(TopicAnchor(topic_number=topic_num, title=title, page=page_num, y=y_pos))
                             
-    # Deduplicate and sort the found anchors
     unique_anchors = list({a.topic_number: a for a in sorted(anchors, key=lambda x: x.title, reverse=True)}.values())
     unique_anchors.sort(key=lambda a: (a.page, a.y))
     return unique_anchors
@@ -158,27 +157,22 @@ def main():
             log(f"  [WARNING] PDF file not found. Skipping.")
             continue
         
-        # Load the checklist of topics for this chapter from the CSV
+        # Load the checklist of topics, now correctly filtered by subject and class
         topics_from_csv = load_topics_from_csv(CSV_PATH, pdf_filename, subject_name, class_number)
         if not topics_from_csv:
-            log(f"  [WARNING] No topics found in CSV for '{pdf_filename}'. Skipping.")
+            log(f"  [WARNING] No topics found in CSV for this specific chapter. Skipping.")
             continue
             
         doc = fitz.open(pdf_path)
-        # Get the main chapter number from the first topic in the CSV
+        # Get the main chapter number from the first topic in the correctly filtered CSV
         chapter_num_from_csv = topics_from_csv[0]['heading_number'].split('.')[0]
         
-        # 1. Find all possible headings using the scoring system
         anchors = find_anchors_with_scoring(doc, chapter_num_from_csv)
-        
-        # 2. Extract all text blocks from the PDF
         all_text_blocks = extract_all_text_blocks(doc)
         doc.close()
         
-        # 3. Assign content between the found anchors
         topics_with_content = assign_content_to_anchors(anchors, all_text_blocks)
         
-        # 4. Update the database
         update_count = 0
         for topic in topics_with_content:
             if topic.content:
