@@ -6,6 +6,7 @@ from typing import List, Tuple, Dict
 import fitz  # PyMuPDF
 import psycopg2
 from dotenv import load_dotenv
+from collections import Counter
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
@@ -41,9 +42,74 @@ def load_topics_from_csv(csv_path: str, chapter_file: str) -> List[Tuple[str, st
                     topics.append((row["heading_number"], row["heading_text"]))
     except FileNotFoundError:
         log(f"[ERROR] CSV file not found at: {csv_path}")
-    
     topics.sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
     return topics
+
+def get_most_common_font_info(doc: fitz.Document) -> Tuple[float, bool]:
+    """Finds the font size and bold status of the main body text."""
+    font_counts = Counter()
+    for page_num, page in enumerate(doc):
+        if page_num > 5: break
+        blocks = page.get_text("dict")["blocks"]
+        for b in blocks:
+            if "lines" in b:
+                for l in b["lines"]:
+                    for s in l["spans"]:
+                        key = (round(s["size"]), "bold" in s["font"].lower())
+                        font_counts[key] += len(s.get("text", ""))
+    if not font_counts: return (10.0, False)
+    return font_counts.most_common(1)[0][0]
+
+def find_anchors_with_scoring(doc: fitz.Document, chapter_number: str) -> List[TopicAnchor]:
+    """
+    --- NEW HEURISTIC SCORING LOGIC ---
+    Finds headings by scoring each line based on multiple text and style features.
+    """
+    anchors = []
+    body_font_size, body_is_bold = get_most_common_font_info(doc)
+    heading_num_pattern = re.compile(rf"^\s*({chapter_number}(?:\.\d+){0,5})")
+
+    for page_num, page in enumerate(doc):
+        styled_blocks = page.get_text("dict")["blocks"]
+        for b in styled_blocks:
+            if "lines" in b:
+                for l in b["lines"]:
+                    if not l["spans"]: continue
+                    
+                    line_text = "".join(s["text"] for s in l["spans"]).strip()
+                    first_span = l["spans"][0]
+                    span_size = round(first_span["size"])
+                    span_is_bold = "bold" in first_span["font"].lower()
+                    x_pos = l["bbox"][0]
+
+                    # --- Scoring System ---
+                    score = 0
+                    match = heading_num_pattern.match(line_text)
+                    if match:
+                        score += 5
+                    if span_is_bold and not body_is_bold:
+                        score += 3
+                    if span_size > body_font_size:
+                        score += 2
+                    if x_pos < 100: # Is it near the left margin?
+                        score += 1
+                    
+                    # --- Threshold ---
+                    if score >= 8: # A high score means it's very likely a heading
+                        topic_num_match = re.match(r"^\s*([\d\.]+)", line_text)
+                        if topic_num_match:
+                            topic_num = topic_num_match.group(1).strip('.')
+                            title = re.sub(r"^\s*[\d\.]+\s*", "", line_text).strip()
+                            y_pos = b['bbox'][1]
+                            
+                            log(f"  [ANCHOR] Found '{line_text}' on page {page_num + 1} (Score: {score})")
+                            anchors.append(TopicAnchor(topic_number=topic_num, title=title, page=page_num, y=y_pos))
+                            
+    # Deduplicate and sort
+    unique_anchors = list({a.topic_number: a for a in sorted(anchors, key=lambda x: x.title, reverse=True)}.values())
+    unique_anchors.sort(key=lambda a: (a.page, a.y))
+    return unique_anchors
+
 
 def extract_all_text_blocks(doc: fitz.Document) -> List[TextBlock]:
     """Extracts all text blocks from a PDF with their locations, filtering headers/footers."""
@@ -60,33 +126,6 @@ def extract_all_text_blocks(doc: fitz.Document) -> List[TextBlock]:
                 all_blocks.append(TextBlock(text=text, page=page_num, y=y0))
     return all_blocks
 
-def find_anchors_by_number(topics_from_csv: List[Tuple[str, str]], all_blocks: List[TextBlock]) -> List[TopicAnchor]:
-    """
-    --- NEW "NUMBER-FIRST" LOGIC ---
-    Finds topic locations by matching the topic NUMBER first.
-    """
-    anchors = []
-    
-    # Create a map of all text blocks that look like topic numbers
-    number_block_map: Dict[str, TextBlock] = {}
-    topic_num_pattern = re.compile(r"^\d{1,2}(\.\d{1,2})*$")
-    for block in all_blocks:
-        # Check if the block's text is a plausible topic number
-        if topic_num_pattern.match(block.text):
-            number_block_map[block.text] = block
-
-    # For each topic from our trusted CSV, find its corresponding number block
-    for topic_num, topic_title in topics_from_csv:
-        if topic_num in number_block_map:
-            found_block = number_block_map[topic_num]
-            log(f"  [ANCHOR] Found number '{topic_num}' on page {found_block.page + 1}")
-            anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
-        else:
-            log(f"  [ANCHOR-FAIL] Could not find block for number: {topic_num} ('{topic_title}')")
-
-    anchors.sort(key=lambda a: (a.page, a.y))
-    return anchors
-
 def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextBlock]):
     """Assigns all text that appears between two anchors to the first anchor."""
     for i, current_anchor in enumerate(anchors):
@@ -94,21 +133,11 @@ def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextB
         start_page, start_y = current_anchor.page, current_anchor.y
         end_page = anchors[i+1].page if i + 1 < len(anchors) else float('inf')
         end_y = anchors[i+1].y if i + 1 < len(anchors) else float('inf')
-
         for block in all_blocks:
             is_after_start = block.page > start_page or (block.page == start_page and block.y > start_y)
             is_before_end = block.page < end_page or (block.page == end_page and block.y < end_y)
             if is_after_start and is_before_end:
                 content_blocks.append(block.text)
-        
-        # Also, check if the title is in the first block after the number
-        if content_blocks:
-            first_content_block = content_blocks[0].lower()
-            topic_title_cleaned = re.sub(r'[^a-z0-9\s]', '', current_anchor.title.lower())
-            if topic_title_cleaned in first_content_block:
-                # Remove the title itself from the content
-                content_blocks[0] = content_blocks[0].replace(current_anchor.title, "").strip()
-
         current_anchor.content = "\n".join(content_blocks).strip()
     return anchors
 
@@ -143,12 +172,19 @@ def main():
             continue
             
         doc = fitz.open(pdf_path)
+        chapter_num_from_csv = topics_from_csv[0][0].split('.')[0]
+        
+        # 1. Find all possible headings using the scoring system
+        anchors = find_anchors_with_scoring(doc, chapter_num_from_csv)
+        
+        # 2. Extract all text blocks from the PDF
         all_text_blocks = extract_all_text_blocks(doc)
         doc.close()
         
-        anchors = find_anchors_by_number(topics_from_csv, all_text_blocks)
+        # 3. Assign content between the found anchors
         topics_with_content = assign_content_to_anchors(anchors, all_text_blocks)
         
+        # 4. Update the database
         update_count = 0
         for topic in topics_with_content:
             if topic.content:
