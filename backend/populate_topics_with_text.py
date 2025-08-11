@@ -2,11 +2,10 @@ import os
 import re
 import csv
 from dataclasses import dataclass, field
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 import fitz  # PyMuPDF
 import psycopg2
 from dotenv import load_dotenv
-from rapidfuzz import process, fuzz
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
@@ -31,14 +30,14 @@ class TopicAnchor:
     y: float
     content: str = field(default="")
 
-def load_topics_from_csv(csv_path: str, subject: str, class_name: str, chapter_file: str) -> List[Tuple[str, str]]:
+def load_topics_from_csv(csv_path: str, chapter_file: str) -> List[Tuple[str, str]]:
     """Loads the ground-truth list of topics for a specific chapter from the master CSV."""
     topics = []
     try:
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                if row.get("subject") == subject and row.get("class") == class_name and row.get("chapter_file") == chapter_file:
+                if row.get("chapter_file") == chapter_file:
                     topics.append((row["heading_number"], row["heading_text"]))
     except FileNotFoundError:
         log(f"[ERROR] CSV file not found at: {csv_path}")
@@ -61,46 +60,32 @@ def extract_all_text_blocks(doc: fitz.Document) -> List[TextBlock]:
                 all_blocks.append(TextBlock(text=text, page=page_num, y=y0))
     return all_blocks
 
-def find_anchor_locations(topics_from_csv: List[Tuple[str, str]], all_blocks: List[TextBlock]) -> List[TopicAnchor]:
+def find_anchors_by_number(topics_from_csv: List[Tuple[str, str]], all_blocks: List[TextBlock]) -> List[TopicAnchor]:
     """
-    --- IMPROVED LOGIC ---
-    Finds topic locations by first looking for title + number together,
-    then by looking for the title and checking the preceding block for the number.
+    --- NEW "NUMBER-FIRST" LOGIC ---
+    Finds topic locations by matching the topic NUMBER first.
     """
     anchors = []
-    block_texts = [block.text for block in all_blocks]
     
+    # Create a map of all text blocks that look like topic numbers
+    number_block_map: Dict[str, TextBlock] = {}
+    topic_num_pattern = re.compile(r"^\d{1,2}(\.\d{1,2})*$")
+    for block in all_blocks:
+        # Check if the block's text is a plausible topic number
+        if topic_num_pattern.match(block.text):
+            number_block_map[block.text] = block
+
+    # For each topic from our trusted CSV, find its corresponding number block
     for topic_num, topic_title in topics_from_csv:
-        # Method 1: Check for blocks that contain both the number and title (fuzzy match)
-        combined_pattern = f"{topic_num} {topic_title}"
-        best_match_combined = process.extractOne(combined_pattern, block_texts, scorer=fuzz.WRatio, score_cutoff=90)
-        
-        if best_match_combined:
-            match_text, score, index = best_match_combined
-            found_block = all_blocks[index]
-            log(f"  [ANCHOR] Found '{topic_title}' (Combined) on page {found_block.page + 1} (Score: {score:.0f})")
+        if topic_num in number_block_map:
+            found_block = number_block_map[topic_num]
+            log(f"  [ANCHOR] Found number '{topic_num}' on page {found_block.page + 1}")
             anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
-            continue # Move to the next topic
-
-        # Method 2 (Fallback): Find the title, then check the block before it for the number
-        best_match_title = process.extractOne(topic_title, block_texts, scorer=fuzz.WRatio, score_cutoff=85)
-        if best_match_title:
-            match_text, score, index = best_match_title
-            
-            # Check the preceding block
-            if index > 0:
-                prev_block = all_blocks[index - 1]
-                # Check if the previous block text IS the topic number
-                if prev_block.text.strip() == topic_num and prev_block.page == all_blocks[index].page:
-                    found_block = prev_block # The anchor is the number block
-                    log(f"  [ANCHOR] Found '{topic_title}' (Split) on page {found_block.page + 1} (Score: {score:.0f})")
-                    anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
-                    continue
-
-        log(f"  [ANCHOR-FAIL] Could not find a reliable location for topic: {topic_num} {topic_title}")
+        else:
+            log(f"  [ANCHOR-FAIL] Could not find block for number: {topic_num} ('{topic_title}')")
 
     anchors.sort(key=lambda a: (a.page, a.y))
-    return list({(a.page, a.y): a for a in anchors}.values()) # Deduplicate
+    return anchors
 
 def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextBlock]):
     """Assigns all text that appears between two anchors to the first anchor."""
@@ -116,7 +101,15 @@ def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextB
             if is_after_start and is_before_end:
                 content_blocks.append(block.text)
         
-        current_anchor.content = "\n".join(content_blocks)
+        # Also, check if the title is in the first block after the number
+        if content_blocks:
+            first_content_block = content_blocks[0].lower()
+            topic_title_cleaned = re.sub(r'[^a-z0-9\s]', '', current_anchor.title.lower())
+            if topic_title_cleaned in first_content_block:
+                # Remove the title itself from the content
+                content_blocks[0] = content_blocks[0].replace(current_anchor.title, "").strip()
+
+        current_anchor.content = "\n".join(content_blocks).strip()
     return anchors
 
 def main():
@@ -144,16 +137,16 @@ def main():
             log(f"  [WARNING] PDF file not found. Skipping.")
             continue
         
-        topics_from_csv = load_topics_from_csv(CSV_PATH, subject_name, class_number, pdf_filename)
+        topics_from_csv = load_topics_from_csv(CSV_PATH, pdf_filename)
         if not topics_from_csv:
-            log("  [WARNING] No topics found in CSV for this chapter. Skipping.")
+            log(f"  [WARNING] No topics found in CSV for '{pdf_filename}'. Skipping.")
             continue
             
         doc = fitz.open(pdf_path)
         all_text_blocks = extract_all_text_blocks(doc)
         doc.close()
         
-        anchors = find_anchor_locations(topics_from_csv, all_text_blocks)
+        anchors = find_anchors_by_number(topics_from_csv, all_text_blocks)
         topics_with_content = assign_content_to_anchors(anchors, all_text_blocks)
         
         update_count = 0
@@ -165,7 +158,8 @@ def main():
                 )
                 update_count += 1
         
-        conn.commit()
+        if update_count > 0:
+            conn.commit()
         log(f"  [SUCCESS] Updated {update_count} of {len(topics_from_csv)} topics for this chapter.")
     
     cursor.close()
