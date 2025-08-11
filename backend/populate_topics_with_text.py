@@ -14,9 +14,11 @@ CSV_PATH = "extracted_headings_all_subjects.csv"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
-# --- This is the Tuning Knob ---
+# ==============================================================================
+# --- THIS IS THE TUNING KNOB ---
 # If the script is missing headings, try lowering this number (e.g., to 7 or 6).
 SCORE_THRESHOLD = 8
+# ==============================================================================
 
 def log(msg: str):
     print(msg, flush=True)
@@ -123,7 +125,7 @@ def main():
     try:
         # --- ROBUST CSV LOADING WITH PANDAS ---
         log(f"[INFO] Loading master topic list from {CSV_PATH}...")
-        master_df = pd.read_csv(CSV_PATH)
+        master_df = pd.read_csv(CSV_PATH, dtype=str) # Read all columns as strings
         master_df = master_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x) # Trim whitespace
     except FileNotFoundError:
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
