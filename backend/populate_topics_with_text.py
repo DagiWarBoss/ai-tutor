@@ -1,48 +1,16 @@
 import os
 import re
 import csv
-from collections import Counter
-from dataclasses import dataclass
-from typing import List, Tuple, Dict, Optional, Set
-
+from dataclasses import dataclass, field
+from typing import List, Tuple, Dict
 import fitz  # PyMuPDF
 import psycopg2
 from dotenv import load_dotenv
-from PIL import Image
-import pytesseract
-from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
-import warnings
+from rapidfuzz import process, fuzz
 
-# Ignore the XML parsed as HTML warning, as we are now handling it.
-warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
-
-try:
-    from rapidfuzz import fuzz
-    HAVE_FUZZ = True
-except ImportError:
-    HAVE_FUZZ = False
-
-# ---------------- Config ----------------
+# --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 CSV_PATH = "extracted_headings_all_subjects.csv"
-
-TARGET_SUBJECT = "Chemistry"
-TARGET_CLASS = "Class 11"
-TARGET_CHAPTER = "Some Basic Concepts Of Chemistry"
-
-# OCR fallback thresholds
-OCR_MIN_HEADINGS_THRESHOLD = 8
-OCR_CHILD_MIN_FOUND = 2
-OCR_ZOOM = 4.0
-OCR_LANG = "eng"
-OCR_FUZZY_THRESHOLD = 85
-
-# If Tesseract not on PATH, set full path
-TESSERACT_EXE = None  # e.g., r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-HEADING_NUMBER_RE = re.compile(r"^\s*(\d+(?:\.\d+){0,5})\b[^\w]*(.*)$")
-SPACE_RE = re.compile(r"\s+")
-
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
@@ -50,279 +18,154 @@ def log(msg: str):
     print(msg, flush=True)
 
 @dataclass
-class HeadingAnchor:
-    number: str
+class TextBlock:
+    text: str
+    page: int
+    y: float
+
+@dataclass
+class TopicAnchor:
+    topic_number: str
     title: str
     page: int
     y: float
-    x: float
-    size: float
-    bold: bool
+    content: str = field(default="")
 
-# ---------------- CSV helpers ----------------
-def load_csv_for_chapter(csv_path: str, subject: str, class_: str, chapter_file: str) -> List[Tuple[str, str]]:
-    rows: List[Tuple[str, str]] = []
-    if not os.path.exists(csv_path):
-        log(f"[ERROR] CSV not found: {csv_path}")
-        return rows
+def load_topics_from_csv(csv_path: str, chapter_file: str) -> List[Tuple[str, str]]:
+    """Loads the ground-truth list of topics for a specific chapter from the master CSV."""
+    topics = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        for r in reader:
-            if r["subject"] == subject and r["class"] == class_ and r["chapter_file"] == chapter_file:
-                hn = (r["heading_number"] or "").strip().strip(".")
-                ht = r.get("heading_text", "")
-                if hn and ht:
-                    rows.append((hn, ht))
-    rows.sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
-    log(f"[CSV] Loaded {len(rows)} headings for {subject} | {class_} | {chapter_file}")
-    return rows
+        for row in reader:
+            if row["chapter_file"] == chapter_file:
+                topics.append((row["heading_number"], row["heading_text"]))
+    # Sort topics numerically
+    topics.sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
+    return topics
 
-def build_children_by_parent(csv_list: List[Tuple[str, str]]) -> Dict[str, List[Tuple[str, str]]]:
-    by_parent: Dict[str, List[Tuple[str, str]]] = {}
-    for n, t in csv_list:
-        parts = n.split(".")
-        if len(parts) >= 2:
-            parent = ".".join(parts[:-1]).strip(".")
-            if parent:
-                by_parent.setdefault(parent, []).append((n, t))
-    for k in by_parent:
-        by_parent[k].sort(key=lambda t: [int(x) for x in t[0].split(".") if x.isdigit()])
-    return by_parent
-
-# ---------------- DB helpers ----------------
-def connect_db():
-    log("[INFO] Connecting to Supabase/Postgres...")
-    conn = psycopg2.connect(SUPABASE_URI)
-    conn.autocommit = False
-    return conn, conn.cursor()
-
-def fetch_chapter(cursor, subject_name: str, class_number: str, chapter_name: str):
-    cursor.execute("SELECT id FROM subjects WHERE name = %s", (subject_name,))
-    s = cursor.fetchone()
-    if not s: return None, None
-    subject_id = s[0]
-    cursor.execute("SELECT id FROM chapters WHERE name = %s AND class_number = %s AND subject_id = %s",
-                   (chapter_name, class_number, subject_id))
-    ch = cursor.fetchone()
-    return subject_id, ch
-
-def fetch_db_topic_numbers(cursor, chapter_id: int) -> Set[str]:
-    cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s", (chapter_id,))
-    return {r[0] for r in cursor.fetchall()}
-
-def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) -> int:
-    cursor.execute(
-        "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-        (content, chapter_id, topic_number),
-    )
-    return cursor.rowcount
-
-# ---------------- text-layer extractor ----------------
-def get_body_font(doc) -> Tuple[float, bool]:
-    font_counts = Counter()
-    for page_idx, page in enumerate(doc):
-        if page_idx > 10: break
-        data = page.get_text("dict")
-        for block in data.get("blocks", []):
-            for line in block.get("lines", []):
-                for span in line.get("spans", []):
-                    size = round(span.get("size", 10))
-                    font = span.get("font", "").lower()
-                    key = (size, "bold" in font)
-                    font_counts[key] += len(span.get("text", ""))
-    if not font_counts: return 10.0, False
-    (size, bold), _ = font_counts.most_common(1)[0]
-    return float(size), bool(bold)
-
-def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) -> List[HeadingAnchor]:
-    anchors: List[HeadingAnchor] = []
-    for page_idx, page in enumerate(doc):
-        pdata = page.get_text("dict")
-        for block in pdata.get("blocks", []):
-            for line in block.get("lines", []):
-                spans = line.get("spans", [])
-                if not spans: continue
-                text = "".join(s.get("text", "") for s in spans).strip()
-                m = HEADING_NUMBER_RE.match(text)
-                if not m: continue
-                first_span = spans[0]
-                size = float(first_span.get("size", 10.0))
-                font = first_span.get("font", "").lower()
-                bold = "bold" in font
-                x0, y0, _, _ = line.get("bbox", [0, 0, 0, 0])
-                title = (m.group(2) or "").strip()
-                is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold))
-                if is_heading:
-                    number = m.group(1).strip(". ")
-                    anchors.append(HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold))
-    return anchors
-
-def dedupe_and_sort(anchors: List[HeadingAnchor]) -> List[HeadingAnchor]:
-    seen, uniq = set(), []
-    for a in anchors:
-        key = (a.number, a.page, round(a.y, 1))
-        if key not in seen:
-            seen.add(key)
-            uniq.append(a)
-    uniq.sort(key=lambda h: (h.page, h.y))
-    return uniq
-
-def collect_blocks(doc) -> List[Dict]:
-    blocks_all = []
-    for page_idx, page in enumerate(doc):
+def extract_all_text_blocks(doc: fitz.Document) -> List[TextBlock]:
+    """Extracts all text blocks from a PDF with their locations, filtering headers/footers."""
+    all_blocks = []
+    for page_num, page in enumerate(doc):
+        page_height = page.rect.height
+        top_margin = page_height * 0.10
+        bottom_margin = page_height * 0.90
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
-            text = (b[4] or "").strip().replace("\n", " ")
+            x0, y0, x1, y1, block_text_raw, _, _ = b
+            if y0 < top_margin or y1 > bottom_margin:
+                continue
+            text = block_text_raw.strip().replace('\n', ' ')
             if text:
-                blocks_all.append({"page": page_idx, "x": b[0], "y": b[1], "text": text})
-    return blocks_all
+                all_blocks.append(TextBlock(text=text, page=page_num, y=y0))
+    return all_blocks
 
-def segment_between_anchors(blocks: List[Dict], anchors: List[HeadingAnchor]) -> Dict[str, str]:
-    topic_text: Dict[str, str] = {}
-    heading_texts = {a.title for a in anchors}
-
-    for i, a in enumerate(anchors):
-        start_page, start_y = a.page, a.y
-        end_page, end_y = (anchors[i + 1].page, anchors[i + 1].y) if i + 1 < len(anchors) else (float("inf"), float("inf"))
-        
-        chunks = []
-        for blk in blocks:
-            after = blk["page"] > start_page or (blk["page"] == start_page and blk["y"] > start_y)
-            before = blk["page"] < end_page or (blk["page"] == end_page and blk["y"] < end_y)
-            if after and before:
-                # Check if the block text is another heading's title
-                if blk["text"] in heading_texts: continue
-                chunks.append(blk["text"])
-        
-        merged = "\n".join(chunks).strip()
-        topic_text[a.number] = merged
-    return topic_text
-
-def extract_textlayer_topics(doc) -> Tuple[Dict[str, str], List[HeadingAnchor]]:
-    body_size, body_bold = get_body_font(doc)
-    anchors = extract_numbered_headings_by_layout(doc, body_size, body_bold)
-    anchors = dedupe_and_sort(anchors)
-    if not anchors: return {}, []
+def find_anchor_locations(topics_from_csv: List[Tuple[str, str]], all_blocks: List[TextBlock]) -> List[TopicAnchor]:
+    """Uses fuzzy matching to find the exact location of each topic from the CSV in the PDF text."""
+    anchors = []
+    block_texts = [block.text for block in all_blocks]
     
-    blocks = collect_blocks(doc)
-    topic_map = segment_between_anchors(blocks, anchors)
-    return topic_map, anchors
-
-# ---------------- OCR fallback ----------------
-def _norm_txt(s: str) -> str:
-    s = (s or "").replace("’","'").replace("“",'"').replace("”",'"').replace("–","-")
-    return SPACE_RE.sub(" ", s.strip()).lower()
-
-def hocr_to_lines(hocr_html: str, page_index: int) -> List[Dict]:
-    # --- FIX: Using the recommended XML parser ---
-    soup = BeautifulSoup(hocr_html, "xml")
-    lines = []
-    for line in soup.find_all(class_="ocr_line"):
-        title = line.get("title", "")
-        m = re.search(r"bbox (\d+) (\d+) (\d+) (\d+)", title)
-        if not m: continue
-        x0, y0, x1, y1 = map(int, m.groups())
-        words = [w.get_text(strip=True) for w in line.find_all(class_="ocrx_word")]
-        text = SPACE_RE.sub(" ", " ".join(words).strip())
-        if text:
-            lines.append({"page": page_index, "x": x0, "y": y0, "text": text})
-    lines.sort(key=lambda r: (r["page"], r["y"], r["x"]))
-    return lines
-
-# ... (Other OCR and span-slicing functions would go here, but keeping it simpler for now) ...
-
-# ---------------- 'Search and Rescue' function ----------------
-def find_missing_by_text_search(missing_specs: List[Tuple[str, str]], all_blocks: List[Dict]) -> List[HeadingAnchor]:
-    """Pass 4: Tries to find missing headings by searching for their titles in the raw text."""
-    found_anchors: List[HeadingAnchor] = []
-    
-    for spec_num, spec_title in missing_specs:
-        if not spec_title or len(spec_title) < 5: continue
+    for topic_num, topic_title in topics_from_csv:
+        # Search for the best match for the topic title in all text blocks
+        # scorer=fuzz.WRatio is good for matching sentences
+        best_match = process.extractOne(topic_title, block_texts, scorer=fuzz.WRatio, score_cutoff=85)
         
-        norm_title = _norm_txt(spec_title)
-        
-        for i, block in enumerate(all_blocks):
-            if norm_title in _norm_txt(block['text']):
-                found_anchors.append(HeadingAnchor(number=spec_num, title=spec_title, page=block['page'], y=block['y'], x=block['x'], size=0, bold=False))
-                break 
-                
-    log(f"[P4][SEARCH] Rescued {len(found_anchors)} anchors by text search.")
-    return found_anchors
+        if best_match:
+            match_text, score, index = best_match
+            found_block = all_blocks[index]
+            
+            # Additional check: the topic number should also be in the matched block
+            if topic_num in found_block.text:
+                log(f"  [ANCHOR] Found '{topic_title}' on page {found_block.page + 1} (Score: {score:.0f})")
+                anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
+            else:
+                log(f"  [ANCHOR-WARN] Found title '{topic_title}' but missing number '{topic_num}'. Skipping.")
+        else:
+            log(f"  [ANCHOR-FAIL] Could not find a reliable location for topic: {topic_num} {topic_title}")
 
-# ---------------- main ----------------
+    # Sort the found anchors by their position in the document
+    anchors.sort(key=lambda a: (a.page, a.y))
+    return anchors
+
+def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextBlock]):
+    """Assigns all text that appears between two anchors to the first anchor."""
+    for i, current_anchor in enumerate(anchors):
+        content_blocks = []
+        # Define the start and end boundaries for this anchor's content
+        start_page, start_y = current_anchor.page, current_anchor.y
+        end_page = anchors[i+1].page if i + 1 < len(anchors) else float('inf')
+        end_y = anchors[i+1].y if i + 1 < len(anchors) else float('inf')
+
+        for block in all_blocks:
+            # Check if the block is physically located after the current anchor...
+            is_after_start = block.page > start_page or (block.page == start_page and block.y > start_y)
+            # ...and before the next anchor.
+            is_before_end = block.page < end_page or (block.page == end_page and block.y < end_y)
+
+            if is_after_start and is_before_end:
+                content_blocks.append(block.text)
+        
+        current_anchor.content = "\n".join(content_blocks)
+    return anchors
+
 def main():
-    log("[BOOT] Fill single chapter (2-Pass: Text-layer -> Search)")
-    
-    chapter_file = f"{TARGET_CHAPTER}.pdf"
-    pdf_path = os.path.join(PDF_ROOT_FOLDER, TARGET_SUBJECT, TARGET_CLASS, chapter_file)
-    log(f"[INFO] Target: {TARGET_SUBJECT} | {TARGET_CLASS} | {TARGET_CHAPTER}")
-    if not os.path.exists(pdf_path):
-        log("[ERROR] PDF not found.")
-        return
-
-    csv_list = load_csv_for_chapter(CSV_PATH, TARGET_SUBJECT, TARGET_CLASS, chapter_file)
-    if not csv_list: return
-
     try:
-        conn, cursor = connect_db()
-        _, chapter_row = fetch_chapter(cursor, TARGET_SUBJECT, TARGET_CLASS, TARGET_CHAPTER)
-        if not chapter_row:
-            log("[ERROR] Chapter row not found in DB.")
-            return
-        chapter_id = chapter_row[0]
-        log(f"[INFO] DB chapter_id: {chapter_id}")
+        conn = psycopg2.connect(SUPABASE_URI)
+        cursor = conn.cursor()
     except Exception as e:
-        log(f"[ERROR] DB setup failed: {e}")
+        log(f"[ERROR] Could not connect to Supabase: {e}")
         return
-
-    # Pass 1: text-layer extraction
-    doc = fitz.open(pdf_path)
-    topic_map, anchors = extract_textlayer_topics(doc)
-    log(f"[P1] Text-layer extracted: {len(topic_map)} topics")
-    
-    updated_count = 0
-    updated_topic_numbers = set()
-
-    for num, content in topic_map.items():
-        if content and len(content.strip()) > 20:
-            if update_topic_text(cursor, chapter_id, num, content) > 0:
-                updated_count += 1
-                updated_topic_numbers.add(num)
-    
-    conn.commit()
-    log(f"[P1] Updates committed: {updated_count}")
-    
-    # Pass 4 (simplified from Pass 4): Search and Rescue
-    csv_topic_numbers = {num for num, _ in csv_list}
-    still_missing_nums = csv_topic_numbers - updated_topic_numbers
-    
-    if still_missing_nums:
-        log(f"[P4][SEARCH] Attempting to rescue {len(still_missing_nums)} missing topics by text search...")
-        missing_specs = [(num, title) for num, title in csv_list if num in still_missing_nums]
-        all_blocks = collect_blocks(doc)
         
-        rescued_anchors = find_missing_by_text_search(missing_specs, all_blocks)
-        
-        if rescued_anchors:
-            # Combine original and rescued anchors and re-segment the whole document
-            final_anchors = dedupe_and_sort(anchors + rescued_anchors)
-            log(f"[P4] Re-segmenting with {len(final_anchors)} total anchors...")
-            final_map = segment_between_anchors(all_blocks, final_anchors)
-            
-            rescued_updates = 0
-            for num, content in final_map.items():
-                if num in still_missing_nums and content and len(content.strip()) > 20:
-                    if update_topic_text(cursor, chapter_id, num, content) > 0:
-                        rescued_updates += 1
-            
-            if rescued_updates > 0:
-                conn.commit()
-                log(f"[P4] Search-and-rescue updates committed: {rescued_updates}")
+    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters")
+    chapters_in_db = cursor.fetchall()
+    cursor.execute("SELECT id, name FROM subjects")
+    subjects_map = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
 
-    doc.close()
+    for chapter_id, chapter_name, class_number, subject_id in chapters_in_db:
+        subject_name = subjects_map.get(subject_id)
+        if not subject_name: continue
+
+        pdf_filename = f"{chapter_name}.pdf"
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
+        
+        log(f"\n--- Processing: {pdf_filename} ---")
+        if not os.path.exists(pdf_path):
+            log(f"  [WARNING] PDF file not found. Skipping.")
+            continue
+        
+        # 1. Load the ground-truth list of topics for this chapter
+        topics_from_csv = load_topics_from_csv(CSV_PATH, subject_name, class_number, pdf_filename)
+        if not topics_from_csv:
+            log("  [WARNING] No topics found in CSV for this chapter. Skipping.")
+            continue
+            
+        # 2. Extract all text blocks from the PDF
+        doc = fitz.open(pdf_path)
+        all_text_blocks = extract_all_text_blocks(doc)
+        doc.close()
+        
+        # 3. Find the locations of our topics in the PDF
+        anchors = find_anchor_locations(topics_from_csv, all_text_blocks)
+        
+        # 4. Assign all text between the found anchors
+        topics_with_content = assign_content_to_anchors(anchors, all_text_blocks)
+        
+        # 5. Update the database
+        update_count = 0
+        for topic in topics_with_content:
+            if topic.content:
+                cursor.execute(
+                    "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
+                    (topic.content, chapter_id, topic.topic_number)
+                )
+                update_count += 1
+        
+        conn.commit()
+        log(f"  [SUCCESS] Updated {update_count} of {len(topics_from_csv)} topics for this chapter.")
+    
     cursor.close()
     conn.close()
-    log("[DONE] Chapter fill complete.")
+    log("\n[COMPLETE] Script finished.")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
