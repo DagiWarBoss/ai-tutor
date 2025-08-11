@@ -26,12 +26,15 @@ TARGET_SUBJECT = "Chemistry"
 TARGET_CLASS = "Class 11"
 TARGET_CHAPTER = "Some Basic Concepts Of Chemistry"
 
-# OCR fallback thresholds
-OCR_MIN_HEADINGS_THRESHOLD = 8          # if fewer than this from text-layer
-OCR_CHILD_MIN_FOUND = 2                 # if child slicing finds fewer than this, consider OCR
-OCR_ZOOM = 4.0                          # ~288dpi
+# Fallback thresholds
+OCR_MIN_HEADINGS_THRESHOLD = 8           # if text-layer < this
+OCR_CHILD_MIN_FOUND = 2                  # if span child slicing < this
+OCR_ZOOM = 4.0                           # ~288dpi
 OCR_LANG = "eng"
-OCR_FUZZY_THRESHOLD = 85
+OCR_FUZZY_THRESHOLD = 80                 # fuzzy threshold for children
+MERGE_Y_THRESH = 6.0                     # px distance to merge adjacent bold lines
+LEFT_MARGIN_MAIN = 90                    # left margin for parents
+LEFT_MARGIN_CHILD = 140                  # accept mildly indented child subheads
 
 # If Tesseract not on PATH, set full path
 TESSERACT_EXE = None  # e.g., r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -104,8 +107,10 @@ def fetch_chapter(cursor, subject_name: str, class_number: str, chapter_name: st
     if not s:
         return None, None
     subject_id = s[0]
-    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters WHERE name = %s AND class_number = %s AND subject_id = %s",
-                   (chapter_name, class_number, subject_id))
+    cursor.execute(
+        "SELECT id, name, class_number, subject_id FROM chapters WHERE name = %s AND class_number = %s AND subject_id = %s",
+        (chapter_name, class_number, subject_id),
+    )
     ch = cursor.fetchone()
     return subject_id, ch
 
@@ -121,12 +126,6 @@ def update_topic_text(cursor, chapter_id: int, topic_number: str, content: str) 
         (content, chapter_id, topic_number),
     )
     return cursor.rowcount
-
-
-def diagnose_topic_numbers(cursor, chapter_id: int):
-    cursor.execute("SELECT topic_number FROM topics WHERE chapter_id = %s ORDER BY topic_number", (chapter_id,))
-    nums = [r[0] for r in cursor.fetchall()]
-    log(f"[DIAG] DB topic_numbers: {nums}")
 
 
 # ---------------- text-layer extractor ----------------
@@ -192,7 +191,7 @@ def extract_numbered_headings_by_layout(doc, body_size: float, body_bold: bool) 
                 bold = "bold" in font
                 x0, y0, x1, y1 = line.get("bbox", [0, 0, 0, 0])
                 title = (m.group(2) or "").strip()
-                is_heading = (x0 < 90) and ((size >= body_size + 1.0) or (bold and not body_bold))
+                is_heading = (x0 < LEFT_MARGIN_MAIN) and ((size >= body_size + 1.0) or (bold and not body_bold))
                 if is_heading:
                     number = m.group(1).strip(". ")
                     anchors.append(HeadingAnchor(number=number, title=title, page=page_idx, y=float(y0), x=float(x0), size=size, bold=bold))
@@ -280,11 +279,12 @@ def extract_textlayer_topics(pdf_path: str) -> Tuple[Dict[str, str], List[Headin
     return topic_map, anchors
 
 
-# ---------------- span-based child slicing ----------------
+# ---------------- span-based child slicing (improved) ----------------
 def _norm_txt(s: str) -> str:
     s = (s or "")
     s = s.replace("’","'").replace("‘","'").replace("“",'"').replace("”",'"')
     s = s.replace("–","-").replace("—","-").replace("·",".").replace("•"," ")
+    s = s.replace("−","-")
     return SPACE_RE.sub(" ", s.strip()).lower()
 
 
@@ -313,8 +313,47 @@ def span_lines_for_doc(pdf_path: str) -> List[Dict]:
     return lines
 
 
-def split_children_in_parent_window(window_lines: List[Dict], children_specs: List[Tuple[str, Optional[str]]], left_margin=95, min_title_len=5) -> Dict[str, str]:
-    cands = [ln for ln in window_lines if ln["bold"] and ln["x"] < left_margin]
+def merge_bold_runs(lines: List[Dict], left_margin=LEFT_MARGIN_CHILD, y_thresh=MERGE_Y_THRESH) -> List[Dict]:
+    merged = []
+    cur = None
+    for ln in lines:
+        if not (ln["bold"] and ln["x"] <= left_margin):
+            continue
+        if cur is None:
+            cur = dict(ln)
+            continue
+        same_line = (ln["page"] == cur["page"]) and (abs(ln["y"] - cur["y"]) <= y_thresh)
+        if same_line:
+            cur["text"] = (cur["text"] + " " + ln["text"]).strip()
+            cur["y"] = min(cur["y"], ln["y"])
+        else:
+            merged.append(cur)
+            cur = dict(ln)
+    if cur:
+        merged.append(cur)
+    return merged
+
+
+def score_match(title_norm: str, cand_norm: str) -> float:
+    if not HAVE_FUZZ:
+        score = 100.0 if title_norm in cand_norm else 0.0
+        if score == 0.0 and cand_norm.startswith(title_norm[: max(6, len(title_norm)//2)]):
+            score = 85.0
+        return score
+    pr = fuzz.partial_ratio(title_norm, cand_norm)
+    ts = fuzz.token_set_ratio(title_norm, cand_norm)
+    # slight boost for prefix agreement
+    prefix = 1.0 if cand_norm.startswith(title_norm[:8]) else 0.0
+    return 0.6*pr + 0.4*ts + 2.0*prefix
+
+
+def split_children_in_parent_window(window_lines: List[Dict],
+                                    children_specs: List[Tuple[str, Optional[str]]],
+                                    left_margin=LEFT_MARGIN_CHILD,
+                                    min_title_len=5,
+                                    fuzzy_threshold=OCR_FUZZY_THRESHOLD) -> Dict[str, str]:
+    # merge bold-left runs to handle wraps
+    bold_runs = merge_bold_runs(window_lines, left_margin=left_margin, y_thresh=MERGE_Y_THRESH)
     found = []
     for cnum, ctitle in children_specs:
         if not cnum or not ctitle:
@@ -323,24 +362,28 @@ def split_children_in_parent_window(window_lines: List[Dict], children_specs: Li
         if len(tnorm) < min_title_len:
             continue
         best = None
-        for ln in cands:
-            if tnorm in _norm_txt(ln["text"]):
+        best_score = -1.0
+        for ln in bold_runs:
+            cand_norm = _norm_txt(ln["text"])
+            sc = score_match(tnorm, cand_norm)
+            if sc > best_score:
+                best_score = sc
                 best = ln
-                break
-        if best is None:
-            half = tnorm[: max(5, len(tnorm)//2)]
-            for ln in cands:
-                if _norm_txt(ln["text"]).startswith(half):
-                    best = ln
-                    break
-        if best:
-            found.append({"number": cnum.strip("."), "page": best["page"], "y": best["y"]})
+        if best and best_score >= fuzzy_threshold:
+            found.append({"number": cnum.strip("."), "page": best["page"], "y": best["y"], "score": best_score})
     if not found:
         return {}
-    found.sort(key=lambda a: (a["page"], a["y"]))
+    # dedupe by number and y-bucket
+    seen = set()
+    uniq = []
+    for a in sorted(found, key=lambda r: (r["page"], r["y"])):
+        key = (a["number"], a["page"], int(a["y"]/2))
+        if key not in seen:
+            seen.add(key)
+            uniq.append(a)
     out: Dict[str, str] = {}
-    for i, a in enumerate(found):
-        end = found[i+1] if i+1 < len(found) else None
+    for i, a in enumerate(uniq):
+        end = uniq[i+1] if i+1 < len(uniq) else None
         chunks = []
         for ln in window_lines:
             after = (ln["page"] > a["page"]) or (ln["page"] == a["page"] and ln["y"] > a["y"])
@@ -357,11 +400,12 @@ def split_children_in_parent_window(window_lines: List[Dict], children_specs: Li
     return out
 
 
-# ---------------- OCR fallback ----------------
-def ocr_render_pages(pdf_path: str, zoom: float) -> List[Tuple[int, Image.Image]]:
+# ---------------- OCR helpers ----------------
+def ocr_render_pages(pdf_path: str, zoom: float, page_indices: Optional[List[int]] = None) -> List[Tuple[int, Image.Image]]:
     doc = fitz.open(pdf_path)
     images = []
-    for i in range(len(doc)):
+    pages = page_indices if page_indices is not None else list(range(len(doc)))
+    for i in pages:
         page = doc.load_page(i)
         mat = fitz.Matrix(zoom, zoom)
         pix = page.get_pixmap(matrix=mat, alpha=False)
@@ -394,7 +438,7 @@ def hocr_to_lines(hocr_html: str, page_index: int) -> List[Dict]:
     return lines
 
 
-def ocr_detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) -> List[Dict]:
+def ocr_detect_numbered_parents(lines: List[Dict], left_margin_px: int = LEFT_MARGIN_MAIN) -> List[Dict]:
     anchors = []
     for ln in lines:
         m = HEADING_NUMBER_RE.match(ln["text"])
@@ -414,22 +458,27 @@ def ocr_detect_numbered_parents(lines: List[Dict], left_margin_px: int = 260) ->
     return uniq
 
 
-def ocr_best_child_matches_in_window(window_lines: List[Dict], csv_children: List[Tuple[str, Optional[str]]], left_margin_px: int = 300, fuzzy_threshold: int = 85) -> List[Dict]:
-    cands = [ln for ln in window_lines if ln["x"] <= left_margin_px]
+def ocr_best_child_matches_in_window(window_lines: List[Dict],
+                                     csv_children: List[Tuple[str, Optional[str]]],
+                                     left_margin_px: int = LEFT_MARGIN_CHILD,
+                                     fuzzy_threshold: int = OCR_FUZZY_THRESHOLD) -> List[Dict]:
+    # Convert generic OCR lines to pseudo span-lines for reuse of merge/score
+    cands = [{"page": ln["page"], "x": ln["x"], "y": ln["y"], "text": ln["text"], "bold": True} for ln in window_lines if ln["x"] <= left_margin_px]
+    bold_runs = merge_bold_runs(cands, left_margin=left_margin_px, y_thresh=MERGE_Y_THRESH)
     results = []
     for child_num, child_title in csv_children:
         if not child_num or not child_title:
             continue
         target = _norm_txt(child_title)
-        best, best_score = None, -1
-        for ln in cands:
+        if len(target) < 5:
+            continue
+        best = None
+        best_score = -1.0
+        for ln in bold_runs:
             cand_norm = _norm_txt(ln["text"])
-            if HAVE_FUZZ:
-                score = fuzz.partial_ratio(target, cand_norm)
-            else:
-                score = 100 if target in cand_norm else (90 if cand_norm.startswith(target[: max(5, len(target)//2)]) else 0)
-            if score > best_score:
-                best_score = score
+            sc = score_match(target, cand_norm)
+            if sc > best_score:
+                best_score = sc
                 best = ln
         if best and best_score >= fuzzy_threshold:
             results.append({"type": "csv_child", "number": child_num.strip("."), "page": best["page"], "y": best["y"], "text": best["text"], "score": best_score})
@@ -487,10 +536,16 @@ def ocr_segment_window(lines_sorted: List[Dict], start_anchor: Dict, end_anchor:
     return segments
 
 
-def ocr_extract_topics(pdf_path: str, csv_children_map: Optional[Dict[str, List[Tuple[str, Optional[str]]]]], tesseract_bin: Optional[str], lang: str, zoom: float, fuzzy_threshold: int) -> Dict[str, str]:
+def ocr_extract_topics(pdf_path: str,
+                       csv_children_map: Optional[Dict[str, List[Tuple[str, Optional[str]]]]],
+                       tesseract_bin: Optional[str],
+                       lang: str,
+                       zoom: float,
+                       fuzzy_threshold: int,
+                       page_indices: Optional[List[int]] = None) -> Dict[str, str]:
     if tesseract_bin:
         pytesseract.pytesseract.tesseract_cmd = tesseract_bin
-    images = ocr_render_pages(pdf_path, zoom=zoom)
+    images = ocr_render_pages(pdf_path, zoom=zoom, page_indices=page_indices)
     all_lines: List[Dict] = []
     for page_index, img in images:
         try:
@@ -519,7 +574,7 @@ def ocr_extract_topics(pdf_path: str, csv_children_map: Optional[Dict[str, List[
         child_specs = csv_children_map.get(parent["number"], []) if csv_children_map else []
         child_anchors = []
         if child_specs:
-            child_anchors = ocr_best_child_matches_in_window(window_lines, child_specs, left_margin_px=300, fuzzy_threshold=fuzzy_threshold)
+            child_anchors = ocr_best_child_matches_in_window(window_lines, child_specs, left_margin_px=LEFT_MARGIN_CHILD, fuzzy_threshold=fuzzy_threshold)
         segs = ocr_segment_window(lines_sorted, parent, end_parent, child_anchors)
         segments.update(segs)
     return segments
@@ -527,7 +582,7 @@ def ocr_extract_topics(pdf_path: str, csv_children_map: Optional[Dict[str, List[
 
 # ---------------- main ----------------
 def main():
-    log("[BOOT] Fill single chapter (text-layer -> span-slicing -> OCR fallback)")
+    log("[BOOT] Fill Chem 11 Ch.1 with strong span-slicing and targeted OCR")
     if TESSERACT_EXE:
         pytesseract.pytesseract.tesseract_cmd = TESSERACT_EXE
 
@@ -573,14 +628,13 @@ def main():
         cursor.close(); conn.close()
         return
 
-    # Pass 1: text-layer extraction
+    # Pass 1: text-layer extraction (parents)
     topic_map, anchors = extract_textlayer_topics(pdf_path)
     log(f"[P1] Text-layer extracted: {len(topic_map)} topics | anchors={len(anchors)}")
 
     updated_topic_numbers: Set[str] = set()
     updated = 0
 
-    # Write parents from pass 1
     for num, content in topic_map.items():
         if not content or len(content.strip()) < 20:
             continue
@@ -590,7 +644,6 @@ def main():
                 updated += 1
                 updated_topic_numbers.add(num.strip().strip("."))
             else:
-                # Log diagnostic once per number
                 log(f"[P1][MISS] No row for topic_number='{num}'.")
         except Exception as e:
             log(f"[P1][ERROR] Update parent {num}: {e}")
@@ -603,7 +656,7 @@ def main():
             conn.rollback()
     log(f"[P1] Parent updates written: {updated}")
 
-    # Pass 2: span-based child slicing
+    # Pass 2: span-based child slicing (improved)
     child_updates = 0
     if anchors:
         parent_pts = [(a.number.strip("."), a.page, a.y) for a in anchors]
@@ -627,7 +680,20 @@ def main():
                     before = (ln["page"] < n_ppage) or (ln["page"] == n_ppage and ln["y"] < n_py)
                 if after and before:
                     window_lines.append(ln)
-            child_segments = split_children_in_parent_window(window_lines, child_specs, left_margin=95, min_title_len=5)
+            child_segments = split_children_in_parent_window(window_lines, child_specs, left_margin=LEFT_MARGIN_CHILD, min_title_len=5, fuzzy_threshold=OCR_FUZZY_THRESHOLD)
+            if not child_segments:
+                # Targeted OCR for this parent window pages only
+                page_list = list({ln["page"] for ln in window_lines})
+                ocr_seg = ocr_extract_topics(
+                    pdf_path,
+                    csv_children_map={pnum: child_specs},
+                    tesseract_bin=TESSERACT_EXE,
+                    lang=OCR_LANG,
+                    zoom=OCR_ZOOM,
+                    fuzzy_threshold=OCR_FUZZY_THRESHOLD,
+                    page_indices=page_list
+                )
+                child_segments = {k: v for k, v in ocr_seg.items() if k != pnum}
             for cnum, content in child_segments.items():
                 try:
                     rowcount = update_topic_text(cursor, chapter_id, cnum, content)
@@ -647,7 +713,7 @@ def main():
                 conn.rollback()
     log(f"[P2] Child updates from span slicing: {child_updates}")
 
-    # Fallback decision
+    # Decide on full-chapter OCR fallback
     need_ocr = False
     if len(topic_map) < OCR_MIN_HEADINGS_THRESHOLD:
         log(f"[OCR] Trigger: text-layer extracted only {len(topic_map)} (<{OCR_MIN_HEADINGS_THRESHOLD})")
@@ -656,9 +722,9 @@ def main():
         log(f"[OCR] Trigger: child slicing found only {child_updates} (<{OCR_CHILD_MIN_FOUND})")
         need_ocr = True
 
-    # Pass 3: OCR fallback
+    # Pass 3: Full OCR fallback (if still needed)
     if need_ocr:
-        log("[P3][OCR] Running Tesseract fallback...")
+        log("[P3][OCR] Running full-chapter Tesseract fallback...")
         ocr_children_map = children_map
         ocr_map = ocr_extract_topics(
             pdf_path,
@@ -666,7 +732,8 @@ def main():
             tesseract_bin=TESSERACT_EXE,
             lang=OCR_LANG,
             zoom=OCR_ZOOM,
-            fuzzy_threshold=OCR_FUZZY_THRESHOLD
+            fuzzy_threshold=OCR_FUZZY_THRESHOLD,
+            page_indices=None
         )
         ocr_updates = 0
         for num, content in ocr_map.items():
