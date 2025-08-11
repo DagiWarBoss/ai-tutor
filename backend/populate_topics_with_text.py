@@ -4,15 +4,13 @@ import re
 from dotenv import load_dotenv
 import psycopg2
 from collections import Counter
-import threading # Use threading for a cross-platform timeout
+import threading
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 PAGE_PROCESS_TIMEOUT = 5  # Seconds to wait before skipping a complex page
-
-# --- (This section is replaced as signal does not work on Windows) ---
 
 CHAPTER_NUMBER_FALLBACK_MAP = {
     "Some Basic Concepts Of Chemistry.pdf": "1", "Structure Of Atom.pdf": "2",
@@ -35,18 +33,18 @@ CHAPTER_NUMBER_FALLBACK_MAP = {
     "Atoms.pdf": "12", "Nuclei.pdf": "13", "SemiConductor Electronics.pdf": "14",
 }
 
-def get_page_data_with_timeout(page, method_name, timeout=5, **kwargs):
+def get_page_data_with_timeout(page, output_type, timeout=5, **kwargs):
     """
-    Calls a method on a page object (e.g., get_text) with a timeout.
-    Returns the result, or None if it times out.
+    Calls page.get_text() with a timeout. Returns the result, or None if it times out.
     """
-    result = [None]  # Use a list to make it mutable inside the thread
+    result = [None]
     def target():
         try:
-            method = getattr(page, method_name)
-            result[0] = method(**kwargs)
+            # --- THIS IS THE FIX ---
+            # Call get_text with output_type as a positional argument
+            result[0] = page.get_text(output_type, **kwargs)
         except Exception as e:
-            result[0] = e # Store exception if one occurs
+            result[0] = e
 
     thread = threading.Thread(target=target)
     thread.start()
@@ -56,7 +54,8 @@ def get_page_data_with_timeout(page, method_name, timeout=5, **kwargs):
         return None  # Timed out
     
     if isinstance(result[0], Exception):
-        raise result[0] # Re-raise exception if one occurred in the thread
+        # Re-raise the actual exception if one occurred in the thread
+        raise result[0]
         
     return result[0]
 
@@ -64,7 +63,7 @@ def get_most_common_font_info(doc):
     font_counts = Counter()
     for page_num, page in enumerate(doc):
         if page_num > 5: break
-        blocks_data = get_page_data_with_timeout(page, 'get_text', timeout=PAGE_PROCESS_TIMEOUT, output="dict")
+        blocks_data = get_page_data_with_timeout(page, "dict", timeout=PAGE_PROCESS_TIMEOUT)
         if blocks_data is None:
             print(f"    [WARNING] Font analysis on page {page_num+1} timed out.")
             continue
@@ -88,10 +87,10 @@ def extract_text_and_headings_with_location(doc, chapter_number):
         page_height = page.rect.height
         top_margin, bottom_margin = page_height * 0.10, page_height * 0.90
 
-        blocks = get_page_data_with_timeout(page, 'get_text', timeout=PAGE_PROCESS_TIMEOUT, output="blocks", sort=True)
-        styled_blocks = get_page_data_with_timeout(page, 'get_text', timeout=PAGE_PROCESS_TIMEOUT, output="dict", flags=fitz.TEXT_INHIBIT_SPACES)
+        blocks = get_page_data_with_timeout(page, "blocks", timeout=PAGE_PROCESS_TIMEOUT, sort=True)
+        styled_blocks_data = get_page_data_with_timeout(page, "dict", timeout=PAGE_PROCESS_TIMEOUT, flags=fitz.TEXT_INHIBIT_SPACES)
 
-        if blocks is None or styled_blocks is None:
+        if blocks is None or styled_blocks_data is None:
             print(f"    [WARNING] Page {page_num+1} is too complex and timed out. Skipping page content.")
             continue
         
@@ -101,7 +100,7 @@ def extract_text_and_headings_with_location(doc, chapter_number):
             if block_text and (y0 < top_margin or y1 > bottom_margin): continue
             if block_text: all_text_blocks.append({'text': block_text, 'page': page_num, 'y': y0})
         
-        for b in styled_blocks["blocks"]:
+        for b in styled_blocks_data["blocks"]:
             if "lines" in b:
                 for l in b["lines"]:
                     line_text = "".join(s["text"] for s in l["spans"]).strip()
