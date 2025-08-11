@@ -10,39 +10,36 @@ PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
-# This map is 100% accurate, generated from your CSV file.
+# This map is the single source of truth for chapter numbers.
 CHAPTER_NUMBER_FALLBACK_MAP = {
-    "Alcohol Phenols Ethers.pdf": "11", "Aldehydes, Ketones And Carboxylic Acid.pdf": "12",
-    "Alternating Current.pdf": "7", "Amines.pdf": "13", "Application Of Derivatives.pdf": "6",
-    "Application Of Integrals.pdf": "8", "Atoms.pdf": "12", "Binomial Theorem.pdf": "8",
-    "Biomolecules.pdf": "14", "Chemical Bonding And Molecular Structure.pdf": "4",
-    "Chemical Kinetics.pdf": "4", "Chemistry in Everyday Life.pdf": "16",
-    "Classification Of Elements And Periodicity.pdf": "3", "Complex Numbers And Quadratic Equations.pdf": "5",
-    "Conic Sections.pdf": "11", "Contunuity And Differentiability.pdf": "5",
-    "Coordination Compounds.pdf": "9", "Current Electricity.pdf": "3", "Determinants.pdf": "4",
-    "Differential Equations.pdf": "9", "Dual Nature Of Radiation And Matter.pdf": "11",
-    "Electric Charges And Fields.pdf": "1", "Electrochemistry.pdf": "3",
-    "Electromagnetic Induction.pdf": "6", "Electromagnetic Waves.pdf": "8",
-    "Electrostatic Potential And Capacitance.pdf": "2", "Equilibrium.pdf": "7",
-    "General Principles and Processes of Isolation of Elements.pdf": "6", "Gravitation.pdf": "8",
-    "Haloalkanes And Haloarenes.pdf": "10", "Hydrocarbons.pdf": "13", "Integrals.pdf": "7",
-    "Introduction to Three Dimensional Geometry.pdf": "12", "Inverse Trigonometric Functions.pdf": "2",
-    "Kinetic Theory.pdf": "13", "Laws Of Motion.pdf": "5", "Limits And Derivatives.pdf": "13",
-    "Linear Inequalities.pdf": "6", "Linear Programming.pdf": "12", "Magnetism And Matter.pdf": "5",
-    "Matrices.pdf": "3", "Mechanical Properties Of Fluids.pdf": "10",
-    "Mechanical Properties Of Solids.pdf": "9", "Motion In A Plane.pdf": "4",
-    "Motion In A Straight Line.pdf": "3", "Moving Charges And Magnetism.pdf": "4", "Nuclei.pdf": "13",
-    "Organic Chemistry Basics.pdf": "12", "Oscillations.pdf": "14",
-    "Permutations And Combinations.pdf": "7", "Polymers.pdf": "15", "Probability.pdf": "13",
-    "Ray Optics.pdf": "9", "Redox Reactions.pdf": "8", "Relations And Functions.pdf": "1",
-    "SemiConductor Electronics.pdf": "14", "Sequences And Series.pdf": "9", "Sets.pdf": "1",
-    "Solutions.pdf": "2", "Some Basic Concepts Of Chemistry.pdf": "1", "Statistics.pdf": "15",
-    "Straight Lines.pdf": "10", "Structure Of Atom.pdf": "2", "Surface Chemistry.pdf": "5",
-    "System Of Particles And Rotational Motion.pdf": "7", "The d and f Block Elements.pdf": "8",
-    "The p-Block Elements.pdf": "7", "Thermal Properties Of Matter.pdf": "11", "Thermodynamics.pdf": "12",
-    "Three Dimensional Geometry.pdf": "11", "Trigonometric Functions.pdf": "3",
-    "Units And Measurements.pdf": "2", "Vector Algebra.pdf": "10", "Wave Optics.pdf": "10",
-    "Waves.pdf": "15", "Work Energy Power.pdf": "6",
+    "Some Basic Concepts Of Chemistry.pdf": "1", "Structure Of Atom.pdf": "2",
+    "Classification Of Elements And Periodicity.pdf": "3", "Chemical Bonding And Molecular Structure.pdf": "4",
+    "Thermodynamics.pdf": "5", "Equilibrium.pdf": "6", "Redox Reactions.pdf": "7",
+    "Organic Chemistry Basics.pdf": "8", "Hydrocarbons.pdf": "9",
+    "Solutions.pdf": "1", "Electrochemistry.pdf": "2", "Chemical Kinetics.pdf": "3",
+    "D And F Block.pdf": "4", "Coordination Compounds.pdf": "5", "Haloalkanes And Haloarenes.pdf": "6",
+    "Alcohol Phenols Ethers.pdf": "7", "Aldehydes, Ketones And Carboxylic Acid.pdf": "8",
+    "Amines.pdf": "9", "Biomolecules.pdf": "10",
+    "Units And Measurements.pdf": "1", "Motion In A Straight Line.pdf": "2", "Motion In A Plane.pdf": "3",
+    "Laws Of Motion.pdf": "4", "Work Energy Power.pdf": "5", "System Of Particles And Rotational Motion.pdf": "6",
+    "Gravitation.pdf": "7", "Mechanical Properties Of Solids.pdf": "8", "Mechanical Properties Of Fluids.pdf": "9",
+    "Thermal Properties Of Matter.pdf": "10", "Thermodynamics.pdf": "11", "Kinetic Theory.pdf": "12",
+    "Oscillations.pdf": "13", "Waves.pdf": "14",
+    "Electric Charges And Fields.pdf": "1", "Electrostatic Potential And Capacitance.pdf": "2",
+    "Current Electricity.pdf": "3", "Moving Charges And Magnetism.pdf": "4", "Magnetism And Matter.pdf": "5",
+    "Electromagnetic Induction.pdf": "6", "Alternating Current.pdf": "7", "Electromagnetic Waves.pdf": "8",
+    "Ray Optics.pdf": "9", "Wave Optics.pdf": "10", "Dual Nature Of Radiation And Matter.pdf": "11",
+    "Atoms.pdf": "12", "Nuclei.pdf": "13", "SemiConductor Electronics.pdf": "14",
+    "Sets.pdf": "1", "Relations And Functions.pdf": "2", "Trigonometric Functions.pdf": "3",
+    "Complex Numbers And Quadratic Equations.pdf": "4", "Linear Inequalities.pdf": "5",
+    "Permutations And Combinations.pdf": "6", "Binomial Theorem.pdf": "7", "Sequences And Series.pdf": "8",
+    "Straight Lines.pdf": "9", "Conic Sections.pdf": "10", "Introduction to Three Dimensional Geometry.pdf": "11",
+    "Limits And Derivatives.pdf": "12", "Statistics.pdf": "13", "Probability.pdf": "14",
+    "Relations And Functions.pdf": "1", "Inverse Trigonometric Functions.pdf": "2", "Matrices.pdf": "3",
+    "Determinants.pdf": "4", "Contunuity And Differentiability.pdf": "5", "Application Of Derivatives.pdf": "6",
+    "Integrals.pdf": "7", "Application Of Integrals.pdf": "8", "Differential Equations.pdf": "9",
+    "Vector Algebra.pdf": "10", "Three Dimensional Geometry.pdf": "11", "Linear Programming.pdf": "12",
+    "Probability.pdf": "13", "Proofs In Mathematics.pdf": "14", "Infinite Series.pdf": "15",
 }
 
 def get_most_common_font_info(doc):
@@ -65,6 +62,7 @@ def extract_text_and_headings_with_location(doc, chapter_number):
     pat = re.compile(rf"^\s*({chapter_number}(?:\.\d+){{0,5}})[\s\.:;\-–]+([A-Za-z].*)$")
     headings, all_text_blocks = [], []
 
+    print("  [DEBUG] Scanning document pages for text blocks and potential headings...")
     for page_num, page in enumerate(doc):
         page_height = page.rect.height
         top_margin = page_height * 0.10
@@ -92,6 +90,7 @@ def extract_text_and_headings_with_location(doc, chapter_number):
                         span_is_bold = "bold" in span_font.lower()
                         is_heading_style = (span_size > body_font_size) or (span_is_bold and not body_is_bold)
                         
+                        # --- DEBUG STATEMENTS FOR HEADING DETECTION ---
                         print(f"\n    [DEBUG] Regex Matched Line: '{line_text}'")
                         print(f"      - Font: {span_font}, Size: {span_size}")
                         if is_heading_style:
@@ -139,7 +138,7 @@ def main():
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name = subjects.get(subject_id, "Unknown Subject")
         pdf_filename = f"{chapter_name}.pdf"
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
+        pdf_path = os.path.join(PDF_ROOT_FLDER, subject_name, class_number, pdf_filename)
         print(f"\nProcessing: {pdf_path}")
         if not os.path.exists(pdf_path):
             print(f"  [WARNING] PDF file not found. Skipping.")
