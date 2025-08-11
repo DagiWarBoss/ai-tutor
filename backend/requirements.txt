@@ -1,9 +1,23 @@
-# For main.py (FastAPI server)
+# For Database and Environment
+psycopg2-binary
+python-dotenv
+
+# For PDF and OCR Processing (Tesseract)
+PyMuPDF
+pytesseract
+Pillow
+beautifulsoup4
+lxml
+rapidfuzz
+
+# For AI and Semantic Search
+sentence-transformers
+requests
+
+# For the Backend Server (API)
 fastapi
 uvicorn[standard]
-python-dotenv
-together
 
-# For populate_database.py
-PyMuPDF
-psycopg2-binary
+# Optional Fallback OCR Engine
+paddlepaddle
+paddleocr
