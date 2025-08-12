@@ -64,9 +64,11 @@ def main():
             continue
             
         pdf_filename = f"{chapter_name}.pdf"
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, str(class_number), pdf_filename)
+        class_folder = f"Class {class_number}"  # Fixed: Use 'Class 11' instead of '11'
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_folder, pdf_filename)
         
         print(f"\nProcessing Chapter ID {chapter_id}: {chapter_name}")
+        print(f"  [DEBUG] Trying PDF path: {pdf_path}")  # Added for better visibility
 
         if not os.path.exists(pdf_path):
             print(f"  [WARNING] PDF file not found at '{pdf_path}'. Skipping.")
