@@ -15,7 +15,7 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Your full Postgres con
 
 def log(msg): print(msg, flush=True)
 
-def similar(a, b): return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+def similar(a, b): return SequenceMatcher(None, a.casefold(), b.casefold()).ratio()
 
 def find_headings(doc, chapter_number, topics, topic_colname, title_colname):
     anchors = []
@@ -23,20 +23,19 @@ def find_headings(doc, chapter_number, topics, topic_colname, title_colname):
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             text = b[4].strip()
+            # Clean up the text
+            cleaned_text = re.sub(r'[^\w\s.]', '', text)
             for topic in topics:
-                tnum = topic[topic_colname]
-                ttitle = topic[title_colname]
-                # Topic number match (e.g. "1.1 ", "3.2.1 ")
-                if text.startswith(tnum):
-                    # Remove topic number from text to compare title fuzzily
-                    heading_title = re.sub(rf'^{re.escape(tnum)}[\s:.-]*', '', text)
-                    if similar(ttitle, heading_title) > 0.6:
-                        anchors.append({
-                            'topic_number': tnum,
-                            'title': ttitle,
-                            'page': page_num,
-                            'y': b[1]
-                        })
+                tnum = topic[topic_colname].strip()
+                ttitle = topic[title_colname].strip()
+                # 1. Try matching topic number anywhere
+                if tnum and tnum in cleaned_text:
+                    possible_title = cleaned_text.split(tnum, 1)[-1].strip()
+                    if similar(ttitle, possible_title) > 0.5:
+                        anchors.append({'topic_number': tnum, 'title': ttitle, 'page': page_num, 'y': b[1]})
+                # 2. Or fuzzy match title alone
+                elif similar(ttitle, cleaned_text) > 0.6:
+                    anchors.append({'topic_number': tnum, 'title': ttitle, 'page': page_num, 'y': b[1]})
     anchors.sort(key=lambda x: (x['page'], x['y']))
     return anchors
 
@@ -67,6 +66,16 @@ def update_topic_in_db(cursor, chapter_id, topic_number, content):
         "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
         (content, chapter_id, topic_number)
     )
+
+def debug_print_blocks(pdf_path):
+    # Helper to print blocks for a problematic PDF
+    doc = fitz.open(pdf_path)
+    print(f"--- DEBUG DUMP: {pdf_path} ---")
+    for page_num, page in enumerate(doc):
+        blocks = page.get_text("blocks", sort=True)
+        for b in blocks:
+            print(f"Page {page_num} | Y-pos {b[1]}: '{b[4]}'")
+    doc.close()
 
 def main():
     # ---------- Connect to DB ----------
@@ -123,7 +132,10 @@ def main():
         if not anchors:
             log(f"[MISS] No anchors found for {pdf_filename}")
             doc.close()
+            # Print the first page's blocks for debug!
+            debug_print_blocks(pdf_path)
             continue
+
         log(f"  [INFO] Found {len(anchors)} anchors.")
 
         topics_with_content = extract_topic_contents(doc, anchors)
