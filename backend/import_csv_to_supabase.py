@@ -46,15 +46,14 @@ def insert_chapters(cursor, chapters_df, subject_map):
             log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid class '{class_value}'")
             continue
 
-        # Extract chapter_number (default to 0 if invalid to avoid NULL)
+        # Extract chapter_number (default to 0 if invalid)
         chapter_num_value = row.get('chapter_number', '')
         try:
             chapter_num = int(chapter_num_value)
         except (ValueError, TypeError):
-            chapter_num = 0  # Default; change if needed
+            chapter_num = 0  # Default; adjust if needed
             log(f"[WARN] Defaulting chapter_number to 0 for {row['chapter_file']}: Invalid value '{chapter_num_value}'")
 
-        # Insert
         cursor.execute(
             "INSERT INTO chapters (name, class_number, subject_id, chapter_number) VALUES (%s, %s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
             (row['chapter_file'].replace('.pdf', ''), class_num, subj_id, chapter_num)
@@ -73,9 +72,10 @@ def insert_topics(cursor, topics_df, chapter_map):
         if not chap_id:
             log(f"[WARN] Skipping topic {row['heading_number']}: No chapter ID for {row['chapter_file']}")
             continue
+        topic_name = row.get('heading_text', '') or ''  # Use heading_text as name; default empty if missing
         cursor.execute(
-            "INSERT INTO topics (chapter_id, topic_number, full_text) VALUES (%s, %s, %s) ON CONFLICT (chapter_id, topic_number) DO NOTHING",
-            (chap_id, row['heading_number'], '')  # full_text empty; will be updated by OCR script
+            "INSERT INTO topics (chapter_id, topic_number, name, full_text) VALUES (%s, %s, %s, %s) ON CONFLICT (chapter_id, topic_number) DO NOTHING",
+            (chap_id, row['heading_number'], topic_name, '')  # Add 'name' from heading_text, full_text empty
         )
 
 def main():
@@ -92,11 +92,6 @@ def main():
     except Exception as e:
         log(f"[ERROR] CSV load failed: {e}")
         return
-
-    # Check for duplicates in CSV
-    duplicates = df[df.duplicated(subset=['chapter_file'], keep=False)]
-    if not duplicates.empty:
-        log("[WARN] Found duplicate chapter_files in CSV:\n" + duplicates['chapter_file'].to_string(index=False))
 
     # Step 1: Unique subjects
     unique_subjects = df['subject'].unique()
