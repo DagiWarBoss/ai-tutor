@@ -2,12 +2,11 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 import pandas as pd
-import re  # For better number extraction
 
-# Paths (update if needed)
+# Path to your CSV file
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\gemini_csv.csv"
 
-# Load environment
+# Load environment and DB URI
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
@@ -38,19 +37,26 @@ def insert_chapters(cursor, chapters_df, subject_map):
         if not subj_id:
             log(f"[WARN] Skipping chapter {row['chapter_file']}: No subject ID for {row['subject']}")
             continue
-        
-        # Robust extraction of class_num using regex to find any number in 'class'
-        class_value = row.get('class', '')  # Safely get value, default to empty
-        match = re.search(r'\d+', str(class_value))  # Find first number sequence
-        if match:
-            class_num = int(match.group())
-        else:
-            log(f"[WARN] Skipping chapter {row['chapter_file']}: No valid number in 'class' value '{class_value}'")
-            continue  # Skip if no number found
-        
+
+        # Extract class_number as integer from 'Class XX'
+        class_value = row.get('class', '')
+        try:
+            class_num = int(str(class_value).split()[-1])
+        except (ValueError, AttributeError, TypeError):
+            log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid class '{class_value}'")
+            continue
+
+        # Use chapter_number directly
+        chapter_num_value = row.get('chapter_number', '')
+        try:
+            chapter_num = int(chapter_num_value)
+        except (ValueError, TypeError):
+            log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid chapter_number '{chapter_num_value}'")
+            continue
+
         cursor.execute(
-            "INSERT INTO chapters (name, class_number, subject_id) VALUES (%s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
-            (row['chapter_file'].replace('.pdf', ''), class_num, subj_id)
+            "INSERT INTO chapters (name, class_number, subject_id, chapter_number) VALUES (%s, %s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
+            (row['chapter_file'].replace('.pdf', ''), class_num, subj_id, chapter_num)
         )
         chap_row = cursor.fetchone()
         if chap_row:
@@ -91,8 +97,8 @@ def main():
     subject_map = insert_subjects(cursor, unique_subjects)
     log(f"[INFO] Inserted {len(subject_map)} subjects.")
 
-    # Step 2: Unique chapters (group by chapter_file, take first class/subject)
-    chapters_df = df.drop_duplicates(subset=['chapter_file'])[['subject', 'class', 'chapter_file']]
+    # Step 2: Unique chapters (group by chapter_file, take first class/subject/chapter_number)
+    chapters_df = df.drop_duplicates(subset=['chapter_file'])[['subject', 'class', 'chapter_file', 'chapter_number']]
     chapter_map = insert_chapters(cursor, chapters_df, subject_map)
     log(f"[INFO] Inserted {len(chapter_map)} chapters.")
 
