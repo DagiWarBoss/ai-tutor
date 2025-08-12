@@ -2,27 +2,101 @@ import os
 import fitz  # PyMuPDF
 from dotenv import load_dotenv
 import psycopg2
-import re  # For punctuation stripping
+import re
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
-# Manual mapping for known name mismatches (DB name: actual filename without .pdf)
+# --- Comprehensive Name Mapping (DB Name -> Filename without .pdf) ---
+# Based on your screenshots and previous CSV structure.
 NAME_MAPPING = {
-    'Alcohol Phenols Ethers': 'Alcohols, Phenols and Ethers',  # Handles comma
-    'Aldehydes Ketones And Carboxylic Acid': 'Aldehydes, Ketones and Carboxylic Acids',
+    # == CHEMISTRY ==
+    # Class 11
+    'Some Basic Concepts Of Chemistry': 'Some Basic Concepts Of Chemistry',
+    'Structure Of Atom': 'Structure Of Atom',
+    'Classification Of Elements And Periodicity': 'Classification Of Elements And Periodicity',
+    'Chemical Bonding And Molecular Structure': 'Chemical Bonding And Molecular Structure',
+    'Thermodynamics': 'Thermodynamics',
+    'Equilibrium': 'Equilibrium',
+    'Redox Reactions': 'Redox Reactions',
+    'Organic Chemistry Basics': 'Organic Chemistry Basics',
+    'Hydrocarbons': 'Hydrocarbons',
+    # Class 12
+    'Solutions': 'Solutions',
+    'Electrochemistry': 'Electrochemistry',
+    'Chemical Kinetics': 'Chemical Kinetics',
+    'D And F Block': 'D And F Block',
+    'Coordination Compounds': 'Coordination Compounds',
+    'Haloalkanes And Haloarenes': 'Haloalkanes And Haloarenes',
+    'Alcohol Phenols Ethers': 'Alcohol Phenols Ethers',
+    'Aldehydes Ketones And Carboxylic Acid': 'Aldehydes, Ketones And Carboxylic Acid', # Note the comma in your screenshot file
     'Amines': 'Amines',
     'Biomolecules': 'Biomolecules',
-    'Chemical Kinetics': 'Chemical Kinetics',
-    'Coordination Compounds': 'Coordination Compounds',
-    'D And F Block': 'The d and f Block Elements',
-    'Electrochemistry': 'Electrochemistry',
-    'Haloalkanes And Haloarenes': 'Haloalkanes and Haloarenes',
-    'Solutions': 'Solutions',
-    # Add for Mathematics if needed, e.g., 'Binomial Theorem': 'Binomial Theorem'
-    # ... extend based on your files
+    
+    # == PHYSICS ==
+    # Class 11
+    'Units And Measurements': 'Units And Measurements',
+    'Motion-In-A-Straight-Line': 'Motion In A Straight Line',
+    'Motion-In-A-Plane': 'Motion In A Plane',
+    'Laws Of Motion': 'Laws Of Motion',
+    'Work Energy Power': 'Work Energy Power',
+    'System Of Particles And Rotational Motion': 'System Of Particles And Rotational Motion',
+    'Gravitation': 'Gravitation',
+    'Mechanical Properties Of Solids': 'Mechanical Properties Of Solids',
+    'Mechanical Properties Of Fluids': 'Mechanical Properties Of Fluids',
+    'Thermal Properties Of Matter': 'Thermal Properties Of Matter',
+    'Thermodynamics': 'Thermodynamics', # Note: Name exists in Chem too
+    'Kinetic Theory': 'Kinetic Theory',
+    'Oscillations': 'Oscillations',
+    'Waves': 'Waves',
+    # Class 12
+    'Electric Charges And Fields': 'Electric Charges And Fields',
+    'Electrostatic Potential And Capacitance': 'Electrostatic Potential And Capacitance',
+    'Current Electricity': 'Current Electricity',
+    'Moving Charges And Magnetism': 'Moving Charges And Magnetism',
+    'Magnetism And Matter': 'Magnetism And Matter',
+    'Electromagnetic-Induction': 'Electromagnetic Induction',
+    'Alternating Current': 'Alternating Current',
+    'Electromagnetic Waves': 'Electromagnetic Waves',
+    'Ray Optics': 'Ray Optics',
+    'Wave-Optics': 'Wave Optics',
+    'Dual-Nature-Of-Radiation-And-Matter': 'Dual Nature Of Radiation And Matter',
+    'Atoms': 'Atoms',
+    'Nuclei': 'Nuclei',
+    'Semiconductor Electronics': 'Semiconductor Electronics',
+
+    # == MATHS (from previous fix) ==
+    # Class 11
+    'Binomial Theorem': 'Binomial Theorem',
+    'Complex Numbers And Quadratic Equations': 'Complex Numbers And Quadratic Equations',
+    'Conic Sections': 'Conic Sections',
+    'Introduction to Three Dimensional Geometry': 'Introduction to Three Dimensional Geometry',
+    'Limits And Derivatives': 'Limits And Derivatives',
+    'Linear Inequalities': 'Linear Inequalities',
+    'Permutations And Combinations': 'Permutations And Combinations',
+    'Probability': 'Probability',
+    'Relations And Functions': 'Relations And Functions',
+    'Sequences And Series': 'Sequences And Series',
+    'Sets': 'Sets',
+    'Statistics': 'Statistics',
+    'Straight Lines': 'Straight Lines',
+    'Trigonometric Functions': 'Trigonometric Functions',
+    # Class 12
+    'Application Of Derivatives': 'Application Of Derivatives',
+    'Application Of Integrals': 'Application Of Integrals',
+    'Contunuity And Differentiability': 'Contunuity And Differentiability',
+    'Determinants': 'Determinants',
+    'Differential Equations': 'Differential Equations',
+    'Infinite Series': 'Infinite Series',
+    'Integrals': 'Integrals',
+    'Inverse Trigonometric Functions': 'Inverse Trigonometric Functions',
+    'Linear Programming': 'Linear Programming',
+    'Matrices': 'Matrices',
+    'Proofs In Mathematics': 'Proofs In Mathematics',
+    'Three Dimensional Geometry': 'Three Dimensional Geometry',
+    'Vector Algebra': 'Vector Algebra'
 }
 
 def extract_full_text_from_pdf(pdf_path):
@@ -54,8 +128,8 @@ def main():
     cursor.execute("SELECT id, name FROM subjects")
     subjects = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
 
-    # 2. Find all chapters that are MISSING full_text
-    cursor.execute("SELECT id, name, class_number, subject_id, chapter_number FROM chapters WHERE full_text IS NULL")
+    # 2. Find ALL chapters from ALL subjects that are MISSING full_text
+    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters WHERE full_text IS NULL")
     chapters_to_process = cursor.fetchall()
     
     if not chapters_to_process:
@@ -65,68 +139,49 @@ def main():
 
     print(f"[INFO] Found {len(chapters_to_process)} chapters that need their full text extracted.")
 
-    # 3. Loop through each chapter, extract its text, and update chapters table
-    for chapter_id, chapter_name, class_number, subject_id, chapter_number in chapters_to_process:
-        subject_name = subjects.get(subject_id)
-        if not subject_name:
-            print(f"  [WARNING] Could not find subject with ID {subject_id} for chapter '{chapter_name}'. Skipping.")
-            continue
+    # 3. Loop through each chapter, extract its text, and update the database
+    for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
+        subject_name_from_db = subjects.get(subject_id)
+        
+        # --- THIS IS THE FIX for folder names ---
+        if subject_name_from_db == 'Mathematics':
+            folder_subject = 'Maths'
+        else:
+            folder_subject = subject_name_from_db # Works for 'Physics' and 'Chemistry'
+        # ----------------------------------------
 
-        # Handle special chapter_number (optional)
-        if isinstance(chapter_number, str) and chapter_number.startswith('A'):
-            print(f"  [INFO] Special appendix detected for '{chapter_name}'; handling as chapter_number 69.")
-
-        # Use manual mapping if available, else normalize
-        mapped_name = NAME_MAPPING.get(chapter_name, chapter_name.replace('-', ' '))
+        # Use manual mapping if available, otherwise just fall back to the raw DB name
+        mapped_name = NAME_MAPPING.get(chapter_name, chapter_name)
         pdf_filename = f"{mapped_name}.pdf"
         class_folder = f"Class {class_number}"
-        folder_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_folder)
+        folder_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder)
         pdf_path = os.path.join(folder_path, pdf_filename)
         
-        print(f"\nProcessing Chapter ID {chapter_id}: {chapter_name}")
-        print(f"  [DEBUG] Chapter name from DB: '{chapter_name}'")
-        print(f"  [DEBUG] Mapped/Expected file name: '{pdf_filename}'")
+        print(f"\nProcessing Chapter ID {chapter_id}: {chapter_name} ({subject_name_from_db})")
         print(f"  [DEBUG] Trying PDF path: {pdf_path}")
-        
-        if os.path.exists(folder_path):
-            dir_files = os.listdir(folder_path)
-            print(f"  [DEBUG] Files in directory: {dir_files}")
-        else:
-            print(f"  [WARNING] Folder not found: '{folder_path}'. Skipping.")
-            continue
 
-        if not os.path.exists(pdf_path):
-            # Improved fuzzy match: Strip punctuation (e.g., commas) and check if all words are in file name (case insensitive)
-            chapter_words = re.sub(r'[^\w\s]', '', mapped_name.lower()).split()  # Remove punctuation like commas
-            candidates = []
-            for f in dir_files:
-                f_clean = re.sub(r'[^\w\s]', '', f.lower())  # Clean file name similarly
-                if all(word in f_clean for word in chapter_words) and f.endswith('.pdf'):
-                    candidates.append(f)
-            if candidates:
-                pdf_path = os.path.join(folder_path, candidates[0])
-                print(f"  [INFO] Using fuzzy match (handled punctuation like commas): Found and using '{candidates[0]}'")
-            else:
-                print(f"  [WARNING] No matching PDF found for '{chapter_name}' (tried fuzzy match on cleaned words: {chapter_words}). Skipping.")
-                continue
+        if not os.path.exists(folder_path):
+            print(f"  [WARNING] FOLDER NOT FOUND: '{folder_path}'. Skipping.")
+            continue
             
-        # Extract the full text from the corresponding PDF
+        if not os.path.exists(pdf_path):
+            print(f"  [WARNING] PDF FILE NOT FOUND for chapter '{chapter_name}'. Skipping.")
+            continue
+            
         full_text = extract_full_text_from_pdf(pdf_path)
         
         if full_text:
-            # Update the chapter row in the database with the full text
             cursor.execute(
                 "UPDATE chapters SET full_text = %s WHERE id = %s",
                 (full_text, chapter_id)
             )
             print(f"  [SUCCESS] Successfully updated chapter '{chapter_name}' with its full text.")
 
-    # 4. Commit all changes to the database
     conn.commit()
     cursor.close()
     conn.close()
     
-    print("\n[COMPLETE] Finished populating chapter text.")
+    print("\n[COMPLETE] Finished processing all chapters.")
 
 if __name__ == '__main__':
     main()
