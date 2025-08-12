@@ -2,6 +2,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 import pandas as pd
+import re  # For better number extraction
 
 # Paths (update if needed)
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\gemini_csv.csv"
@@ -38,19 +39,14 @@ def insert_chapters(cursor, chapters_df, subject_map):
             log(f"[WARN] Skipping chapter {row['chapter_file']}: No subject ID for {row['subject']}")
             continue
         
-        # FIX: Robust extraction of class_num
-        class_value = row.get('class')  # Safely get value
-        if pd.isna(class_value) or not isinstance(class_value, str) or not class_value.strip():
-            log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid or missing 'class' value ({class_value})")
-            continue
-        
-        try:
-            # Extract number (e.g., 'Class 11' -> 11, or '11' -> 11)
-            class_num_str = class_value.split()[-1].strip()  # Last word
-            class_num = int(class_num_str)
-        except (ValueError, IndexError, AttributeError, TypeError) as e:
-            log(f"[WARN] Skipping chapter {row['chapter_file']}: Could not extract integer from 'class' value '{class_value}' ({e})")
-            continue
+        # Robust extraction of class_num using regex to find any number in 'class'
+        class_value = row.get('class', '')  # Safely get value, default to empty
+        match = re.search(r'\d+', str(class_value))  # Find first number sequence
+        if match:
+            class_num = int(match.group())
+        else:
+            log(f"[WARN] Skipping chapter {row['chapter_file']}: No valid number in 'class' value '{class_value}'")
+            continue  # Skip if no number found
         
         cursor.execute(
             "INSERT INTO chapters (name, class_number, subject_id) VALUES (%s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
