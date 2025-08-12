@@ -37,9 +37,17 @@ def insert_chapters(cursor, chapters_df, subject_map):
         if not subj_id:
             log(f"[WARN] Skipping chapter {row['chapter_file']}: No subject ID for {row['subject']}")
             continue
+        
+        # FIX: Extract the numeric part from 'class' (e.g., 'Class 11' -> 11)
+        try:
+            class_num = int(row['class'].split()[-1])  # Takes the last word (assumes format like 'Class 11')
+        except ValueError:
+            log(f"[ERROR] Invalid class value '{row['class']}' for chapter {row['chapter_file']}. Skipping.")
+            continue
+        
         cursor.execute(
             "INSERT INTO chapters (name, class_number, subject_id) VALUES (%s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
-            (row['chapter_file'].replace('.pdf', ''), int(row['class']), subj_id)
+            (row['chapter_file'].replace('.pdf', ''), class_num, subj_id)
         )
         chap_row = cursor.fetchone()
         if chap_row:
