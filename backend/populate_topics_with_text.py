@@ -44,7 +44,10 @@ def extract_topics(chapter_text):
     return topics
 
 def extract_questions(chapter_text):
-    # --- DEBUGGING ADDED HERE ---
+    """
+    --- THIS FUNCTION IS NOW FIXED ---
+    Uses a more flexible regex to find questions.
+    """
     print("  - Searching for 'EXERCISES' section...")
     exercises_pat = re.compile(r'EXERCISES(.+)', re.DOTALL | re.IGNORECASE)
     ex_match = exercises_pat.search(chapter_text)
@@ -56,7 +59,9 @@ def extract_questions(chapter_text):
     print('    [DEBUG] "EXERCISES" section was found.')
     exercises_text = ex_match.group(1)
     
-    question_pat = re.compile(r'(\d+\.\d+|\d+\.)\s*-\s*(.+?)(?=\n\d+\.\d+|\n\d+\.|\n\n|$)', re.DOTALL)
+    # This new regex looks for a number, followed by whitespace (including newlines),
+    # and then the question text. The hyphen is no longer required.
+    question_pat = re.compile(r'(\d+\.\d+)\s+(.+?)(?=\n\d+\.\d+|\Z)', re.DOTALL | re.IGNORECASE)
     raw_questions = question_pat.findall(exercises_text)
     
     print(f'    [DEBUG] Found {len(raw_questions)} potential questions in this section.')
