@@ -42,7 +42,6 @@ def run_ocr_on_pdf(pdf_path: str) -> str:
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     """
-    --- NEW, SIMPLIFIED LOGIC ---
     Extracts both topics and questions using a reliable split-based method.
     """
     extracted_topics = []
@@ -51,7 +50,6 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
     
     # Create a regex pattern to find all topic numbers in the text
-    # This pattern looks for the start of a line, then a number, then whitespace
     heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
     
@@ -60,15 +58,13 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     for topic_num in topic_numbers:
         start_pos = topic_locations.get(topic_num)
         if start_pos is not None:
-            # Find the start position of the next topic to define the end of this topic's content
+            # Find the start position of the next topic to define the end
             end_pos = len(ocr_text)
             for next_num, next_pos in topic_locations.items():
-                # Check if next_pos is a valid end point (after start_pos)
                 if next_pos > start_pos and next_pos < end_pos:
                     end_pos = next_pos
             
             content = ocr_text[start_pos:end_pos].strip()
-            # The title is the first line of the content
             title = content.split('\n')[0].strip()
             
             extracted_topics.append({
@@ -77,7 +73,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                 'content': content
             })
 
-    # Extract questions (using the same reliable logic as before)
+    # Extract questions
     questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
     if exercises_match:
@@ -92,13 +88,11 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
     log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
-    # Update topics
     for topic in topics:
         cursor.execute(
             "UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
             (topic['content'], topic['title'], chapter_id, topic['topic_number'])
         )
-    # Update questions (delete old ones first)
     cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
     for q in questions:
         cursor.execute(
