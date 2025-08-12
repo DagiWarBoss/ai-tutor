@@ -2,16 +2,30 @@ import os
 import fitz  # PyMuPDF
 from dotenv import load_dotenv
 import psycopg2
+import re  # For punctuation stripping
 
 # --- Configuration ---
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
+# Manual mapping for known name mismatches (DB name: actual filename without .pdf)
+NAME_MAPPING = {
+    'Alcohol Phenols Ethers': 'Alcohols, Phenols and Ethers',  # Handles comma
+    'Aldehydes Ketones And Carboxylic Acid': 'Aldehydes, Ketones and Carboxylic Acids',
+    'Amines': 'Amines',
+    'Biomolecules': 'Biomolecules',
+    'Chemical Kinetics': 'Chemical Kinetics',
+    'Coordination Compounds': 'Coordination Compounds',
+    'D And F Block': 'The d and f Block Elements',
+    'Electrochemistry': 'Electrochemistry',
+    'Haloalkanes And Haloarenes': 'Haloalkanes and Haloarenes',
+    'Solutions': 'Solutions',
+    # Add for Mathematics if needed, e.g., 'Binomial Theorem': 'Binomial Theorem'
+    # ... extend based on your files
+}
+
 def extract_full_text_from_pdf(pdf_path):
-    """
-    Opens a PDF file and extracts its entire text content page by page.
-    """
     print(f"    - Reading file: {os.path.basename(pdf_path)}")
     try:
         doc = fitz.open(pdf_path)
@@ -57,37 +71,43 @@ def main():
         if not subject_name:
             print(f"  [WARNING] Could not find subject with ID {subject_id} for chapter '{chapter_name}'. Skipping.")
             continue
-            
-        # Handle special chapter_number (e.g., 'A1' -> 69, optional from earlier discussion)
+
+        # Handle special chapter_number (optional)
         if isinstance(chapter_number, str) and chapter_number.startswith('A'):
             print(f"  [INFO] Special appendix detected for '{chapter_name}'; handling as chapter_number 69.")
-            # You can add update logic here if needed, e.g., cursor.execute("UPDATE chapters SET chapter_number = 69 WHERE id = %s", (chapter_id,))
 
-        pdf_filename = f"{chapter_name.replace('-', ' ')}.pdf"  # Normalize hyphens to spaces
+        # Use manual mapping if available, else normalize
+        mapped_name = NAME_MAPPING.get(chapter_name, chapter_name.replace('-', ' '))
+        pdf_filename = f"{mapped_name}.pdf"
         class_folder = f"Class {class_number}"
         folder_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_folder)
         pdf_path = os.path.join(folder_path, pdf_filename)
         
         print(f"\nProcessing Chapter ID {chapter_id}: {chapter_name}")
         print(f"  [DEBUG] Chapter name from DB: '{chapter_name}'")
-        print(f"  [DEBUG] Expected file name: '{pdf_filename}'")
+        print(f"  [DEBUG] Mapped/Expected file name: '{pdf_filename}'")
         print(f"  [DEBUG] Trying PDF path: {pdf_path}")
         
         if os.path.exists(folder_path):
-            print(f"  [DEBUG] Files in directory: {os.listdir(folder_path)}")
+            dir_files = os.listdir(folder_path)
+            print(f"  [DEBUG] Files in directory: {dir_files}")
         else:
             print(f"  [WARNING] Folder not found: '{folder_path}'. Skipping.")
             continue
 
         if not os.path.exists(pdf_path):
-            # Fuzzy match fallback: Find file containing key words from chapter_name
-            chapter_base = chapter_name.replace('-', ' ').lower()
-            candidates = [f for f in os.listdir(folder_path) if chapter_base in f.lower() and f.endswith('.pdf')]
+            # Improved fuzzy match: Strip punctuation (e.g., commas) and check if all words are in file name (case insensitive)
+            chapter_words = re.sub(r'[^\w\s]', '', mapped_name.lower()).split()  # Remove punctuation like commas
+            candidates = []
+            for f in dir_files:
+                f_clean = re.sub(r'[^\w\s]', '', f.lower())  # Clean file name similarly
+                if all(word in f_clean for word in chapter_words) and f.endswith('.pdf'):
+                    candidates.append(f)
             if candidates:
                 pdf_path = os.path.join(folder_path, candidates[0])
-                print(f"  [INFO] Using fuzzy match: Found and using '{candidates[0]}'")
+                print(f"  [INFO] Using fuzzy match (handled punctuation like commas): Found and using '{candidates[0]}'")
             else:
-                print(f"  [WARNING] No matching PDF found for '{chapter_name}' (tried fuzzy match). Skipping.")
+                print(f"  [WARNING] No matching PDF found for '{chapter_name}' (tried fuzzy match on cleaned words: {chapter_words}). Skipping.")
                 continue
             
         # Extract the full text from the corresponding PDF
