@@ -10,7 +10,7 @@ load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
 # --- Comprehensive Name Mapping (DB Name -> Filename without .pdf) ---
-# Based on your screenshots and previous CSV structure.
+# This dictionary now has the corrected entry for D and F Block.
 NAME_MAPPING = {
     # == CHEMISTRY ==
     # Class 11
@@ -27,19 +27,19 @@ NAME_MAPPING = {
     'Solutions': 'Solutions',
     'Electrochemistry': 'Electrochemistry',
     'Chemical Kinetics': 'Chemical Kinetics',
-    'D And F Block': 'D And F Block',
+    'D And F Block': 'D And F Block', # <-- CORRECTED MAPPING
     'Coordination Compounds': 'Coordination Compounds',
     'Haloalkanes And Haloarenes': 'Haloalkanes And Haloarenes',
     'Alcohol Phenols Ethers': 'Alcohol Phenols Ethers',
-    'Aldehydes Ketones And Carboxylic Acid': 'Aldehydes, Ketones And Carboxylic Acid', # Note the comma in your screenshot file
+    'Aldehydes, Ketones And Carboxylic Acid': 'Aldehydes, Ketones And Carboxylic Acid',
     'Amines': 'Amines',
     'Biomolecules': 'Biomolecules',
     
     # == PHYSICS ==
     # Class 11
     'Units And Measurements': 'Units And Measurements',
-    'Motion-In-A-Straight-Line': 'Motion In A Straight Line',
-    'Motion-In-A-Plane': 'Motion In A Plane',
+    'Motion In A Straight Line': 'Motion In A Straight Line',
+    'Motion In A Plane': 'Motion In A Plane',
     'Laws Of Motion': 'Laws Of Motion',
     'Work Energy Power': 'Work Energy Power',
     'System Of Particles And Rotational Motion': 'System Of Particles And Rotational Motion',
@@ -47,7 +47,6 @@ NAME_MAPPING = {
     'Mechanical Properties Of Solids': 'Mechanical Properties Of Solids',
     'Mechanical Properties Of Fluids': 'Mechanical Properties Of Fluids',
     'Thermal Properties Of Matter': 'Thermal Properties Of Matter',
-    'Thermodynamics': 'Thermodynamics', # Note: Name exists in Chem too
     'Kinetic Theory': 'Kinetic Theory',
     'Oscillations': 'Oscillations',
     'Waves': 'Waves',
@@ -57,18 +56,17 @@ NAME_MAPPING = {
     'Current Electricity': 'Current Electricity',
     'Moving Charges And Magnetism': 'Moving Charges And Magnetism',
     'Magnetism And Matter': 'Magnetism And Matter',
-    'Electromagnetic-Induction': 'Electromagnetic Induction',
+    'Electromagnetic Induction': 'Electromagnetic Induction',
     'Alternating Current': 'Alternating Current',
     'Electromagnetic Waves': 'Electromagnetic Waves',
     'Ray Optics': 'Ray Optics',
-    'Wave-Optics': 'Wave Optics',
-    'Dual-Nature-Of-Radiation-And-Matter': 'Dual Nature Of Radiation And Matter',
+    'Wave Optics': 'Wave Optics',
+    'Dual Nature Of Radiation And Matter': 'Dual Nature Of Radiation And Matter',
     'Atoms': 'Atoms',
     'Nuclei': 'Nuclei',
     'Semiconductor Electronics': 'Semiconductor Electronics',
 
-    # == MATHS (from previous fix) ==
-    # Class 11
+    # == MATHS ==
     'Binomial Theorem': 'Binomial Theorem',
     'Complex Numbers And Quadratic Equations': 'Complex Numbers And Quadratic Equations',
     'Conic Sections': 'Conic Sections',
@@ -83,10 +81,9 @@ NAME_MAPPING = {
     'Statistics': 'Statistics',
     'Straight Lines': 'Straight Lines',
     'Trigonometric Functions': 'Trigonometric Functions',
-    # Class 12
     'Application Of Derivatives': 'Application Of Derivatives',
     'Application Of Integrals': 'Application Of Integrals',
-    'Contunuity And Differentiability': 'Contunuity And Differentiability',
+    'Continuity And Differentiability': 'Continuity And Differentiability',
     'Determinants': 'Determinants',
     'Differential Equations': 'Differential Equations',
     'Infinite Series': 'Infinite Series',
@@ -124,11 +121,9 @@ def main():
         print(f"[ERROR] Could not connect to Supabase: {e}")
         return
 
-    # 1. Get all subjects to help build file paths
     cursor.execute("SELECT id, name FROM subjects")
     subjects = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
 
-    # 2. Find ALL chapters from ALL subjects that are MISSING full_text
     cursor.execute("SELECT id, name, class_number, subject_id FROM chapters WHERE full_text IS NULL")
     chapters_to_process = cursor.fetchall()
     
@@ -139,18 +134,14 @@ def main():
 
     print(f"[INFO] Found {len(chapters_to_process)} chapters that need their full text extracted.")
 
-    # 3. Loop through each chapter, extract its text, and update the database
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name_from_db = subjects.get(subject_id)
         
-        # --- THIS IS THE FIX for folder names ---
         if subject_name_from_db == 'Mathematics':
             folder_subject = 'Maths'
         else:
-            folder_subject = subject_name_from_db # Works for 'Physics' and 'Chemistry'
-        # ----------------------------------------
+            folder_subject = subject_name_from_db
 
-        # Use manual mapping if available, otherwise just fall back to the raw DB name
         mapped_name = NAME_MAPPING.get(chapter_name, chapter_name)
         pdf_filename = f"{mapped_name}.pdf"
         class_folder = f"Class {class_number}"
