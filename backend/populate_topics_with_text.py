@@ -5,6 +5,9 @@ import re
 import os
 
 # ----- Paths/Config -----
+import os
+print("Poppler path exists:", os.path.exists(poppler_path))
+print("Poppler contents:", os.listdir(poppler_path))
 pdf_path = r"..."   # your chapter PDF
 poppler_path = r"..."  # your Poppler bin
 tesseract_path = r"..."  # Tesseract exe
