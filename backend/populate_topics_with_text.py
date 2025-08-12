@@ -1,40 +1,27 @@
-import re
+import pytesseract
+from pdf2image import convert_from_path
+from PIL import Image
+import os
 
-def extract_ncert_topics(chapter_text):
-    """
-    Extract topics from NCERT chapter using numbered headings as anchors.
-    Returns: List of dicts: { 'topic_number', 'title', 'content' }
-    """
-    # Regex matches lines like "1.2 Nature of Matter", "1.2.3 Example of ...", etc.
-    heading_re = re.compile(r'^(\d+(?:\.\d+)+)\s+([^\n]+)', re.MULTILINE)
-    matches = list(heading_re.finditer(chapter_text))
-    topics = []
+# Set these paths as needed
+pdf_path = "Some-Basic-Concepts-Of-Chemistry.pdf"
+output_txt_path = "Some-Basic-Concepts-Of-Chemistry_OCR.txt"
+poppler_path = r"C:\path\to\poppler\bin"  # Only needed on Windows
 
-    for i, match in enumerate(matches):
-        topic_num = match.group(1)
-        topic_title = match.group(2).strip()
-        # Content: from this heading to the next, or EOF
-        start = match.end()
-        end = matches[i+1].start() if (i+1) < len(matches) else len(chapter_text)
-        content = chapter_text[start:end].strip()
-        topics.append({
-            'topic_number': topic_num,
-            'title': topic_title,
-            'content': content
-        })
-    return topics
+# Point pytesseract to the tesseract binary if necessary (Windows)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-# Script entrypoint:
-if __name__ == "__main__":
-    # Path to your exported plain text file
-    CHAPTER_TXT_PATH = "Some-Basic-Concepts-Of-Chemistry.txt"  # Change to your file
-    with open(CHAPTER_TXT_PATH, "r", encoding="utf-8") as f:
-        chapter_text = f.read()
+# Convert PDF pages to images
+images = convert_from_path(pdf_path, dpi=300, poppler_path=poppler_path)
 
-    topics = extract_ncert_topics(chapter_text)
+all_text = []
+for i, image in enumerate(images):
+    text = pytesseract.image_to_string(image)
+    text = text.replace('-\n', '')  # Fixes broken words on line breaks
+    all_text.append(text)
 
-    # Print result summary for verification
-    for topic in topics:
-        print(f"{topic['topic_number']} - {topic['title']}\n{'-'*60}")
-        print(topic['content'][:400], "\n---\n")
-    print(f"\nExtracted {len(topics)} topics.")
+full_text = '\n'.join(all_text)
+with open(output_txt_path, "w", encoding="utf-8") as f:
+    f.write(full_text)
+
+print(f"OCR text written to {output_txt_path}!")
