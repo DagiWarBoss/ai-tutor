@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 CSV_PATH = "extracted_headings_all_subjects.csv"
 load_dotenv()
-SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Full Postgres connection string
+SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Your full Postgres connection string
 # ------------------------------------------------
 
 def log(msg): print(msg, flush=True)
@@ -26,8 +26,9 @@ def find_headings(doc, chapter_number, topics, topic_colname, title_colname):
             for topic in topics:
                 tnum = topic[topic_colname]
                 ttitle = topic[title_colname]
-                # Try matching: line starts with topic number, then fuzzy title match
+                # Topic number match (e.g. "1.1 ", "3.2.1 ")
                 if text.startswith(tnum):
+                    # Remove topic number from text to compare title fuzzily
                     heading_title = re.sub(rf'^{re.escape(tnum)}[\s:.-]*', '', text)
                     if similar(ttitle, heading_title) > 0.6:
                         anchors.append({
@@ -85,17 +86,9 @@ def main():
         return
 
     log(f"CSV Columns: {master_df.columns.tolist()}")
-    # Automatically detect topic number and title column names
-    topic_colname = None
-    title_colname = None
-    # Suggest common alternatives if not found
-    for col in master_df.columns:
-        if col.lower().replace(" ", "_") in ("topic_number", "number", "topic_no"):
-            topic_colname = col
-        if col.lower().replace(" ", "_") in ("name", "title", "topic_title"):
-            title_colname = col
-    if not topic_colname or not title_colname:
-        raise Exception("Topic number and/or topic title column not found. Please check CSV.")
+    # Use correct column names
+    topic_colname = 'heading_number'
+    title_colname = 'heading_text'
 
     # ---------- Load DB chapters and subjects ----------
     cursor.execute("SELECT id, name, class_number, subject_id FROM chapters")
