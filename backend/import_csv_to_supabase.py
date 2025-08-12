@@ -38,11 +38,18 @@ def insert_chapters(cursor, chapters_df, subject_map):
             log(f"[WARN] Skipping chapter {row['chapter_file']}: No subject ID for {row['subject']}")
             continue
         
-        # FIX: Extract the numeric part from 'class' (e.g., 'Class 11' -> 11)
+        # FIX: Robust extraction of class_num
+        class_value = row.get('class')  # Safely get value
+        if pd.isna(class_value) or not isinstance(class_value, str) or not class_value.strip():
+            log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid or missing 'class' value ({class_value})")
+            continue
+        
         try:
-            class_num = int(row['class'].split()[-1])  # Takes the last word (assumes format like 'Class 11')
-        except ValueError:
-            log(f"[ERROR] Invalid class value '{row['class']}' for chapter {row['chapter_file']}. Skipping.")
+            # Extract number (e.g., 'Class 11' -> 11, or '11' -> 11)
+            class_num_str = class_value.split()[-1].strip()  # Last word
+            class_num = int(class_num_str)
+        except (ValueError, IndexError, AttributeError, TypeError) as e:
+            log(f"[WARN] Skipping chapter {row['chapter_file']}: Could not extract integer from 'class' value '{class_value}' ({e})")
             continue
         
         cursor.execute(
