@@ -3,10 +3,10 @@ import psycopg2
 from dotenv import load_dotenv
 import pandas as pd
 
-# Path to your CSV file
+# Paths (update if needed)
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\gemini_csv.csv"
 
-# Load environment and DB URI
+# Load environment
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
@@ -38,22 +38,23 @@ def insert_chapters(cursor, chapters_df, subject_map):
             log(f"[WARN] Skipping chapter {row['chapter_file']}: No subject ID for {row['subject']}")
             continue
 
-        # Extract class_number as integer from 'Class XX'
+        # Extract class_number
         class_value = row.get('class', '')
         try:
-            class_num = int(str(class_value).split()[-1])
+            class_num = int(class_value.split()[-1])
         except (ValueError, AttributeError, TypeError):
             log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid class '{class_value}'")
             continue
 
-        # Use chapter_number directly
+        # Extract chapter_number (default to 0 if invalid to avoid NULL)
         chapter_num_value = row.get('chapter_number', '')
         try:
             chapter_num = int(chapter_num_value)
         except (ValueError, TypeError):
-            log(f"[WARN] Skipping chapter {row['chapter_file']}: Invalid chapter_number '{chapter_num_value}'")
-            continue
+            chapter_num = 0  # Default; change if needed
+            log(f"[WARN] Defaulting chapter_number to 0 for {row['chapter_file']}: Invalid value '{chapter_num_value}'")
 
+        # Insert
         cursor.execute(
             "INSERT INTO chapters (name, class_number, subject_id, chapter_number) VALUES (%s, %s, %s, %s) ON CONFLICT (name) DO NOTHING RETURNING id",
             (row['chapter_file'].replace('.pdf', ''), class_num, subj_id, chapter_num)
@@ -92,12 +93,17 @@ def main():
         log(f"[ERROR] CSV load failed: {e}")
         return
 
+    # Check for duplicates in CSV
+    duplicates = df[df.duplicated(subset=['chapter_file'], keep=False)]
+    if not duplicates.empty:
+        log("[WARN] Found duplicate chapter_files in CSV:\n" + duplicates['chapter_file'].to_string(index=False))
+
     # Step 1: Unique subjects
     unique_subjects = df['subject'].unique()
     subject_map = insert_subjects(cursor, unique_subjects)
     log(f"[INFO] Inserted {len(subject_map)} subjects.")
 
-    # Step 2: Unique chapters (group by chapter_file, take first class/subject/chapter_number)
+    # Step 2: Unique chapters
     chapters_df = df.drop_duplicates(subset=['chapter_file'])[['subject', 'class', 'chapter_file', 'chapter_number']]
     chapter_map = insert_chapters(cursor, chapters_df, subject_map)
     log(f"[INFO] Inserted {len(chapter_map)} chapters.")
