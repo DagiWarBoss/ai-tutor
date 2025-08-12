@@ -795,63 +795,6 @@ Physics,Class 11,Oscillations.pdf,13,13.5,VELOCITY AND ACCELERATION IN SIMPLE HA
 Physics,Class 11,Oscillations.pdf,13,13.6,FORCE LAW FOR SIMPLE HARMONIC MOTION
 Physics,Class 11,Oscillations.pdf,13,13.7,ENERGY IN SIMPLE HARMONIC MOTION
 Physics,Class 11,Oscillations.pdf,13,13.8,THE SIMPLE PENDULUM
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.1,Introduction
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.2,Centre of mass
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.3,Motion of centre of mass
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.4,Linear momentum of a system of particles
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.5,Vector product of two vectors
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.6,Angular velocity and its relation with linear velocity
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.7,Torque and angular momentum
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.8,Equilibrium of a rigid body
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.9,Moment of inertia
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.10,Kinematics of rotational motion about a fixed axis
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.11,Dynamics of rotational motion about a fixed axis
-Physics,11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.12,Angular momentum in case of rotation about a fixed axis
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.1,Introduction
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.2,Temperature and heat
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.3,Measurement of temperature
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.4,Ideal-gas equation and absolute temperature
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.5,Thermal expansion
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.6,Specific heat capacity
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.7,Calorimetry
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.8,Change of state
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.9,Heat transfer
-Physics,11,Thermal-Properties-Of-Matter.pdf,10,10.10,Newton's law of cooling
-Physics,11,Thermodynamics.pdf,11,11.1,Introduction
-Physics,11,Thermodynamics.pdf,11,11.2,Thermal equilibrium
-Physics,11,Thermodynamics.pdf,11,11.3,Zeroth law of Thermodynamics
-Physics,11,Thermodynamics.pdf,11,11.4,Heat, internal energy and work
-Physics,11,Thermodynamics.pdf,11,11.5,First law of thermodynamics
-Physics,11,Thermodynamics.pdf,11,11.6,Specific heat capacity
-Physics,11,Thermodynamics.pdf,11,11.7,Thermodynamic state variables and equation of state
-Physics,11,Thermodynamics.pdf,11,11.8,Thermodynamic processes
-Physics,11,Thermodynamics.pdf,11,11.9,Second law of thermodynamics
-Physics,11,Thermodynamics.pdf,11,11.10,Reversible and irreversible processes
-Physics,11,Thermodynamics.pdf,11,11.11,Carnot engine
-Physics,11,Units-And-Measurements.pdf,1,1.1,Introduction
-Physics,11,Units-And-Measurements.pdf,1,1.2,The international system of units
-Physics,11,Units-And-Measurements.pdf,1,1.3,Significant figures
-Physics,11,Units-And-Measurements.pdf,1,1.4,Dimensions of physical quantities
-Physics,11,Units-And-Measurements.pdf,1,1.5,Dimensional formulae and dimensional equations
-Physics,11,Units-And-Measurements.pdf,1,1.6,Dimensional analysis and its applications
-Physics,11,Waves.pdf,14,14.1,Introduction
-Physics,11,Waves.pdf,14,14.2,Transverse and longitudinal waves
-Physics,11,Waves.pdf,14,14.3,Displacement relation in a progressive wave
-Physics,11,Waves.pdf,14,14.4,The speed of a travelling wave
-Physics,11,Waves.pdf,14,14.5,The principle of superposition of waves
-Physics,11,Waves.pdf,14,14.6,Reflection of waves
-Physics,11,Waves.pdf,14,14.7,Beats
-Physics,11,Work-Energy-Power.pdf,5,5.1,Introduction
-Physics,11,Work-Energy-Power.pdf,5,5.2,Notions of work and kinetic energy: The work-energy theorem
-Physics,11,Work-Energy-Power.pdf,5,5.3,Work
-Physics,11,Work-Energy-Power.pdf,5,5.4,Kinetic energy
-Physics,11,Work-Energy-Power.pdf,5,5.5,Work done by a variable force
-Physics,11,Work-Energy-Power.pdf,5,5.6,The work-energy theorem for a variable force
-Physics,11,Work-Energy-Power.pdf,5,5.7,The concept of potential energy
-Physics,11,Work-Energy-Power.pdf,5,5.8,The conservation of mechanical energy
-Physics,11,Work-Energy-Power.pdf,5,5.9,The potential energy of a spring
-Physics,11,Work-Energy-Power.pdf,5,5.10,Power
-Physics,11,Work-Energy-Power.pdf,5,5.11,Collisions
 Physics,Class 11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.1,Introduction
 Physics,Class 11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.2,Centre of mass
 Physics,Class 11,System-Of-Particles-And-Rotational-Motion.pdf,6,6.3,Motion of centre of mass
@@ -909,3 +852,197 @@ Physics,Class 11,Work-Energy-Power.pdf,5,5.8,The conservation of mechanical ener
 Physics,Class 11,Work-Energy-Power.pdf,5,5.9,The potential energy of a spring
 Physics,Class 11,Work-Energy-Power.pdf,5,5.10,Power
 Physics,Class 11,Work-Energy-Power.pdf,5,5.11,Collisions
+Physics,Class 12,Alternating-Current.pdf,7,7.1,INTRODUCTION
+Physics,Class 12,Alternating-Current.pdf,7,7.2,AC VOLTAGE APPLIED TO A RESISTOR
+Physics,Class 12,Alternating-Current.pdf,7,7.3,REPRESENTATION OF AC CURRENT AND VOLTAGE BY ROTATING VECTORS — PHASORS
+Physics,Class 12,Alternating-Current.pdf,7,7.4,AC VOLTAGE APPLIED TO AN INDUCTOR
+Physics,Class 12,Alternating-Current.pdf,7,7.5,AC VOLTAGE APPLIED TO A CAPACITOR
+Physics,Class 12,Alternating-Current.pdf,7,7.6,AC VOLTAGE APPLIED TO A SERIES LCR CIRCUIT
+Physics,Class 12,Alternating-Current.pdf,7,7.6.1,Phasor-diagram solution
+Physics,Class 12,Alternating-Current.pdf,7,7.6.2,Resonance
+Physics,Class 12,Alternating-Current.pdf,7,7.7,POWER IN AC CIRCUIT: THE POWER FACTOR
+Physics,Class 12,Alternating-Current.pdf,7,7.8,TRANSFORMERS
+Physics,Class 12,Atoms.pdf,12,12.1,INTRODUCTION
+Physics,Class 12,Atoms.pdf,12,12.2,ALPHA-PARTICLE SCATTERING AND RUTHERFORD’S NUCLEAR MODEL OF ATOM
+Physics,Class 12,Atoms.pdf,12,12.2.1,Alpha-particle trajectory
+Physics,Class 12,Atoms.pdf,12,12.2.2,Electron orbits
+Physics,Class 12,Atoms.pdf,12,12.3,ATOMIC SPECTRA
+Physics,Class 12,Atoms.pdf,12,12.4,BOHR MODEL OF THE HYDROGEN ATOM
+Physics,Class 12,Atoms.pdf,12,12.4.1,Energy levels
+Physics,Class 12,Atoms.pdf,12,12.5,THE LINE SPECTRA OF THE HYDROGEN ATOM
+Physics,Class 12,Atoms.pdf,12,12.6,DE BROGLIE’S EXPLANATION OF BOHR’S SECOND POSTULATE OF QUANTISATION
+Physics,Class 12,Current-Electricity.pdf,3,3.1,INTRODUCTION
+Physics,Class 12,Current-Electricity.pdf,3,3.2,ELECTRIC CURRENT
+Physics,Class 12,Current-Electricity.pdf,3,3.3,ELECTRIC CURRENTS IN CONDUCTORS
+Physics,Class 12,Current-Electricity.pdf,3,3.4,OHM’S LAW
+Physics,Class 12,Current-Electricity.pdf,3,3.5,DRIFT OF ELECTRONS AND THE ORIGIN OF RESISTIVITY
+Physics,Class 12,Current-Electricity.pdf,3,3.5.1,Mobility
+Physics,Class 12,Current-Electricity.pdf,3,3.6,LIMITATIONS OF OHM'S LAW
+Physics,Class 12,Current-Electricity.pdf,3,3.7,RESISTIVITY OF VARIOUS MATERIALS
+Physics,Class 12,Current-Electricity.pdf,3,3.8,TEMPERATURE DEPENDENCE OF RESISTIVITY
+Physics,Class 12,Current-Electricity.pdf,3,3.9,ELECTRICAL ENERGY, POWER
+Physics,Class 12,Current-Electricity.pdf,3,3.10,CELLS, EMF, INTERNAL RESISTANCE
+Physics,Class 12,Current-Electricity.pdf,3,3.11,CELLS IN SERIES AND IN PARALLEL
+Physics,Class 12,Current-Electricity.pdf,3,3.12,KIRCHHOFF’S RULES
+Physics,Class 12,Current-Electricity.pdf,3,3.13,WHEATSTONE BRIDGE
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.1,INTRODUCTION
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.2,ELECTRON EMISSION
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.3,PHOTOELECTRIC EFFECT
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.3.1,Hertz's observations
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.3.2,Hallwachs' and Lenard's observations
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.4,EXPERIMENTAL STUDY OF PHOTOELECTRIC EFFECT
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.4.1,Effect of intensity of light on photocurrent
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.4.2,Effect of potential on photoelectric current
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.4.3,Effect of frequency of incident radiation on stopping potential
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.5,PHOTOELECTRIC EFFECT AND WAVE THEORY OF LIGHT
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.6,EINSTEIN’S PHOTOELECTRIC EQUATION: ENERGY QUANTUM OF RADIATION
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.7,PARTICLE NATURE OF LIGHT: THE PHOTON
+Physics,Class 12,Dual-Nature-Of-Radiation-And-Matter.pdf,11,11.8,WAVE NATURE OF MATTER
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.1,INTRODUCTION
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.2,ELECTRIC CHARGE
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.3,CONDUCTORS AND INSULATORS
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.4,BASIC PROPERTIES OF ELECTRIC CHARGE
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.4.1,Additivity of charges
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.4.2,Charge is conserved
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.4.3,Quantisation of charge
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.5,COULOMB'S LAW
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.6,FORCES BETWEEN MULTIPLE CHARGES
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.7,ELECTRIC FIELD
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.7.1,Electric field due to a system of charges
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.7.2,Physical significance of electric field
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.8,ELECTRIC FIELD LINES
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.9,ELECTRIC FLUX
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.10,ELECTRIC DIPOLE
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.10.1,The field of an electric dipole
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.10.2,Dipole in a uniform external field
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.11,CONTINUOUS CHARGE DISTRIBUTION
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.12,GAUSS'S LAW
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.13,APPLICATIONS OF GAUSS'S LAW
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.13.1,Field due to an infinitely long straight uniformly charged wire
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.13.2,Field due to a uniformly charged infinite plane sheet
+Physics,Class 12,Electric-Charges-And-Fields.pdf,1,1.13.3,Field due to a uniformly charged thin spherical shell
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.1,INTRODUCTION
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.2,THE EXPERIMENTS OF FARADAY AND HENRY
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.3,MAGNETIC FLUX
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.4,FARADAY'S LAW OF INDUCTION
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.5,LENZ's Law AND CONSERVATION OF ENERGY
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.6,ΜΟΤΙONAL ELECTROMOTIVE FORCE
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.7,INDUCTANCE
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.7.1,Mutual inductance
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.7.2,Self-inductance
+Physics,Class 12,Electromagnetic-Induction.pdf,6,6.8,AC GENERATOR
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.1,INTRODUCTION
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.2,DISPLACEMENT CURRENT
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.3,ELECTROMAGNETIC WAVES
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.3.1,Sources of electromagnetic waves
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.3.2,Nature of electromagnetic waves
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4,ELECTROMAGNETIC SPECTRUM
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.1,Radio waves
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.2,Microwaves
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.3,Infrared waves
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.4,Visible rays
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.5,Ultraviolet rays
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.6,X-rays
+Physics,Class 12,Electromagnetic-Waves.pdf,8,8.4.7,Gamma rays
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.1,INTRODUCTION
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.2,ELECTROSTATIC POTENTIAL
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.3,POTENTIAL DUE TO A POINT CHARGE
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.4,POTENTIAL DUE TO AN ELECTRIC DIPOLE
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.5,POTENTIAL DUE TO A SYSTEM OF CHARGES
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.6,EQUIPOTENTIAL SURFACES
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.6.1,Relation between field and potential
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.7,POTENTIAL ENERGY OF A SYSTEM OF CHARGES
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.8,POTENTIAL ENERGY IN AN EXTERNAL FIELD
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.8.1,Potential energy of a single charge
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.8.2,Potential energy of a system of two charges in an external field
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.8.3,Potential energy of a dipole in an external field
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.9,ELECTROSTATICS OF CONDUCTORS
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.10,DIELECTRICS AND POLARISATION
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.11,CAPACITORS AND CAPACITANCE
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.12,THE PARALLEL PLATE CAPACITOR
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.13,EFFECT OF DIELECTRIC ON CAPACITANCE
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.14,COMBINATION OF CAPACITORS
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.14.1,Capacitors in series
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.14.2,Capacitors in parallel
+Physics,Class 12,Electrostatic-Potential-And-Capacitance.pdf,2,2.15,ENERGY STORED IN A CAPACITOR
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.1,Introduction
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.2,The Bar Magnet
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.2.1,The magnetic field lines
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.2.2,Bar magnet as an equivalent solenoid
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.2.3,The dipole in a uniform magnetic field
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.2.4,The electrostatic analog
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.3,Magnetism And Gauss's Law
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.4,Magnetisation And Magnetic Intensity
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.5,Magnetic Properties Of Materials
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.5.1,Diamagnetism
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.5.2,Paramagnetism
+Physics,Class 12,Magnetism-And-Matter.pdf,5,5.5.3,Ferromagnetism
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.1,Introduction
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.2,Magnetic Force
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.2.1,Sources and fields
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.2.2,Magnetic Field, Lorentz Force
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.2.3,Magnetic force on a current-carrying conductor
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.3,Motion In A Magnetic Field
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.4,Magnetic Field due to a Current Element, Biot-Savart Law
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.5,Magnetic Field on the Axis of a Circular Current Loop
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.6,Ampere's Circuital Law
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.7,The Solenoid
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.8,Force Between Two Parallel Currents, The Ampere
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.9,Torque On Current Loop, Magnetic Dipole
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.9.1,Torque on a rectangular current loop in a uniform magnetic field
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.9.2,Circular current loop as a magnetic dipole
+Physics,Class 12,Moving-Charges-And-Magnetism.pdf,4,4.10,The Moving Coil Galvanometer
+Physics,Class 12,Nuclei.pdf,13,13.1,Introduction
+Physics,Class 12,Nuclei.pdf,13,13.2,Atomic Masses And Composition Of Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.3,Size Of The Nucleus
+Physics,Class 12,Nuclei.pdf,13,13.4,Mass-Energy And Nuclear Binding Energy
+Physics,Class 12,Nuclei.pdf,13,13.4.1,Mass – Energy
+Physics,Class 12,Nuclei.pdf,13,13.4.2,Nuclear binding energy
+Physics,Class 12,Nuclei.pdf,13,13.5,Nuclear Force
+Physics,Class 12,Nuclei.pdf,13,13.6,Radioactivity
+Physics,Class 12,Nuclei.pdf,13,13.7,Nuclear Energy
+Physics,Class 12,Nuclei.pdf,13,13.7.1,Fission
+Physics,Class 12,Nuclei.pdf,13,13.7.2,Nuclear fusion – energy generation in stars
+Physics,Class 12,Nuclei.pdf,13,13.7.3,Controlled thermonuclear fusion
+Physics,Class 12,Ray-Optics.pdf,9,9.1,Introduction
+Physics,Class 12,Ray-Optics.pdf,9,9.2,Reflection Of Light By Spherical Mirrors
+Physics,Class 12,Ray-Optics.pdf,9,9.2.1,Sign convention
+Physics,Class 12,Ray-Optics.pdf,9,9.2.2,Focal length of spherical mirrors
+Physics,Class 12,Ray-Optics.pdf,9,9.2.3,The mirror equation
+Physics,Class 12,Ray-Optics.pdf,9,9.3,Refraction
+Physics,Class 12,Ray-Optics.pdf,9,9.4,Total Internal Reflection
+Physics,Class 12,Ray-Optics.pdf,9,9.4.1,Total internal reflection in nature and its technological applications
+Physics,Class 12,Ray-Optics.pdf,9,9.5,Refraction At Spherical Surfaces And By Lenses
+Physics,Class 12,Ray-Optics.pdf,9,9.5.1,Refraction at a spherical surface
+Physics,Class 12,Ray-Optics.pdf,9,9.5.2,Refraction by a lens
+Physics,Class 12,Ray-Optics.pdf,9,9.5.3,Power of a lens
+Physics,Class 12,Ray-Optics.pdf,9,9.5.4,Combination of thin lenses in contact
+Physics,Class 12,Ray-Optics.pdf,9,9.6,Refraction Through A Prism
+Physics,Class 12,Ray-Optics.pdf,9,9.7,Optical Instruments
+Physics,Class 12,Ray-Optics.pdf,9,9.7.1,The microscope
+Physics,Class 12,Ray-Optics.pdf,9,9.7.2,Telescope
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.1,Introduction
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.2,Classification Of Metals, Conductors And Semiconductors
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.3,Intrinsic Semiconductor
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.4,Extrinsic Semiconductor
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.5,p-n Junction
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.5.1,p-n junction formation
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.6,Semiconductor Diode
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.6.1,p-n junction diode under forward bias
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.6.2,p-n junction diode under reverse bias
+Physics,Class 12,SemiConductor-Electronics.pdf,14,14.7,Application Of Junction Diode As A Rectifier
+Physics,Class 12,Wave-Optics.pdf,10,10.1,Introduction
+Physics,Class 12,Wave-Optics.pdf,10,10.2,Huygens Principle
+Physics,Class 12,Wave-Optics.pdf,10,10.3,Refraction And Reflection Of Plane Waves Using Huygens Principle
+Physics,Class 12,Wave-Optics.pdf,10,10.3.1,Refraction of a plane wave
+Physics,Class 12,Wave-Optics.pdf,10,10.3.2,Refraction at a rarer medium
+Physics,Class 12,Wave-Optics.pdf,10,10.3.3,Reflection of a plane wave by a plane surface
+Physics,Class 12,Wave-Optics.pdf,10,10.4,Coherent And Incoherent Addition Of Waves
+Physics,Class 12,Wave-Optics.pdf,10,10.5,Interference Of Light Waves And Young's Experiment
+Physics,Class 12,Wave-Optics.pdf,10,10.6,Diffraction
+Physics,Class 12,Wave-Optics.pdf,10,10.6.1,The single slit
+Physics,Class 12,Wave-Optics.pdf,10,10.6.2,Seeing the single slit diffraction pattern
+Physics,Class 12,Wave-Optics.pdf,10,10.7,Polarisation
+
+
+
