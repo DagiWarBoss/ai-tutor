@@ -1,29 +1,42 @@
-import os, re, fitz, pandas as pd
+import os
+import re
+import fitz
+import pandas as pd
 from difflib import SequenceMatcher
+import psycopg2
+from dotenv import load_dotenv
 
-def similar(a, b):
-    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+# --- Configuration ---
+PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
+CSV_PATH = "extracted_headings_all_subjects.csv"
+load_dotenv()
+SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Your full postgres connection string
+
+# --- Helper Functions ---
+def log(msg): print(msg, flush=True)
+
+def similar(a, b): return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
 def find_headings(doc, chapter_number, topics):
     anchors = []
     for page_num, page in enumerate(doc):
-        blocks = page.get_text("blocks")
+        blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             text = b[4].strip()
             for topic in topics:
                 tnum = topic['topic_number']
                 ttitle = topic['name']
-                # Match topic number
-                if re.search(rf"^{chapter_number}\.\d+", text):
-                    # Use fuzzy match for title
-                    if similar(ttitle, text) > 0.6:
+                # Look for lines starting with topic number (like "1.1 "),
+                # then fuzzy match the rest to the expected title
+                if text.startswith(tnum):
+                    heading_title = re.sub(rf'^{re.escape(tnum)}\s*', '', text)
+                    if similar(ttitle, heading_title) > 0.6:
                         anchors.append({
                             'topic_number': tnum,
                             'title': ttitle,
                             'page': page_num,
                             'y': b[1]
                         })
-    # sort anchors
     anchors.sort(key=lambda x: (x['page'], x['y']))
     return anchors
 
@@ -51,27 +64,81 @@ def extract_topic_contents(doc, anchors):
         anchor['content'] = "\n".join(topic_blocks)
     return anchors
 
-def main():
-    df = pd.read_csv(CSV_PATH)
-    for pdf_filename in os.listdir(PDF_ROOT_FOLDER):
-        if not pdf_filename.endswith('.pdf'):
-            continue
-        chapter_topics = df[df['chapter_file']==pdf_filename].to_dict('records')
-        if not chapter_topics:
-            print(f"[SKIP] No topic info for {pdf_filename}")
-            continue
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, pdf_filename)
-        doc = fitz.open(pdf_path)
-        chap_num = str(chapter_topics[0]['chapter_number'])
-        # Detect anchors
-        anchors = find_headings(doc, chap_num, chapter_topics)
-        if not anchors:
-            print(f"[MISS] No anchors found for {pdf_filename}")
-            continue
-        # Extract topic contents
-        topics_with_content = extract_topic_contents(doc, anchors)
-        # Now, update DB with these contents (as in your code)
-        # Loop topics_with_content and execute the UPDATE query
-        doc.close()
+def update_topic_in_db(cursor, chapter_id, topic_number, content):
+    cursor.execute(
+        "UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
+        (content, chapter_id, topic_number)
+    )
 
-main()
+def main():
+    # --- Connect to DB ---
+    try:
+        conn = psycopg2.connect(SUPABASE_URI)
+        cursor = conn.cursor()
+    except Exception as e:
+        log(f"[ERROR] Could not connect to DB: {e}")
+        return
+
+    # --- Load CSV ---
+    try:
+        master_df = pd.read_csv(CSV_PATH, dtype=str)
+        master_df = master_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+    except Exception as e:
+        log(f"[ERROR] Could not read {CSV_PATH}: {e}")
+        return
+
+    # --- Load DB chapters and subjects ---
+    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters")
+    chapters_in_db = cursor.fetchall()
+    cursor.execute("SELECT id, name FROM subjects")
+    subjects_map = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
+
+    for chapter_id, chapter_name, class_number, subject_id in chapters_in_db:
+        subject_name = subjects_map.get(subject_id)
+        if not subject_name: continue
+
+        pdf_filename = f"{chapter_name}.pdf"
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
+        log(f"\n--- Processing: {pdf_filename} ---")
+        if not os.path.exists(pdf_path):
+            log(f"  [WARNING] PDF not found.")
+            continue
+        
+        chapter_topics_df = master_df[
+            (master_df['chapter_file'] == pdf_filename) &
+            (master_df['subject'] == subject_name) &
+            (master_df['class'] == class_number)
+        ]
+        if chapter_topics_df.empty:
+            log(f"  [WARNING] No topics for chapter in CSV. Skipping.")
+            continue
+
+        topics_from_csv = chapter_topics_df.to_dict('records')
+        doc = fitz.open(pdf_path)
+        # use the first topic's chapter_number (they are all the same per chapter)
+        chap_num = str(topics_from_csv[0]['chapter_number'])
+        anchors = find_headings(doc, chap_num, topics_from_csv)
+        if not anchors:
+            log(f"[MISS] No anchors found for {pdf_filename}")
+            doc.close()
+            continue
+        log(f"  [INFO] Found {len(anchors)} anchors.")
+
+        topics_with_content = extract_topic_contents(doc, anchors)
+        doc.close()
+        update_count = 0
+        for topic in topics_with_content:
+            if topic['content']:
+                update_topic_in_db(cursor, chapter_id, topic['topic_number'], topic['content'])
+                update_count += 1
+        
+        if update_count > 0:
+            conn.commit()
+        log(f"  [SUCCESS] Updated {update_count} topics for this chapter.")
+    
+    cursor.close()
+    conn.close()
+    log("\n[COMPLETE] Script finished.")
+
+if __name__ == "__main__":
+    main()
