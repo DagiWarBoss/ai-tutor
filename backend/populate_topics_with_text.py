@@ -1,6 +1,6 @@
 import os
 import re
-import pandas as pd  # Using pandas for robust CSV handling
+import pandas as pd
 from dataclasses import dataclass, field
 from typing import List
 import fitz  # PyMuPDF
@@ -16,7 +16,7 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 
 # ==============================================================================
 # --- THIS IS THE TUNING KNOB ---
-# If the script is missing headings, try lowering this number (e.g., to 7 or 6).
+# If the script is missing headings, you can lower this number (e.g., to 7 or 6).
 SCORE_THRESHOLD = 8
 # ==============================================================================
 
@@ -123,10 +123,9 @@ def main():
         return
         
     try:
-        # --- ROBUST CSV LOADING WITH PANDAS ---
         log(f"[INFO] Loading master topic list from {CSV_PATH}...")
-        master_df = pd.read_csv(CSV_PATH, dtype=str) # Read all columns as strings
-        master_df = master_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x) # Trim whitespace
+        master_df = pd.read_csv(CSV_PATH, dtype=str)
+        master_df = master_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     except FileNotFoundError:
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
