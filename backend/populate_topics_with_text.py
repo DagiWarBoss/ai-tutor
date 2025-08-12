@@ -2,7 +2,6 @@ import os
 import re
 import fitz  # PyMuPDF
 import pandas as pd
-import unicodedata
 from difflib import SequenceMatcher
 import psycopg2
 from dotenv import load_dotenv
@@ -11,36 +10,40 @@ from dotenv import load_dotenv
 PDF_ROOT_FOLDER = "NCERT_PCM_ChapterWise"
 CSV_PATH = "extracted_headings_all_subjects.csv"
 load_dotenv()
-SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Your full Postgres connection string
+SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")  # Full Postgres connection string
 # ------------------------------------------------
 
 def log(msg): print(msg, flush=True)
 
-def similar(a, b): return SequenceMatcher(None, a, b).ratio()
+def similar(a, b): return SequenceMatcher(None, a.casefold(), b.casefold()).ratio()
 
-def normalize_text(text):
-    text = str(text)
-    text = unicodedata.normalize('NFKD', text)
-    text = re.sub(r'[\W_]+', ' ', text)
-    return text.lower().strip()
+def is_anchor_block(text, tnum, ttitle):
+    # Heading pattern that starts with topic number (with some optional decorations)
+    heading_pattern = rf'^\s*{re.escape(tnum)}[\s:.\-–—]*'
+    if re.match(heading_pattern, text):
+        heading_title = re.sub(heading_pattern, '', text).strip()
+        # Only accept with high fuzzy title similarity (adjust threshold as needed)
+        if similar(ttitle, heading_title) > 0.7:
+            return True
+    return False
 
-def find_headings(doc, chapter_number, topics, topic_colname, title_colname):
+def find_headings(doc, topics, topic_colname, title_colname):
     anchors = []
     for page_num, page in enumerate(doc):
         blocks = page.get_text("blocks", sort=True)
         for b in blocks:
             text = b[4].strip()
-            cleaned_text = normalize_text(text)
             for topic in topics:
-                tnum = normalize_text(topic[topic_colname])
-                ttitle = normalize_text(topic[title_colname])
-                # Match topic number anywhere, or title loosely
-                if tnum and tnum in cleaned_text:
-                    possible_title = cleaned_text.split(tnum, 1)[-1].strip()
-                    if similar(ttitle, possible_title) > 0.5:
-                        anchors.append({'topic_number': topic[topic_colname], 'title': topic[title_colname], 'page': page_num, 'y': b[1], 'raw_text': text})
-                elif similar(ttitle, cleaned_text) > 0.7 or ttitle in cleaned_text or cleaned_text in ttitle:
-                    anchors.append({'topic_number': topic[topic_colname], 'title': topic[title_colname], 'page': page_num, 'y': b[1], 'raw_text': text})
+                tnum = topic[topic_colname].strip()
+                ttitle = topic[title_colname].strip()
+                if tnum and ttitle and is_anchor_block(text, tnum, ttitle):
+                    anchors.append({
+                        'topic_number': tnum,
+                        'title': ttitle,
+                        'page': page_num,
+                        'y': b[1],
+                        'raw_text': text
+                    })
     anchors.sort(key=lambda x: (x['page'], x['y']))
     return anchors
 
@@ -121,7 +124,7 @@ def main():
 
         topics_from_csv = chapter_topics_df.to_dict('records')
         doc = fitz.open(pdf_path)
-        anchors = find_headings(doc, None, topics_from_csv, topic_colname, title_colname)
+        anchors = find_headings(doc, topics_from_csv, topic_colname, title_colname)
         if not anchors:
             log(f"[MISS] No anchors found for {pdf_filename}")
             doc.close()
@@ -132,18 +135,13 @@ def main():
         topics_with_content = extract_topic_contents(doc, anchors)
         doc.close()
 
-        # Try to match anchors to CSV topics with normalized text (even if noisy)
         update_count = 0
         missed_topics = []
+        # Try to match anchors to CSV topics
         for topic in topics_from_csv:
-            csv_num = normalize_text(topic[topic_colname])
-            csv_title = normalize_text(topic[title_colname])
             found_match = False
             for anchor in topics_with_content:
-                anchor_num = normalize_text(anchor['topic_number'])
-                anchor_title = normalize_text(anchor['title'])
-                # Match on number or high title similarity
-                if (anchor_num == csv_num) or (similar(anchor_title, csv_title) > 0.7) or (csv_title in anchor_title) or (anchor_title in csv_title):
+                if (anchor['topic_number'] == topic[topic_colname]) and (anchor['title'] == topic[title_colname]):
                     update_topic_in_db(cursor, chapter_id, topic[topic_colname], anchor['content'])
                     update_count += 1
                     found_match = True
