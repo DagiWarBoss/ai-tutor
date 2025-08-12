@@ -40,18 +40,23 @@ def main():
     cursor.execute("SELECT id, name FROM subjects")
     subjects = {sub_id: sub_name for sub_id, sub_name in cursor.fetchall()}
 
-    # 2. Find all chapters that are MISSING their full_text content
-    cursor.execute("SELECT id, name, class_number, subject_id FROM chapters WHERE full_text IS NULL")
+    # 2. Find all chapters that are MISSING an entry in chapter_texts
+    cursor.execute("""
+        SELECT c.id, c.name, c.class_number, c.subject_id 
+        FROM chapters c 
+        LEFT JOIN chapter_texts ct ON c.id = ct.chapter_id 
+        WHERE ct.id IS NULL
+    """)
     chapters_to_process = cursor.fetchall()
     
     if not chapters_to_process:
-        print("[INFO] All chapters already have their full text populated. Nothing to do.")
+        print("[INFO] All chapters already have their full text populated in chapter_texts. Nothing to do.")
         conn.close()
         return
 
     print(f"[INFO] Found {len(chapters_to_process)} chapters that need their full text extracted.")
 
-    # 3. Loop through each chapter, extract its text, and update the database
+    # 3. Loop through each chapter, extract its text, and insert into chapter_texts
     for chapter_id, chapter_name, class_number, subject_id in chapters_to_process:
         subject_name = subjects.get(subject_id)
         if not subject_name:
@@ -59,7 +64,7 @@ def main():
             continue
             
         pdf_filename = f"{chapter_name}.pdf"
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, class_number, pdf_filename)
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subject_name, str(class_number), pdf_filename)
         
         print(f"\nProcessing Chapter ID {chapter_id}: {chapter_name}")
 
@@ -71,19 +76,19 @@ def main():
         full_text = extract_full_text_from_pdf(pdf_path)
         
         if full_text:
-            # Update the chapter row in the database with the full text
+            # Insert into the new chapter_texts table
             cursor.execute(
-                "UPDATE chapters SET full_text = %s WHERE id = %s",
-                (full_text, chapter_id)
+                "INSERT INTO chapter_texts (chapter_id, full_text) VALUES (%s, %s)",
+                (chapter_id, full_text)
             )
-            print(f"  [SUCCESS] Successfully updated chapter '{chapter_name}' with its full text.")
+            print(f"  [SUCCESS] Successfully inserted full text for chapter '{chapter_name}' into chapter_texts.")
 
     # 4. Commit all changes to the database
     conn.commit()
     cursor.close()
     conn.close()
     
-    print("\n[COMPLETE] Finished populating chapter text.")
+    print("\n[COMPLETE] Finished populating chapter text in chapter_texts table.")
 
 if __name__ == '__main__':
     main()
