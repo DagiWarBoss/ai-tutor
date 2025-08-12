@@ -6,25 +6,30 @@ from pdf2image import convert_from_path
 import pytesseract
 import pandas as pd
 
+
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = "extracted_headings_all_subjects.csv"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\gemini_csv.csv"
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # =======================================================
+
 
 # --- Configuration ---
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 
+
 def log(msg: str):
     print(msg, flush=True)
+
 
 def get_chapter_map_from_db(cursor):
     """Fetches all chapters from the DB to create a name-to-ID map."""
     cursor.execute("SELECT name, id FROM chapters")
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
+
 
 def run_ocr_on_pdf(pdf_path: str) -> str:
     """Performs OCR on every page of a PDF and returns the full text."""
@@ -40,6 +45,7 @@ def run_ocr_on_pdf(pdf_path: str) -> str:
         log(f"  [ERROR] OCR process failed for {os.path.basename(pdf_path)}: {e}")
         return ""
 
+
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     """Extracts topics and questions from the OCR text using the CSV as a guide."""
     extracted_topics = []
@@ -53,6 +59,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     matches = list(heading_pattern.finditer(ocr_text))
     
     topic_locations = {match.group(1): match.start() for match in matches}
+
 
     # Assign content to topics
     for index, row in topics_from_csv.iterrows():
@@ -76,6 +83,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                 'content': content
             })
 
+
     # Extract questions
     questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
@@ -88,6 +96,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             questions.append({'question_number': q_num, 'question_text': q_text.strip()})
             
     return extracted_topics, questions
+
 
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
@@ -107,6 +116,7 @@ def update_database(cursor, chapter_id: int, topics: list, questions: list):
         )
     log(f"  - Database update commands sent.")
 
+
 def main():
     try:
         conn = psycopg2.connect(SUPABASE_URI)
@@ -123,7 +133,9 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
+
     chapter_map = get_chapter_map_from_db(cursor)
+
 
     for root, dirs, files in os.walk(PDF_ROOT_FOLDER):
         for filename in sorted(files):
@@ -144,6 +156,7 @@ def main():
                     log(f"  [WARNING] No topics for this chapter in the CSV. Skipping.")
                     continue
 
+
                 # Run the full OCR and extraction process
                 ocr_text = run_ocr_on_pdf(pdf_path)
                 if ocr_text:
@@ -152,9 +165,11 @@ def main():
                     conn.commit()
                     log(f"  [SUCCESS] Saved data for '{chapter_name}' to Supabase.")
 
+
     cursor.close()
     conn.close()
     log("\n[COMPLETE] Script finished.")
+
 
 if __name__ == '__main__':
     main()
