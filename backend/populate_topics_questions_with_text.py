@@ -8,9 +8,7 @@ import pytesseract
 
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
-# --- THIS PATH HAS BEEN UPDATED ---
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
-# ---------------------------------
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # =======================================================
@@ -117,59 +115,55 @@ def run_ocr_on_pdf(pdf_path: str) -> str:
         log(f"    [ERROR] OCR process failed for {os.path.basename(pdf_path)}: {e}")
         return ""
 
-def natural_sort_key(s):
-    if s is None:
-        return []
-    parts = re.split(r'(\d+|\D+)', s)
-    processed_parts = []
-    for part in parts:
-        if part.isdigit():
-            processed_parts.append(int(part))
-        elif part.isalpha():
-            processed_parts.append(part.lower())
-        else:
-            processed_parts.append(part)
-    return processed_parts
-
-def extract_topics_and_questions(full_text: str, topics_from_csv: pd.DataFrame):
+def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
+    """Extracts topics and questions from the OCR text using the CSV as a guide."""
     extracted_topics = []
-    csv_topics_info = sorted([
-        {'id': row_id, 'topic_number': str(row['heading_number']), 'name': row['heading_text']}
-        for row_id, row in topics_from_csv.iterrows()
-    ], key=lambda x: natural_sort_key(x['topic_number']))
+    
+    # --- THIS IS YOUR PREFERRED, MORE RELIABLE TOPIC LOGIC ---
+    # Create a regex pattern for all topic numbers to find their locations
+    topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
+    
+    # Find all potential topic start points
+    # This finds the start of a line, the topic number, then whitespace
+    heading_pattern = re.compile(r'^(%s)\s+' % '|'.join(topic_numbers), re.MULTILINE)
+    matches = list(heading_pattern.finditer(ocr_text))
+    
+    topic_locations = {match.group(1): match.start() for match in matches}
 
-    found_topic_starts = {}
-    log(f"    - Searching for {len(csv_topics_info)} topics in PDF text.")
-    for topic_info in csv_topics_info:
-        topic_num = topic_info['topic_number']
-        topic_name = topic_info['name']
-        pattern = re.compile(r'^\s*' + re.escape(topic_num) + r'\s+' + re.escape(topic_name), re.MULTILINE | re.IGNORECASE)
-        match = pattern.search(full_text)
-        if match:
-            found_topic_starts[topic_num] = match.start()
-    
-    sorted_found_topics = sorted(found_topic_starts.items(), key=lambda item: item[1])
-    
-    for i, (topic_num, start_pos) in enumerate(sorted_found_topics):
-        end_pos = len(full_text)
-        if i + 1 < len(sorted_found_topics):
-            end_pos = sorted_found_topics[i+1][1]
+    log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
+
+    # Assign content to topics
+    for index, row in topics_from_csv.iterrows():
+        topic_num = str(row['heading_number'])
+        start_pos = topic_locations.get(topic_num)
         
-        content = full_text[start_pos:end_pos].strip()
-        topic_name = next(t['name'] for t in csv_topics_info if t['topic_number'] == topic_num)
-        extracted_topics.append({'topic_number': topic_num, 'title': topic_name, 'content': content})
-        log(f"        - Extracted content for '{topic_num} {topic_name}'.")
+        if start_pos is not None:
+            # Find the start position of the next topic to define the end of this topic's content
+            end_pos = len(ocr_text)
+            for next_num, next_pos in topic_locations.items():
+                if next_pos > start_pos and next_pos < end_pos:
+                    end_pos = next_pos
+            
+            content = ocr_text[start_pos:end_pos].strip()
+            
+            extracted_topics.append({
+                'topic_number': topic_num,
+                'title': row['heading_text'],
+                'content': content
+            })
+    # --- END OF REVERTED TOPIC LOGIC ---
 
+    # --- Question Extraction (Using the improved logic from before) ---
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
     for marker in exercise_markers:
-        exercises_match = re.search(marker, full_text, re.IGNORECASE)
+        exercises_match = re.search(marker, ocr_text, re.IGNORECASE)
         if exercises_match:
             break
             
     if exercises_match:
-        exercises_text = full_text[exercises_match.start():]
+        exercises_text = ocr_text[exercises_match.start():]
         
         question_start_pattern = re.compile(r'^\s*(\d+(\.\d+)?)\s*[\.\)]\s*', re.MULTILINE)
         question_matches = list(question_start_pattern.finditer(exercises_text))
@@ -188,7 +182,6 @@ def extract_topics_and_questions(full_text: str, topics_from_csv: pd.DataFrame):
             
             if q_text:
                 questions.append({'question_number': q_num, 'question_text': q_text})
-
     else:
         log(f"    - No obvious 'EXERCISES' or 'QUESTIONS' section found.")
             
@@ -269,14 +262,14 @@ def main():
             skipped_chapters_count += 1
             continue
 
-        full_chapter_text = run_ocr_on_pdf(pdf_path)
+        ocr_text = run_ocr_on_pdf(pdf_path)
         
-        if not full_chapter_text:
+        if not ocr_text:
             log(f"    [ERROR] Failed to get text from '{pdf_filename}'. Skipping chapter.")
             skipped_chapters_count += 1
             continue
         
-        topics_data, questions_data = extract_topics_and_questions(full_chapter_text, chapter_topics_df)
+        topics_data, questions_data = extract_topics_and_questions(ocr_text, chapter_topics_df)
         
         if not topics_data and not questions_data:
             log(f"    [WARNING] No topics or questions extracted from text for '{chapter_name_db}'. Skipping database update.")
