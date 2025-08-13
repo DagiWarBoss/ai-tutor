@@ -1,0 +1,656 @@
+Chapter 2
+
+12079CHO2
+
+INVERSE TRIGONOMETRIC
+
+FUNCTIONS
+
++ Mathematics, in general, is fundamentally the science of
+self-evident things. — FELIX KLEIN
+
+2.1 Introduction
+
+In Chapter 1, we have studied that the inverse ofa function
+f, denoted by f, exists if fis one-one and onto. There are
+many functions which are not one-one, onto or both and
+hence we can not talk of their inverses. In Class XI, we
+studied that trigonometric functions are not one-one and
+onto over their natural domains and ranges and hence their
+inverses do not exist. In this chapter, we shall study about
+the restrictions on domains and ranges of trigonometric
+functions which ensure the existence of their inverses and
+observe their behaviour through graphical representations.
+Besides, some elementary properties will also be discussed. >= l= verre
+
+The inverse trigonometric functions play an important Aryabhata
+. : (476-550 A. D.)
+role in calculus for they serve to define many integrals.
+The concepts of inverse trigonometric functions is also used in science and engineering.
+2.2 Basic Concepts
+In Class XI, we have studied trigonometric functions, which are defined as follows:
+sine function, 1.e., sine : R > [- 1, 1]
+cosine function, 1.e., cos : R > [- 1, 1]
+
+™
+tangent function, i.e., tan: R- {x:x=(2n+ 1) zone Z} >R
+
+cotangent function, ie., cot: R- {x:x=nt,neZ}>R
+
+T
+secant function, i.e., sec: R- {x:x=(2n+ 1) 5° ne Z}>R- (1,1)
+
+cosecant function, 1.e., cosec: R- {x:x =n, n € Z} >R-(-1, 1)
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 19
+
+We have also learnt in Chapter | that iff: XY such that f(x) =y is one-one and
+onto, then we can define a unique function g : YX such that g(y) =x, where x € X
+and y = f(x), vy € Y. Here, the domain of g = range of fand the range of g = domain
+of f, The function g is called the inverse of fand is denoted by f'. Further, g is also
+one-one and onto and inverse of g is f, Thus, g'= (f')'=f. We also have
+
+fof) =f" FO) =f) =x
+and fof )M=fF 0) =f) =y
+
+Since the domain of sine function is the set of all real numbers and range is the
+
+closed interval [—1, 1]. If we restrict its domain to =. Z| , then it becomes one-one
+
+and onto with range [- 1, 1]. Actually, sine function restricted to any of the intervals
+
+2° 2 2°2]) 12’
+
+therefore, define the inverse of sine function in each of these intervals. We denote the
+inverse of sine function by sin! (arc sine function). Thus, sin! is a function whose
+
+3# # |3 =|, E **] etc., is one-one and its range is [-I, 1]. We can,
+
+domain is [— 1, 1] and range could be any of the intervals = =| , =. "| or
+
+3 : :
+Ee , and so on. Corresponding to each such interval, we get a branch of the
+
+—l 7
+function sin'. The branch with range S4 is called the principal value branch,
+whereas other intervals as range give different branches of sin. When we refer
+to the function sin', we take it as the function whose domain is [—1, 1] and range is
+—T 1 i, —l 1
+—.—]|. We write sin! : [-1, 1] > | —.<=
+2 2 2 2
+From the definition of the inverse functions, it follows that sin (sin! x) = x
+
+7 7
+if —1<x<1 and sin’ (sin x) =x if 5 SxS 5" In other words, if y = sin x, then
+
+sin y = x.
+Remarks
+
+(i) We know from Chapter 1, that ify = f(x) is an invertible function, then x =f (y).
+Thus, the graph of sin function can be obtained from the graph of original
+function by interchanging x and y axes, 1.e., if (a, 5) is a point on the graph of
+sine function, then (b, a) becomes the corresponding point on the graph of inverse
+
+Reprint 2025-26
+
+20 MATHEMATICS
+
+of sine function. Thus, the graph of the function y = sin! x can be obtained from
+the graph of y = sin x by interchanging x and y axes. The graphs of y = sin x and
+y =sin' x are as given in Fig 2.1 (1), (ii), (iii). The dark portion of the graph of
+y =sin' x represent the principal value branch.
+
+(ii) It can be shown that the graph of an inverse function can be obtained from the
+corresponding graph of original function as a mirror image (i.e., reflection) along
+the line y = x. This can be visualised by looking the graphs of y = sin x and
+
+y =sin' x as given in the same axes (Fig 2.1 (ii1)).
+
+a . eo -1
+y=sin'x y =sin x and y= sin" x
+
+Fig 2.1 (ii) Fig 2.1 (iii)
+
+Like sine function, the cosine function is a function whose domain is the set of all
+
+real numbers and range is the set [—1, 1]. If we restrict the domain of cosine function
+to [0, z], then it becomes one-one and onto with range [—1, 1]. Actually, cosine function
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 21
+
+restricted to any of the intervals [— 2, 0], [0,7], [, 27] etc., is bijective with range as
+[-1, 1]. We can, therefore, define the inverse of cosine function in each of these
+intervals. We denote the inverse of the cosine function by cos" (arc cosine function).
+Thus, cos! is a function whose domain is [—1, 1] and range Y
+
+could be any of the intervals [—7, 0], [0, m], [z, 27] etc.
+Corresponding to each such interval, we get a branch of the
+function cos. The branch with range [0, 71] is called the principal
+value branch of the function cos. We write
+
+cos! : [-1, 1] > [0, z].
+
+The graph of the function given by y = cos x can be drawn
+
+in the same way as discussed about the graph of y = sin! x. The ;
+graphs of y= cos x and y= cos 'x are given in Fig 2.2 (i) and (ii). x
+
+Y
+y=cosx y=cos x
+Fig 2.2 (i) Fig 2.2 (ii)
+
+Let us now discuss cosec!x and sec !x as follows:
+
+1
+Since, cosec x = ———, the domain of the cosec function is the set {x : x « Rand
+sin x
+
+x #nn,n € Z} and the range is the set {v: y € R, y= 1 ory < —I} ie., the set
+R-(-1, 1). It means that y = cosec x assumes all real values except —1 < y < 1 and is
+not defined for integral multiple of 2. If we restrict the domain of cosec function to
+
+Tm 1
+- >? 4 — {0}, then it is one to one and onto with its range as the set R—(— 1, 1). Actually,
+
+; —3n —T —Tt 1
+cosec function restricted to any of the intervals 73D —{-T} , 35 — {0},
+mT 37 ;
+79 |” {T} etc., is bijective and its range is the set of all real numbers R — (-1, 1).
+
+Reprint 2025-26
+
+22 MATHEMATICS
+
+Thus cosec™ can be defined as a function whose domain is R—(—1, 1) and range could
+
+34 # zF mn 30
+i — ,— 4} —,— {0} Jo -]-
+be any of the intervals a) { ¥}, 79 {0} , B 5 {m} etc. The
+function corresponding to the range =. 4 — {0} is called the principal value branch
+
+of cosec”'. We thus have principal branch as
+
+cosec! : R—(-l, 1) > =.2)—10
+
+The graphs of y = cosec x and y = cosec"!x are given in Fig 2.3 (i), (ii).
+
+-1
+y=cosec xX
+
+y = cosec x
+Fig 2.3 (i) Fig 2.3 (ii)
+; i . ; T
+Also, since sec x = osx? the domain of y= sec x is the set R— {x : x =(2n+ 1) >
+x
+
+n € Z} and range is the set R — (-1, 1). It means that sec (secant function) assumes
+
+™
+all real values except —1 < y < 1 and is not defined for odd multiples of - If we
+
+™
+restrict the domain of secant function to [0, 2] — { > }, then it is one-one and onto with
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 23
+
+its range as the set R — (-l, 1). Actually, secant function restricted to any of the
+—T
+intervals [—1, 0] — i> }, [0, x]- {5 , [1, 27] - (= } etc., is bijective and its range
+is R— {—1, 1}. Thus sec" can be defined as a function whose domain is R— (—1, 1) and
+—T T 3m
+range could be any of the intervals [— 2, 0]— i> }, (0, x]— iy }, [n, 2a] - > } ete.
+Corresponding to each of these intervals, we get different branches of the function sec.
+T
+The branch with range [0, a] — 53 is called the principal value branch of the
+function sec'. We thus have
+T
+sec! : R—(-1,1) > [0, x] - 53
+The graphs of the functions vy = sec x and y = sec" x are given in Fig 2.4 (1), (ii).
+
+y=secx
+Fig 2.4 (i) Fig 2.4 (ii)
+
+Finally, we now discuss tan and cot!
+We know that the domain of the tan function (tangent function) is the set
+
+™
+{x :x € Rand x # (2n +1) zene Z} and the range is R. It means that tan function
+
+™
+is not defined for odd multiples of 5: If we restrict the domain of tangent function to
+
+Reprint 2025-26
+
+24 MATHEMATICS
+
+—m 7 : ys .
+(= , then it is one-one and onto with its range as R. Actually, tangent function
+
+; —3m —T —m™ nm 37
+range could be any of the intervals ro }lo?a} aro and so on. These
+. . 4. . ; —l 1
+intervals give different branches of the function tan. The branch with range (=. > )
+
+is called the principal value branch of the function tan!.
+
+We thus have
+tan': R> [=.2)
+2 2
+The graphs of the function y = tan x and y = tan''x are given in Fig 2.5 (i), (ii).
+
+y=tan'x
+y=tanx
+Fig 2.5 (i) Fig 2.5 (ii)
+
+We know that domain of the cot function (cotangent function) is the set
+{x:x € Randx #nz,n € Z} and range is R. It means that cotangent function is not
+defined for integral multiples of 2. If we restrict the domain of cotangent function to
+(0, 7), then it is bijective with and its range as R. In fact, cotangent function restricted
+to any of the intervals (—1, 0), (0, 7), (, 271) etc., is bijective and its range is R. Thus
+cot can be defined as a function whose domain is the R and range as any of the
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 25
+
+intervals (—1, 0), (0, 2), (1, 27) etc. These intervals give different branches of the
+function cot"!. The function with range (0, 7) is called the principal value branch of
+the function cot"!. We thus have
+cot!: R > (0, 2)
+The graphs of y = cot x and y = cot ‘x are given in Fig 2.6 (1), (ii).
+
+Y 1
+y=cot x
+
+y=cotx
+Fig 2.6 (i) Fig 2.6 (ii)
+The following table gives the inverse trigonometric function (principal value
+branches) along with their domains and ranges.
+
+cosec! : R-(-1,1)
+
+Reprint 2025-26
+
+26 MATHEMATICS
+
+1. sin''x should not be confused with (sin x)1. In fact (sin x)!=
+
+similarly for other trigonometric functions.
+
+. Whenever no branch of an inverse trigonometric functions is mentioned, we
+mean the principal value branch of that function.
+
+. The value of an inverse trigonometric functions which lies in the range of
+
+principal branch is called the principal value of that inverse trigonometric
+functions.
+
+We now consider some examples:
+
+1
+Example 1 Find the principal value of sin! [<5
+
+1 1
+Solution Let sin | —= |= y. Then, sin y= —=.
+es » V2
+
+nN] 4
+N|
+
+We know that the range of the principal value branch of sin™ is and
+
+1 1
+sin( =| = Ve: Therefore, principal value of sin”! [= is :
+
+-l
+Example 2 Find the principal value of cot"! =)
+
+B
+
+Solution Let cot! €. = y. Then,
+
+t -l (=) cot(n =) cot{ =]
+cot y=—==-co = -—|= —
+"BB 3 3 3
+
+We know that the range of principal value branch of cot’ is (0, 2) and
+2n 1 20
+
+—l
+cot (=*)- VB . Hence, principal value of cot! =) is 3
+
+EXERCISE 2.1
+
+Find the principal values of the following:
+
+1 V3
+
+1. sin! [-5] 2. cos! 2) 3. cosec! (2)
+
+1
+4. tan! (-V3) 5. cos! [-5
+
+6. tan! (-1)
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 27
+
+2
+
+7. sec! [= 8. cot! (v3) 9. cos! [-=5
+
+10. cosec! (_/2 )
+Find the values of the following:
+
+1 1 1
+11. tan'(1) + cos! 5 + sin! "5 12. cos! > +2 sin! >
+13. Ifsin'x=y, then
+™ ™
+(A) O<y<n (B) -~Sysz
+2 2
+C) 0< y< D) -=<y<=
+(C) O< y<a (D) ~Z<¥<5
+14. tan! J3-sec™!(-2) is equal to
+T T 2m
+A) & B) -= C) = D) —
+(A) (B) 3 () 3 (D) 3
+
+2.3 Properties of Inverse Trigonometric Functions
+
+In this section, we shall prove some important properties of inverse trigonometric
+functions. It may be mentioned here that these results are valid within the principal
+value branches of the corresponding inverse trigonometric functions and wherever
+they are defined. Some results may not be valid for all values of the domains of inverse
+trigonometric functions. In fact, they will be valid only for some values of x for which
+inverse trigonometric functions are defined. We will not go into the details of these
+values of x in the domain as this discussion goes beyond the scope of this textbook.
+Let us recall that if y = sin'x, then x = sin y and if x = sin y, then y = sin ‘x. This
+is equivalent to
+sin (sin! x) =x,x € [—1, 1] and sin (sin x) =x, x € =. 4
+2 2
+For suitable values of domain similar results follow for remaining trigonometric
+functions.
+
+Reprint 2025-26
+
+28 MATHEMATICS
+
+We now consider some examples.
+
+Example 3 Show that
+1
+
+(i) sin" (21-2) =2 sin x, “FES*5
+1
+(i) sin! (ax J/{—x?) =2 cos! x, wer!
+
+Solution
+(i) Let x = sin 0. Then sin! x = 0. We have
+
+sin! (oxi ) = sin! (2sino 1-sin? 0)
+= sin! (2sinO cos) = sin (sin20) = 20
+
+=2 sin!x
+
+sl>
+
+(ii) Take x = cos 9, then proceeding as above, we get, si! (9 xVb— x2 )= 2 cos! x
+
+COS X —3n Tw. .
+/ —— —<x oy in the simplest form.
+
+Example 4 Express tan : ,
+1 sinx 2
+
+Solution We write
+
+2X
+
+2X :
+cosx cos” ——sin* —
+tan ) = tan’! 2 2
+
+l—sinx 9X 1. 9X . Xx x
+cos’ —+sin 2 sin —cos
+2 2 2 2
+
+x. Xx x. Xx
+cos—+sin— || cos——sin
+1 2 Al 2 |
+
+= tan
+xX - X j\2
+cos— —sin—
+L [ 2 5]
+i x . Xx x
+cos—+sin — 1+ tan—
+= tan! 2 = tan! 2
+x . Xx x
+cos——sin— 1-tan—
+2 2 2
+= tan!
+
+TT Xx Tl Xx
+tan} —+— || =—+—
+[ E *]| 4 2
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS 29
+
+_ 1
+Example 5 Write cot (<5) x > 1 in the simplest form.
+x -1
+
+Solution Let x = sec 0, then Vx -l|= sec? 0-1 =tand
+
+Therefore, cot !
+
+= cot! (cot 0) = 0 = sec! x, which is the simplest form.
+
+x
+EXERCISE 2.2
+Prove the following:
+1. 3sin' x = sin! (3x — 4x3), xe 4. 4
+. 2 2
+
+2. 3cos! x = cos! (4x3- 3x), xe E i
+
+Write the following functions in the simplest form:
+
+2 _
+3. tant Nite =! 0 4. in| S82 | ce
+
+tan ————_-,, X
+x 1+cosx
+
+_,{ cosx—sinx x 34
+5. tan | —————— |], — <x< —
+cosx+sinx ] 4 4
+
+6. tan’
+
+x
+To Ix <a
+ja -x
+
+eS x
+7. tan-
+
+ee), a> 0; BO <5
+
+Find the values of each of the following:
+
+8. tan” E cos [2 sin +)
+2
+
+1) . _, 2x l-y
+9. tan sin mes iy ,|x|<l,y>Oandxy< 1
+
+Reprint 2025-26
+
+30 MATHEMATICS
+
+Find the values of each of the expressions in Exercises 16 to 18.
+
+. af... 2
+10. sin {sin 11. tar( tn
+3 4
+tan sin >+cot 2
+12. 5 3
+
+13. cos! cos Te) is equal to
+
+(A) Z (er r (D)
+14. sin{ Zin | is equal to
+A 1 B 1 C a D) 1
+(A) 5 (B) 5 Oz ©
+15. tan! V3 —cot!(—V3) is equal to
+(A) x (B)-> ©0 (D) 23
+
+Miscellaneous. Examples
+
+. - -l,. 3
+Example 6 Find the value of sin” (sin 5?
+
+; . 1, . 3m, 3m
+Solution We know that sin"!(sin x) =x. Therefore, sin (sin =) “>
+
+31 Tt 1 a. Lo. .
+But = € a5 | which is the principal branch of sin"! x
+. 31 . 3m . 27 2m ™ 1
+H —)= ——)=sin— and —e|-—,—
+owever sin ( 5 ) = sin(7 5) sin 5 ani 5 5 =
+Therefore sin! (sin =) = sin! (sin a) = -
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS
+
+Miscellaneous Exercise on Chapter 2
+
+an | tan—
+6
+
+Find the value of the following:
+
+1. cos cos —
+6
+
+2.
+Prove that
+24
+3. 2sin! 3 = tan | — 4. sin! 8 + sin! 3 = tan! i
+5 5 36
+14 _,12 133 am 13.56
+5, cos —+cos —=cos — 6. cos —+sin  —=sin = —
+5 13 65 5 65
+63 . 45 3
+7. tan —-=sin —+cos —
+16 13 5
+Prove that
+8. tan’ x ! cos | 1x [0, 1]
+. = = — € [0,
+2 ltx >
+9. cot V1+ sin x +V1=sinx -*,xe(o.2]
+Vl+sinx —Vl-sinx } 2 4
+Vl+x-vl1- 1 1
+10. tan? a ~\=4 cos x, -—=<x<l [Hint: Put x = cos 20]
+Vl+x4+vl-x}) 4 2 V2
+Solve the following equations:
+-1 x 1 -]
+11. 2tan (cos x) = tan"! (2 cosec x) 12. tan’ ——=—tan  x,(x > 0)
+
+l+x 2
+
+13. sin (tan), |x| < 1 is equal to
+
+x
+5 (B)
+
+A
+(A) _
+
+1 1 x
+C D
+1-x° ©) V1+x? (0) l+x°
+
+T
+14. sin'(1 —x)-2 sin'!x= 5° then x is equal to
+
+1 1 1
+(A) 0.5 BL> ©o (D) 5
+
+Reprint 2025-26
+
+32 MATHEMATICS
+
+The domains and ranges (principal value branches) of inverse trigonometric
+functions are given in the following table:
+
+Functions Range
+(Principal Value Branches)
+
+1
+sin''x should not be confused with (sinx)'. In fact (sin x)! = sinx and
+
+similarly for other trigonometric functions.
+
+The value of an inverse trigonometric functions which lies in its principal
+value branch is called the principal value of that inverse trigonometric
+functions.
+
+For suitable values of domain, we have
+y=sin'x>x=siny x=sny >y=sin'x
+
+sin (sin! x) =x sin! (sin x) =x
+
+Reprint 2025-26
+
+INVERSE TRIGONOMETRIC FUNCTIONS
+
+The study of trigonometry was first started in India. The ancient Indian
+Mathematicians, Aryabhata (476A.D.), Brahmagupta (598 A.D.), Bhaskara I
+(600 A.D.) and Bhaskara II (1114 A.D.) got important results of trigonometry. All
+this knowledge went from India to Arabia and then from there to Europe. The
+Greeks had also started the study of trigonometry but their approach was so
+clumsy that when the Indian approach became known, it was immediately adopted
+throughout the world.
+
+In India, the predecessor of the modern trigonometric functions, known as
+the sine of an angle, and the introduction of the sine function represents one of
+the main contribution of the siddhantas (Sanskrit astronomical works) to
+mathematics.
+
+Bhaskara I (about 600 A.D.) gave formulae to find the values of sine functions
+for angles more than 90°. A sixteenth century Malayalam work Yuktibhasa
+contains a proof for the expansion of sin (A + B). Exact expression for sines or
+cosines of 18°, 36°, 54°, 72°, etc., were given by Bhaskara II.
+
+The symbols sin! x, cos"! x, etc., for arc sin x, are cos x, etc., were suggested
+by the astronomer Sir John F.W. Hersehel (1813) The name of Thales
+(about 600 B.C.) is invariably associated with height and distance problems. He
+is credited with the determination of the height of a great pyramid in Egypt by
+measuring shadows of the pyramid and an auxiliary staff (or gnomon) of known
+height, and comparing the ratios:
+
+H
+
+h
+nr = tan (sun’s altitude)
+
+Thales is also said to have calculated the distance of a ship at sea through
+the proportionality of sides of similar triangles. Problems on height and distance
+using the similarity property are also found in ancient Indian works.
+
+Reprint 2025-26
+
+33
+
