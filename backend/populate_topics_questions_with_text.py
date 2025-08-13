@@ -107,7 +107,7 @@ def get_chapter_map_from_db(cursor):
 def clean_ocr_text(text: str) -> str:
     # Simplified: Focus on basics to avoid over-correction
     text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
-    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines and remove extra empty lines
+    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
     return text.strip()
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
@@ -124,7 +124,7 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
         full_text = ""
         for i, image in enumerate(images):
-            full_text += pytesseract.image_to_string(image) + "\n"
+            full_text += pytesseract.image_to_string(image, config='--psm 3') + "\n"  # Improved layout detection
         log("    - OCR complete.")
         with open(cache_filepath, 'w', encoding='utf-8') as f:
             f.write(full_text)
@@ -140,24 +140,29 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     
     extracted_topics = []
     
-    # Loosened regex: More flexible for OCR noise (spaces, dots, dashes, sublevels)
-    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', '[\\.\\- ]?') for num in topics_from_csv['heading_number']]  # Allow optional sep for sublevels
-    heading_pattern = re.compile(r'(?m)^[\s]*(' + '|'.join(topic_numbers_escaped) + r')[\s\.]*', re.IGNORECASE)
+    # Refined regex: Flexible for sublevels, requires space or end after number to avoid over-matching
+    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', r'(?:\.|\s|\-)?') for num in topics_from_csv['heading_number']]
+    heading_pattern = re.compile(r'(?m)^\s*(' + '|'.join(topic_numbers_escaped) + r')(?:\s|\.|$)', re.IGNORECASE)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {}
+    text_length = len(ocr_text)
     for match in matches:
-        cleaned_num = re.sub(r'\s+', '', match.group(1)).replace('-', '.')  # Normalize matched num (e.g., "4 . 6 . 3" -> "4.6.3")
-        topic_locations[cleaned_num] = match.start()
-        log(f"    - Matched heading: {cleaned_num} at position {match.start()}")  # Debug: Show what was matched
+        # Normalize matched number (remove spaces, fix dashes)
+        cleaned_num = re.sub(r'\s+', '', match.group(1)).replace('-', '.')
+        pos = match.start()
+        # Filter: Ignore matches in likely exercise sections (last 20% of text)
+        if pos < text_length * 0.8:
+            if cleaned_num not in topic_locations:  # Avoid duplicates
+                topic_locations[cleaned_num] = pos
+                log(f"    - Matched heading: {cleaned_num} at position {pos}")
     
-    # Log expected vs found for debugging
+    # Log expected vs found
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
     found_topics = set(topic_locations.keys())
     missing_topics = expected_topics - found_topics
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
     if missing_topics:
         log(f"    - Missing topics: {', '.join(sorted(missing_topics))} (check OCR for artifacts or adjust regex).")
-        # Debug snippet for first missing: Print 50 chars around expected position
         for miss in list(missing_topics)[:3]:  # Limit to 3 for brevity
             miss_pos = ocr_text.find(miss)
             if miss_pos != -1:
@@ -165,33 +170,34 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                 log(f"      - Snippet around missing '{miss}': ...{snippet}...")
 
     # Extract content for found topics
-    for index, row in topics_from_csv.iterrows():
-        topic_num = str(row['heading_number'])
-        start_pos = topic_locations.get(topic_num)
-        if start_pos is not None:
-            end_pos = len(ocr_text)
-            for next_num, next_pos in sorted(topic_locations.items(), key=lambda x: x[1]):
-                if next_pos > start_pos and next_pos < end_pos:
-                    end_pos = next_pos
-                    break
-            content = ocr_text[start_pos:end_pos].strip()
-            extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
+    sorted_locations = sorted(topic_locations.items(), key=lambda x: x[1])
+    for i, (topic_num, start_pos) in enumerate(sorted_locations):
+        end_pos = sorted_locations[i+1][1] if i+1 < len(sorted_locations) else len(ocr_text)
+        content = ocr_text[start_pos:end_pos].strip()
+        title = topics_from_csv[topics_from_csv['heading_number'] == topic_num]['heading_text'].values[0] if not topics_from_csv[topics_from_csv['heading_number'] == topic_num].empty else ''
+        extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
     
-    # Fallback: Scan for missing subtopics within parent sections
-    for topic in extracted_topics:
-        parent_num = '.'.join(topic['topic_number'].split('.')[:-1])  # e.g., "4.6" from "4.6.3"
-        if parent_num in topic_locations:
-            continue
-        # Search within this topic's content for missing subtopics
-        sub_matches = heading_pattern.finditer(topic['content'])
+    # Improved fallback: Scan for missing subtopics within each extracted topic's content
+    for topic in extracted_topics[:]:  # Copy to avoid modification issues
+        content = topic['content']
+        sub_matches = heading_pattern.finditer(content)
         for sub_match in sub_matches:
             sub_cleaned = re.sub(r'\s+', '', sub_match.group(1)).replace('-', '.')
-            if sub_cleaned in missing_topics:
-                sub_start = sub_match.start() + start_pos  # Adjust position to full text
+            if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
+                sub_start = sub_match.start() + topic_locations[topic['topic_number']]
                 topic_locations[sub_cleaned] = sub_start
-                log(f"    - Fallback match for subtopic: {sub_cleaned}")
+                sub_end = len(ocr_text)  # Default to end; adjust if next found
+                for next_num, next_pos in sorted_locations:
+                    if next_pos > sub_start:
+                        sub_end = next_pos
+                        break
+                sub_content = ocr_text[sub_start:sub_end].strip()
+                sub_title = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]['heading_text'].values[0] if not topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned].empty else ''
+                extracted_topics.append({'topic_number': sub_cleaned, 'title': sub_title, 'content': sub_content})
+                log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
+                missing_topics.remove(sub_cleaned)  # Update missing set
 
-    # (Question extraction unchanged, as it was working well)
+    # (Question extraction unchanged)
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
