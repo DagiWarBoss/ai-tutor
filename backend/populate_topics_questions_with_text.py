@@ -104,13 +104,17 @@ def get_chapter_map_from_db(cursor):
     cursor.execute("SELECT name, id FROM chapters")
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
-def clean_ocr_text(text: str) -> str:
-    # Simplified: Focus on basics to avoid over-correction
-    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
+def clean_ocr_text(text: str, subject: str) -> str:
+    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Multiple spaces to single
     text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
+    if 'physics' in subject.lower():
+        text = re.sub(r'(\d+)\s*[\.=:\-]\s*(\d+)', r'\1.\2', text)  # Fix "2=1", "2 : 1" to "2.1"
+        text = re.sub(r'\[\s*(\d+)\s*\]', r'\1', text)  # Clean equation artifacts
+    # Handle commas: Convert in numbers (e.g., "4,1" -> "4.1") but keep in text
+    text = re.sub(r'(\d+),(\d+)', r'\1.\2', text)  # Comma as separator artifact
     return text.strip()
 
-def get_text_from_pdf_with_caching(pdf_path: str) -> str:
+def get_text_from_pdf_with_caching(pdf_path: str, subject: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
     cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
 
@@ -123,8 +127,11 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
     try:
         images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
         full_text = ""
+        config = '--psm 3'  # Default
+        if 'physics' in subject.lower():
+            config = '--psm 4'  # Better for single-column with diagrams
         for i, image in enumerate(images):
-            full_text += pytesseract.image_to_string(image, config='--psm 3') + "\n"  # Improved layout detection
+            full_text += pytesseract.image_to_string(image, config=config) + "\n"
         log("    - OCR complete.")
         with open(cache_filepath, 'w', encoding='utf-8') as f:
             f.write(full_text)
@@ -134,27 +141,24 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         log(f"    [ERROR] OCR process failed for {pdf_filename}: {e}")
         return ""
 
-def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
-    # Clean the OCR text first
-    ocr_text = clean_ocr_text(ocr_text)
-    
+def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
     extracted_topics = []
     
-    # Refined regex: Flexible for sublevels, requires space or end after number to avoid over-matching
-    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', r'(?:\.|\s|\-)?') for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'(?m)^\s*(' + '|'.join(topic_numbers_escaped) + r')(?:\s|\.|$)', re.IGNORECASE)
+    # Normalize CSV headings: Strip commas for matching but keep original for output
+    topics_from_csv['heading_text_normalized'] = topics_from_csv['heading_text'].str.replace(',', '', regex=False)
+    
+    # Enhanced regex: Tolerant for commas (treat as dots in numbers)
+    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', r'(?:[\.\s:\-,])?') for num in topics_from_csv['heading_number']]
+    heading_pattern = re.compile(r'(?m)^\s*(' + '|'.join(topic_numbers_escaped) + r')(?:\s*[\.\s:\-,]?|$)', re.IGNORECASE | re.DOTALL)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {}
     text_length = len(ocr_text)
     for match in matches:
-        # Normalize matched number (remove spaces, fix dashes)
-        cleaned_num = re.sub(r'\s+', '', match.group(1)).replace('-', '.')
+        cleaned_num = re.sub(r'[\s:\-,]+', '.', match.group(1)).strip('.')
         pos = match.start()
-        # Filter: Ignore matches in likely exercise sections (last 20% of text)
-        if pos < text_length * 0.8:
-            if cleaned_num not in topic_locations:  # Avoid duplicates
-                topic_locations[cleaned_num] = pos
-                log(f"    - Matched heading: {cleaned_num} at position {pos}")
+        if pos < text_length * 0.8 and cleaned_num not in topic_locations:
+            topic_locations[cleaned_num] = pos
+            log(f"    - Matched heading: {cleaned_num} at position {pos}")
     
     # Log expected vs found
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
@@ -163,7 +167,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
     if missing_topics:
         log(f"    - Missing topics: {', '.join(sorted(missing_topics))} (check OCR for artifacts or adjust regex).")
-        for miss in list(missing_topics)[:3]:  # Limit to 3 for brevity
+        for miss in list(missing_topics)[:3]:
             miss_pos = ocr_text.find(miss)
             if miss_pos != -1:
                 snippet = ocr_text[max(0, miss_pos-50):miss_pos+50].replace('\n', ' ')
@@ -172,66 +176,40 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     # Extract content for found topics
     sorted_locations = sorted(topic_locations.items(), key=lambda x: x[1])
     for i, (topic_num, start_pos) in enumerate(sorted_locations):
-        end_pos = sorted_locations[i+1][1] if i+1 < len(sorted_locations) else len(ocr_text)
+        end_pos = sorted_locations[i+1][1] if i+1 < len(sorted_locations) else text_length
         content = ocr_text[start_pos:end_pos].strip()
-        title = topics_from_csv[topics_from_csv['heading_number'] == topic_num]['heading_text'].values[0] if not topics_from_csv[topics_from_csv['heading_number'] == topic_num].empty else ''
+        row = topics_from_csv[topics_from_csv['heading_number'] == topic_num]
+        title = row['heading_text'].values[0] if not row.empty else ''  # Use original title with commas if present
         extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
     
-    # Improved fallback: Scan for missing subtopics within each extracted topic's content
-    for topic in extracted_topics[:]:  # Copy to avoid modification issues
+    # Stronger fallback: Deeper scan with looser pattern for misses, handling commas
+    loose_pattern = re.compile(r'(?m)(?:^|\n)\s*(\d+(?:[\.\s,\-]\d+)?(?:[\.\s,\-]\d+)?)\s*[\.:]?\s*', re.IGNORECASE)
+    for topic in extracted_topics[:]:
         content = topic['content']
-        sub_matches = heading_pattern.finditer(content)
+        sub_matches = loose_pattern.finditer(content)
         for sub_match in sub_matches:
-            sub_cleaned = re.sub(r'\s+', '', sub_match.group(1)).replace('-', '.')
+            sub_cleaned = re.sub(r'[\s,\-]+', '.', sub_match.group(1)).strip('.')
             if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
                 sub_start = sub_match.start() + topic_locations[topic['topic_number']]
                 topic_locations[sub_cleaned] = sub_start
-                sub_end = len(ocr_text)  # Default to end; adjust if next found
+                sub_end = text_length
                 for next_num, next_pos in sorted_locations:
                     if next_pos > sub_start:
                         sub_end = next_pos
                         break
                 sub_content = ocr_text[sub_start:sub_end].strip()
-                sub_title = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]['heading_text'].values[0] if not topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned].empty else ''
+                sub_row = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]
+                sub_title = sub_row['heading_text'].values[0] if not sub_row.empty else ''
                 extracted_topics.append({'topic_number': sub_cleaned, 'title': sub_title, 'content': sub_content})
                 log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
-                missing_topics.remove(sub_cleaned)  # Update missing set
+                missing_topics.remove(sub_cleaned)
 
-    # (Question extraction unchanged)
-    questions = []
-    exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
-    exercises_match = None
-    for marker in exercise_markers:
-        exercises_match = re.search(marker, ocr_text, re.IGNORECASE)
-        if exercises_match:
-            break
-            
-    if exercises_match:
-        exercises_text = ocr_text[exercises_match.start():]
-        question_pattern = re.compile(
-            r'^\s*(\d+(?:\.\d+)?)[\.\)]\s*(.+?)(?=\n\s*\d+(?:\.\d+)?[\.\)]|\nEXERCISES|\nQUESTIONS|\Z)',
-            re.MULTILINE | re.DOTALL
-        )
-        found_questions = question_pattern.findall(exercises_text)
-        
-        log(f"    - Found {len(found_questions)} potential questions.")
-        
-        for q_num, q_text in found_questions:
-            if q_text.strip():
-                questions.append({'question_number': q_num.strip(), 'question_text': q_text.strip()})
-    else:
-        log(f"    - No obvious 'EXERCISES' or 'QUESTIONS' section found.")
-            
-    return extracted_topics, questions
+    return extracted_topics
 
-def update_database(cursor, chapter_id: int, topics: list, questions: list):
-    log(f"    - Preparing to update {len(topics)} topics and {len(questions)} questions in the database.")
+def update_database(cursor, chapter_id: int, topics: list):
+    log(f"    - Preparing to update {len(topics)} topics in the database.")
     for topic in topics:
         cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", (topic['content'], chapter_id, topic['topic_number']))
-    if questions:
-        cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
-        for q in questions:
-            cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)", (chapter_id, q['question_number'], q['question_text']))
     log(f"    - Database update commands sent.")
 
 def main():
@@ -263,9 +241,6 @@ def main():
     db_chapters = cursor.fetchall()
 
     for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
-        # For testing: Uncomment to process only one chapter (e.g., the problematic one)
-        # if chapter_name_db != 'Chemical Bonding And Molecular Structure': continue
-        
         log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
         folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
         mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
@@ -286,18 +261,19 @@ def main():
             skipped_chapters_count += 1
             continue
 
-        full_chapter_text = get_text_from_pdf_with_caching(pdf_path)
+        full_chapter_text = get_text_from_pdf_with_caching(pdf_path, subject_name_db)
         if not full_chapter_text:
             log(f"    [ERROR] Failed to get text from '{pdf_filename}'. Skipping.")
             skipped_chapters_count += 1
             continue
         
-        topics_data, questions_data = extract_topics_and_questions(full_chapter_text, chapter_topics_df)
+        full_chapter_text = clean_ocr_text(full_chapter_text, subject_name_db)
+        topics_data = extract_topics(full_chapter_text, chapter_topics_df)
         
-        if not topics_data and not questions_data:
-            log(f"    [WARNING] No topics or questions extracted from text. Skipping database update.")
+        if not topics_data:
+            log(f"    [WARNING] No topics extracted from text. Skipping database update.")
         else:
-            update_database(cursor, chapter_id, topics_data, questions_data)
+            update_database(cursor, chapter_id, topics_data)
             conn.commit()
             log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}'.")
             processed_chapters_count += 1
