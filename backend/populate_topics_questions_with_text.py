@@ -208,8 +208,8 @@ def update_database(cursor, chapter_id: int, topics: list):
             cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", 
                            (topic['content'], chapter_id, topic['topic_number']))
             updated_count += 1
-            log(f"      - Updated empty topic {topic['topic_number']}.")
-    
+            log(f"      - Updated empty topic {topic['topic_number']}: {topic['title']}")
+
     log(f"    - Updated {updated_count} empty topics in the database.")
 
 def main():
