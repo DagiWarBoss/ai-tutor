@@ -1,0 +1,1961 @@
+Chapter
+
+12080CHO9
+
+DIFFERENTIAL EQUATIONS
+
+¢ He who seeks for methods without having a definite problem in mind
+seeks for the most part in vain. - D. HILBERT “
+
+9.1 Introduction
+
+In Class XI and in Chapter 5 of the present book, we
+discussed how to differentiate a given function f with respect
+to an independent variable, i.e., how to find f’(x) for a given
+function f at each x in its domain of definition. Further, in
+the chapter on Integral Calculus, we discussed how to find
+a function f whose derivative is the function g, which may
+also be formulated as follows:
+
+For a given function g, find a function f such that
+dy
+ak = g(x), where y = f(x) .. )
+
+An equation of the form (1) is known as a differential Henri Poincare
+equation. A formal definition will be given later. (1854-1912 )
+
+These equations arise in a variety of applications, may it be in Physics, Chemistry,
+Biology, Anthropology, Geology, Economics etc. Hence, an indepth study of differential
+equations has assumed prime importance in all modern scientific investigations.
+
+In this chapter, we will study some basic concepts related to differential equation,
+general and particular solutions of a differential equation, formation of differential
+equations, some methods to solve a first order - first degree differential equation and
+some applications of differential equations in different areas.
+
+9.2 Basic Concepts
+
+We are already familiar with the equations of the type:
+
+x -—3x+3=0 . (1)
+sin x + cos x = 0 (2)
+x+y=7 .. (3)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 301
+
+Let us consider the equation:
+
+x+y 20 .. (4)
+
+dx
+We see that equations (1), (2) and (3) involve independent and/or dependent variable
+(variables) only but equation (4) involves variables as well as derivative of the dependent
+variable y with respect to the independent variable x. Such an equation is called a
+
+differential equation.
+
+In general, an equation involving derivative (derivatives) of the dependent variable
+with respect to independent variable (variables) is called a differential equation.
+
+A differential equation involving derivatives of the dependent variable with respect
+to only one independent variable is called an ordinary differential equation, e.g.,
+
+2 3
+2 ay + (2) = 0 is an ordinary differential equation we (5)
+
+dx dx
+
+Of course, there are differential equations involving derivatives with respect to
+more than one independent variables, called partial differential equations but at this
+stage we shall confine ourselves to the study of ordinary differential equations only.
+Now onward, we will use the term ‘differential equation’ for ‘ordinary differential
+equation’.
+
+1. We shall prefer to use the following notations for derivatives:
+
+day
+2 y>
+
+y Ww
+
+dx? ~
+
+2. For derivatives of higher order, it will be inconvenient to use so many dashes
+
+. . . i. dd”
+as supersuffix therefore, we use the notation y, for nth order derivative <* .
+
+dx
+
+9.2.1. Order of a differential equation
+
+Order of a differential equation is defined as the order of the highest order derivative of
+the dependent variable with respect to the independent variable involved in the given
+differential equation.
+
+Consider the following differential equations:
+
+mre .. (6)
+
+Reprint 2025-26
+
+302 MATHEMATICS
+
+d*y
+=a =0 (7
+mt) (7)
+3
+dy (2
+~~ l4?)/52) =0 (8
+(< * ae? ®)
+
+The equations (6), (7) and (8) involve the highest derivative of first, second and
+third order respectively. Therefore, the order of these equations are 1, 2 and 3 respectively.
+
+9.2.2 Degree of a differential equation
+To study the degree of a differential equation, the key point is that the differential
+
+wr
+
+equation must be a polynomial equation in derivatives, i.e., y’, y”, y” etc. Consider the
+
+following differential equations:
+
+2
+dy ,(d°y) dy
++2 —-—+y=0 9
+dx? ‘S dx » ©)
+(2) +(2)-sin’s =0 (10)
+dx dx ”
+dy. 2)
+—+sin} — | =
+ax [4 0 .. (1)
+
+We observe that equation (9) is a polynomial equation in y”, y” and y’, equation (10)
+is a polynomial equation in y’ (not a polynomial in y though). Degree of such differential
+equations can be defined. But equation (11) is not a polynomial equation in y’ and
+degree of such a differential equation can not be defined.
+
+By the degree of a differential equation, when it is a polynomial equation in
+derivatives, we mean the highest power (positive integral index) of the highest order
+derivative involved in the given differential equation.
+
+In view of the above definition, one may observe that differential equations (6), (7),
+(8) and (9) each are of degree one, equation (10) is of degree two while the degree of
+differential equation (11) is not defined.
+
+Order and degree (if defined) of a differential equation are always
+positive integers.
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 303
+
+Example 1 Find the order and degree, if defined, of each of the following differential
+equations:
+
+dy d*y dy ) dy
+i) —-cosx=0 ii + =0
+@ dx Gy)» dx? * dx » dx
+
+(iii) y”+y? +e” =0
+
+Solution
+
+(i) The highest order derivative present in the differential equation is 7 So its
+
+d
+order is one. It is a polynomial equation in y’ and the highest power raised to ~
+
+is one, so its degree is one.
+
+d2
+(ii) The highest order derivative present in the given differential equation is = , SO
+
+2
+d
+its order is two. It is a polynomial equation in a and & and the highest
+x
+
+dx
+
+2
+power raised to We is One, so its degree is one.
+
+(iii) The highest order derivative present in the differential equation is y”, so its
+
+order is three. The given differential equation is not a polynomial equation in its
+derivatives and so its degree is not defined.
+
+EXERCISE 9.1
+
+Determine order and degree (if defined) of differential equations given in Exercises
+1 to 10.
+
+d*y ., ds \" d’s
+1. —+tsin(y )=0 2. y+5y=0 3. (=) +3s —~=0
+dx y yey dt dt”
+2
+ey) (2) d’y .
+4, |—~| +cos} — }|=0 5, —+=cos3x+sin3x
+[o dx dx?
+6. (YY +0’ +O) + =0 7. y” +2y"+y'=0
+
+Reprint 2025-26
+
+304. MATHEMATICS
+
+8 yty=e 9. V+ +2y=0 10. y+ 2y +sin y=0
+ll. The degree of the differential equation
+
+2_\3 2
+[<2] (2) + sin{ 2 J41= 0 is
+dx dx dx
+(A) 3 (B) 2 (C) 1 (D) not defined
+12. The order of the differential equation
+
+2
+2x 2-324 y= 0 is
+xX
+
+(A) 2 (B) 1 (C) 0 (D) not defined
+9.3. General and Particular Solutions of a Differential Equation
+In earlier Classes, we have solved the equations of the type:
+Vr+1=0 .. C1)
+sin? x — cos x = 0 w. (2)
+Solution of equations (1) and (2) are numbers, real or complex, that will satisfy the
+
+given equation i.e., when that number is substituted for the unknown x in the given
+equation, L.H.S. becomes equal to the R.HLS..
+
+&
+Now consider the differential equation a +y=0 .. (3)
+Ix
+
+In contrast to the first two equations, the solution of this differential equation is a
+function @ that will satisfy it i.e., when the function @ is substituted for the unknown y
+(dependent variable) in the given differential equation, L.H.S. becomes equal to R.HLS..
+
+The curve y = 6 (x) is called the solution curve (integral curve) of the given
+differential equation. Consider the function given by
+
+y= (x) =asin (x +d), w. (4)
+where a, b € R. When this function and its derivative are substituted in equation (3),
+L.H.S. = R.HLS.. So it is a solution of the differential equation (3).
+
+. . 1
+Let a and b be given some particular values say a = 2 and b= re then we get a
+
+function y=O,@)= 2sin{ x+) (5)
+
+When this function and its derivative are substituted in equation (3) again
+L.H.S. = R.H.S.. Therefore 6, is also a solution of equation (3).
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 305
+
+Function @ consists of two arbitrary constants (parameters) a, b and it is called
+general solution of the given differential equation. Whereas function , contains no
+arbitrary constants but only the particular values of the parameters a and b and hence
+is called a particular solution of the given differential equation.
+
+The solution which contains arbitrary constants is called the general solution
+(primitive) of the differential equation.
+
+The solution free from arbitrary constants 1.e., the solution obtained from the general
+solution by giving particular values to the arbitrary constants is called a particular
+solution of the differential equation.
+
+Example 2 Verify that the function y = e-* is a solution of the differential equation
+
+d°y , dy
++—-—6y=0
+dx’ dx y
+
+Solution Given function is y = e*. Differentiating both sides of equation with respect
+to x , we get
+
+dy
+
+oY =-3e3% .. C1)
+dx
+Now, differentiating (1) with respect to x, we have
+2
+ay =9e*
+dx
+
+d
+Substituting the values of ak and y in the given differential equation, we get
+he
+
+L.H.S.=9 e*4+ -3e*) -6e*% =9e*-9Ye*=0=RHS..
+Therefore, the given function is a solution of the given differential equation.
+
+Example 3 Verify that the function y = a cos x + b sin x, where, a, b € R is a solution
+
+2
+of the differential equation +y=0
+x
+
+Solution The given function is
+y=acosx+bsinx . (1)
+
+Differentiating both sides of equation (1) with respect to x, successively, we get
+=—asinx + bcosx
+
+d
+—>, =-acosx—b sinx
+
+dx’
+
+dy
+
+dx
+
+2
+y
+
+Reprint 2025-26
+
+306 MATHEMATICS
+
+2
+Substituting the values of = and y in the given differential equation, we get
+he
+
+L.H.S. = (—acos x—b sin x) + (acos x +b sin x) =0=R.HLS.
+
+Therefore, the given function is a solution of the given differential equation.
+
+EXERCISE 9.2
+
+In each of the Exercises | to 10 verify that the given functions (explicit or implicit) is a
+solution of the corresponding differential equation:
+
+1. y=e+l1 > y-y=0
+
+2. y=xr+2x4+C > y-2x-2=0
+
+3. y=cosx+C > y+sinx=0
+xy
+
+4. y= 2 : y=
+
+y l+x in wae
+
+5. y=Ax : xy =y(x* #0)
+
+6. y=xsinx > xy sytxJx?-y? #0 and x>yorx<-—y)
+2
+
+7. xy=logy+C Y xy (xy # 1)
+
+8. y-cosy=x >: (ysiny+cosy+x)y=y
+
+9. x+y=tan'y > pyt+y+1=0
+
+10. y= J@ix2 xe Caja): xt “ = 0 (y #0)
+
+11. The number of arbitrary constants in the general solution of a differential equation
+of fourth order are:
+(A) 0 (B) 2 (C) 3 (D) 4
+
+12. The number of arbitrary constants in the particular solution of a differential equation
+of third order are:
+(A) 3 (B) 2 (C) 1 (D) 0
+
+9.4. Methods of Solving First Order, First Degree Differential Equations
+In this section we shall discuss three methods of solving first order first degree differential
+equations.
+9.4.1 Differential equations with variables separable
+A first order-first degree differential equation is of the form
+dy
+a = F(x, y) . C1)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 307
+
+If F(x, y) can be expressed as a product g (x) h(y), where, g(x) is a function of x
+and A(y) is a function of y, then the differential equation (1) is said to be of variable
+separable type. The differential equation (1) then has the form
+
+a h 2
+7 7h): 8@) - (2)
+If h(y) 4 0, separating the variables, (2) can be rewritten as
+dy =g(x) d (3)
+—— dy =g(x) dx bee
+ny) 8
+Integrating both sides of (3), we get
+1
+——dy= | g(x) dx .. (4)
+hy) J
+Thus, (4) provides the solutions of given differential equation in the form
+H(y) =G(~) +C
+
+1
+Here, H (y) and G (x) are the anti derivatives of hy) and g(x) respectively and
+
+C is the arbitrary constant.
+
++1
+Example 4 Find the general solution of the differential equation “ = a ,(y#2)
+XxX 47~y
+
+Solution We have
+
+dy xl
+a . CL)
+dx 2-y
+Separating the variables in equation (1), we get
+(2-—y) dy=(x+ 1) dx w. (2)
+
+Integrating both sides of equation (2), we get
+fa- y)dy = or+Dade
+
+2 2
+
+y x
+Qy—-— = —4x4+C
+
+or y 3 2 1
+
+or erty +2x-4y+2C, =0
+
+or x + y’ + 2x —4y + C = 0, where C = 2C,
+
+which is the general solution of equation (1).
+
+Reprint 2025-26
+
+308 MATHEMATICS
+
+2
+Example 5 Find the general solution of the differential equation i” = = y 7:
+X +X
+
+Solution Since 1 + y’ # 0, therefore separating the variables, the given differential
+equation can be written as
+
+dy _ dx
+It+y? 14x?
+
+(1)
+
+Integrating both sides of equation (1), we get
+
+dy dx
+eee ~ TT
+
+or tan! y = tan'x + C
+
+which is the general solution of equation (1).
+
+Example 6 Find the particular solution of the differential equation ay =-4xy’ given
+he
+
+that y= 1, when x = 0.
+
+Solution If y # 0, the given differential equation can be written as
+
+d
+= =— 4x dx . (1)
+Integrating both sides of equation (1), we get
+(2 ot al x dx
+y
+1
+or —-—=-27+C
+y
+' 2
+or y= 2° —-C . (2)
+
+Substituting y = 1 and x = 0 in equation (2), we get, C=- 1.
+
+Now substituting the value of C in equation (2), we get the particular solution of the
+
+given differential equation as y=
+
+2x7 +17
+
+Example 7 Find the equation of the curve passing through the point (1, 1) whose
+differential equation is x dy = (2x° + 1) dx (x #0).
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 309
+
+Solution The given differential equation can be expressed as
+
+2
+dy* = (2 1) as
+
+x
+
+or dy
+
+fart an .. (1)
+
+x
+
+Integrating both sides of equation (1), we get
+
+[ay = I(2e+4}as
+
+or y=x + log lxl+C w. (2)
+Equation (2) represents the family of solution curves of the given differential equation
+but we are interested in finding the equation of a particular member of the family which
+passes through the point (1, 1). Therefore substituting x = 1, y = 1 in equation (2), we
+getC =0.
+Now substituting the value of C in equation (2) we get the equation of the required
+curve as y = x° + log Ixl.
+
+Example 8 Find the equation of a curve passing through the point (—2, 3), given that
+
+the slope of the tangent to the curve at any point (x, y) is 2x .
+
+Solution We know that the slope of the tangent to a curve is given by 2.
+he
+dy 2x
+, => mel
+so dx y° )
+
+Separating the variables, equation (1) can be written as
+y dy = 2x dx .. (2)
+Integrating both sides of equation (2), we get
+} y'dy = [2x dx
+
+3
+
+y
+or — =x+C .. (3)
+3
+dy
+* The notation h due to Leibnitz is extremely flexible and useful in many calculation and formal
+x
+
+transformations, where, we can deal with symbols dy and dx exactly as if they were ordinary numbers. By
+treating dx and dy like separate entities, we can give neater expressions to many calculations.
+
+Refer: Introduction to Calculus and Analysis, volume-I page 172, By Richard Courant,
+Fritz John Spinger — Verlog New York.
+
+Reprint 2025-26
+
+310 MATHEMATICS
+
+Substituting x =—2, y = 3 in equation (3), we get C=5.
+
+Substituting the value of C in equation (3), we get the equation of the required curve as
+3 I
+
+and +5 or y=(3x" +15)
+
+Example 9 In a bank, principal increases continuously at the rate of 5% per year. In
+how many years Rs 1000 double itself?
+
+Solution Let P be the principal at any time ¢. According to the given problem,
+
+dt 100
+
+dp P ;
+o dt 20 ~ @)
+separating the variables in equation (1), we get
+dp dt
+P = 200 w (2)
+Integrating both sides of equation (2), we get
+t
+log P= —+C
+88S 200
+t
+or P= e2% .e%
+tL
+or P= Ce” (where eC =C) .. (3)
+Now P= 1000, whent=0
+
+Substituting the values of P and rin (3), we get C = 1000. Therefore, equation (3),
+gives
+t
+P= 1000 e”
+Let t years be the time required to double the principal. Then
+
+t
+2000 = 1000e = t= 20 log 2
+
+EXERCISE 9.3
+
+For each of the differential equations in Exercises 1 to 10, find the general solution:
+
+dy 1-cosx dy 7
+== —=,/4- 2<y<2
+dx 1+cosx 2. dx yi y<2)
+
+Reprint 2025-26
+
+9.
+
+DIFFERENTIAL EQUATIONS 311
+
+dy
+may 4. sec? x tan y dx + sec? y tan x dy = 0
+7 _ dy _ 2 2
+(e* + e) dy — (e — e*) dx =0 6. mote dty)
+d
+y log ydx -x dy=0 eos °
+dy _ al 2
+=m x 10. e* tan y dx + (1 -e’) sec? y dy=0
+
+For each of the differential equations in Exercises 11 to 14, find a particular solution
+satisfying the given condition:
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+16.
+
+17.
+
+18.
+
+19,
+
+d
+(8 tx tx4D = 2 +05 y= 1 whenx=0
+x
+dy
+2
+x(x° -1l)—=I1-y= =
+( Pr ;y=0 when x=2
+
+cos( 2 =a (a€ R); y=1 when x =0
+dx
+
+Y _ ytanx:y= 1 when x = 0
+
+dx
+
+Find the equation of a curve passing through the point (0, 0) and whose differential
+equation is y’ = e* sin x.
+
+For the differential equation xy “ =(x+2)(y+2), find the solution curve
+x
+
+passing through the point (1, —-1).
+
+Find the equation of a curve passing through the point (0, —2) given that at any
+point (x, y) on the curve, the product of the slope of its tangent and y coordinate
+of the point is equal to the x coordinate of the point.
+
+At any point (x, y) of a curve, the slope of the tangent is twice the slope of the
+line segment joining the point of contact to the point (— 4, —3). Find the equation
+of the curve given that it passes through (—2, 1).
+
+The volume of spherical balloon being inflated changes at a constant rate. If
+initially its radius is 3 units and after 3 seconds it is 6 units. Find the radius of
+balloon after ¢ seconds.
+
+Reprint 2025-26
+
+312 MATHEMATICS
+
+20. Ina bank, principal increases continuously at the rate of r% per year. Find the
+value of rif Rs 100 double itself in 10 years (log 2 = 0.6931).
+
+21. Inabank, principal increases continuously at the rate of 5% per year. An amount
+of Rs 1000 is deposited with this bank, how much will it worth after 10 years
+(e°> = 1.648).
+
+22. Inaculture, the bacteria count is 1,00,000. The number is increased by 10% in 2
+hours. In how many hours will the count reach 2,00,000, if the rate of growth of
+bacteria is proportional to the number present?
+
+23. The general solution of the differential equation “ =e*" is
+Nx
+
+(A) e+erv= (B) ev +e=C
+(C) e*+e=C (D) e*+er%=
+
+9.4.2 Homogeneous differential equations
+Consider the following functions in x and y
+
+F, (x, y) = COs (2) ; F, (x, y) = sin. x + cos y
+
+If we replace x and y by Ax and Ay respectively in the above functions, for any nonzero
+constant A, we get
+
+F, (Ax, Ay) = 1? ( + 2xy) =A? F (x, y)
+F, (Ax, Ay) = A (2x — 3y) = AF, (x, y)
+
+F, (Ax, Ay) = cos (=) =Ccos (2) =)° F, (x, y)
+
+F, (Ax, Ay) = sin Ax + cos Ay #A" F, (x, y), for any n € N
+Here, we observe that the functions F,, F,, F, can be written in the form
+
+F(Ax, Ay) =” F(x, y) but F, can not be written in this form. This leads to the following
+definition:
+
+A function F(x, y) is said to be homogeneous function of degree n if
+F(Ax, Ay) = A” F(x, y) for any nonzero constant A.
+
+We note that in the above examples, F,, F,, F, are homogeneous functions of
+degree 2, 1, 0 respectively but F, is not a homogeneous function.
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 313
+
+We also observe that
+
+h
+x
+or F(x, y) = y [is **) = vhf
+
+Res!
+D>
+Se
+—
+
+i]
+<
+NN
+N
+< |e
+J
+N.Y
+Il
+<
+>=
+aN
+S| &
+N.Y
+
+or
+F(x, y)=x elt x° hs (2)
+Xx x
+y
+F(x, y) # x ne( 2] for anyne N
+x
+f Xx
+or F, (x, y) # ¥ h, y , for anyne N
+
+Therefore, a function F (x, y) is a homogeneous function of degree n if
+
+F(x, y) = ve(2] or vn(*|
+x y
+
+d
+A differential equation of the form oO. F (@, y) is said to be homogenous if
+
+dx
+F(x, y) is a homogenous function of degree zero.
+
+To solve a homogeneous differential equation of the type
+
+7 )
+dx (9) x ()
+We make the substitution y=v.x .. (2)
+Differentiating equation (2) with respect to x, we get
+ay, yf
+dx dx ~G)
+
+d
+Substituting the value of ~ from equation (3) in equation (1), we get
+
+Reprint 2025-26
+
+314. MATHEMATICS
+
+vt yl =
+dv
+or hk =g(v)-v we (4)
+Separating the variables in equation (4), we get
+dv dx 5
+gov x w. (5)
+Integrating both sides of equation (5), we get
+1
+| a = [-ar+c ... (6)
+g(v)-v x
+
+Equation (6) gives general solution (primitive) of the differential equation (1) when
+
+we replace v by *.
+x
+
+If the homogeneous differential equation is in the form “ =F(x, y)
+y
+where, F (x, y) is homogenous function of degree zero, then we make substitution
+
+—=v i.e., x = vy and we proceed further to find the general solution as discussed
+
+above by writing ax =F(x,y) = (2)
+dy y
+
+d
+Example 10 Show that the differential equation (x — y) ~ =x+2yis homogeneous
+
+and solve it.
+
+Solution The given differential equation can be expressed as
+
+dy x+2y
+an yoy . C1)
+x+2y
+Let F(x, y) = ———
+x-y
+A(xt+2y) ,6
+Now F(Ax, Ay) = ———— =A: f(x,y)
+M(x-y)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 315
+
+Therefore, F(x, y) is a homogenous function of degree zero. So, the given differential
+equation is a homogenous differential equation.
+
+Alternatively,
+dy 1422 y
+xX
+— =| — |= 8|— . (2
+dx 12 2] @)
+xX
+
+R.HLS. of differential equation (2) is of the form g (4) and so it is ahomogeneous
+x
+
+function of degree zero. Therefore, equation (1) is ahomogeneous differential equation.
+
+To solve it we make the substitution
+
+y=vx .. (3)
+
+Differentiating equation (3) with respect to, x we get
+Oya et
+dx dx “~@
+
+d
+Substituting the value of y and « in equation (1) we get
+x
+
+1+2v
+v+x—o=
+dx l-v
+dv 1+2v
+or x—= —
+dx l-v
+
+dv yw +v4l
+or xX— = ———
+
+dx l-v
+v-l —dx
+or 5 dv =
+vt+ve4+l x
+
+Integrating both sides of equation (5), we get
+
+-1
+a a
+vitvtl x
+[aa “Joe IxI C,
+or v eva” og it
+
+Reprint 2025-26
+
+316 MATHEMATICS
+
+1 2v+1 3 1
+d dv=-1 +C
+or ol Faye . a) Pavel v=—log|x|+C,
+1, |» 3 1 -
+or sloalv +v+l| 5] nN > dv =—log|x|+C,
+v+—] +| —
+bs)
+—log|v° +v+1 .—= tan =—log}x|+C
+or 3 g| | 2 3 (a) g|x|+C,
+or log|y? tye |+ tops? = VStan (224) Ac, (Why?)
+. y
+Replacing v by —, we get
+x
+1 yoy 1 3 _1(2y+x
+—logJ—+—4+1]+=1 =v3t +C
+or D og x2 x Dy ogx v3 an 3x 1
+Loo uaa le -1(2y+x
+—log|| —+=—+1|x?|=~3 tan +C
+or 7) ‘(3 x Bx 1
+on log|(y? tay +2)|=2vB tan{ 22** | 490,
+3x
+on log|(x2 +.1y+y?)|=2vBtan!| 272” | 4
+3x
+which is the general solution of the differential equation (1)
+. . . y \dy | y .
+Example 11 Show that the differential equation xcos} — x ycos| —|+x is
+x) dx x
+
+homogeneous and solve it.
+
+Solution The given differential equation can be written as
+y
+cos} — |+x
+dy > 2]
+
+dx X COS 2)
+x
+
+Reprint 2025-26
+
+(1)
+
+DIFFERENTIAL EQUATIONS 317
+
+It is a differential equation of the form oP, y).
+x
+
+yeos{ > )+x
+Here F(x, y) = —__*/
+x cos( ™)
+
+x
+
+Replacing x by Ax and y by Ay, we get
+ALy cos{ J
+
+Xx
+
+F(Ax, Ay) =
+i x00s ”)
+
+Xx
+
+=A°[F(x, y)]
+
+Thus, F(x, y) is a homogeneous function of degree zero.
+
+Therefore, the given differential equation is a homogeneous differential equation.
+To solve it we make the substitution
+
+fev (2)
+
+Differentiating equation (2) with respect to x, we get
+
+= vtx—  B)
+
+d
+Substituting the value of y and 7 in equation (1), we get
+
+dv _vcosv+l1
+v+x— = —————
+dx COS V
+
+dv vcosv+l
+—————-y
+
+X— =
+or dx COSV
+yt
+or dx cosv
+dx
+or cosv dy = —
+x
+1
+Therefore [cosy dv = |- dx
+x
+
+Reprint 2025-26
+
+318 MATHEMATICS
+
+or sin v= log |x| + logICl
+
+or sin v = log |Cxl
+
+Replacing v by 2 , we get
+x
+
+sin (2) = log |Cx!
+x
+
+which is the general solution of the differential equation (1).
+
+Example 12 Show that the differential equation 2y edx + c —2x e? Ja =Ois
+homogeneous and find its particular solution, given that, x = 0 when y = 1.
+
+Solution The given differential equation can be written as
+
+x
+
+dx 2x e =y
+a (1)
+2ye”
+2x0) —
+Let F(x, y) = “CG
+2 ye”
+
+x
+
+a} 2xe” -y
+
+Then F(Ax, Ay) = on [F(x, y)]
+A a
+
+Thus, F(x, y) is a homogeneous function of degree zero. Therefore, the given
+differential equation is a homogeneous differential equation.
+
+To solve it, we make the substitution
+x=vy (2)
+Differentiating equation (2) with respect to y, we get
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 319
+
+Substituting the value of x and = in equation (1), we get
+y
+
+dv 2ve'-1
+v+y— = ———
+dy 2e”
+dv 2ve’-1
+or y— =
+dy 2e
+dave 1
+or DY = De
+-d
+or 2e’ dv= —
+y
+d
+or [2e"-av = (=
+y
+or 2 e’ =—log lyl+C
+x
+and replacing v by y , we get
+2e* +loglyl=C .. (3)
+
+Substituting x = 0 and y = 1 in equation (3), we get
+2e+loglll=C>C=2
+
+Substituting the value of C in equation (3), we get
+2e* +loglyl=2
+
+which is the particular solution of the given differential equation.
+
+Example 13 Show that the family of curves for which the slope of the tangent at any
+
+2,2
+point (x, y) on it is ety is given by x? — y? = cx.
+
+2xy
+. ; _ dy
+Solution We know that the slope of the tangent at any point on a curve is a
+d x+y?
+Therefore, bcd = avy
+dx 2xy
+
+Reprint 2025-26
+
+320 MATHEMATICS
+
+dy
+=  (
+or hk (1)
+
+Clearly, (1) is ahomogenous differential equation. To solve it we make substitution
+y=vx
+
+Differentiating y = vx with respect to x, we get
+
+dy dv
+= = vt+x—
+dx dx
+dv 1+w
+or v+tx— =
+dx 2v
+aa l-v
+or dx _2v
+2 dx
+“dv =
+l-v x
+2 dx
+or » dv = -—
+vy -l x
+2v 1
+Therefore Perera = ~Joae
+or log |v? — 11 =—log Ix1+logIC,|
+or log I(v — 1) (x) = log IC ||
+or (7 -1)x=+C,
+
+Replacing v by ~ , we get
+
+2
+[e-1) x=H+ C,
+
+or (y? — x) =+£C, xorx’-y =Cx
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 321
+
+EXERCISE 9.4
+
+In each of the Exercises | to 10, show that the given differential equation is homogeneous
+and solve each of them.
+
+, xX+y
+1. (0? + xy) dy = (? + y’) dx 2. y= x
+3. (x-y) dy-(x+y) dx=0 4. (x —y’) dx + 2xy dy =0
+dy
+24Y_ 2 4 2 _
+5. va 2y° +xy 6. xdy-ydx= Jx+y? dx
+7. [os (2) + ysin (2}} ydx= {yin [2)- xCOS (2s dy
+x x x x
+8. v@ ya rsin(2]=0 9; ydr+ xlog{ 2 }dy=2x dy=0
+dx x x
+
+For each of the differential equations in Exercises from 11 to 15, find the particular
+solution satisfying the given condition:
+
+ll. («+ y)dy+(x-y) dx =0; y=1 when x=1
+12. x dy + (xy + y’) dx =0; y= 1 when x= 1
+
+Tt
+13. [sin?(2)—y Jaca dy=0; y= 2 when x = 1
+
+dy _y
+
+14. ak x
+
++ cosec{®|=0; y = 0 when x = 1
+
+d
+15. Quy + y? 2x? = 0; y=2 whenx=1
+x
+
+dx Xx
+16. A homogeneous differential equation of the from dy = (*) can be solved by
+
+making the substitution.
+(A) y= vx (B) v= yx (C) x= vy (D) x=yv
+
+Reprint 2025-26
+
+322. MATHEMATICS
+
+17. Which of the following is a homogeneous differential equation?
+(A) (4x + 6y +5) dy — By + 2x + 4) dx =0
+(B) (xy) dx — (x* + y’) dy = 0
+(C) (x3 + 2y’) dx + 2xy dy =0
+(D) y* dx + (° — xy — y’) dy =0
+9.4.3 Linear differential equations
+A differential equation of the from
+
+dy
+—-+Py =
+ce y=Q
+
+where, P and Q are constants or functions of x only, is known as a first order linear
+differential equation. Some examples of the first order linear differential equation are
+dy
+
+—ty =sinx
+
+dx
+
+d 1
+
+dx x
+
+dy y il
+dx \xlogx}~ x
+
+Another form of first order linear differential equation is
+
+dx
+—+Px=
+F the =Q,
+
+where, P, and Q, are constants or functions of y only. Some examples of this type of
+differential equation are
+
+dx +X
+—+xX=cos
+dy y
+
+dx  —2x
+— + = y e~’
+dy y
+To solve the first order linear differential equation of the type
+dy
+—+Py=Q .. C1)
+dx
+
+Multiply both sides of the equation by a function of x say g (x) to get
+
+d
+g(a) 7 + Pg) y=Q. 8) 2)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 323
+
+Choose g(x) in such a way that R.H.S. becomes a derivative of y . g (x).
+
+. dy d
+i.e. g(x) at P.g(x) y= ak ly.g @)]
+dy dy ,
+or g(x) ax + P.g(x) y=g(x) a + y g (x)
+> P. g(x) =g" (x)
+or _ g(x)
+g(x)
+
+Integrating both sides with respect to x, we get
+
+[Pax = pe dx
+
+& (x)
+or [Pax = log(g (x))
+or g(x) = pleas
+
+On multiplying the equation (1) by g(x) = el + , the L.H.S. becomes the derivative
+
+of some function of x and y. This function g(x) = el ** is called Integrating Factor
+(L.F.) of the given differential equation.
+
+Substituting the value of g (x) in equation (2), we get
+
+ole D pel y _ Q.elh™
+dx
+
+d be
+or £ (vel) = Qelh™
+
+Integrating both sides with respect to x, we get
+peel = (ae! ax
+
+or y= el (Qe! as +C
+
+which is the general solution of the differential equation.
+
+Reprint 2025-26
+
+324 MATHEMATICS
+
+Steps involved to solve first order linear differential equation:
+
+(i) Write the given differential equation in the form o 4 Py=Q where P, Q are
+constants or functions of x only.
+(ii) Find the Integrating Factor (I.F) = e [Pav
+(iii) Write the solution of the given differential equation as
+
+y (LF) = J(Q*LF)dx+C
+dx
+In case, the first order linear differential equation is in the form dy +Px=Q, ;
+
+where, P, and Q, are constants or functions of y only. Then LF = ¢ dy and the
+
+solution of the differential equation is given by
+
+x. (LF) = f(Q xLF)dy+C
+
+Example 14 Find the general solution of the differential equation dy y =cosx.
+dx
+
+Solution Given differential equation is of the form
+dy
+hk + Py = Q, where P =-1 and Q = cos x
+he
+
+-ldx _y
+Therefore ILF= el =e
+
+Multiplying both sides of equation by I.F, we get
+
+or Bie ~ Cos
+a = x
+dx ye
+d -
+or (ve *)=e"cosx
+dx
+On integrating both sides with respect to x, we get
+yer = Je cosx dx +C .. (1)
+Let I= fer cos x dx
+
+= cons | fi sin x) (-e™) dx
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 325
+
+—cosxe” —[sin xe dx
+
+—cosxe* -[sin x(-e*)— [cos x (-e™*) dx |
+
+x
+
+—cosxe +sinxe
+
+- [cos xe" dx
+or I=-—e*cosx + sin x e*—I
+
+or 21 = (sin x — cos x) e*
+
+x
+
+(sin x —cosx)e~
+or = 5
+
+Substituting the value of I in equation (1), we get
+
+yers [sme es iC
+
+sin x — cos x
+or = | ———
+
+2
+
+which is the general solution of the given differential equation.
+
+}+ ce
+
+d
+Example 15 Find the general solution of the differential equation * +2y=x° (x40),
+
+Solution The given differential equation is
+
+d
+x2 42y 23? (1)
+dx
+Dividing both sides of equation (1) by x, we get
+dy 2
+—+-ye=
+dx x ae
+
+er ; ; ; dy 2
+which is a linear differential equation of the type a + Py=Q, where P=— and Q=x.
+he x
+
+So LF= Jie = e2logx = eles” = las eles fo) =f (x)]
+Therefore, solution of the given equation is given by
+y= FQ) O°)dc+C = fxrde+C
+
+2
+or y= tCx*
+
+which is the general solution of the given differential equation.
+
+Reprint 2025-26
+
+326 MATHEMATICS
+
+Example 16 Find the general solution of the differential equation y dx — (x + 2y’) dy = 0.
+Solution The given differential equation can be written as
+dx
+
+2
+— =2y
+dy y
+ar . ; . dx 1
+This is a linear differential equation of the type Wy +P,.x=Q,, where P, =—— and
+J y
+
+Je | yd
+Q, = 2y. Therefore LF=e 7? =e 8% =e) =—
+y
+
+Hence, the solution of the given differential equation is
+
+fey [Jarre
+
+y
+or + [(2ay)+C
+y
+. C
+or i +
+y y
+or x= 2y?+ Cy
+
+which is a general solution of the given differential equation.
+
+Example 17 Find the particular solution of the differential equation
+
+dy
+
+—+ ycot x = 2x + x’ cot x (x # 0)
+X
+
+given that y= 0 when x= . .
+
+d
+Solution The given equation is a linear differential equation of the type -. +Py=Q,
+he
+where P = cot x and Q = 2x + x’ cot x. Therefore
+IF= looted e P85 sin x
+
+Hence, the solution of the differential equation is given by
+
+y. sin x =|(2x + x cot x) sinx dx+C
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 327
+
+or y sin x =] 2x sin x dx + Jx2 cos x dx + C
+; _ (2x 2x?
+or ysin x= sins 2® | Jooss{ 2 Jarefereosrare
+2 2
+or ysin x= x sinx-[x° cos.x dx+ fx* cosx dx+C
+or ysinx =x? sinx+C .. (1)
+
+Tl
+Substituting y=0 and «= 5 in equation (1), we get
+
+4
+
+Substituting the value of C in equation (1), we get
+
+or C=
+
+2
+. 2:
+ysinx= x sin x ON
+
+2
+
+or y=x (sin x #0)
+
+4 sin x
+which is the particular solution of the given differential equation.
+
+Example 18 Find the equation of a curve passing through the point (0, 1). If the slope
+of the tangent to the curve at any point (x, y) is equal to the sum of the x coordinate
+(abscissa) and the product of the x coordinate and y coordinate (ordinate) of that point.
+
+d
+Solution We know that the slope of the tangent to the curve is 7
+
+dy
+Therefore, — =x4+xy
+dx
+or dx AY =x . (1)
+er ; ; ; dy
+This is a linear differential equation of the type dk + Py=Q, where P=—x and Q=x.
+frs dx a
+Therefore, I.F=e =e?
+
+Reprint 2025-26
+
+328
+
+MATHEMATICS
+
+Hence, the solution of equation is given by
+
+Let
+
+ye? = fool? )ac+c (2)
+
+I= foo rds
+
+2
+
+Let =F, then =x de = dt or x dx == dr.
+
+2
+Xx
+
+Therefore, I= -fe' dt=-e' =-e 2
+
+Substituting the value of I in equation (2), we get
+
+or
+
+ye2 = —e24C
+y= -1+Ce2 .. 3)
+
+Now (3) represents the equation of family of curves. But we are interested in
+
+finding a particular member of the family passing through (0, 1). Substituting x = 0 and
+y = | in equation (3) we get
+
+1=-1+C.e or C=2
+
+Substituting the value of C in equation (3), we get
+
+y= -l+2e?
+
+which is the equation of the required curve.
+
+EXERCISE 9.5
+
+For each of the differential equations given in Exercises | to 12, find the general solution:
+
+1.
+
+Y | gm Sas 2 ® i 3y 26°
+
+, 3 Diu
+dx dx dx x
+
+x
+© 4 (seex)y=tans{ 0<.x<% 5. cos? x + y=tanx [osx<4)
+dx 2 dx 2
+
+2
+xD poy= Plog x 7. rlog x e+ y= 10g x
+dx dx x
+
+(1 + x’) dy + 2xy dx = cot x dx (x #0)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 329
+
+9, yo 4 yx tay cotx=0 (x#0) 10. (xt ye at
+dx dx
+2, dy
+ll. ydx+(x-y’) dy=0 12. (x+3y ae. (y>0).
+
+For each of the differential equations given in Exercises 13 to 15, find a particular
+solution satisfying the given condition:
+
+13.
+
+14.
+
+15.
+16.
+
+17.
+
+18.
+
+19,
+
+d . Tt
+& +. 2ytan x= sin x; y=0 when x=—
+dx 3
+
+d 1
+(4x?) 4 2ay = —— 3 y=0 when x=1
+
+Y 3 ycot.x=sin 2x: y=2 when x=
+dx 2
+
+Find the equation of a curve passing through the origin given that the slope of the
+tangent to the curve at any point (x, y) is equal to the sum of the coordinates of
+the point.
+
+Find the equation of a curve passing through the point (0, 2) given that the sum of
+the coordinates of any point on the curve exceeds the magnitude of the slope of
+the tangent to the curve at that point by 5.
+
+d
+The Integrating Factor of the differential equation —y=2x" is
+he
+1
+
+(A) e* (B) e° (©) > (D) x
+The Integrating Factor of the differential equation
+(-y?) 24 yx S acl<y<d is
+
+dy
+
+1 1
+
+1 1
+(A) yal (B) ey (C) I-y (D) h-?
+
+Miscellaneous Examples
+
+Example 19 Verify that the function y = c, e“ cos bx + c, e“ sin bx, where c,, c, are
+arbitrary constants is a solution of the differential equation
+
+2
+#Y _9g® 4 (a? +b?) y=0
+dx dx
+
+Reprint 2025-26
+
+330 MATHEMATICS
+
+Solution The given function is
+y =e [c, cosbx + c, sinbx] . C1)
+
+Differentiating both sides of equation (1) with respect to x, we get
+
+dy as ; ax
+mre [—be, sin bx + bc, cosbx|+[c, cosbx +c, sinbx]e“ - a
+dy .
+or a e“[(bc, +. ac, )cosbx + (ac, —bc,) sin bx] w (2)
+
+Differentiating both sides of equation (2) with respect to x, we get
+“y
+ae = e“[(bc, +ac,) (—bsin bx) + (ac, —bc,) (bcos bx)]
+x
+
++ [(bc, +ac,) cosbx + (ac, —bc,) sinbx] e“.a
+= e“[(a’ c, —2abc, —b’c,) sinbx + (a’ c, + 2abc, —b*c,) cosbx]
+
+2
+Substituting the values of 4 and y in the given differential equation, we get
+
+dx” d
+
+LHS. = e“[a’c, —2abc, —b’c,)sinbx+(a’c, + 2abc, —b’c,) cos bx]
+
+—2ae“ [(bc, +ac,)cos bx+ (ac, —bc,)sin bx]
+
++(a> +b’ Je“ [c, cos bx+ c, sin bx]
+
+(a’c, ~2abe, —b*c, -—2a°c, +2abe, +.a°c, +b°c, )sin bx
+ee
+
++(a°c, + 2abc,—b*c, —2abc, —2a*c, +a°c, +b’c, )cos bx
+= e“[0xsinbx + Ocosbx] =e“ x0=0 =R.HS.
+Hence, the given function is a solution of the given differential equation.
+Example 20 Find the particular solution of the differential equation log (2) =3x+4y
+given that y = 0 when x = 0.
+Solution The given differential equation can be written as
+
+dy
+
+a eh + 4y)
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 331
+
+or — =e*. ev .. Cd)
+
+d
+= =e* dx
+e
+Therefore fe*ay = fe*ax
+ey 3x
+or 4 = 5 +C
+or 4e%4+3e%+12C=0 w. (2)
+Substituting x = 0 and y = 0 in (2), we get
+-7
+4+34+12C=0orC= DD
+
+Substituting the value of C in equation (2), we get
+4e%4+3e%-7=0,
+
+which is a particular solution of the given differential equation.
+
+Example 21 Solve the differential equation
+
+(x dy — y dx) y sin (2) = (y dx + x dy) x cos (2).
+
+Solution The given differential equation can be written as
+
+E ysin 2) —x? cox( >) dy = E cos (2) +y? sin (2) dx
+x x x x
+y 2anl{ ¥
+d ryeos{ + y sin( >
+or i. = x x
+‘ aysin( 2 |? cos(
+x x
+Dividing numerator and denominator on RHS by x’, we get
+2
+y cos (2) (2m 2)
+dy x x x x
+dx .. C1)
+* sin 2) - cos(”)
+x x x
+
+Reprint 2025-26
+
+
+332 MATHEMATICS
+
+d
+Clearly, equation (1) is a homogeneous differential equation of the form * =8 (2) .
+
+To solve it, we make the substitution
+
+y=vx .. (2)
+or a = yea”?
+dx dx
+dy vcosv+v’sinv ag (1) and (2
+or ytxe = TV sinv—cosy (using (1) and (2))
+dv 2v COsV
+or X = ;
+dx vsinv—cosv
+[taneseose 2 dx
+or —— |dv = —
+vcosv x
+vsinv —cosv 1
+Therefore j (aw = 2{ —dx
+vcosv x
+or ftanvdv-[ av = 2] ar
+Vv x
+or log|secv|—loglv| = 2log| x1+log!C, |
+\ secv
+or 0g yx = log IC ||
+secv
+or 7 =+C, 3)
+Vx
+
+Replacing v by 2 in equation (3), we get
+x
+
+XxX
+
+or sec (2) =C xy
+x
+
+which is the general solution of the given differential equation.
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 333
+Example 22 Solve the differential equation
+(tanty — x) dy =(1 + y’) dx.
+Solution The given differential equation can be written as
+
+dx x tan!
+n y
+
+= . (Ud
+dy 1+y? I+ y? (1)
+
+Now (1) is a linear differential equation of the form a +P, x=Q,
+
+1 tan”ly
+where, P = and = .
+r= py ye ME VHT y
+yw
+Therefore, I.F= e hy eu y
+
+Thus, the solution of the given differential equation is
+
+tan y tan“ly
+anty = dy+C
+oun'y -j[2 3}. ly .. (2)
+tan ly tan!y
+Let I= ed
+teers ,
+
+1
+Substituting tan”' y =f so that f 4 Jo =dt , we get
++y
+
+I= [tedt=te—ll .e@dt=te-—eé=e (t-1)
+
+or T= e@"y(tany -1)
+Substituting the value of I in equation (2), we get
+
+x.e™" Y=e™ tan 'y-LD+C
+
+or x = (tan 'y-LD+C ew
+
+which is the general solution of the given differential equation.
+
+Miscellaneous Exercise on Chapter 9
+
+1. For each of the differential equations given below, indicate its order and degree
+(if defined).
+
+Reprint 2025-26
+
+334. MATHEMATICS
+
+, @& dy) .. (dy) _,f(dyy
+(i) “Pasx{ 2) 6y =log x (ii) (2) -4( 2) +7y = sin x
+
+d*y . [“s)
+iii) —~-— sin] —~ |=0
+(a) dx* dx?
+
+2. For each of the exercises given below, verify that the given function (implicit or
+explicit) is a solution of the corresponding differential equation.
+
+d d
+(i) xy=aet+ber*4+x : xo 429 yt? -2=0
+dx dx
+d’y dy
+(ii) y= e* (acosx +b sin x) 5 -2—+2y=0
+Ix dx
+dy
+Ix
+d
+(iv) x° = 2y? log y ; (Pty) aya 0
+
+3. Prove that x° — y> =c (x + y’)’ is the general solution of differential equation
+(x3 — 3x y’) dx = (y? — 3x’y) dy, where c is a parameter.
+
+d
+4. Find the general solution of the differential equation . +
+x
+
+2
++y+l
+ae ytl_o,
+dx x +x+4+l1
+
+given by («+ y+1)=A(1 —x-—y- 2xy), where A is parameter.
+
+5. Show that the general solution of the differential equation
+
+Tl
+6. Find the equation of the curve passing through the point [o. *) whose differential
+equation is sin x cos y dx + cos x sin y dy = 0.
+
+7. Find the particular solution of the differential equation
+(1 + e*) dy + (1 + y’) e* dx = 0, given that y = 1 when x = 0.
+
+8. Solve the differential equation y e dx = x e + y ay (y#0).
+
+Reprint 2025-26
+
+10.
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+DIFFERENTIAL EQUATIONS 335
+
+Find a particular solution of the differential equation (x — y) (dx + dy) = dx — dy,
+given that y=—1, when x = 0. (Hint: put x -— y = 2)
+
+-2/x
+Solve the differential equation E — +|# =1(x#0).
+
+Vx Vx Jdy
+
+d
+Find a particular solution of the differential equation -. + ycotx = 4x cosec x
+he
+
+1
+(x #0), given that y = 0 when x= 5"
+
+d
+Find a particular solution of the differential equation (x + 1) * =2e°-1, given
+that y = 0 when x = 0.
+y dx—x dy =0 is
+y
+(A) xy=C (B) x =Cy° (C) y=Cx (D) y = Cx’
+
+The general solution of the differential equation
+
+dx
+The general solution of a differential equation of the type dy +P.x=Q, is
+J
+
+(A) yel®® Hae? )ayec
+(B) yd? (gel?) ar+c
+(C) vel’ = f(Qel?*)ay+c
+
+(D) xl =[(Qel**)ar+c
+
+The general solution of the differential equation e* dy + (y e* + 2x) dx = 0 is
+(A) x&+xX=C (B) x&+y=C
+(C) ye+xX=C (D) yek+xX=C
+
+Reprint 2025-26
+
+336
+
+MATHEMATICS
+
+Summary
+An equation involving derivatives of the dependent variable with respect to
+independent variable (variables) is known as a differential equation.
+
+Order of a differential equation is the order of the highest order derivative
+occurring in the differential equation.
+
+Degree of a differential equation is defined if it is a polynomial equation in its
+derivatives.
+
+Degree (when defined) of a differential equation is the highest power (positive
+integer only) of the highest order derivative in it.
+
+A function which satisfies the given differential equation is called its solution.
+The solution which contains as many arbitrary constants as the order of the
+differential equation is called a general solution and the solution free from
+arbitrary constants is called particular solution.
+
+Variable separable method is used to solve such an equation in which variables
+can be separated completely i.e. terms containing y should remain with dy
+and terms containing x should remain with dx.
+
+A differential equation which can be expressed in the form
+
+d d
+. =f (x,y) or x = g(x, y) where, f (x, y) and g(x, y) are homogenous
+X y
+
+functions of degree zero is called a homogeneous differential equation.
+. d
+A differential equation of the form =. +Py =Q, where P and Qare constants
+I
+
+or functions of x only is called a first order linear differential equation.
+
+Historical Note
+
+One of the principal languages of Science is that of differential equations.
+
+Interestingly, the date of birth of differential equations is taken to be November,
+11,1675, when Gottfried Wilthelm Freiherr Leibnitz (1646 - 1716) first put in black
+
+and white the identity } ydy= > y” , thereby introducing both the symbols Jand dy.
+
+Leibnitz was actually interested in the problem of finding a curve whose tangents
+were prescribed. This led him to discover the ‘method of separation of variables’
+1691. A year later he formulated the ‘method of solving the homogeneous
+
+Reprint 2025-26
+
+DIFFERENTIAL EQUATIONS 337
+
+differential equations of the first order’. He went further in a very short time
+to the discovery of the ‘method of solving a linear differential equation of the
+first-order’. How surprising is it that all these methods came from a single man
+and that too within 25 years of the birth of differential equations!
+
+In the old days, what we now call the ‘solution’ of a differential equation, was
+used to be referred to as ‘integral’ of the differential equation, the word being
+coined by James Bernoulli (1654 - 1705) in 1690. The word ‘solution was first
+used by Joseph Louis Lagrange (1736 - 1813) in 1774, which was almost hundred
+years since the birth of differential equations. It was Jules Henri Poincare
+(1854 - 1912) who strongly advocated the use of the word ‘solution’ and thus the
+word ‘solution’ has found its deserved place in modern terminology. The name of
+the ‘method of separation of variables’ is due to John Bernoulli (1667 - 1748),
+a younger brother of James Bernoulli.
+
+Application to geometric problems were also considered. It was again John
+Bernoulli who first brought into light the intricate nature of differential equations.
+In a letter to Leibnitz, dated May 20, 1715, he revealed the solutions of the
+differential equation
+
+x y= 2y,
+
+which led to three types of curves, viz., parabolas, hyperbolas and a class of
+cubic curves. This shows how varied the solutions of such innocent looking
+differential equation can be. From the second half of the twentieth century attention
+has been drawn to the investigation of this complicated nature of the solutions of
+differential equations, under the heading ‘qualitative analysis of differential
+equations’. Now-a-days, this has acquired prime importance being absolutely
+necessary in almost all investigations.
+
+Reprint 2025-26
+
