@@ -8,7 +8,6 @@ import pandas as pd
 from dataclasses import dataclass, field
 from typing import List
 
-
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai--tutor\backend\NCERT_PCM_ChapterWise"
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
@@ -17,34 +16,42 @@ TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
 # =======================================================
 
-
-# --- Configuration ---
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
-
 def log(msg: str):
     print(msg, flush=True)
 
-
-# --- THIS IS THE MISSING FUNCTION THAT HAS BEEN ADDED ---
 def normalize_name(name: str) -> str:
-    """Creates a consistent, searchable key from a name by removing all non-alphanumeric characters and making it lowercase."""
+    """Removes all non-alphanumeric characters and makes lowercase."""
     return re.sub(r'[^a-zA-Z0-9]', '', name.lower())
-
 
 @dataclass
 class TextBlock:
-    text: str; page: int; y: float
-
+    text: str
+    page: int
+    y: float
 
 @dataclass
 class TopicAnchor:
-    topic_number: str; title: str; page: int; y: float
+    topic_number: str
+    title: str
+    page: int
+    y: float
     content: str = field(default="")
 
+def find_pdf_by_normalized_name(root_folder, subject, class_name, target_normalized):
+    """Find a PDF file in the directory whose normalized name matches."""
+    subject_folder = os.path.join(root_folder, subject, class_name)
+    if not os.path.exists(subject_folder):
+        return None
+    for fname in os.listdir(subject_folder):
+        if fname.lower().endswith(".pdf"):
+            if normalize_name(os.path.splitext(fname)[0]) == target_normalized:
+                return os.path.join(subject_folder, fname)
+    return None
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
@@ -65,45 +72,46 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         log(f"  [ERROR] OCR process failed for {pdf_filename}: {e}")
         return ""
 
-
 def extract_all_text_blocks(doc_text: str) -> List[TextBlock]:
-    """Converts raw OCR text into a list of located text blocks."""
     all_blocks = []
     for i, line in enumerate(doc_text.split('\n')):
         if line.strip():
             all_blocks.append(TextBlock(text=line.strip(), page=0, y=float(i)))
     return all_blocks
 
-
 def find_anchor_locations(topics_from_csv: pd.DataFrame, all_blocks: List[TextBlock]) -> List[TopicAnchor]:
-    """Uses fuzzy matching on normalized text (alphanumeric characters only) to find the exact location of each topic from the CSV in the OCR text."""
     from rapidfuzz import process, fuzz
     anchors = []
     block_texts = [block.text for block in all_blocks]
     normalized_block_texts = [normalize_name(text) for text in block_texts]
-    
+
     for _, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
         topic_title = str(row['heading_text'])
         search_query = f"{topic_num} {topic_title}"
         normalized_query = normalize_name(search_query)
+
+        # First try normal fuzzy match
         best_match = process.extractOne(normalized_query, normalized_block_texts, scorer=fuzz.WRatio, score_cutoff=85)
-        
+
+        # If no match, retry with stripped alphanumeric characters only
+        if not best_match:
+            stripped_blocks = [''.join(ch for ch in txt if ch.isalnum()) for txt in block_texts]
+            stripped_query = ''.join(ch for ch in search_query if ch.isalnum())
+            best_match = process.extractOne(stripped_query, stripped_blocks, scorer=fuzz.partial_ratio, score_cutoff=75)
+
         if best_match:
-            match_text, score, index = best_match
+            _, score, index = best_match
             found_block = all_blocks[index]
             log(f"  [ANCHOR FOUND] {topic_num} {topic_title} (Score: {score:.0f})")
             anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
         else:
             log(f"  [ANCHOR FAILED] Could not find: {topic_num} {topic_title}")
 
-
     anchors.sort(key=lambda a: (a.page, a.y))
     return list({(a.page, a.y): a for a in anchors}.values())
 
-
 def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextBlock]):
-    """Assigns all text that appears between two anchors to the first anchor."""
     for i, current_anchor in enumerate(anchors):
         content_blocks = []
         start_y = current_anchor.y
@@ -113,7 +121,6 @@ def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextB
                 content_blocks.append(block.text)
         current_anchor.content = "\n".join(content_blocks).strip()
     return anchors
-
 
 def extract_questions(ocr_text: str) -> List[dict]:
     questions = []
@@ -126,9 +133,7 @@ def extract_questions(ocr_text: str) -> List[dict]:
             questions.append({'question_number': q_num, 'question_text': q_text.strip()})
     return questions
 
-
 def update_database(cursor, chapter_id: int, topics: List[TopicAnchor], questions: list):
-    """Updates the database."""
     log(f"  - Updating {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
         if topic.content:
@@ -140,7 +145,6 @@ def update_database(cursor, chapter_id: int, topics: List[TopicAnchor], question
             cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
                            (chapter_id, q['question_number'], q['question_text']))
     log(f"  - Database updates complete.")
-
 
 def main():
     try:
@@ -158,52 +162,42 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
-
     cursor.execute("SELECT name, id FROM chapters")
     db_chapters = {normalize_name(name): chap_id for name, chap_id in cursor.fetchall()}
 
-
     csv_chapters = master_df[['subject', 'class', 'chapter_file']].drop_duplicates().to_dict('records')
-
 
     for chapter_info in csv_chapters:
         original_pdf_filename = chapter_info['chapter_file']
-        # Normalize filename for path by removing hyphens, commas, and other non-alphanumeric characters except the extension
-        base_name, ext = os.path.splitext(original_pdf_filename)
-        pdf_filename = normalize_name(base_name) + ext
-        
-        chapter_name = os.path.splitext(original_pdf_filename)[0]  # Use original for chapter_name to keep normalization separate
-        
-        log(f"\n--- Processing: {original_pdf_filename} (using normalized {pdf_filename} for path) ---")
-        
+        pdf_filename_normalized = normalize_name(os.path.splitext(original_pdf_filename)[0])
+
+        pdf_path = find_pdf_by_normalized_name(PDF_ROOT_FOLDER, chapter_info['subject'], chapter_info['class'], pdf_filename_normalized)
+        if not pdf_path:
+            log(f"  [WARNING] PDF file not found for normalized name '{pdf_filename_normalized}'. Skipping.")
+            continue
+
+        chapter_name = os.path.splitext(original_pdf_filename)[0]
         chapter_id = db_chapters.get(normalize_name(chapter_name))
         if not chapter_id:
             log(f"  [WARNING] Chapter '{chapter_name}' not found in DB. Skipping.")
             continue
-            
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, chapter_info['subject'], chapter_info['class'], pdf_filename)
-        if not os.path.exists(pdf_path):
-            log(f"  [WARNING] PDF file not found at '{pdf_path}'. Skipping.")
-            continue
-            
+
         chapter_topics_df = master_df[master_df['chapter_file'] == original_pdf_filename]
-        
+
         ocr_text = get_text_from_pdf_with_caching(pdf_path)
         if ocr_text:
             all_blocks = extract_all_text_blocks(ocr_text)
             anchors = find_anchor_locations(chapter_topics_df, all_blocks)
             topics_with_content = assign_content_to_anchors(anchors, all_blocks)
             questions = extract_questions(ocr_text)
-            
+
             update_database(cursor, chapter_id, topics_with_content, questions)
             conn.commit()
             log(f"  [SUCCESS] Saved data for '{chapter_name}'.")
 
-
     cursor.close()
     conn.close()
     log("\n[COMPLETE] Script finished.")
-
 
 if __name__ == '__main__':
     main()
