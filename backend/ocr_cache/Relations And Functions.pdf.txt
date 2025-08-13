@@ -1,0 +1,879 @@
+Chapter 2
+
+11076CHO2
+
+RELATIONS AND FUNCTIONS
+
+“¢ Mathematics is the indispensable instrument of
+all physical research. - BERTHELOT *%
+
+2.1 Introduction
+
+Much of mathematics is about finding a pattern — a
+recognisable link between quantities that change. In our
+daily life, we come across many patterns that characterise
+relations such as brother and sister, father and son, teacher
+and student. In mathematics also, we come across many
+relations such as number m is less than number n, line /is
+parallel to line m, set A is a subset of set B. In all these, we
+notice that a relation involves pairs of objects in certain
+order. In this Chapter, we will learn how to link pairs of
+objects from two sets and then introduce relations between
+the two objects in the pair. Finally, we will learn about G.W. Leibnitz
+special relations which will qualify to be functions. The (1646-1716)
+concept of function is very important in mathematics since it captures the idea of a
+mathematically precise correspondence between one quantity with the other.
+
+2.2 Cartesian Products.of Sets
+
+Suppose A is a set of 2 colours and B is a set of 3 objects, i.e.,
+A = {red, blue}and B = {b, c, s},
+
+where b, c and s represent a particular bag, coat and shirt, respectively.
+How many pairs of coloured objects can be made from these two sets?
+
+Proceeding in a very orderly manner, we can see that there will be 6
+distinct pairs as given below:
+
+(red, b), (red, c), (red, s), (blue, 5), (blue, c), (blue, s). b
+Thus, we get 6 distinct objects (Fig 2.1). . red blue
+Let us recall from our earlier classes that an ordered pair of elements Fig 2.1
+
+taken from any two sets P and Q is a pair of elements written in small
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 25
+
+brackets and grouped together in a particular order, i.e., (p,g), p € Pand gq € Q. This
+leads to the following definition:
+
+Definition 1 Given two non-empty sets P and Q. The cartesian product P x Q is the
+set of all ordered pairs of elements from P and Q, i.e.,
+
+PxQ={(@q):P €Pq €Q}
+If either P or Q is the null set, then P x Q will also be empty set, i.e., Px Q=0
+
+From the illustration given above we note that
+
+A x B= {(red,b), (red,c), (red,s), (blue,b), (blue,c), (blue,s)}.
+
+Again, consider the two sets:
+
+A= {DL, MP, KA}, where DL, MP, KA represent Delhi,
+
+Madhya Pradesh and Karnataka, respectively and B = {01,02, 03
+03}representing codes for the licence plates of vehicles issued 92
+by DL, MP and KA . 01
+
+If the three states, Delhi, Madhya Pradesh and Karnataka
+were making codes for the licence plates of vehicles, withthe DL MP KA
+restriction that the code begins with an element from set A,
+which are the pairs available from these sets and how many such
+pairs will there be (Fig 2.2)?
+
+The available pairs are:(DL,01), (DL,02), (DL,03), (MP,01), (MP,02), (MP,03),
+(KA,01), (KA,02), (KA,03) and the product of set A and set B is given by
+Ax B= {(DL,01), (DL,02), (DL,03), (MP,01), (MP,02), (MP,03), (KA,01), (KA,02),
+
+(KA,03)}.
+
+It can easily be seen that there will be 9 such pairs in the Cartesian product, since
+there are 3 elements in each of the sets A and B. This gives us 9 possible codes. Also
+note that the order in which these elements are paired is crucial. For example, the code
+(DL, 01) will not be the same as the code (01, DL).
+
+As a final illustration, consider the two sets A= {a,, a,} and b,
+
+B= {b,, b,, b,, b,} (Fig 2.3). b,
+
+AxB= {(a, 5,), (4, 5,), (a,, 53), (4, 54), (455 5), (a, 5,), B,
+
+(4), b,), (dy b,)}- by
+The 8 ordered pairs thus formed can represent the position of points in
+the plane if A and B are subsets of the set of real numbers and it is =a, a,
+obvious that the point in the position (a,, b,) will be distinct from the point
+in the position (5,, a,).
+
+Fig 2.2
+
+Fig 2.3
+Remarks
+
+(i) Two ordered pairs are equal, if and only if the corresponding first elements
+are equal and the second elements are also equal.
+
+Reprint 2025-26
+
+26 MATHEMATICS
+
+(ii) If there are p elements in A and gq elements in B, then there will be pg
+elements in A x B,ie., if m(A) = p and n(B) =q, then n(A x B) = pg.
+
+(iii) IfA and B are non-empty sets and either A or B is an infinite set, then so is
+A XB.
+
+(iv) Ax Ax A= {(a, b,c): a,b,c € A}. Here (a, b, c) is called an ordered
+triplet.
+
+Example 1 If (x+ 1, y—2)=@,1), find the values of x and y.
+
+Solution Since the ordered pairs are equal, the corresponding elements are equal.
+Therefore x+1=3 andy—-2=1.
+Solving weget x=2andy=3.
+
+Example 2 If P= {a, b, c} and Q = {r}, form the sets P x Q and Q x P.
+Are these two products equal?
+
+Solution By the definition of the cartesian product,
+PxXQ= {(a,r), (6,7), (¢,r)} and Qx P= {(r, a), (7, ), (7, ©)
+Since, by the definition of equality of ordered pairs, the pair (a, ) is not equal to the pair
+(r, a), we conclude that Px Q#Q*xP.
+However, the number of elements in each set will be the same.
+Example 3 Let A= {1,2,3}, B= {3,4} and C = {4,5,6}. Find
+G@) Ax(BOC) (ii) (Ax B)AN(A xC)
+(ii) Ax (BUC) (iv) (Ax B)U(A xC)
+Solution (i) By the definition of the intersection of two sets, (B ~ C) = {4}.
+Therefore, A x (BM C) = {(1,4), (2,4), (3,4)}.
+(ii) Now (A x B)= {(1,3), (1,4), (2,3), (2,4), (3,3), (3.4)}
+and (A x C)= {(1,4), (1,5), (1,6), (2,4), (2,5), (2,6), (3.4), (3,5), (3,6)
+Therefore, (A x B)N(AxC) = {(1, 4), (2, 4), GB, 4}.
+(iii) Since, (BUC) = {3, 4, 5, 6}, we have
+Ax (BUC) = {(1,3), (1,4), 1,5), (1,6), (2,3), (2,4), (2,5), (2,6), (3,3),
+(3,4), (3,5), (3,6)}.
+(iv) Using the sets A x B and A x C from part (ii) above, we obtain
+(A x B) U(A x C) = £{(1,3), (1,4), (1,5), (1,6), (2,3), (2,4), (2,5), (2,6),
+(3,3), (3,4), (3,5), (3,6)}-
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 27
+
+Example 4 If P = {1, 2}, form the set P x P x P.
+
+Solution We have, Px Px P= {(1,1,1), (1,1,2), (1,2,1), (1,2,2), (2,1,1), (2,1,2), (2,2, 1),
+(2,2,2)}.
+
+Example 5 If R is the set of all real numbers, what do the cartesian products R x R
+and R x R x R represent?
+
+Solution The Cartesian product R x R represents the set R x R={(x, y): x, y € R}
+which represents the coordinates of all the points in two dimensional space and the
+cartesian product R x R x R represents the set R x R x R={(x, yz): x,y,z € R}
+which represents the coordinates of all the points in three-dimensional space.
+
+Example 6 IfA x B ={(p, q),(p, 7), (m, g), (m, r)}, find A and B.
+
+Solution A= set of first elements = {p, m}
+B = set of second elements = {g, r}.
+
+EXERCISE 2.1
+
+5 1
+)-(3 a find the values of x and y.
+
+3 3
+
+2. Ifthe set A has 3 elements and the set B = {3, 4, 5}, then find the number of
+
+elements in (AxB).
+3. IfG= {7,8} andH = {5, 4, 2}, find G x HandH xG.
+4. State whether each of the following statements are true or false. If the statement
+
+is false, rewrite the given statement correctly.
+
+(i) IfP = {m,n} and Q= {n, m}, then P x Q= {(m, n),(n, m)}.
+(i) IfA and B are non-empty sets, then A x B is a non-empty set of ordered
+
+x 2
+1. If |}>t+hbLy
+
+pairs (x, y) such that x € Aand y € B.
+(i) IfA= {1,2}, B= {3, 4}, thn Ax (BOM 6) = 9.
+5. IfA= {-1, 1}, find Ax AXA.
+IfA x B= {(a, x),(a , y), (6, x), (b, y)}. Find A and B.
+7. LetA= {1,2}, B= {1, 2,3, 4}, C = {5, 6} and D = {5, 6, 7, 8}. Verify that
+(i) Ax (B AC) =(A x B) (A x C). (ii) A x C is a subset of B x D.
+8. LetA= {1,2} and B= {3,4}. Write A x B. How many subsets will A x B have?
+List them.
+9. Let A and B be two sets such that n(A) = 3 and n(B) =2. If (x, 1), (, 2), (z, 1)
+are in A x B, find A and B, where x, y and z are distinct elements.
+
+>
+
+Reprint 2025-26
+
+28 MATHEMATICS
+
+10. The Cartesian product A x A has 9 elements among which are found (—1, 0) and
+(0,1). Find the set A and the remaining elements of A x A.
+
+2.3 Relations
+Consider the two sets P= {a, b, c} and Q = {Ali, Bhanu, Binoy, Chandra, Divya}.
+The cartesian product of P Q
+P and Q has 15 ordered pairs which
+can be listed as P x Q = {(a, Ali),
+(a, Bhanu), (a, Binoy), ..., (c, Divya)}.
+We can now obtain a subset of
+P x Q by introducing a relation R
+between the first element x and the
+second element y of each ordered pair
+(x, y) as
+R= { (wy): x is the first letter of the name y, x € P, y € Q}.
+Then R = {(a, Ali), (6, Bhanu), (6, Binoy), (c, Chandra) }
+A visual representation of this relation R (called an arrow diagram) is shown
+in Fig 2.4.
+
+eAli
+eBhanu
+eBinoy
+
+eChandra
+eDivya
+
+Definition 2 A relation R from a non-empty set A to a non-empty set B is a subset of
+the cartesian product A x B. The subset is derived by describing a relationship between
+the first element and the second element of the ordered pairs in A x B. The second
+element is called the image of the first element.
+
+Definition 3 The set of all first elements of the ordered pairs in a relation R from a set
+A to a set B is called the domain of the relation R.
+
+Definition 4 The set of all second elements in a relation R from a set A to a set B is
+called the range of the relation R. The whole set B is called the codomain of the
+relation R. Note that range C codomain.
+
+Remarks (i) A relation may be represented algebraically either by the Roster
+method or by the Set-builder method.
+(ii) An arrow diagram is a visual representation of a relation.
+
+Example 7 LetA= {1, 2,3, 4,5, 6}. Define a relation R from A to A by
+
+R= {@,y)iy= xt 1}
+(i) Depict this relation using an arrow diagram.
+(ii) Write down the domain, codomain and range of R.
+
+Solution (4) By the definition of the relation,
+R= {(1,2), (2,3), (3.4), (4,5), (5,6)}-
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 29
+
+The corresponding arrow diagram is
+
+shown in Fig 2.5. \_
+(ii) We can see that the |
+
+domain ={1, 2,3, 4, 5,} _
+Similarly, the range = {2, 3, 4, 5, 6} es
+
+and the codomain = {1, 2, 3, 4, 5, 6}.
+Fig 2.5
+Example 8 The Fig 2.6 shows a relation
+
+between the sets P and Q. Write this relation (i) in set-builder form, (ii) in roster form.
+What is its domain and range? P Q
+
+Solution It is obvious that the relation R is
+“x is the square of y”.
+(1) In set-builder form, R = {(x, y): x
+is the square of y, x € PR. y € Q}
+(11) In roster form, R = {(9, 3),
+(9, —3), (4, 2), (4, —2), (25, 5), (25, -5)} Fig 2.6
+The domain of this relation is {4, 9, 25}.
+The range of this relation is {— 2, 2, -3, 3, —-5, 5}.
+Note that the element | is not related to any element in set P.
+
+The set Q is the codomain of this relation.
+
+he total number of relations that can be defined from a set A to a set B
+
+is the number of possible subsets of A x B. If n(A ) = p and n(B) = q, then
+n(A x B) =pq and the total number of relations is 2”.
+
+Example 9 Let A= {1, 2} and B = {3, 4}. Find the number of relations from A to B.
+
+Solution We have,
+
+Ax B= {(1, 3), C1, 4), (2, 3), (2, 4}.
+Since n (AxB ) = 4, the number of subsets of AxB is 2*. Therefore, the number of
+relations from A into B will be 2+.
+
+Remark Arelation R from A to A is also stated as a relation on A.
+
+EXERCISE 2.2
+
+1. Let A = {1, 2, 3,...,14}. Define a relation R from A to A by
+R= {(x, y): 3x-—y=0, where x, y € A}. Write down its domain, codomain and
+range.
+
+Reprint 2025-26
+
+30 MATHEMATICS
+
+2. Define a relation R on the set N of natural numbers by R = {(x, y): y= x+5,
+x is a natural number less than 4; x, y EN}. Depict this relationship using roster
+form. Write down the domain and the range.
+
+3. A= {l1, 2, 3, 5} and B = {4, 6, 9}. Define a relation R from A to B by
+R= {(x, y): the difference between x and y is odd; x € A, y € B}. Write R in
+roster form.
+
+P Q
+
+4. The Fig2.7 shows a relationship
+between the sets P and Q. Write this
+
+(1) in set-builder form (11) roster form.
+What is its domain and range? J
+5. LetA= {1, 2, 3, 4, 6}. Let R be the
+
+relation on A defined by Fig 2.7
+{(a, b): a, b €A, b is exactly divisible by a}.
+
+(i) Write R in roster form
+(ii) Find the domain of R
+(iti) Find the range of R.
+6. Determine the domain and range of the relation R defined by
+R= {(x, x +5):x € {0, 1, 2,3, 4, 5}.
+7. Write the relation R = {(x, x*) : x is a prime number less than 10} in roster form.
+Let A= {x, y, z} and B = {1, 2}. Find the number of relations from A to B.
+9. Let R be the relation on Z defined by R = {(a,b): a, b € Z, a— bis an integer}.
+Find the domain and range of R.
+
+lo}
+
+2.4 Functions
+
+In this Section, we study a special type of relation called function. It is one of the most
+important concepts in mathematics. We can, visualise a function as a rule, which produces
+new elements out of some given elements. There are many terms such as ‘map’ or
+‘mapping’ used to denote a function.
+
+Definition 5 A relation f from a set A to a set B is said to be a function if every
+element of set A has one and only one image in set B.
+
+In other words, a function fis a relation from a non-empty set A to a non-empty
+set B such that the domain of fis A and no two distinct ordered pairs in f have the
+same first element.
+
+If fis a function from A to B and (a, b) € f then f(a) = b, where b is called the
+image of a under f and a is called the preimage of b under f.
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 31
+
+The function ffrom A to B is denoted by f A > B.
+Looking at the previous examples, we can easily see that the relation in Example 7 is
+not a function because the element 6 has no image.
+
+Again, the relation in Example 8 is not a function because the elements in the
+domain are connected to more than one images. Similarly, the relation in Example 9 is
+also not a function. (Why?) In the examples given below, we will see many more
+relations some of which are functions and others are not.
+
+Example 10 Let N be the set of natural numbers and the relation R be defined on
+N such that R= {(x, y): y= 2x, x, y € N}.
+What is the domain, codomain and range of R? Is this relation a function?
+
+Solution The domain of R is the set of natural numbers N. The codomain is also N.
+The range is the set of even natural numbers.
+
+Since every natural number 7 has one and only one image, this relation is a
+function.
+
+Example 11 Examine each of the following relations given below and state in each
+case, giving reasons whether it is a function or not?
+(i) R= {(2,1),G,1), (4,2)}, GD R= {(2,2),(2,4),(3,3), (4.45
+(iii) R= {(1,2),(2,3),(3,4), (4,5), (5,6), (6,7)}
+
+Solution @) Since 2,3, 4 are the elements of domain of R having their unique images,
+this relation R is a function.
+(ii) Since the same first element 2 corresponds to two different images 2
+and 4, this relation is not a function.
+(iti) Since every element has one and only one image, this relation is a
+function.
+
+Definition 6 A function which has either R or one of its subsets as its range is called
+a real valued function. Further, if its domain is also either R or a subset of R, it is
+called a real function.
+
+Example 12 Let N be the set of natural numbers. Define a real valued function
+
+f: NON by f(x) = 2x + 1. Using this definition, complete the table given below.
+
+Pet aot 2 | 3 ft 4 fs ft 6 fT 7
+
+Solution The completed table is given by
+
+pet tof 2 | 3 tf 4 ts ft 6 ft 7
+
+Reprint 2025-26
+
+32 MATHEMATICS
+
+2.4.1 Some functions and their graphs
+
+(i) Identity function Let R be the set of real numbers. Define the real valued
+function f: R > R by y = f(x) =x for each x € R. Such a function is called the
+identity function. Here the domain and range of fare R. The graph is a straight line as
+shown in Fig 2.8. It passes through the origin.
+
+Y
+
+y’
+SI) =x
+Fig 2.8
+(ii) Constant function Define the function f R > R by y = f(x) =c, x € R where
+
+c is a constant and each x € R. Here domain of fis R and its range is {c}.
+Y
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 33
+
+The graph is a line parallel to x-axis. For example, if f(x)=3 for each xeER, then its
+graph will be a line as shown in the Fig 2.9.
+
+(iii) Polynomial function A function f: R > R is said to be polynomial function if
+for each x inR,y = f(x)=a,+ax tax t..+ a,x’, where n is a non-negative
+integer and d,, d,, d,,....a,ER.
+
+The functions defined by f(x) = x° —x°+ 2, and g(x) =x*+ ./2 x are some examples
+
+WIN
+
+of polynomial functions, whereas the function h defined by A(x) = x° + 2x is not a
+
+polynomial function.(Why?)
+
+Example 13 Define the function f/ R > R by y = f(x) = x’, x € R. Complete the
+Table given below by using this definition. What is the domain and range of this function?
+Draw the graph of f-
+
+Solution The completed Table is given below:
+
+parece bel aba bope ts sb
+
+Domain of f= {x :xER}. Range of f = fy: :x € R}. The graph of f is given
+by Fig 2.10
+
+Y
+
+y’
+Sx) =x? Fig 2.10
+
+Reprint 2025-26
+
+34 MATHEMATICS
+
+Example 14 Draw the graph of the function f :R — R defined by f (x) = x°, xeR.
+
+Solution We have
+AO) = 0, AL) = 1, fl) =-1, f2) = 8, f-2) = -8, f(3) = 27; f-3) = -27, ete.
+Therefore, f= {(x,x°): xeER}. Y
+
+The graph of fis given in Fig 2.11.
+
+yY'
+fe) =x3
+Fig 2.11
+f(x)
+g(x)
+
+polynomial functions of x defined in a domain, where g(x) # 0.
+
+(iv) Rational functions are functions of the type , where f(x) and g(x) are
+
+1
+Example 15 Define the real valued function f: R — {0} > R defined by f(x) = x?
+
+x € R—{0}. Complete the Table given below using this definition. What is the domain
+and range of this function?
+
+pf ofep fetetab Pats
+
+Solution The completed Table is given by
+
+1
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 35
+
+The domain is all real numbers except 0 and its range is also all real numbers
+
+except 0. The graph of fis given in Fig 2.12.
+Y
+
+y’
+fs) =4
+
+Fig 2.12
+
+(v) The Modulus function The function
+f, ROR defined by f(x) = |x| for each
+x €Ris called modulus function. For each
+non-negative value of x, f(x) is equal to x.
+But for negative values of x, the value of
+Aix) is the negative of the value of x, i.e.,
+
+x,x>0
+
+—x,x <0
+
+094
+
+The graph of the modulus function is given
+in Fig 2.13.
+
+(vi) Signum function The function
+f-ROR defined by
+
+Lifx>0
+f(x) =50,if x=0
+-Lifx<0
+
+Reprint 2025-26
+
+36 MATHEMATICS
+
+is called the signum function. The domain of the signum function is R and the range is
+the set {—1, 0, 1}. The graph of the signum function is given by the Fig 2.14.
+
+Sfo= Il Oand Ofor x = 0
+
+Fig 2.14
+
+(vil) Greatest integer function
+The function f: R > R defined
+by f(x) = [x], x ER assumes the
+value of the greatest integer, less
+than or equal to x. Such a function
+is called the greatest integer
+function. Xx’
+From the definition of [x], we
+
+can see that
+
+[x] =-1 for-l <x<0
+
+[x]= Ofor0<x<1
+
+[x]= 1 forl<x<2
+
+[x] = 2 for2 <x <3 and
+
+f(x) = [x]
+Fig 2.15
+
+so on.
+The graph of the function is
+shown in Fig 2.15.
+
+2.4.2 Algebra of real functions In this Section, we shall learn how to add two real
+functions, subtract a real function from another, multiply a real function by a scalar
+(here by a scalar we mean a real number), multiply two real functions and divide one
+real function by another.
+
+(i) Addition of two real functions Let f: X — R and g: X > R be any two real
+functions, where X c R. Then, we define (f+ g): X — R by
+
+(f+ g) (x) =f (x) + g (x), for all x € X.
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 37
+
+(ii) Subtraction of a real function from another Let f: X — R and g: X > R be
+any two real functions, where XCR. Then, we define (f- g) : XR by
+
+(f-g) (x) = f(x) -g(x), for all x € X.
+
+(iii) Multiplication by a scalar Let f: X—R be a real valued function and a be a
+scalar. Here by scalar, we mean a real number. Then the product a fis a function from
+X to R defined by (a f) (x)= a f(x), x EX.
+
+(iv) Multiplication of two real functions The product (or multiplication) of two real
+functions f:X—R and g:X—-R is a function fg:X—R defined by
+
+(fz) (x) = fix) g(x), for all x € X.
+This is also called pointwise multiplication.
+
+(v) Quotient of two real functions Let fand g be two real functions defined from
+
+f
+XR, where X CR. The quotient of f/by g denoted by g is a function defined by ,
+f f(x)
+[4 (x) ~ a(x) , provided g(x) #0, x e X
+
+Example 16 Let f(x) = xand g(x) = 2x + | be two real functions.Find
+
+f
+(f+ g) (x), (f-8) (@), (8) >), (4) (x),
+
+Solution We have, / ;
+(f+ g)Q)=x +2x+1, (f-g) @)= x -2x-1,
+
+2
+_ 2? _ 43 2 f x 1
+(fe) () = Qe 1) = 20 +4", [LJ -aapre-t
+Example 17 Let fix) = {x and g(x) =x be two functions defined over the set of non-
+
+negative real numbers. Find (f+ g) (x), (f— g) (x), (fg) (x) and [<) (x).
+
+Solution We have
+
+(f+ (= Vx tx, (f— 9) @) = vx -x,
+
+(fz)x = Vx(x)=x? and [LJ Viet xe0
+x
+
+Reprint 2025-26
+
+38 MATHEMATICS
+
+EXERCISE 2.3
+
+1. Which of the following relations are functions? Give reasons. If it is a function,
+determine its domain and range.
+
+(i) (2,1), (65,1), 8,1), U1), 4D, 07,5
+(ii) {(2,1), (4,2), (6,3), (8,4), (10,5), (12,6), (14,7)}
+(it) {(1,3), (1,5), (2,5)}.
+2. Find the domain and range of the following real functions:
+(i) fl) =— |p (il) fix) = J9-x?.
+3. A function fis defined by f(x) = 2x —5. Write down the values of
+(i) f(0), Gi) £7), (ati) fC-3).
+4. The function ‘? which maps temperature in degree Celsius into temperature in
+9C
+degree Fahrenheit is defined by #(C) = 5 + 32.
+Find () 40) (i) 428) (ii) t-10) (av) The value of C, when «(C) = 212.
+
+5. Find the range of each of the following functions.
+G) f@) =2-3xxeEeRx>0.
+(ii) f(x) =x? + 2, x is a real number.
+(iti) f(x) =x, xis a real number.
+
+Miscellaneous‘Examples
+
+Example 18 Let R be the set of real numbers.
+
+Define the real function Y
+f: ROR by fy) =x + 10
+and sketch the graph of this function.
+(0,10)
+
+Solution Here f(0) = 10, (1) = 11, f2) = 12, ...,
+fU10) = 20, etc., and
+
+fl-l) = 9, f-2) = 8, ..., A-10) = 0 and so on, 10, 9)
+
+Therefore, shape of the graph of the given x O
+function assumes the form as shown in Fig 2.16.
+Remark The function f defined by f(x) = mx +c, M
+x € R, is called linear function, where m and c are fx) =x +10
+constants. Above function is an example of a /inear
+
+Fig 2.16
+function. 6
+
+Reprint 2025-26
+
+RELATIONS AND FUNCTIONS 39
+
+Example 19 Let R be a relation from Q to Q defined by R = {(a,b): a,b € Q and
+a—b € Z}. Show that
+
+(i) (aa) €¢ R forallae Q
+
+(ii) (a,b) € R implies that (6, a) e R
+
+(iti) (a,b) € R and (4,c) € R implies that (a,c) ER
+
+Solution (a) Since,a—a=0 € Z, if follows that (a, a) € R.
+(ii) (a,b) € R implies that a- 6b € Z. So, b- a € Z. Therefore,
+(bayeR
+(iti) (a, b) and (b,c) € Rimplies thata—b e¢ Z.b-ceZ. So,
+a—c=(a—b)+ (6-c) € Z. Therefore, (a,c) e R
+
+Example 20 Let f= {(,1), (2,3), (0, -1), (-1, -3)} be a linear function from Z into Z.
+Find f(x).
+
+Solution Since fis a linear function, f(x) = mx +c. Also, since (1, 1), (0,-—1) € R,
+fQ)=m+c=1 and f(0) =c =-1. This gives m = 2 and f(x) = 2x - 1.
+
+7 43x45
+Example 21 Find the domain of the function f(x) = 74
+x —5x+4
+
+Solution Sincex —Sx+4= (x — 4) (x=1), the function fis defined for all real numbers
+except at x = 4 and x = 1. Hence the domain of fis R— {1, 4}.
+
+Example 22 The function fis defined by
+l-x, x<0
+1 ,x=0
+x+1, x>0
+
+f(x) =
+
+Draw the graph of f(x).
+Solution Here, f(x) =1-—x, x <0, this gives
+f- 4) =1-C4)=5;
+f- 3) =1-C3)=4,
+f- 2) =1-C@2)=3
+fl) == 1-€1) =2; ete,
+and f(1) =2, f(2)=3,f(3)=4
+f(4) =S5 and so on for fix) =x+1,x>0. Y’
+Thus, the graph of fis as shown in Fig 2.17 Fig 2.17
+
+Reprint 2025-26
+
+40
+
+10.
+
+MATHEMATICS
+
+Miscellaneous Exercise on Chapter 2
+
+The relation fis defined by f(&) = «08x83
+t =
+e relation fis defined by 3x,3<x<10
+(x) x? ,O<x<2
+. . x)=
+The relation g is defined by & 3x ,2<x<10
+Show that fis a function and g is not a function.
+2 AC PA)
+If =x , find —————..
+f(x) =x, fin (1-1)
+2
+Find the domain of the function f(x) = yesh
+x? —8x+12°
+
+Find the domain and the range of the real function fdefined by f(x) = ./(x-1) .
+
+Find the domain and the range of the real function f defined by f(x) = |x - I .
+
+2
+x
+Let f= [ 5 ) “XE R| be a function from R into R. Determine the range
+
+l+x
+of f-
+
+Let f g : ROR be defined, respectively by f(x) = x + 1, g(x) = 2x — 3. Find
+
+ft+ef- and =
+& & g°
+
+Let f= {(1,1), (2,3), (0-1), (-1, -3)} be a function from Z to Z defined by
+
+fix) = ax + b, for some integers a, b. Determine a, b.
+
+Let R be a relation from N to N defined by R = {(a, b): a,b EN anda= bY. Are
+
+the following true?
+
+(i) (a,a) € R, foralla eN (ii) (a,b) € R, implies (b,a) € R
+
+(it) (a,b) € R, (b,c) € R implies (a,c) € R.
+Justify your answer in each case.
+
+Let A={1,2,3,4}, B= {1,5,9,11,15,16} and f= {(1,5), (2,9), (3,1), (4,5), (2,11)}
+
+Are the following true?
+
+(i) fis a relation from A to B (ii) f is a function from A to B.
+
+Justify your answer in each case.
+
+Reprint 2025-26
+
+11.
+
+12.
+
+RELATIONS AND FUNCTIONS 41
+
+Let f be the subset of Z x Z defined by f = {(ab,a+b): a,b € Z}. Is fa
+function from Z to Z? Justify your answer.
+
+LetA= {9,10,11,12,13} and let f: AN be defined by f(7) = the highest prime
+factor of n. Find the range of f-
+
+Summary
+
+In this Chapter, we studied about relations and functions.The main features of
+this Chapter are as follows:
+© Ordered pair A pair of elements grouped together in a particular order.
+® Cartesian product A x B of two sets A and B is given by
+Ax B= {(a,b):a¢A,b eB}
+In particular R x R= {(x, y): x,y € R}
+and Rx Rx R= {(x, y, Z): x,y, z € R}
+© If (a, b) = (x, y), then a =x and b=}.
+© If n(A) = p and n(B) = gq, then n(A x B) = pq.
+eAXxO=0
+® In general, Ax B4#BX A.
+
+® Relation A relation R from a set A to a set B is a subset of the cartesian
+product A x B obtained by describing a relationship between the first element
+x and the second element y of the ordered pairs in A x B.
+
+® The image of an element x under a relation R is given by y, where (x, y) € R,
+
+® The domain of R is the set of all first elements of the ordered pairs in a
+relation R.
+
+® The range of the relation R is the set of all second elements of the ordered
+pairs in a relation R.
+
+® Function A function f from a set A to a set B is a specific type of relation for
+which every element x of set A has one and only one image y in set B.
+
+We write f AB, where f(x) = y.
+® A is the domain and B is the codomain of f:
+
+Reprint 2025-26
+
+42 MATHEMATICS
+
+® The range of the function is the set of images.
+
+® A real function has the set of real numbers or one of its subsets both as its
+domain and as its range.
+
+® Algebra of functions For functions f: X — R and g: X > R, we have
+(f+ g) (x) = f(x) + g(x), x € X
+(f— g) (x) =f) — g(x), x € X
+(fg) (x) =f) .g@),x EX
+(kf) (x) =k (f(x) ), x € X, where k is a real number.
+
+4) (x) = Sy x € X, g(x) #0
+
+g g(x)’
+
+Historical/Note
+
+The word FUNCTION first appears in a Latin manuscript “Methodus
+tangentium inversa, seu de fuctionibus” written by Gottfried Wilhelm Leibnitz
+(1646-1716) in 1673; Leibnitz used the word in the non-analytical sense. He
+considered a function in terms of “mathematical job” — the “employee” being
+Just a curve.
+
+On July 5, 1698, Johan Bernoulli, in a letter to Leibnitz, for the first time
+deliberately assigned a specialised use of the term function in the analytical
+sense. At the end of that month, Leibnitz replied showing his approval.
+
+Function is found in English in 1779 in Chambers’ Cyclopaedia: “The
+term function is used in algebra, for an analytical expression any way compounded
+of a variable quantity, and of numbers, or constant quantities”.
+
+>,
+— ~~ —
+
+Reprint 2025-26
+
