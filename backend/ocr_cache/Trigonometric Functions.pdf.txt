@@ -1,0 +1,1538 @@
+11076CHO3
+
+TRIGONOMETRIC FUNCTIONS
+
+“4 mathematician knows how to solve a problem,
+
+he can not solve it. — MILNE %
+
+3.1 Introduction
+
+The word ‘trigonometry’ is derived from the Greek words
+‘trigon’ and ‘metron’ and it means ‘measuring the sides of
+a triangle’. The subject was originally developed to solve
+geometric problems involving triangles. It was studied by
+sea captains for navigation, surveyor to map out the new
+lands, by engineers and others. Currently, trigonometry is
+used in many areas such as the science of seismology,
+designing electric circuits, describing the state of an atom,
+predicting the heights of tides in the ocean, analysing a
+musical tone and in many other areas.
+
+In earlier classes, we have studied the trigonometric
+ratios of acute angles as the ratio of the sides of a right
+
+3.2 Angles
+
+Chapter 3
+
+Arya Bhatt
+(476-550)
+
+angled triangle. We have also studied the trigonometric identities and application of
+
+trigonometric ratios in solving the problems related to heights and distances. In this
+
+Chapter, we will generalise the concept of trigonometric ratios to trigonometric functions
+
+and study their properties.
+
+Angle is a measure of rotation of a given ray about its initial point. The original ray is
+
+B Vertex
+O
+
+Vertex Initial side
+
+Initial side
+
+77) 2 "XD
+e
+
+(i)Positive angle Fig 3.1 (ii) Negative angle
+
+Reprint 2025-26
+
+44 MATHEMATICS
+
+called the initial side and the final position of the ray after rotation is called the
+terminal side of the angle. The point of rotation is called the vertex. If the direction of
+rotation is anticlockwise, the angle is said to be positive and if the direction of rotation
+
+is clockwise, then the angle is negative (Fig 3.1). A
+
+The measure of an angle is the amount of Initial side
+rotation performed to get the terminal side from @ f Terminal Side B
+the initial side. There are several units for
+measuring angles. The definition of an angle Fig 3.2
+suggests a unit, viz. one complete revolution from the position of the initial side as
+indicated in Fig 3.2.
+
+This is often convenient for large angles. For example, we can say that a rapidly
+spinning wheel is making an angle of say 15 revolution per second. We shall describe
+two other units of measurement of an angle which are most commonly used, viz.
+degree measure and radian measure.
+
+tye
+3.2.1 Degree measure Ifarotation from the initial side to terminal side is =a) of
+
+a revolution, the angle is said to have a measure of one degree, written as 1°. A degree is
+divided into 60 minutes, and a minute is divided into 60 seconds . One sixtieth ofa degree is
+called a minute, written as 1’, and one sixtieth of a minute is called a second, written as 1”.
+Thus, 1° = 60’, 1'=60"
+
+Some of the angles whose measures are 360°,180°, 270°, 420°, — 30°, — 420° are
+shown in Fig 3.3.
+
+(e) (e)
+360 A © 270
+Ey—> Be——_L0 ¥)__t5 A
+B
+
+fe)
+420 0 A A
+A N2- 30° ? 420°
+B
+Fig 3.3 B
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS — 45
+3.2.2. Radian measure There is another unit for measurement of an angle, called
+the radian measure. Angle subtended at the centre by an arc of length | unit ina
+unit circle (circle of radius | unit) is said to have a measure of | radian. In the Fig
+3.4(i) to (iv), OA is the initial side and OB is the terminal side. The figures show the
+
+1 1
+angles whose measures are | radian, —1 radian, Is radian and —1 5 radian.
+
+Ky se\\ AY
+
+<—vi-
+
+(i)
+
+(iil)
+
+Fig 3.4 (i) to (iv)
+
+We know that the circumference of a circle of radius 1 unit is 27. Thus, one
+complete revolution of the initial side subtends an angle of 27 radian.
+
+More generally, in a circle of radius 7, an arc of length v will subtend an angle of
+1 radian. It is well-known that equal arcs of a circle subtend equal angle at the centre.
+Since in a circle of radius 7, an arc of length r subtends an angle whose measure is |
+radian, an arc of length / will subtend an angle whose measure is radian. Thus, if in
+
+acircle of radius 7, an arc of length / subtends an angle 0 radian at the centre, we have
+
+i
+6 =— or /=r0O.
+r
+
+Reprint 2025-26
+
+46 MATHEMATICS
+
+3.2.3 Relation between radian and real numbers
+Consider the unit circle with centre O. Let Abe any point
+on the circle. Consider OA as initial side of an angle.
+Then the length ofan arc of the circle will give the radian 1
+measure of the angle which the arc will subtend at the
+
+centre of the circle. Consider the line PAQ which is
+
+tangent to the circle at A. Let the point A represent the 0
+real number zero, AP represents positive real number and
+
+AQ represents negative real numbers (Fig 3.5). If we
+
+rope the line AP in the anticlockwise direction along the
+
+circle, and AQ in the clockwise direction, then every real
+
+number will correspond to a radian measure and 2
+conversely. Thus, radian measures and real numbers can Fig 3.5 Q
+be considered as one and the same.
+
+3.2.4 Relation between degree and radian Since a circle subtends at the centre
+an angle whose radian measure is 27 and its degree measure is 360°, it follows that
+
+2n radian =360° or  wmradian = 180°
+
+The above relation enables us to express a radian measure in terms of degree
+measure and a degree measure in terms of radian measure. Using approximate value
+
+22
+
+of m as 7° we have
+
+oO
+
+1 radian = = 57° 16’ approximately.
+1
+Also 1°= 180 radian = 0.01746 radian approximately.
+
+The relation between degree measures and radian measure of some common angles
+are given in the following table:
+
+SN A
+
+Radi ud ud ud ud Bd
+we 4 3 2 7 2 aa
+
+Reprint 2025-26
+
+
+TRIGONOMETRIC FUNCTIONS 47
+
+Notational Convention
+Since angles are measured either in degrees or in radians, we adopt the convention
+that whenever we write angle 0°, we mean the angle whose degree measure is 0 and
+whenever we write angle 8, we mean the angle whose radian measure is B.
+
+Note that when an angle is expressed in radians, the word ‘radian’ is frequently
+
+1 1
+omitted. Thus, 7 =180° and 4" 45° are written with the understanding that x and 4
+
+are radian measures. Thus, we can say that
+
+1
+Radian measure = 180 x Degree measure
+180 ;
+Degree measure = —— x Radian measure
+1
+
+Example 1 Convert 40° 20’ into radian measure.
+
+Solution We know that 180° = 7x radian.
+
+1 xz 121 ; 21a ;
+Hence 40° 20' = 40 3 degree = 180 x 37 radian = 540 radian.
+1212 ;
+Therefore 40° 20' = 540 radian.
+
+Example 2 Convert 6 radians into degree measure.
+Solution We know that zm radian = 180°.
+1080 x 7
+
+0
+Hence 6 radians = —— x6 degree = ——_—— degree
+1
+
+22
+
+7 7x60 |
+=343— degree =343°+ minute [as 1° = 60]
+
+11 11
+2
+= 343° + 38’ + Tl minute [as 1' = 60"]
+= 343° + 38’ + 10.9” = 343°38' 11” approximately.
+Hence 6 radians = 343° 38’ 11” approximately.
+
+Example 3 Find the radius of the circle in which a central angle of 60° intercepts an
+
+22
+arc of length 37.4 cm (use 7 =>):
+
+Reprint 2025-26
+
+48 MATHEMATICS
+
+607 . 1
+Solution Here /= 37.4 cm and 0 = 60° = 180 radian = 3
+
+Hence, by r= ri , we have
+37.4x3  37.4x3x7 57
+r= 7 ey = 35.7 cm
+
+Example 4 The minute hand of a watch is 1.5 cm long. How far does its tip move in
+40 minutes? (Use m = 3.14).
+
+Solution In 60 minutes, the minute hand ofa watch completes one revolution. Therefore,
+
+2 2
+in 40 minutes, the minute hand turns through 3 of arevolution. Therefore, 4 = 3 x 360°
+
+4n
+or > radian. Hence, the required distance travelled is given by
+
+l=r0 = 1.5~x som = 2m em =2 x 3.14 cm = 6.28 cm.
+
+Example 5 If the arcs of the same lengths in two circles subtend angles 65°and 110°
+at the centre, find the ratio of their radii.
+
+Solution Let r, and r, be the radii of the two circles. Given that
+
+9 = 65° T 65 13z di
+= = T20 = 36 Tadian
+1 221
+=110°= x110 = i
+
+and 0, = 110 180 36 radian
+Let / be the length of each of the arc. Then/= 1,0, = r,0,, which gives
+
+13 _ 220 . Fe 22
+
+36. xr, = 36, XT, 1.¢., ry = B
+Hence rir, = 22:13.
+
+EXERCISE 3.1
+
+1. Find the radian measures corresponding to the following degree measures:
+(1) 25° (11) —47°30' (iii) 240° (iv) 520°
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 49
+
+Find the degree measures corresponding to the following radian measures
+
+_ 22
+(Use m=).
+() 56 i) -4 ii) 5 iv) =
+
+A wheel makes 360 revolutions in one minute. Through how many radians does
+it turn in one second?
+Find the degree measure of the angle subtended at the centre of a circle of
+
+22
+radius 100 cm by an arc of length 22 cm (Use 7 = 7):
+
+Ina circle of diameter 40 cm, the length of a chord is 20 cm. Find the length of
+minor arc of the chord.
+
+If in two circles, arcs of the same length subtend angles 60° and 75° at the
+centre, find the ratio of their radii.
+
+Find the angle in radian through which a pendulum swings if its length is 75 cm
+and th e tip describes an arc of length
+
+(i) 10cm (i) 15cm
+
+3.3 Trigonometric Functions
+
+(ii) 21cm
+
+In earlier classes, we have studied trigonometric ratios for acute angles as the ratio of
+sides of a right angled triangle. We will now extend the definition of trigonometric
+ratios to any angle in terms of radian measure and study them as trigonometric functions.
+
+Consider a unit circle with centre
+at origin of the coordinate axes. Let
+P (a, 6) be any point on the circle with
+angle AOP =x radian, i.e., length of arc
+AP = x (Fig 3.6).
+
+We define cos x= a and sinx = b
+Since AOMP is aright triangle, we have
+
+OM? + MP? = OP’ or a? + Bb? = 1
+Thus, for every point on the unit circle,
+we have
+
+a’ + b?= 1 or cos’x + sin’x = |
+
+Since one complete revolution
+subtends an angle of 27 radian at the
+
+1
+centre of the circle, ZAOB = 5°
+
+Reprint 2025-26
+
+
+50 MATHEMATICS
+
+3a
+2
+
+quadrantal angles. The coordinates of the points A, B, C and D are, respectively,
+(1, 0), (0, 1), (-1, 0) and (0, —1). Therefore, for quadrantal angles, we have
+
+ZAOC =mand ZAOD= . All angles which are integral multiples of 5 are called
+
+cos 0° = 1 sin 0° =0,
+1 _
+cos > =0 sin > =]
+cost =— | sint = 0
+1 . 32
+cos > =0 sin =—1
+cos 27 = 1 sin 27 =0
+
+Now, if we take one complete revolution from the point P, we again come back to
+same point P. Thus, we also observe that if x increases (or decreases) by any integral
+multiple of 27, the values of sine and cosine functions do not change. Thus,
+
+sin (2nn +x) =sinx,n eZ, cos(2nn+x)=cosx,neZ
+Further, sinx = 0, if x =0,4+7, +27,+ 37, ..., 1.e., when x is an integral multiple of x
+
+1 3a 5a
+2° oy 2
+
+and cos x = 0, if x , «. L@., COS x vanishes when x is an odd
+
+1
+multiple of - Thus
+sin x = 0 implies x = nz, where n is any integer
+a
+cos x = 0 implies x = (2n + 1) >? where 7 is any integer.
+
+We now define other trigonometric functions in terms of sine and cosine functions:
+
+1
+
+cosec x = ———, x # nm, where n is any integer.
+sinx
+
+1
+
+secx = x#(2n+1 where 71 is any integer.
+cosx? )>> y integ
+sin x 1 ; ;
+
+tanx = ,x #(2n +1)—, where nv is any integer.
+COS X 2
+COS X ; ;
+
+cotx =——,x#n7, where n is any integer.
+sinx
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 51
+
+We have shown that for all real x, sin?x + cos?x = 1
+It follows that
+
+1 + tan?x = sec*x (why?)
+
+1 + cot?x = cosec* x (why?)
+
+In earlier classes, we have discussed the values of trigonometric ratios for 0°,
+30°, 45°, 60° and 90°. The values of trigonometric functions for these angles are same
+as that of trigonometric ratios studied in earlier classes. Thus, we have the following
+table:
+
+The values of cosec x, sec x and cot x Y
+are the reciprocal of the values of sin x,
+cos x and tan x, respectively.
+
+3.3.1 Sign of trigonometric functions
+Let P (a, b) be a point on the unit circle
+
+with centre at the origin such that (1,0) C
+ZAOP = x- If ZAOQ = — x, then the *
+coordinates of the point Q will be (a, —b)
+(Fig 3.7). Therefore
+
+cos (— x) = cos x
+
+and sin (—x) =— sinx
+Since for every point P (a, b) on Y’
+the unit circle, — | < a < 1 and Fig 3.7
+
+Reprint 2025-26
+
+52 MATHEMATICS
+—~1< b<1, wehave-1<cosx<1and-—1 <sinx <1 forallx. We have learnt in
+
+1
+previous classes that in the first quadrant (0 <x < 5 ) aand b are both positive, in the
+1
+second quadrant G <x <m) a is negative and 5 is positive, in the third quadrant
+3a : : 3a .
+(T<x< > ) aand b are both negative and in the fourth quadrant ( > <x< 2m) ais
+
+positive and b is negative. Therefore, sin x is positive for 0 <x < x, and negative for
+
+1 1 1
+1m <x<2n. Similarly, cos xis positive for 0<x< 5° negative for 5 <x< > and also
+
+positive for > < x < 2n. Likewise, we can find the signs of other trigonometric
+
+functions in different quadrants. In fact, we have the following table.
+
+a ee
+ee ee ee ee ee
+pos [oe RS
+poms fe
+
+| woes | + + | - | - |
+| owe [yO] - | - [+ |
+| cote of + fT
+
+3.3.2 Domain and range of trigonometric functions From the definition of sine
+and cosine functions, we observe that they are defined for all real numbers. Further,
+we observe that for each real number x,
+
+—l<sinx<land —l1<cosx<l
+
+Thus, domain of y = sin x and y = cos x is the set of all real numbers and range
+
+is the interval [-1, 1], 1.e.,-I<y<l.
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 53
+
+1
+
+Since cosec x = sin x’ the domain of y = cosec x is the set { x : x € R and
+
+x#nm,n € Z} and range is the set {y: vy € R,y 21 ory <—1}. Similarly, the domain
+
+1
+of y = sec x is the set {x : x € Rand x # (2n + 1) ane Z} and range is the set
+
+{fy:y €R,y <-lory2 1}. The domain of y = tan x is the set {x : x € R and
+
+1
+x #(2n + 1) ane Z} and range is the set of all real numbers. The domain of
+
+y =cot x is the set {x:x € Randx#n17,n © Z} and the range is the set of all real
+numbers.
+
+. . a .
+We further observe that in the first quadrant, as x increases from 0 to 5° sinx
+. . a .
+increases from 0 to 1, as x increases from 5 to 7, sin x decreases from | to 0. In the
+; ; 3a, ;
+third quadrant, as x increases from 7 to A + Sinx decreases from 0 to —land finally, in
+
+the fourth quadrant, sin x increases from —1 to 0 as x increases from > to 21.
+
+Similarly, we can discuss the behaviour of other trigonometric functions. In fact, we
+have the following table:
+
+|| I quadrant II quadrant II quadrant IV quadrant
+sin |increases from 0 to 1 | decreases from 1 to 0 | decreases from 0 to —1 | increases from —1 to 0
+decreases from | to 0 | decreases from 0 to — 1] increases from —1 to 0 | increases from 0 to 1
+
+tan increases from 0 to 0 | increases from —coto 0 | increases from 0 to: | increases from —oto 0
+decreases from © to 0} decreases from 0 to—co| decreases from © to 0 | decreases from Oto —co
+sec increases from | to 0:0 | increases from —ooto—1] decreases from —1to—co} decreases from © to |
+
+decreases from © to 1} increases from | to 00 | increases from —to—1 | decreases from—1to—co
+
+Remark Jn the above table, the statement tan x increases from 0 to © (infinity) for
+
+1 1
+0<x< > simply means that tan x increases as x increases for 0 < x < > and
+
+Reprint 2025-26
+
+54 MATHEMATICS
+
+1
+2
+cosec x decreases from —1 to — c (minus infinity) in the fourth quadrant means that
+
+assumes arbitraily large positive values as x approaches to = . Similarly, to say that
+
+3a
+cosec x decreases for x € (> , 2m) and assumes arbitrarily large negative values as
+
+x approaches to 27. The symbols oo and — oo simply specify certain types of behaviour
+of functions and variables.
+
+We have already seen that values of sin x and cos x repeats after an interval of
+2n. Hence, values of cosec x and sec x will also repeat after an interval of 27. We
+
+y=tanx Fig 3.10 y=cotx Fig 3.11
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 55
+
+Y
+
+j= Sec x y = cosec x
+Fig 3.12 Fig 3.13
+
+shall see in the next section that tan (1 + x) = tan x. Hence, values of tan x will repeat
+after an interval of z. Since cot x is reciprocal of tan x, its values will also repeat after
+an interval of z. Using this knowledge and behaviour of trigonometic functions, we can
+sketch the graph of these functions. The graph of these functions are given above:
+
+Example 6 If cos x= — 3 , x lies in the third quadrant, find the values of other five
+trigonometric functions.
+Solution Since cos x = - , we have sec x = 3
+Now sin?x + cos*x = 1, ie., sin?x = 1 — cos*x
+or sin?x = P= )
+25 25
+Hence sin x =+ =
+Since x lies in third quadrant, sin x is negative. Therefore
+; 4
+sinx=— 5
+which also gives
+5
+cosec x =— 7
+
+Reprint 2025-26
+
+56 MATHEMATICS
+
+Further, we have
+
+sinx 4 cosx 3
+tan x = =z and cotx= =—,
+3 x 4
+5 ,
+Example 7 If cot x =— DD? x lies in second quadrant, find the values of other five
+trigonometric functions.
+. 5 12
+Solution Since cotx = — Db’ we have tanx =— 5
+N ; 1 +tantx-1+2%4 169
+ow sec? x an? x I 35 75
+
+13
+Hence sec x =+ >
+
+5
+Since x lies in second quadrant, sec x will be negative. Therefore
+
+— 2B
+sec x =— 5°
+
+which also gives
+
+5
+
+cos x = ——
+13
+
+Further, we have
+
+nee unvemeee By Sy 2
+sinx = tan x cos x = (— 5 xe RB? B
+
+4 1 13
+an cosec x = =—_—.,
+* sinx 12
+31x
+
+Example 8 Find the value of sin 3:
+
+Solution We know that values of sin x repeats after an interval of 27. Therefore
+
+2 8
+3) =sin =
+
+. 3la,
+sin ~~ = sin (107 +
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 57
+
+Example 9 Find the value of cos (—1710°).
+
+Solution We know that values of cos x repeats after an interval of 27 or 360°.
+Therefore, cos (-1710°) = cos (-1710° + 5 x 360°)
+= cos (-1710° + 1800°) = cos 90° = 0.
+
+EXERCISE 3.2
+
+Find the values of other five trigonometric functions in Exercises | to 5.
+
+1. cosx=-—7, x lies in third quadrant.
+
+2
+
+2. sinx= 5° x lies in second quadrant.
+
+3
+3. cotx= 4a lies in third quadrant.
+
+13
+
+4. secx= 5° lies in fourth quadrant.
+
+5. tanx=-— 12° x lies in second quadrant.
+Find the values of the trigonometric functions in Exercises 6 to 10.
+6. sin 765° 7. cosec (— 1410°)
+8. tan — 9. sin =
+. tan 3 . sin (— 3 )
+
+15x
+10. cot (- 7?
+
+3.4 Trigonometric-Functions of Sum and Difference of Two Angles
+In this Section, we shall derive expressions for trigonometric functions of the sum and
+difference of two numbers (angles) and related expressions. The basic results in this
+connection are called trigonometric identities. We have seen that
+
+1. sin(x) =-sinx
+
+2. cos (— x) = cos x
+
+We shall now prove some more results:
+
+Reprint 2025-26
+
+58 MATHEMATICS
+
+3. cos (x + y) = cos x cos y — sin x sin y
+
+Consider the unit circle with centre at the origin. Letx be the angle P,OP,and_ y be
+the angle P,OP,. Then (x + y) is the angle P,OP,. Also let (— y) be the angle P,OP,.
+Therefore, P,, P,, P, and P, will have the coordinates P,(cos x, sin x),
+P, [cos (x + y), sin (x + y)], P; [cos (—y), sin (— y)] and P, (1, 0) (Fig 3.14).
+
+P, (cos x, sin x)
+
+P, [cos(—y), sin(—y)]
+
+y’
+
+Fig 3.14
+
+Consider the triangles P,OP, and P,OP,. They are congruent (Why?). Therefore,
+PP, and P,P, are equal. By using distance formula, we get
+
+P.P,* =[cos x—cos (—y)]* + [sin x — sin(—yf
+
+=(cos x —cos y)’ + (sin x + sin y)
+
+2
+
+= cos’ x + cos* y— 2 cos x cos y + sin’x + sin? y + 2sin x sin y
+= 2 —2 (cos x cos y— sin x sin y) (Why?)
+
+Also, P,P,? =[1-—cos(x+y)]* + [0- sin (x + y)]?
+= ] — 2cos (x + y) + cos? (x + y) + sin? (x + y)
+
+=2-—2 cos (x+y)
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 59
+
+Since P,P, =P,P,, we have P,P, = P,P,’.
+Therefore, 2 —2 (cos x cos y — sin x sin y) = 2 —2 cos (x + y).
+Hence cos (x + y) =cos x cos y— sin x sin y
+4. cos (x —y) = cos x cos y + sin x sin y
+Replacing y by —y in identity 3, we get
+
+cos (x + (— y)) = cos x cos (— y) — sin x sin (— y)
+
+or cos(x—y)=cos x cos y+ sin x siny
+
+a
+5. cos G”*) = sin x
+
+1
+If we replace x by > and y by x in Identity (4), we get
+
+1 1 ik, .
+cos (5 Xx) = cos 7 0OSx + sin 7 Sinx = sin x.
+
+a
+6. sin (G7) = cos x
+
+Using the Identity 5, we have
+
+. vm va v/a x
+sin (5 x) = cos 2 \9 = COS x.
+
+7. sin (x + y) = sin x cos y + cos x sin y
+We know that
+
+sin (x + y) = cos [F-+9)} =c0 C x) »|
+
+a . a .
+= cos (37%) cos y + sin Gu» sin y
+
+= sin x cos y + cos x sin y
+8. sin (x — y) = sin x cos y — cos x sin y
+If we replace y by —y, in the Identity 7, we get the result.
+9. By taking suitable values of x and y in the identities 3, 4, 7 and 8, we get the
+
+following results:
+
+a a
+cos Gt» =—sinx sin Gt» = cos x
+cos (tT-x) =-cosx sin (t7-— x) =sinx
+
+Reprint 2025-26
+
+60 MATHEMATICS
+
+cos (T+ x) =-cosx sin (t+ x) =-sinx
+cos (2m — x) = cos x sin (2x — x) =—- sin x
+
+Similar results for tan x, cot x, sec x and cosec x can be obtained from the results of sin
+x and cos x.
+
+TU
+10. If none of the angles x, y and (x + y) is an odd multiple of >? then
+
+tanx+tan y
+
+tan (© +9) = 7 tan x tan y
+
+1
+Since none of the x, y and (x + y) is an odd multiple of >? it follows that cos x,
+cos y and cos (x + y) are non-zero. Now
+
+sin(x+y)  sinxcosy+cosxsiny
+
+tan (x + = = ; ; F
+«+y) cos(x+y) cosxcosy—sinxsiny
+
+Dividing numerator and denominator by cos x cos y, we have
+
+sin x cos y 4 £08 xsiny
+cosxcosy cosxcosy
+
++y) = 7 ,
+tan (x + y) cosxcosy sin xsin y
+COSXCOSV COSXCOS y
+tanx+tan y
+~ |—tan xtan y
+tan x —tan y
+11. tan (x-y)=
+
+1+tan x tan y
+If we replace y by — y in Identity 10, we get
+tan (x — y) = tan [x + (-y)]
+tan x+tan(—y) tanx—tany
+
+~ |-tanxtan(-y) 1+ tan xtan y
+12. If none of the angles x, y and (x + y) is a multiple of 7, then
+
+cotxcot y—1
+
+cot (x + y)= cot y+cot x
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 61
+
+Since, none of the x, y and (x + y) is multiple of 2, we find that sin x sin y and
+sin (x + y) are non-zero. Now,
+
+cos(x+y) cos x cos y—sin x sin y
+
+cot (x+y)= — : :
+sin(x+y) sinxcos y+cos xsin y
+
+Dividing numerator and denominator by sin x sin y, we have
+
+cot x cot y—1
+
+t(xty)=
+cot (x+y) cot y + cot x
+cotxcotyt+1 . . .
+13. cot («-y)= corxcory if none of angles x, y and x-y is a multiple of
+cot y — cotx
+
+If we replace y by —y in identity 12, we get the result
+
+. . 1-tan? x
+14. cos 2x = cos*x — sin? x = 2 cos? x — 1 =1—-2 sin? x = —_—
+1+tan* x
+
+We know that
+
+cos (x + y) =cos x cos y—sin x sin y
+Replacing y by x, we get
+cos 2x = cos*x — sin? x
+= cos*x — (1 — cos?x) = 2 cos*x — |
+Again, cos 2x = cos? x — sin? x
+= 1- sin’ x —- sin’ x = 1-2 sin’x.
+
+cos’ x—sin? x
+
+We have cos 2x = cos’. x — sin? x = 5) 7)
+cos’ x+sin “x
+
+Dividing numerator and denominator by cos’ x, we get
+
+1— tan? x T . .
+cos 2x = —__5_, *#nNX+—, where nis an integer
+1+tan“ x 2
+2tan x
+
+1
+15. sin 2x =2 sinx cos x = ENTS, where n is an integer
+
+1+tan? x
+We have
+sin (x + y) = sin x cos y+ cos x sin y
+Replacing y by x, we get sin 2x = 2 sin x cos x.
+2sin x cos x
+
+Again sin 2x = :
+8 cos’ x+sin7 x
+
+Reprint 2025-26
+
+62 MATHEMATICS
+
+Dividing each term by cos’ x, we get
+
+2tan x
+
+sin 2x =
+l+tan? x
+
+2tanx
+
+1
+16. tan 2x= if 2x anat, where n is an integer
+
+1-tan’ x
+We know that
+
+tanx + tan y
+tan (& + y) = 1—tanx tany
+: 2 tan
+Replacing y by x , we get tan2x= rs
+—tan* x
+
+17. sin 3x =3 sin x —4 sin?x
+We have,
+sin 3x = sin (2x + x)
+
+= sin 2x cos x + cos 2x sin x
+
+= 2 sin x cos x cos x + (1 — 2sin’ x) sin x
+
+=2 sinx (1 —sin?x) + sin x — 2 sin’x
+
+=2sinx—2 sin'x + sin x—2 sin?x
+
+=3 sinx—4sin’x
+18. cos 3x= 4 cos*?x — 3 cos x
+We have,
+
+cos 3x = cos (2x +x)
+
+=cos 2x cos x — sin 2x sin x
+
+= (2cos’x — 1) cos x — 2sin x cos x sin x
+
+= (2cos’x — 1) cos x — 2cos x (1 — cos? x)
+
+= 2cos? x — cos x — 2cos x + 2 cos? x
+
+= 4cos? x — 3cos x.
+
+tan3 _ 3tanx—tan’ x ; 1 ; ;
+19, tan 1 3tanex if 3x # nats, where n is an integer
+We have tan 3x =tan (2x + x)
+2tan x
+
+tan2x+tanx _ 1—tan? x
+
+1—tan 2x tan x ,_ Ztan x. tan x
+1—tan? x
+
++ tan x
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 63
+
+_ 2tan x + tan x — tan>x _ 3 tan x — tan>x
+
+l—tan?x—2tan?x «1 —3tan?x
+20. (@ cosx+cos y = 2cos FP cos *—*
+(ii) cos x — cos y =— 2sin “ty sin”
+2 2
+(iii) sin x + sin y = 2sin ~~ cos >
+(iv) sin x — sin y = 2cos X*Y in wy
+2 2
+We know that
+cos (x + y) =cos x cos y— sin x sin y .. (1)
+and cos (x — y) = cos x cos y + sin x sin y .. (2)
+Adding and subtracting (1) and (2), we get
+cos (x + y) + cos(x — y) = 2 cos x cos y .. (3)
+and cos (x + y)—cos (x —y) =—2 sinx sin y .. (4)
+Further sin (x + y) = sin x cos y + cos x sin y w.. (5)
+and sin (x — y) = sin x cos y— cos x sin y ... (6)
+Adding and subtracting (5) and (6), we get
+sin (x + y) + sin (x — y) =2 sin x cos y .. (7)
+sin (x + y) — sin (x — y) = 2cos x sin y .. (8)
+
+Let x + y = 0 and x — y= 9. Therefore
+
+Substituting the values of x and y in (3), (4), (7) and (8), we get
+
+0 6-
+cos 8 + cos @ = 2 cos (A?) cos [+*)
+
+cos 8 —cos 6 =—2 sin [72 inf <4)
+2 2
+
+sin8+sind =2 sin (Ae) cos [A*)
+
+Reprint 2025-26
+
+64 MATHEMATICS
+
+sin 0 — sin @ = 2 cos (Ae) sin (A)
+
+Since 8 and @ can take any real values, we can replace 0 by x and 9 by y.
+Thus, we get
+
+x+ x- x+y . x-
+cos x + cos y = 2 cos ~ cos ” cos x—cosy=—2 sin Y sin yo
+2 2 2 2
+x+ x- xty . x-
+sinx + siny =2 sin 560s 5 sin x—sin y=2 cos 5 sin >
+
+Remark Asa part of identities given in 20, we can prove the following results:
+21. (i) 2 cos x cos y = cos (x + y) + cos (x —- y)
+
+(ii) —2 sin x sin y = cos (x + y) — cos (x —- y)
+
+(iii) 2 sin x cos y = sin (x + y) + sin (x — y)
+
+(iv) 2 cos x sin y = sin (x + y) — sin (x — y).
+
+Example 10 Prove that
+
+3sin T sec r 4sin at cot =]
+6 3 6 4
+
+Solution We have
+
+L.H.S 3sin sec Asin cot
+ee 6 3 6 4
+
+=3x —-x2- x] =3-— —
+2 sin 6 sin 6
+
+1
+=3-4x > =1=RHS.
+
+Example 11 Find the value of sin 15°.
+
+Solution We have
+sin 15° =sin (45° — 30°)
+= sin 45° cos 30° — cos 45° sin 30°
+1 vB 1 13-1
+2 2 V2 2 22°
+
+137
+Example 12 Find the value of tan DD:
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 65
+
+Solution We have
+13% = T+ n n =tan nm
+tan D = tan 12 = tan 12 4 6
+
+tan —tan= |1-—=
+
+1+tan~ tan 1+ l V3+1
+
+Example 13 Prove that
+
+sin(x+y) tanx+tany
+
+sin(x—y) tanx—-tany°
+
+Solution We have
+
+_sin(x+y)  sinxcosy+cosxsin y
+
+LHS. = sin(x—y) 7 sin xcos y—cosxsin y
+
+Dividing the numerator and denominator by cos x cos y, we get
+
+sin(x+y) _ tanx+tany
+
+sin(x—-y) 7 tanx—tan y *
+Example 14 Show that
+tan 3 x tan 2 x tan x = tan 3x — tan 2 x — tan x
+Solution We know that 3x = 2x +x
+
+Therefore, tan 3x = tan (2x + x)
+
+tan2x+tan x
+or tan 3x =——____—_
+
+1—-tan 2 xtan x
+or tan 3x — tan 3x tan 2x tan x = tan 2x + tan x
+or tan 3x — tan 2x — tan x = tan 3x tan 2x tan x
+or tan 3x tan 2x tan x = tan 3x — tan 2x — tan x.
+
+Example 15 Prove that
+cos{ ¥x }roos{ Sx] COs x
+
+Solution Using the Identity 20(), we have
+
+Reprint 2025-26
+
+66 MATHEMATICS
+
+= cos Tyx + Cos ny
+L.HLS. 4 4
+Tt Tt Tt Tt
+—+x+—-x —+x-(——x)
+= 2cos 4 4 cos 4 4
+2 2
+
+2 “ 2 R.H.S
+— x —
+cos 7 Cos x 2 cos x= ,/2 cos x HLS.
+
+cos 7x +cos 5x _
+
+Example 16 Prove that cot x
+
+sin 7x — sin 5x
+Solution Using the Identities 20 (i) and 20 (iv), we get
+
+7x +5x gl % 79%
+
+2cos
+2 2 COS x
+L.H.S. = Ty 45x 75x cotx =R.HLS.
+2cos 5 sin 5 SINX
+
+sin5x—2sin3x+ sin x
+= tan x
+
+Example 17 Prove that =
+cos 5x —cos x
+
+Solution We have
+
+sin5x—2sin3x+sinx _ sinSx+sinx—2sin3x
+
+L.H.S. =
+cos5x —cos x cos 5x —cos x
+_ 2sin3x cos2x—2sin3x _ sin3x (cos2x —1)
+—2sin 3x sin 2x sin 3x sin 2x
+
+- 2
+_1l-cos2x _— 2sin* x
+
+; = = tanx = R.HS.
+sin2x  2sinxcosx
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 67
+
+EXERCISE 3.3
+
+Prove that:
+. sin 6 cos 3 an mn 5 . 2sin 6 cosec 6 375
+3. cot? tcosee +3 tan? = = 6 4, Isin? >” +2008? = + sec? = =10
+6 6 6 4 4 3
+5. Find the value of:
+(1) sin 75° (11) tan 15°
+Prove the following:
+cos| ~—x |cos| = sin} = —x |sin| = - =sin(x+y)
+6. 4 4 y 4 4 Jy Jy
+1
+tan | —+¥x 2
+4 [ean | cos (1+x) cos (—x) 2
+7. = 8. = cot'x
+Wa 1-—tan x . Tt
+tan | —-x sin (t—x) cos | —+x
+i] 5
+3x 3x
+9, cos 3 tx cos (2a7+x) | cot ry. Se +cot (2n+x)\|=1
+10. sin (n+ 1)x sin (1 + 2)x + cos (n + 1)x cos (n + 2)x = cos x
+11. cos 3m +x |—cos 3m x| = —J2sin x
+4 4
+12. sin? 6x — sin? 4x = sin 2x sin 10x 13. cos? 2x — cos’ 6x = sin 4x sin 8x
+14. sin2x+2 sin 4x + sin 6x = 4 cos’ x sin 4x
+15. cot 4x (sin Sx + sin 3x) = cot x (sin 5x — sin 3x)
+cos 9x — cos 5x sin2x sin5x + sin3x
+16. =— . = tan 4x
+sin 17x — sin3x cos 10x cos 5x + cos 3x
+sinx —siny x—y sinx + sin3x
+18. = tan 19, — = tan2x
+cosx+cosy 2 cos x + cos3x
+sinx — sin3x ; cos4x + cos3x + cos2x
+20. 3 7 = 2sinx 21. — ; ; = cot3x
+sin” X — cos’ x sin4x + sin3x + sin2x
+
+Reprint 2025-26
+
+68 MATHEMATICS
+
+22. cot x cot 2x — cot 2x cot 3x — cot 3x cot x = 1
+
+Atan x (1 —tan*x)
+
+1-6 tan’x + tan*x
+
+23. tan4x= 24. cos 4x = 1 — 8sin’ x cos* x
+
+25. cos 6x = 32 cos® x — 48cos* x + 18 cos? x — 1
+
+Miscellaneous Examples
+12
+13
+
+3
+Example 18 Ifsinx= 5° cos y= ——~, where x and y both lie in second quadrant,
+find the value of sin (x + y).
+
+Solution We know that
+
+sin (x + y) = sin x cos y + cos x sin y .. (1)
+; 9 16
+Now cos’ x= 1-sin’ x=1-T= za
+25 25
+4
+
+Therefore cosx= +3:
+
+Since x lies in second quadrant, cos x is negative.
+
+4
+Hence cos x =-T
+
+5
+N y=] ; ' 144 25
+ow sin-y cosy 169 169
+ae
+1.€. siny= =o:
+
+5
+Since y lies in second quadrant, hence sin y is positive. Therefore, sin y = 1B Substituting
+the values of sin x, sin y, cos x and cos y in (1), we get
+
+3 12 4\ 5 36 20 56
+sin(x + y) = =x|- +|-—— |x = = ;
+5 13 5/ 13 65 65 65
+
+Example 19 Prove that
+cos 2x cos~ —cos 3x cos. = sin 5x sin oe .
+2 2 2
+
+Solution We have
+
+Reprint 2025-26
+
+1
+Example 20 Find the value of tan >.
+
+TRIGONOMETRIC FUNCTIONS 69
+
+1
+2
+
+_l cos Qx+— +cos| 2x * cos OX 435 cos ox 3x
+2 2 2 2 2
+
+1] 5x 3x 15x 3x] If 5x 15x |
+
+L.H.S. = 200 2x COS 5 —2cos = cos 35
+
+= 08 + COS cos cos |= | 698 cos
+2 2 2 2 2 2 2 2
+2sin 2 2 sin 2 2
+= 2 2 2
+
+5x Sx
+= —sin5x sin _— = sin5x ey... = R.HLS.
+
+8
+
+1 1
+Solution Let x = 8" Then 2x = 1
+
+2 tan x
+Now tan2x = ——x—
+l- tan” x
+tan
+tan— = 8
+1= tan? 2
+8
+— tan “f= 2
+Let y= tan gf en 1 = 1-y?
+y+2y—-1=0
+—2+22
+Therefore y= 5 v2 = 14/2
+
+Reprint 2025-26
+
+70 MATHEMATICS
+
+ua
+
+Since 8
+
+1
+lies in the first quadrant, y = tan 8 is positve. Hence
+
+tan = 2 —1.
+8
+3 3a x x x
+Example 21 If tanx= rt a<Xx ZT , find the value of sins cos, and tan, .
+
+3x
+Solution Since 7<x< 3° cosx is negative.
+
+3
+<
+
+Al mx 3m
+so 2°2° 4°
+
+x x
+Therefore, sin > is positive and cos > is negative.
+
+Now sec?x = 1+ tan?x = 142-2
+16 16
+16 4
+Therefore cos*.x = 35 or cos.x = — (Why?)
+Now Qsin? = =1~ cosx =14 2 =~.
+2 5 5
+Therefore sin? xo
+2 10
+x 3
+or sins = Vi0 (Why?)
+x 4]
+Again 2cos’ > = 1+ cosx= I“ Fao
+Therefore cos? xt
+2 10
+x 1
+or cos 5 ~ Vio (Why?)
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 71
+
+x
+x > 3° (-V10
+Hence tan = = = x
+
+\
+2 x J10 [ 1 jr-3
+
+cos _—
+
+Example 22 Prove that cos*x + cos” [» 2) +cos* [> 2) =
+
+Nw
+
+Solution We have
+
+[+005 (20+ [+ 005( 20-72
+LHS. = l+oos 2x | 3 n 3).
+
+2 2 2
+
+_l 3+cos 2x +cos 2x42 +COSs 2-2)
+2 3 3
+
+| 2
+= : 3+cos 2x + 2cos 2x cos
+
+= —| 3+cos 2x + 2cos 2x cos [=-5)]
+
+3+cos 2x —2cos 2x cos 4
+
+[3 + cos 2x —cos 2x] =— =RHS.
+
+N | Ww
+
+Miscellaneous Exercise on Chapter 3
+
+Prove that:
+
+1 9x 3a 5a
+1.  2cos—cos—+cos —+cos —=0
+13 13 13
+
+2. (sin 3x + sin x) sin x + (cos 3x — cos x) cos x = 0
+
+3. (cos x +cos yy + (sin x — sin y? = 4 cos?
+
+Reprint 2025-26
+
+72 MATHEMATICS
+
+Y
+2
+5. sinx+sin 3x+sin 5x +sin 7x =4 cos x cos 2x sin 4x
+
+x
+4. (cosx—cos y) + (sinx— sin y) = 4 sin’
+
+(sin 7x + sin 5x) + (sin 9x + sin3x)
+(cos 7x + cos 5x) + (cos 9x + cos3x)
+
+= tan6x
+
+x 3x
+7. sin 3x + sin 2x — sin x = 4sin x cos > cos >
+
+x x x
+Find sin >? cos 5 and tan 5 in each of the following :
+8. tanx = 737% in quadrant II 9. cosx= “3 in quadrant II
+
+1
+10. sinx = qa? x in quadrant II
+
+Summary
+¢ Ifin acircle of radius r, an are of length / subtends an angle of 0 radians, then
+l=r0
+
+1
+@ Radian measure = 180 * Degree measure
+
+@ Degree measure = ——* Radian measure
+1
+@cos* x + sin? x = 1
+
+@ 1+ tan’ x = sec*x
+
+@ 1+ cot*?x = cosec?x
+
+cos (2nn + x) =cos x
+
+sin (Qnn + x) = sin x
+
+sin (- x) =— sin x
+
+cos (— x) =cos x
+
+cos (x + y) =cos x cos y — sin x sin y
+
+@cos (x —y) =cos x cos y + sin x sin y
+
+1
+cos (57%) = sin x
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS 73
+
+1
+@ sin (5 ~¥) = cos x
+
+@ sin (x + y) = sin x cos y+ cos x sin y
+
+@ sin (x — y) = sin x cos y— cos x sin y
+
+cos (E+) ——sinx sin Ga =cos x
+cos (t§ —x) =— cos x sin (m —x) = sin x
+cos (t +x) =—cosx sin(m + x)=—sinx
+cos (2m —x)=cos x sin (2x —x)=-—sinx
+
+1
+@ Ifnone of the angles x, y and (x + y) is an odd multiple of 5° then
+
+tanx + tan y
+tan (x + y)= 1
+
+—tanxtany
+
+tan x — tan y
+En G3) = 1+ tan xtany
+
+@ If none of the angles x, y and (x + y) is a multiple of z, then
+
+cot xcot y—1
+
+eo ery) = coty + cot x
+
+cotxcoty+1
+@ cot (x — y) = coty cotx
+
+; 1 — tan*x
+@ cos 2x = cos’ x — sin’?x = 2cos?x — 1 = 1 —2 sin?x =——7—
+1+ tan“x
+
+. . 2 tan x
+@ sin 2x =2 sinx cos x =———.—
+1+ tan°x
+oe 2tanx
+tan 2x = ——_3
+bd 1—tan’x
+
+@ sin 3x =3sinx — 4sin*x
+
+@ cos 3x = 4cos*?x — 3cosx
+
+Reprint 2025-26
+
+74
+
+MATHEMATICS
+
+3tanx—tan? x
+1-3tan? x
+
+@ tan 3x =
+
+; x+y x-y
+@ (i) cosx+cos y= 2cos 7 OBS
+
+x+y sin 2”
+
+(ii) cos x —cos y=-— 2sin 5 n 5
+x+ x-
+Gi) sinx+sin y=2 sin 7 cos =
+
+X+ . xT
+(iv) sin x—sin y = 2cos 7 sin =
+
+@ (i) 2cos x cos y=cos (x + y) + cos (x—y)
+(ii) —2sin x sin y = cos (x + y) — cos (x — y)
+(iii) 2sin x cos y= sin (x + y) + sin (x —y)
+
+(iv) 2 cos x sin y = sin (x + y)— sin (x —y).
+
+Historical Note
+
+The study of trigonometry was first started in India. The ancient Indian
+Mathematicians, Aryabhatta (476), Brahmagupta (598), Bhaskara I (600) and
+Bhaskara II (1114) got important results. All this knowledge first went from
+India to middle-east and from there to Europe. The Greeks had also started the
+study of trigonometry but their approach was so clumsy that when the Indian
+approach became known, it was immediately adopted throughout the world.
+
+In India, the predecessor of the modern trigonometric functions, known as
+the sine of an angle, and the introduction of the sine function represents the main
+contribution of the siddhantas (Sanskrit astronomical works) to the history of
+mathematics.
+
+Bhaskara I (about 600) gave formulae to find the values of sine functions
+for angles more than 90°. A sixteenth century Malayalam work Yuktibhasa
+(period) contains a proof for the expansion of sin (A + B). Exact expression for
+sines or cosines of 18°, 36°, 54°, 72°, etc., are given by
+Bhaskara II.
+
+Reprint 2025-26
+
+TRIGONOMETRIC FUNCTIONS
+
+The symbols sin! x, cos! x, etc., for arc sin x, arc cos x, etc., were
+suggested by the astronomer Sir John F.W. Hersehel (1813) The names of Thales
+(about 600 B.C.) is invariably associated with height and distance problems. He
+is credited with the determination of the height of a great pyramid in Egypt by
+measuring shadows of the pyramid and an auxiliary staff (or gnomon) of known
+height, and comparing the ratios:
+
+2 =— =i ’s altitud
+Sy an (sun’s altitude)
+
+Thales is also said to have calculated the distance of a ship at sea through
+the proportionality of sides of similar triangles. Problems on height and distance
+using the similarity property are also found in ancient Indian works.
+
+SZ
+—%~ —
+
+Reprint 2025-26
+
+715
+
