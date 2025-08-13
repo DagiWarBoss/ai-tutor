@@ -100,17 +100,6 @@ NAME_MAPPING = {
 def log(msg: str):
     print(msg, flush=True)
 
-def get_chapter_map_from_db(cursor):
-    cursor.execute("SELECT name, id FROM chapters")
-    return {name: chapter_id for name, chapter_id in cursor.fetchall()}
-
-def clean_ocr_text(text: str) -> str:
-    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
-    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
-    text = re.sub(r'(\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix split numbers like "4 . 1" -> "4.1"
-    text = re.sub(r'(\d+\.\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix sublevels like "4.6 . 3" -> "4.6.3"
-    return text.strip()
-
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
     cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
@@ -135,22 +124,15 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         log(f"    [ERROR] OCR process failed for {pdf_filename}: {e}")
         return ""
 
-def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
-    ocr_text = clean_ocr_text(ocr_text)
-    
+def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     extracted_topics = []
     
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'^\s*(' + '|'.join(topic_numbers) + r')\s*(?:[\.\- ]*)?\s*', re.MULTILINE | re.IGNORECASE)
+    heading_pattern = re.compile(r'^\s*(' + '|'.join(topic_numbers) + r')\s*', re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
-    topic_locations = {match.group(1): match.start() for match in matches}
+    topic_locations = {match.group(1).strip(): match.start() for match in matches}
     
-    expected_topics = set(topics_from_csv['heading_number'].astype(str))
-    found_topics = set(topic_locations.keys())
-    missing_topics = expected_topics - found_topics
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
-    if missing_topics:
-        log(f"    - Missing topics: {', '.join(missing_topics)} (check OCR for artifacts or adjust regex).")
 
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
@@ -162,58 +144,39 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
                     end_pos = next_pos
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
-    
-    # Fallback extraction logic (as in your log, it's working well)
-    loose_pattern = re.compile(r'(?m)^ \s*(\d+(?:\.\d+)?)[\.\)]?\s*(.+?)(?=\n \s*\d+\.\d+[\.\)]|\nEXERCISES|\nQUESTIONS|$)', re.MULTILINE | re.DOTALL)
-    for topic in extracted_topics[:]:
-        content = topic['content']
-        sub_matches = loose_pattern.finditer(content)
-        for sub_match in sub_matches:
-            sub_cleaned = sub_match.group(1)
-            if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
-                sub_start = sub_match.start() + topic_locations[topic['topic_number']]
-                topic_locations[sub_cleaned] = sub_start
-                sub_end = len(ocr_text)
-                for next_num, next_pos in topic_locations.items():
-                    if next_pos > sub_start:
-                        sub_end = next_pos
-                        break
-                sub_content = ocr_text[sub_start:sub_end].strip()
-                row = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]
-                title = row['heading_text'].values[0] if not row.empty else ''
-                extracted_topics.append({'topic_number': sub_cleaned, 'title': title, 'content': sub_content})
-                log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
-                missing_topics.remove(sub_cleaned)
 
-    return extracted_topics
+    questions = []
+    exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
+    exercises_match = None
+    for marker in exercise_markers:
+        exercises_match = re.search(marker, ocr_text, re.IGNORECASE)
+        if exercises_match:
+            break
+            
+    if exercises_match:
+        exercises_text = ocr_text[exercises_match.start():]
+        question_pattern = re.compile(r'^\s*(\d+(?:\.\d+)?)\s*[\.\)]?\s*(.+?)(?=\n\s*\d+\.\d+|\Z)', re.MULTILINE | re.DOTALL)
+        found_questions = question_pattern.findall(exercises_text)
+        
+        log(f"    - Found {len(found_questions)} potential questions.")
+        
+        for q_num, q_text in found_questions:
+            if q_text.strip():
+                questions.append({'question_number': q_num.strip(), 'question_text': q_text.strip()})
+    else:
+        log(f"    - No obvious 'EXERCISES' or 'QUESTIONS' section found.")
+            
+    return extracted_topics, questions
 
-def update_database(cursor, chapter_id: int, topics: list):
-    log(f"    - Preparing to update empty topics only for chapter_id {chapter_id}.")
-    
-    # Query for topics with empty full_text
-    cursor.execute("""
-        SELECT topic_number
-        FROM topics
-        WHERE chapter_id = %s AND (full_text IS NULL OR full_text = '')
-    """, (chapter_id,))
-    empty_topics = {row[0] for row in cursor.fetchall()}
-    
-    if not empty_topics:
-        log("    - No empty topics found. Skipping update.")
-        return 0  # Return 0 since no updates
-    
-    updated_count = 0
+def update_database(cursor, chapter_id: int, topics: list, questions: list):
+    log(f"    - Preparing to update {len(topics)} topics and {len(questions)} questions in the database.")
     for topic in topics:
-        if topic['topic_number'] in empty_topics:
-            cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", 
-                           (topic['content'], chapter_id, topic['topic_number']))
-            updated_count += 1
-            log(f"      - Updated empty topic {topic['topic_number']}: {topic['title']}.")
-        else:
-            log(f"      - Skipping non-empty topic {topic['topic_number']}: {topic['title']}.")
-
-    log(f"    - Updated {updated_count} empty topics in the database.")
-    return updated_count
+        cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", (topic['content'], chapter_id, topic['topic_number']))
+    if questions:
+        cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
+        for q in questions:
+            cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)", (chapter_id, q['question_number'], q['question_text']))
+    log(f"    - Database update commands sent.")
 
 def main():
     try:
@@ -231,10 +194,6 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
-    chapter_map = get_chapter_map_from_db(cursor)
-    processed_chapters_count = 0
-    skipped_chapters_count = 0
-
     cursor.execute("""
         SELECT c.id, c.name, c.class_number, s.name as subject_name_db
         FROM chapters c
@@ -242,17 +201,30 @@ def main():
         ORDER BY s.name, c.class_number, c.name
     """)
     db_chapters = cursor.fetchall()
+    processed_chapters_count = 0
+    skipped_chapters_count = 0
 
     for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
         log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
+
+        # --- NEW EFFICIENCY CHECK ---
+        cursor.execute("SELECT COUNT(*) FROM topics WHERE chapter_id = %s AND (full_text IS NULL OR TRIM(full_text) = '')", (chapter_id,))
+        missing_count = cursor.fetchone()[0]
+        
+        if missing_count == 0:
+            log(f"  - All topics for this chapter are already populated. Skipping.")
+            skipped_chapters_count += 1
+            continue
+        else:
+            log(f"  - Found {missing_count} empty topics. Proceeding with extraction.")
+        # --- END OF CHECK ---
+
         folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
         mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
         pdf_filename = f"{mapped_pdf_filename_base}.pdf"
         class_folder = f"Class {class_number}"
-        folder_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder)
-        pdf_path = os.path.join(folder_path, pdf_filename)
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder, pdf_filename)
         
-        log(f"    [DEBUG] Looking for PDF at: {pdf_path}")
         if not os.path.exists(pdf_path):
             log(f"    [WARNING] PDF not found for '{chapter_name_db}'. Skipping chapter.")
             skipped_chapters_count += 1
@@ -270,14 +242,14 @@ def main():
             skipped_chapters_count += 1
             continue
         
-        topics_data = extract_topics(full_chapter_text, chapter_topics_df)
+        topics_data, questions_data = extract_topics_and_questions(full_chapter_text, chapter_topics_df)
         
-        if not topics_data:
-            log(f"    [WARNING] No topics extracted from text. Skipping database update.")
+        if not topics_data and not questions_data:
+            log(f"    [WARNING] No topics or questions extracted from text. Skipping database update.")
         else:
-            updated_count = update_database(cursor, chapter_id, topics_data)
+            update_database(cursor, chapter_id, topics_data, questions_data)
             conn.commit()
-            log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}' (updated {updated_count} topics).")
+            log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}'.")
             processed_chapters_count += 1
 
     cursor.close()
