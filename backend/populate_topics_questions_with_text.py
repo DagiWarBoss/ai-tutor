@@ -105,11 +105,9 @@ def get_chapter_map_from_db(cursor):
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
 def clean_ocr_text(text: str) -> str:
-    # Normalize spaces, newlines, and common OCR errors in headings
+    # Simplified: Focus on basics to avoid over-correction
     text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
-    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
-    text = re.sub(r'(\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix "4 . 6" or "4 - 6" -> "4.6"
-    text = re.sub(r'(\d+\.\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix sublevels like "4.6 . 3" -> "4.6.3"
+    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines and remove extra empty lines
     return text.strip()
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
@@ -142,35 +140,58 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     
     extracted_topics = []
     
-    # Robust topic regex: more forgiving for spaces, dots, dashes, etc.
-    topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(
-        r'^\s*(' + '|'.join(topic_numbers) + r')\s*(?:[\.\- ]*)?\s*',
-        re.MULTILINE | re.IGNORECASE
-    )
+    # Loosened regex: More flexible for OCR noise (spaces, dots, dashes, sublevels)
+    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', '[\\.\\- ]?') for num in topics_from_csv['heading_number']]  # Allow optional sep for sublevels
+    heading_pattern = re.compile(r'(?m)^[\s]*(' + '|'.join(topic_numbers_escaped) + r')[\s\.]*', re.IGNORECASE)
     matches = list(heading_pattern.finditer(ocr_text))
-    topic_locations = {match.group(1): match.start() for match in matches}  # Key by cleaned number
+    topic_locations = {}
+    for match in matches:
+        cleaned_num = re.sub(r'\s+', '', match.group(1)).replace('-', '.')  # Normalize matched num (e.g., "4 . 6 . 3" -> "4.6.3")
+        topic_locations[cleaned_num] = match.start()
+        log(f"    - Matched heading: {cleaned_num} at position {match.start()}")  # Debug: Show what was matched
     
-    # Log expected vs found for debugging missing topics
+    # Log expected vs found for debugging
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
     found_topics = set(topic_locations.keys())
     missing_topics = expected_topics - found_topics
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
     if missing_topics:
         log(f"    - Missing topics: {', '.join(sorted(missing_topics))} (check OCR for artifacts or adjust regex).")
+        # Debug snippet for first missing: Print 50 chars around expected position
+        for miss in list(missing_topics)[:3]:  # Limit to 3 for brevity
+            miss_pos = ocr_text.find(miss)
+            if miss_pos != -1:
+                snippet = ocr_text[max(0, miss_pos-50):miss_pos+50].replace('\n', ' ')
+                log(f"      - Snippet around missing '{miss}': ...{snippet}...")
 
+    # Extract content for found topics
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
         start_pos = topic_locations.get(topic_num)
         if start_pos is not None:
             end_pos = len(ocr_text)
-            for next_num, next_pos in topic_locations.items():
+            for next_num, next_pos in sorted(topic_locations.items(), key=lambda x: x[1]):
                 if next_pos > start_pos and next_pos < end_pos:
                     end_pos = next_pos
+                    break
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
     
-    # Improved question extraction: stricter boundaries to prevent stuffing
+    # Fallback: Scan for missing subtopics within parent sections
+    for topic in extracted_topics:
+        parent_num = '.'.join(topic['topic_number'].split('.')[:-1])  # e.g., "4.6" from "4.6.3"
+        if parent_num in topic_locations:
+            continue
+        # Search within this topic's content for missing subtopics
+        sub_matches = heading_pattern.finditer(topic['content'])
+        for sub_match in sub_matches:
+            sub_cleaned = re.sub(r'\s+', '', sub_match.group(1)).replace('-', '.')
+            if sub_cleaned in missing_topics:
+                sub_start = sub_match.start() + start_pos  # Adjust position to full text
+                topic_locations[sub_cleaned] = sub_start
+                log(f"    - Fallback match for subtopic: {sub_cleaned}")
+
+    # (Question extraction unchanged, as it was working well)
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
@@ -181,7 +202,6 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
-        # Robust question regex: captures number (e.g., 4.25) and text until next number or end
         question_pattern = re.compile(
             r'^\s*(\d+(?:\.\d+)?)[\.\)]\s*(.+?)(?=\n\s*\d+(?:\.\d+)?[\.\)]|\nEXERCISES|\nQUESTIONS|\Z)',
             re.MULTILINE | re.DOTALL
@@ -237,6 +257,9 @@ def main():
     db_chapters = cursor.fetchall()
 
     for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
+        # For testing: Uncomment to process only one chapter (e.g., the problematic one)
+        # if chapter_name_db != 'Chemical Bonding And Molecular Structure': continue
+        
         log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
         folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
         mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
