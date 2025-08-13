@@ -190,19 +190,19 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
 def update_database(cursor, chapter_id: int, topics: list):
     log(f"    - Preparing to update empty topics only for chapter_id {chapter_id}.")
     
-    # Query for topics with empty full_text
+    # Query for topics with empty full_text (handling NULL, empty, or whitespace)
     cursor.execute("""
         SELECT topic_number
         FROM topics
-        WHERE chapter_id = %s AND (full_text IS NULL OR full_text = '')
+        WHERE chapter_id = %s AND (full_text IS NULL OR TRIM(full_text) = '')
     """, (chapter_id,))
     empty_topics = {row[0] for row in cursor.fetchall()}
     
     if not empty_topics:
-        log("    - No empty topics found. Skipping update.")
+        log("    - No empty topics found in DB. Skipping update.")
         return
     
-    log(f"    - Found {len(empty_topics)} empty topics in the DB.")
+    log(f"    - Found {len(empty_topics)} empty topics in DB: {', '.join(empty_topics)}")
     
     updated_count = 0
     for topic in topics:
@@ -212,7 +212,7 @@ def update_database(cursor, chapter_id: int, topics: list):
             updated_count += 1
             log(f"      - Updated empty topic {topic['topic_number']}: {topic['title']}")
         else:
-            log(f"      - Skipping non-empty topic {topic['topic_number']}: {topic['title']}")
+            log(f"      - Skipping populated topic {topic['topic_number']}: {topic['title']}")
 
     log(f"    - Updated {updated_count} empty topics in the database (out of {len(topics)} extracted).")
 
