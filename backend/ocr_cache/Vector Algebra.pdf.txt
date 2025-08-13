@@ -1,0 +1,1811 @@
+Chapter 1 0
+
+12080CH10
+
+VECTOR ALGEBRA
+
+¢¢ In most sciences one generation tears down what another has built and what
+one has established another undoes. In Mathematics alone each generation
+builds a new story to the old structure. - HERMAN HANKEL *%
+
+10.1 Introduction
+
+In our day to day life, we come across many queries such {pete bhi es eh
+as — What is your height? How should a football player hit
+
+the ball to give a pass to another player of his team? Observe
+that a possible answer to the first query may be 1.6 meters,
+a quantity that involves only one value (magnitude) which
+is a real number. Such quantities are called scalars.
+However, an answer to the second query is a quantity (called
+force) which involves muscular strength (magnitude) and
+direction (in which another player is positioned). Such
+quantities are called vectors. In mathematics, physics and
+engineering, we frequently come across with both types of
+
+W.R. Hamilton
+(1805-1865)
+
+quantities, namely, scalar quantities such as length, mass,
+time, distance, speed, area, volume, temperature, work,
+money, voltage, density, resistance etc. and vector quantities like displacement, velocity,
+acceleration, force, weight, momentum, electric field intensity etc.
+
+In this chapter, we will study some of the basic concepts about vectors, various
+operations on vectors, and their algebraic and geometric properties. These two type of
+properties, when considered together give a full realisation to the concept of vectors,
+and lead to their vital applicability in various areas as mentioned above.
+
+10.2 Some Basic Concepts
+
+Let ‘7 be any straight line in plane or three dimensional space. This line can be given
+two directions by means of arrowheads. A line with one of these directions prescribed
+is called a directed line (Fig 10.1 (i), (ii)).
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 339
+
+B
+A
+A
+
+(i) (ii) (iii)
+Fig 10.1
+Now observe that if we restrict the line / to the line segment AB, then a magnitude
+is prescribed on the line / with one of the two directions, so that we obtain a directed
+
+line segment (Fig 10.1(i1i)). Thus, a directed line segment has magnitude as well as
+direction.
+
+Definition 1 A quantity that has magnitude as well as direction is called a vector.
+Notice that a directed line segment is a vector (Fig 10.1(iii)), denoted as AB or
+simply as G, and read as ‘vector AB’ or ‘vector @’.
+The point A from where the vector AB starts is called its initial point, and the
+
+point B where it ends is called its terminal point. The distance between initial and
+terminal points of a vector is called the magnitude (or length) of the vector, denoted as
+
+IABI, or Idl, or a. The arrow indicates the direction of the vector.
+
+Since the length is never negative, the notation Id! < 0 has no meaning.
+
+Position Vector
+From Class XI, recall the three dimensional right handed rectangular coordinate system
+(Fig 10.2(i)). Consider a point P in space, having coordinates (x, y, z) with respect to
+
+the origin O(0, 0, 0). Then, the vector OP having O and P as its initial and terminal
+points, respectively, is called the position vector of the point P with respect
+
+to O. Using distance formula (from Class XD), the magnitude of OP (or 7) is given by
+
+lOPI= fx? + y? +27
+In practice, the position vectors of points A, B, C, etc., with respect to the origin O
+
+are denoted by a, b,c, etc., respectively (Fig 10.2 (ii)).
+
+Reprint 2025-26
+
+340 MATHEMATICS
+
+Fig 10.2
+Direction Cosines
+
+Consider the position vector OP (or r ) of a point P(x, y, z) as in Fig 10.3. The angles a,
+B, y made by the vector / with the positive directions of x, y and z-axes respectively,
+are called its direction angles. The cosine values of these angles, i.e., cos, cos B and
+cos y are called direction cosines of the vector 7, and usually denoted by /, m and n,
+respectively.
+
+Fig 10.3 “ay
+From Fig 10.3, one may note that the triangle OAP is right angled, and in it, we
+
+have cosa =~ (r stands for |7|). Similarly, from the right angled triangles OBP and
+r
+
+OCP, we may write cos B = * and cos y= s Thus, the coordinates of the point P may
+r r
+
+also be expressed as (/r, mr,nr). The numbers /r, mr and nr, proportional to the direction
+cosines are called as direction ratios of vector 7, and denoted as a, b and c, respectively.
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 341
+
+One may note that ? + m? + n? = 1 but a? + b? + c’ #1, in general.
+
+10.3 Types of Vectors
+
+Zero Vector A vector whose initial and terminal points coincide, is called a zero vector
+(or null vector), and denoted as 0. Zero vector can not be assigned a definite direction
+as it has zero magnitude. Or, alternatively otherwise, it may be regarded as having any
+
+direction. The vectors AA, BB represent the zero vector,
+
+Unit Vector A vector whose magnitude is unity (1.e., 1 unit) is called a unit vector. The
+
+unit vector in the direction of a given vector d is denoted by a.
+
+Coinitial Vectors Two or more vectors having the same initial point are called coinitial
+
+vectors.
+
+Collinear Vectors Two or more vectors are said to be collinear if they are parallel to
+
+the same line, irrespective of their magnitudes and directions.
+
+Equal Vectors Two vectors a and b are said to be equal, if they have the same
+magnitude and direction regardless of the positions of their initial points, and written
+as G=b.
+
+Negative of a Vector A vector whose magnitude is the same as that of a given vector
+
+(say, AB), but direction is opposite to that of it, is called negative of the given vector.
+
+For example, vector BA is negative of the vector AB, and written as BA = — AB.
+
+Remark The vectors defined above are such that any of them may be subject to its
+parallel displacement without changing its magnitude and direction. Such vectors are
+
+called free vectors. Throughout this chapter, we will be dealing with free vectors only.
+N
+
+Example 1 Represent graphically a displacement Oo
+of 40 km, 30° west of south. Ww E
+
+Solution The vector OP represents the required Scale
+
+displacement (Fig 10.4). 10 km
+
+Example 2 Classify the following measures as
+scalars and vectors.
+(i) 5 seconds
+
+(ii) 1000 cm? Fig 10.4
+
+Reprint 2025-26
+
+342 MATHEMATICS
+
+(iii) 10 Newton (iv) 30 km/hr (v) 10 g/cm?
+(vi) 20 m/s towards north
+Solution
+(i) Time-scalar (i) Volume-scalar (iil) Force-vector
+(iv) Speed-scalar (v) Density-scalar (vi) Velocity-vector
+
+Example 3 In Fig 10.5, which of the vectors are:
+(i) Collinear (ti) Equal (iii) Coinitial
+
+Solution
+
+(i) Collinear vectors: a, @ and d .
+
+Scale
+(ti) Equal vectors: dand ¢. 1 unit
+(iii) Coinitial vectors: b, ¢ and d. Fig 10.5
+
+EXERCISE 10.1
+
+Represent graphically a displacement of 40 km, 30° east of north.
+
+2. Classify the following measures as scalars and vectors.
+
+(i) 10kg (ii) 2 meters north-west (iti) 40°
+(iv) 40 watt (v) 10-!° coulomb (vi) 20 m/s?
+3. Classify the following as scalar and vector quantities.
+(i) time period (ii) distance (iil) force
+(iv) velocity (v) work done ri
+
+4. InFig 10.6(asquare), identify the following vectors.
+(i) Coinitial (ti) Equal
+(ii) Collinear but not equal d
+5. Answer the following as true or false.
+(i) @ and —4 are collinear.
+
+(ti) Two collinear vectors are always equal in >
+c
+magnitude.
+oe | | | Fig 10.6
+(ii) Two vectors having same magnitude are collinear.
+
+(iv) Two collinear vectors having the same magnitude are equal.
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 343
+
+10.4 Addition of Vectors Cc
+
+A vector AB simply means the displacement from a point
+A to the point B. Now consider a situation that a girl
+moves from A to B and then from B to C
+(Fig 10.7). The net displacement made by the girl from
+point A to the point C, is given by the vector AC and A
+
+expressed as Fig 10.7
+
+AC = AB + BC
+This is known as the triangle law of vector addition.
+
+In general, if we have two vectors 4 and b (Fig 10.8 (i)), then to add them, they are
+positioned so that the initial point of one coincides with the terminal point of the other
+(Fig 10.8(ii)).
+
+(i) (ii)
+
+Fig 10.8
+
+For example, in Fig 10.8 (ii), we have shifted vector b without changing its magnitude
+and direction, so that it’s initial point coincides with the terminal point of a. Then, the
+
+vector G + b, represented by the third side AC of the triangle ABC, gives us the sum (or
+resultant) of the vectors @ and 6 ie., in triangle ABC (Fig 10.8 (ii)), we have
+AB + BC = AC
+Now again, since AC = —CA, from the above equation, we have
+
+AB+BC+CA = AA =0
+This means that when the sides of a triangle are taken in order, it leads to zero
+resultant as the initial and terminal points get coincided (Fig 10.8(ii1)).
+
+Reprint 2025-26
+
+344 MATHEMATICS
+
+Now, construct a vector BC’ so that its magnitude is same as the vector BC, but the
+direction opposite to that of it (Fig 10.8 (iii), i-e.,
+BC’ = -BC
+Then, on applying triangle law from the Fig 10.8 (iii), we have
+
+AC' = AB+BC' = AB+(-BC) =4-b
+
+The vector AC’ is said to represent the difference of a and b.
+
+Now, consider a boat in a river going from one bank of the river to the other in a
+direction perpendicular to the flow of the river. Then, it is acted upon by two velocity
+vectors—one is the velocity imparted to the boat by its engine and other one is the
+velocity of the flow of river water. Under the simultaneous influence of these two
+velocities, the boat in actual starts travelling with a different velocity. To have a precise
+idea about the effective speed and direction
+(i.e., the resultant velocity) of the boat, we have
+the following law of vector addition.
+
+If we havetwo vectors @ and b represented
+by the two adjacent sides of a parallelogram
+in magnitude and direction (Fig 10.9), then their
+sum a+b is represented in magnitude and
+
+direction by the diagonal of the parallelogram
+
+through their common point. This is known as
+
+the parallelogram law of vector addition.
+
+From Fig 10.9, using the triangle law, one may note that
+OA+ AC =OC
+
+or OA + OB =O0C (since AC = OB )
+
+which is parallelogram law. Thus, we may say that the two laws of vector
+addition are equivalent to each other.
+
+Properties of vector addition
+Property 1 For any two vectors a and b,
+
+ont
+
+QI
+
+G+b=b+ (Commutative property)
+
+Reprint 2025-26
+
+VECTOR ALGEBRA
+
+Proof Consider the parallelogram ABCD
+(Fig 10.10). Let AB = @ and BC = 5, then using
+the triangle law, from triangle ABC, we have
+
+AC =a+b
+Now, since the opposite sides of a
+
+parallelogram are equal and parallel, from
+
+345
+
+Fig10.10, we have, AD=BC=b and a
+—. Fig 10.10
+DC = AB =a. Again using triangle law, from 6
+triangle ADC, we have
+
+AC =AD+ DC=b+a
+Hence a@+b=b+a
+Property 2 For any three vectors a,b andc
+
+(+b) +@=a+(b +2) (Associative property)
+
+Proof Let the vectors a,b and é be represented by PQ, QR and RS, respectively, as
+
+shown in Fig 10.11(4) and (ii).
+
+Q
+
+B
+
+Then a+b =PQ+QR=PR
+and b+é@=QR+RS=QS
+So (@+b)+é@=PR+RS=PS
+
+Reprint 2025-26
+
+346 MATHEMATICS
+
+and a+(b+¢)=PQ+QS=PS
+Hence (4+b)+€=a+(b+C)
+Remark The associative property of vector addition enables us to write the sum of
+three vectors a,b, é as @+b + é without using brackets.
+Note that for any vector qa, we have
+a+0=0+a=4
+Here, the zero vector 0 is called the additive identity for the vector addition.
+
+10.5 Multiplication of a Vector by a Scalar
+
+Let a be a given vector and i a scalar. Then the product of the vector a by the scalar
+A, denoted as Ad, is called the multiplication of vector @ by the scalar A. Note that, Ad
+is also a vector, collinear to the vector d. The vector Ad has the direction same (or
+opposite) to that of vector 4 according as the value of A is positive (or negative). Also,
+the magnitude of vector Ad is |A| times the magnitude of the vector 4, i.e.,
+IAdl =1Allal
+
+A geometric visualisation of multiplication of a vector by a scalar is given
+
+in Fig 10.12.
+
+A As
+A ys vs
+) *)
+Fig 10.12
+When A = —1, then Ad= — 4, which is a vector having magnitude equal to the
+
+magnitude of 4 and direction opposite to that of the direction of 4. The vector —4 is
+called the negative (or additive inverse) of vector 4 and we always have
+
+a@+(-a@)=(-@)+4=0
+
+. 1 . - Loo.
+Also, if A= lal , provided 4 # 0 i.e. @ is not a null vector, then
+a
+
+_ _ 1.
+|Ad| =IAl|al = —|a|=1
+[4]
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 347
+
+So, A @ represents the unit vector in the direction of 4. We write it as
+
+A 1 =
+a=,_ 4
+||
+
+[a= Note |For any scalar k, k0=-0.
+
+10.5.1 Components of a vector
+Let us take the points A(1, 0, 0), B(O, 1, 0) and C(O, 0, 1) on the x-axis, y-axis and
+z-axis, respectively. Then, clearly
+
+IOAI= 1, |OB |= 1 and lOCI= 1
+
+The vectors OA, OB and OC, each having magnitude 1,
+are called unit vectors along the axes OX, OY and OZ,
+
+respectively, and denoted by 7,7 and k, respectively
+(Fig 10.13).
+
+Now, consider the position vector OP of a point P(x, y, z)
+as in Fig 10.14. Let P, be the foot of the perpendicular from P on the plane XOY.
+
+Fig 10.13
+
+x Fig 10.14
+
+We, thus, see that P, P is parallel to z-axis. As i ; j and k are the unit vectors along the
+x, y and z-axes, respectively, and by the definition of the coordinates of P, we have
+PP=OR = ck, Similarly, QP, = OS = yj and OQ = xi.
+
+Reprint 2025-26
+
+348 MATHEMATICS
+
+Therefore, it follows that OP, =0Q+QP, =xi+ yj
+and OP = OP, + RP=xi+ yj+zk
+Hence, the position vector of P with reference to O is given by
+OP (or F)-xi + yj tczk
+This form of any vector is called its component form. Here, x, y and z are called
+
+as the scalar components of 7, and xi, yj and zk are called the vector components
+
+of * along the respective axes. Sometimes x, y and z are also termed as rectangular
+components.
+
+The length of any vector 7 = xi + yj+ zk , is readily determined by applying the
+Pythagoras theorem twice. We note that in the right angle triangle OQP, (Fig 10.14)
+OP, |= //OQ/+QR)° = Vx? + y?>
+and in the right angle triangle OPP, we have
+
+OP = J|OPf +/RPP = ye +y%) +27
+Hence, the length of any vector 7 = xi + yjtzk is given by
+ig) =|ait yt ckla=Jrryte
+If @ and b are any two vectors given in the component form ai + dy j tayk and
+bi + b,j + bk , respectively, then
+(i) the sum (or resultant) of the vectors a and b is given by
+G+b = (a, +bi + (ay +by)j + (a; +b, dk
+(ii) the difference of the vector d and b is given by
+a—b = (a —b,)i + (a, —by)j + (a, —b,)k
+(iii) the vectors a and b are equal if and only if
+ad,=b,,4,=b, and a,=b,
+(iv) the multiplication of vector a by any scalar A is given by
+
+NG = (Aa, )i + (Aa) j+ (Aa; )k
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 349
+
+The addition of vectors and the multiplication of a vector by a scalar together give
+
+the following distributive laws:
+
+Let @ and b be any two vectors, and k and m be any scalars. Then
+
+(i) kad+ma =(k+m)a
+(il) k(ma) = (km)a
+Gil) k(@+b)=ka+kb
+Remarks
+(i) One may observe that whatever be the value of A, the vector Ad is always
+collinear to the vector 4. In fact, two vectors d@ and b are collinear if and only if
+there exists a nonzero scalar A such that b = Ad. If the vectors @ and b are given
+in the component form, i.e. d = ai + dy] + a,k and b = bi + b,j + bk, then the
+two vectors are collinear if and only if
+bitb,j+bk = Maitaj+ak)
+pan bitb,j+byk = (Aa,)i+(Aa,)j + (Aa, )k
+eS b, =ha,, b) =ha,, b, =ha;
+b, b, b
+ay a, ay
+(i) Ifa= al + dy] + a,k , then a,, a,, a, are also called direction ratios of a.
+(ii) Incase ifitis given that /, m,n are direction cosines of a vector, then li+ mj +nk
+
+= (cosa)i +(cosB) 7 +(cos)k is the unit vector in the direction of that vector,
+where o, B and y are the angles which the vector makes with x, y and z axes
+respectively.
+
+Example 4 Find the values of x, y and z so that the vectors @= xi +2] + zk and
+
+b=2i+ yitk are equal.
+
+Solution Note that two vectors are equal if and only if their corresponding components
+
+are equal. Thus, the given vectors @ and b will be equal if and only if
+
+x=2,y=2,z=1
+
+Reprint 2025-26
+
+350 | MATHEMATICS
+Example 5 Let @=i+2j and b =2/ + j. Is|@|=|5|? Are the vectors @ and b equal?
+Solution We have |@|= VI? +2” = V5 and |[b|=V2? +1 =V5
+
+So, |a]=| b |. But, the two vectors are not equal since their corresponding components
+are distinct.
+
+Example 6 Find unit vector in the direction of vector @ = 27 +37 + k
+
+| ~
+
+Solution The unit vector in the direction of a vector a is given by d= —4.
+
+Now la@|= J2?43?4+P = J14
+
+QI
+
+—_
+
+Via
+
+Example 7 Find a vector in the direction of vector @=i-—2j that has magnitude
+7 units.
+
+2 7423 jt l¢
+Ji4. V4" (V4
+
+(22+37+k) =
+
+Therefore a=
+
+Solution The unit vector in the direction of the given vector 4 is
+
+((-2j)=
+
+V5 V5
+
+Therefore, the vector having magnitude equal to 7 and in the direction of a is
+
+. . 7, 14,
+
+BB) 5"
+
+Example 8 Find the unit vector in the direction of the sum of the vectors, a = 2i+27- 5k
+and b = 27 + 7 +3k.
+Solution The sum of the given vectors is
+
+a+b (=é, say) =47 +3) -2k
+
+and |e] = 4° +37+(-2)? =
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 351
+
+Thus, the required unit vector is
+
+1 a a A 4 A A 2 A
+| = _(47437-26)= j 35 k
+
+i+ J-
+Ié@| 29 J29 J/29° ~=—/29
+
+Example 9 Write the direction ratio’s of the vector @ =i + j- 2k and hence calculate
+its direction cosines.
+
+C=
+
+Solution Note that the direction ratio’s a, b, c of a vector f= xi + yt zk are just
+the respective components x, y and z of the vector. So, for the given vector, we have
+a=1,b=1 andc =-2. Further, if /, m and n are the direction cosines of the given
+vector, then
+
+1 b 1 —2
+l= =—, m n=——= as |7|= v6
+
+l7| vo "|? Ve’ |F| Vo
+
+1 1 2
+Thus, the direction cosines are | —=,—=.-—= |}.
+Le V6 |
+10.5.2 Vector joining two points
+If PQ, yp» Zz) and P(X), Ys z,) are any two Z
+points, then the vector joining P| and P, is the
+
+vector PP, (Fig 10.15).
+Joining the points P, and P, with the origin
+O, and applying triangle law, from the triangle
+
+P, (Xp5V25 2)
+
+OP,P,, we have ee Pi XY 921)
+—., —. _. = Y
+OP, + P,P, = OP,
+Using the properties of vector addition, the x
+above equation becomes Fig 10.15
+P,P; = OP, —OP,
+ie. PP, = (40 + yp J+ Zk)— (xl + yp + Uk)
+
+= (%) —x it, ~ y)it( —%)k
+The magnitude of vector PP, is given by
+
+IP,P, | = (x, =x) +(yy -y,) + (Z, —z)°
+
+Reprint 2025-26
+
+352 MATHEMATICS
+
+Example 10 Find the vector joining the points P(2, 3, 0) and Q- 1, — 2, — 4) directed
+from P to Q.
+Solution Since the vector is to be directed from P to Q, clearly P is the initial point
+
+and Q is the terminal point. So, the required vector joining P and Q is the vector PQ,
+given by
+
+PO = (-I-2)i + (-2-3)j + (-4-O)k
+ie. PQ = -31-5j—4k.
+
+10.5.3 Section formula
+Let P and Q be two points represented by the position vectors OP and OQ, respectively,
+with respect to the origin O. Then the line segment
+joining the points P and Q may be divided by a third
+point, say R, in two ways — internally (Fig 10.16)
+and externally (Fig 10.17). Here, we intend to find
+the position vector OR for the point R with respect
+to the origin O. We take the two cases one by one.
+
+Case I When R divides PQ internally (Fig 10.16).
+If R divides PQ such that m RQ = 7 PR, Fig 10.16
+
+where m and n are positive scalars, we say that the point R divides PQ internally in the
+ratio of m:n. Now from triangles ORQ and OPR, we have
+
+RQ = 0Q-OR =b-r
+
+and PR = OR -OP=r-a,
+Therefore, we have m(b -F) =n(F-4) (Why?)
+. mb + na . . .
+or r= (on simplification)
+m+n
+
+Hence, the position vector of the point R which divides P and Q internally in the
+
+ratio of m:n is given by
+—. mb+na
+
+m+n
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 353
+
+Case II When R divides PQ externally (Fig 10.17).
+We leave it to the reader as an exercise to verify
+that the position vector of the point R which divides
+the line segment PQ externally in the ratio
+
+. m
+min 1e ——=— jis givenb
+OR 7 g y
+
+mb —na
+
+OR =
+
+Fig 10.17
+
+m-n
+Remark If R is the midpoint of PQ , then m =n. And therefore, from Case I, the
+midpoint R of PQ, will have its position vector as
+
+at+b
+
+OR =
+Example 11 Consider two points P and Q with position vectors OP = 3a —2b and
+
+OQ = 4 +b. Find the position vector of a point R which divides the line joining P and Q
+in the ratio 2:1, (i) internally, and (ii) externally.
+
+Solution
+(i) The position vector of the point R dividing the join of P and Q internally in the
+ratio 2:1 is
+OR = 2(a +b) + (3a — 2b) _ 5a
+2+1 3
+(ii) The position vector of the point R dividing the join of P and Q externally in the
+ratio 2:1 is
+OR = 2a wees = 2b) _ Ab a
+
+Example 12 Show that the points A(2i — 7 +k), B@—3j—5k), C@i-4j—4k) are
+the vertices of a right angled triangle.
+
+Solution We have
+AB = (1-2) + (-3+ I) j+(-5—Dk =-i-2j-6k
+BC = (3-1it+(4+3)j+(445)k =27-j+k
+and CA = (2-3) +(-14 4)j+(14+4)k =-7+37+5k
+
+Reprint 2025-26
+
+354
+
+MATHEMATICS
+
+Further, note that
+
+| ABP = 41=6+35=|BC/ +|CA[
+
+Hence, the triangle is a right angled triangle.
+
+1.
+
+ye Ye
+
+aa
+
+10.
+11.
+
+12.
+13.
+
+14.
+15.
+
+EXERCISE 10.2
+
+Compute the magnitude of the following vectors:
+
+A
+
+k
+
+ee Ge |
+G=[+j+k; b=2i-7j]-3k; C= BT BIB
+Write two different vectors having same magnitude.
+Write two different vectors having same direction.
+Find the values of x and y so that the vectors 2+37 and xi + y are equal.
+
+Find the scalar and vector components of the vector with initial point (2, 1) and
+terminal point (— 5, 7).
+
+Find the sum of the vectors @ = i-2]+k, b=-2i+ Aj+ 5k and =i — 6] ~Tk.
+Find the unit vector in the direction of the vector @=7+ 7+ Ik.
+
+Find the unit vector in the direction of vector PQ, where P and Q are the points
+(1, 2, 3) and (4, 5, 6), respectively.
+
+For given vectors, @ = 2i-jt+ 2k and b=-i + j- k , find the unit vector in the
+direction of the vector d+.
+
+Find a vector in the direction of vector 57 — j + 2k which has magnitude 8 units.
+Show that the vectors 27-3j+4k and—4i+6j—8k are collinear.
+
+Find the direction cosines of the vector 7+27+3k.
+
+Find the direction cosines of the vector joining the points A(1, 2, —3) and
+B (-1, —2, 1), directed from A to B.
+
+Show that the vector 7 + 7 +k is equally inclined to the axes OX, OY and OZ.
+Find the position vector of a point R which divides the line joining two points P
+and Q whose position vectors are 7 + 27 —k and—i+ j+ k respectively, in the
+ratio2:1
+
+(i) internally (ii) externally
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 355
+
+16. Find the position vector of the mid point of the vector joining the points P(2, 3, 4)
+and Q(4, 1, —2).
+
+17. Show that the points A, B and C with position vectors, a =3i —4]-—4k,
+
+b=2i) —j+k and¢=j —37 —5k, respectively form the vertices of a right angled
+triangle.
+18. Intriangle ABC (Fig 10.18), which of the following is not true:
+
+(A) AB+BC+CA=0 c
+(B) AB+BC-—AC=0
+(C) AB+BC-AC =0
+
+(D) AB-CB+CA =0 Fig 10.18
+19. If and b are two collinear vectors, then which of the following are incorrect:
+
+(A) b=)a, for some scalar A
+(B) G=+b
+(C) the respective components of a and b are not proportional
+
+(D) both the vectors a and b have same direction, but different magnitudes.
+
+10.6 Product of Two Vectors
+
+So far we have studied about addition and subtraction of vectors. An other algebraic
+operation which we intend to discuss regarding vectors is their product. We may
+recall that product of two numbers is a number, product of two matrices is again a
+matrix. But in case of functions, we may multiply them in two ways, namely,
+multiplication of two functions pointwise and composition of two functions. Similarly,
+multiplication of two vectors is also defined in two ways, namely, scalar (or dot)
+product where the result is a scalar, and vector (or cross) product where the
+result is a vector. Based upon these two types of products for vectors, they have
+found various applications in geometry, mechanics and engineering. In this section,
+we will discuss these two types of products.
+
+10.6.1 Scalar (or dot) product of two vectors
+
+Definition 2 The scalar product of two nonzero vectors a and b, denoted by a-b, is
+
+Reprint 2025-26
+
+356 MATHEMATICS
+
+defined as a.b =|4||b|cos®, A”
+where, 6 is the angle between @ and b,0<0<7x (Fig 10.19). 8 =
+If either d=0orb=0 then 0 is not defined, and in this case, we Fig 10.19 °
+define 4-6 =0
+Observations
+
+1. d-b isa real number.
+
+2. Let and b be two nonzero vectors, then 4-5 =0 if and only if @ and b are
+perpendicular to each other. i.e.
+G@-b=0@ GLb
+
+=|4||b|
+
+~~!
+
+Q
+
+3. If@=0, then
+In particular, @-a=|a|?, as @ in this case is 0.
+4. If@=7, then g-b=-|a||d|
+
+In particular, @-5 =-|d|||, as 0 in this case is 7.
+
+5. In view of the Observations 2 and 3, for mutually perpendicular unit vectors
+
+na
+
+i, j and k, we have
+
+bei=j-jsk-k=l,
+i-j=jk = k-i=0
+
+6. The angle between two nonzero vectors 4d and b is given by
+
+, or 0 =cos'| ab )
+| a || 5 | (a||b |
+
+7. The scalar product is commutative. i.e.
+
+QI
+hor
+
+cos§@ =
+
+oy
+
+Q}
+
+G-b=b-a (Why?)
+Two important properties of scalar product
+
+Property 1 (Distributivity of scalar product over addition) Let @, 5 and @ be
+
+any three vectors, then
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 357
+
+Property 2 Let @ and b be any two vectors, and | be any scalar. Then
+(Aa): b =(Aa)-b =0(G-b) =4- (AD)
+If two vectors d and 4 are given in component form as ai +a,jta,k and
+bi +b,j+b,k , then their scalar product is given as
+G-b= (aita,j+ak)-(bi +b,j +b,k)
+= af-(bi+b,j+bk)+a,j-(bitb,jtbyk) +a,k (bi +b, j +b,k)
+
+abi -i) + abi j) + ab, (2k) +.ab,(j-2) + a,b, (J J) + ayby(G-
+
++ a,b, (k 1 )+ a,b, (k . j ) + azb, (k -k ) (Using the above Properties | and 2)
+= ab, + a,b, + a,b, (Using Observation 5)
+Thus aG-b= ab, +a,b, +a,b,
+10.6.2 Projection of a vector on a line
+Suppose a vector AB makes an angle @ with a given directed line / (say), in the
+anticlockwise direction (Fig 10.20). Then the projection of AB on / is a vector P
+(say) with magnitude | AB| | cos |, and the direction of P being the same (or opposite)
+
+to that of the line /, depending upon whether cos @ is positive or negative. The vector P
+
+a 7B .
+O74 : os
+@ | l ; 8 l
+>
+A Dp C Cc rs A
+(0’< 8 < 90°) (90°< 6 < 180°)
+(i) (ii)
+=>
+cP 8 |
+A
+A
+B
+(180°< 6 < 270°) (270°< 6 < 360°)
+(iii) (iv)
+
+Fig 10.20
+
+Reprint 2025-26
+
+358 MATHEMATICS
+
+is called the projection vector, and its magnitude | pl is simply called as the projection
+
+of the vector AB on the directed line /.
+For example, in each of the following figures (Fig 10.20 (i) to (iv)), projection vector
+
+of AB along the line / is vector AC.
+Observations
+1. If P is the unit vector along a line /, then the projection of a vector 4 on the line
+lis given by a-p.
+2. Projection of a vector 4 on other vector 4, is given by
+a-b, or “(= , or +(@-5)
+| | b|
+3. If 6=0, then the projection vector of AB will be AB itself and if 6 = 7, then the
+projection vector of AB will be BA.
+
+T 3m ‘ac
+4. If 8 =5 or 9 =F , then the projection vector of AB will be zero vector.
+
+Remark If a, B and y are the direction angles of vector d= at + a,jt+ a,k , then its
+
+direction cosines may be given as
+
+Q}
+
+me
+&
+
+iS)
+N
+
+Q
+
+3
+
+cosa = =—, cosB=—,, and cosy=
+
+|a||¢ | |
+
+Ql
+
+Q!
+
+Also, note that |d@|cosa, |a@\cosB and |a|cosy are respectively the projections of
+4 along OX, OY and OZ. i.e., the scalar components a,, 4, and a, of the vector d, are
+precisely the projections of 4 along x-axis, y-axis and z-axis, respectively. Further, if a
+is a unit vector, then it may be expressed in terms of its direction cosines as
+
+a = cos ai + cosBj + cos yk
+
+Example 13 Find the angle between two vectors @ and b with magnitudes | and 2
+
+respectively and when a. b =1.
+
+Solution Given @-b =1,|@|=1and|b|=2 . We have
+8=cos! ab =cos'(7}=2
+| a || | 2) 3
+
+Reprint 2025-26
+
+
+VECTOR ALGEBRA 359
+
+A
+
+Example 14 Find angle ‘6’ between the vectors a@= i+j—-k and b=i- jt k.
+
+Solution The angle 6 between two vectors d and b is given by
+
+a-b
+cos8 = —>
+
+||| |
+
+Now a@.b= (¢+j—k)-(@-j+k)=1-1-1=-1,
+-1
+
+Therefore, we have cos8 = 3
+
+. . af 1
+hence the required angle is @ = cos (-]
+
+Example 15 If a=5i — j-—3k and b=i+3j —5k, then show that the vectors
+a+b and 4-5 are perpendicular.
+
+Solution We know that two nonzero vectors are perpendicular if their scalar product
+is Zero.
+
+Here a+b = (5i—j—3k)+(i+3j—5k) =61+2j-8k
+
+and G—b = (5i—j—3k)-(1+3j-5k)=47-4] + 2k
+
+So (a+b). (G@—b) = (61 + 27 -8k)-(47 —4] + 2k) = 24-8-16=0.
+Hence a+b and G—b are perpendicular vectors.
+
+Example 16 Find the projection of the vector d= i+ 3] + 2k on the vector
+b=i+2j+k.
+Solution The projection of vector d on the vector h is given by
+
+] . (2x1+3x24+2xl) 10 5
+
+—(a-b) = 5 5 5 = =
+
+|b | Jaz +ar+ayr v6 3
+Example 17 Find |@—4|, if two vectors @ and é are such that |@|=2, |b|=3
+and a@-b=4.
+
+Solution We have
+
+Q1
+|
+onl
+—>
+Il
+—
+Q]
+|
+jolt
+—
+~
+QI
+|
+ont
+—
+
+|
+QI
+Q|
+|
+QI
+>
+|
+ol
+QI
++
+~
+o~
+
+Reprint 2025-26
+
+360 MATHEMATICS
+
+|a |? -2(a4-b)+|b/?
+(2)? —2(4) + (3)
+Therefore |a-b| = J5
+
+Example 18 If @ is a unit vector and (¥—d)-(X +d) =8, then find | x |.
+
+Solution Since 4 is a unit vector, |@|=1. Also,
+
+(¥ —G)-(¥+ @) =8
+
+or X-X+X-G-a-X-a-a =8
+or |¥[/-1=8 ie.|¥?=9
+Therefore |x|=3 (as magnitude of a vector is non negative).
+
+Example 19 For any two vectors @ and b, we always have |@-6|<|4||6| (Cauchy-
+Schwartz inequality).
+
+Solution The inequality holds trivially when either g=0 or 6 =0. Actually, in sucha
+
+situation we have |@-b|=0=|G||b|. So, let us assume that |@|#0#|5|.
+Then, we have
+
+a5 |
+\a|lb| =~ IcosO@I<1
+Therefore |ad-b|<|a||b|
+az Cc
+Example 20 For any two vectors a4 and b, we always ax b
+= - >
+have |a+b|<|@|+ || (triangle inequality). b
+A > B
+Solution The inequality holds trivially in case either ad
+a=0orb=0 (How?). So, let |\@|#0#|6| . Then,
+ay ne ee Fig 10.21
+|\a+b| =(a+b) =(a+b)-(a+b)
+= G-G+a-b+b-a+b-b
+= |a| +2a-b+|b5/ (scalar product is commutative)
+< |a@)? +2|a-b|+ bf (since x <lxlVxe R)
+< |G) +2\a|]b|+\5P (from Example 19)
+= (/@|+|5)°
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 361
+
+Hence |\d+b|<|a|+|b|
+Remark ff the equality holds in triangle inequality (in the above Example 20), i.e.
+
+|@+b| = |4|+|d|,
+
+then |AC| = |AB|+|BC|
+showing that the points A, B and C are collinear.
+Example 21 Show that the points A(-27+37+5k), B(?+2j+3k) and C(7i-k)
+are collinear.
+Solution We have
+AB = (1+ 2)i+(2—3)j+@—5)k =31 —j—2k,
+BC = (7-Di+(-2)j+(-1-3)k =61 - 2) —-4k ,
+AC = (7+ 2) +(0—3) 7 + (-1-5S)k =97 —3] — 6k
+
+|AB|= V14, |BG|=2V14 and | AC|=3V14
+
+Therefore | AC|=|AB|+|BC|
+
+Hence the points A, B and C are collinear.
+
+In Example 21, one may note that although AB+BC+CA =0 but the
+
+points A, B and C do not form the vertices of a triangle.
+
+EXERCISE 10.3
+
+1. Find the angle between two vectors d and b with magnitudes 3 and 2,
+
+respectively having G-b=/6 .
+Find the angle between the vectors i— 2] +3k and 3i- 2j+ k
+
+Find the projection of the vector 7 — j on the vector 7+).
+
+Find the projection of the vector 7 +37+ 7k on the vector 77 — j+ Sk.
+
+ye Se $8
+
+Show that each of the given three vectors is a unit vector:
+loos oa Ce Lis Ca an Ls a ae
+7 (2 +3) + 64), 7 Gi —6j + 2k), 7 (61 +2 j— 3k)
+
+Also, show that they are mutually perpendicular to each other.
+
+Reprint 2025-26
+
+362
+
+10.
+
+11.
+
+12.
+13.
+
+14.
+
+15.
+
+16.
+17.
+
+18.
+
+MATHEMATICS
+
+Find |@| and |b|,if (@+6)-(@—6)=8 and|G|=8|4|,
+Evaluate the product (3a — 5b)-(24+7b).
+
+Find the magnitude of two vectors @ and b, having the same magnitude and such
+
+that the angle between them is 60° and their scalar product is ; .
+
+Find | x |, if for a unit vector @, (¥ —d@)-(¥+a)=12.
+
+If a@=27+2j+3k, b=-i+2j+k and @=3i+/j are such that @+Ab is
+perpendicular to ¢, then find the value of i.
+
+Show that |@|5+|5|a@ is perpendicular to |a|b—|5|a , for any two nonzero
+vectors @ and b.
+
+If @-4=0 and @-b= 0, then what can be concluded about the vector b?
+
+If G@,b,é are unit vectors such that a@+4+é=6, find the value of
+
+a-b+b-é€+¢é-a.
+
+If either vector G@=0 or b=0, then @-b =0. But the converse need not be
+
+true. Justify your answer with an example.
+
+If the vertices A, B, C of a triangle ABC are (1, 2, 3), (-1, 0, 0), (0, 1, 2),
+respectively, then find ZABC. [ZABC is the angle between the vectors BA and
+BC].
+
+Show that the points A(1, 2, 7), B(2, 6, 3) and C(3, 10, —1) are collinear.
+
+Show that the vectors 27 -—j+k, i-3j7-—5k and 3i—4j-4k form the vertices
+of a right angled triangle.
+
+If @ is anonzero vector of magnitude ‘a’ and A a nonzero scalar, then Ad is unit
+vector if
+
+(A) A=1 (B) A=-1 (C) a=IAl (D) a=1AAI
+
+10.6.3 Vector (or cross) product of two vectors
+
+In Section 10.2, we have discussed on the three dimensional right handed rectangular
+coordinate system. In this system, when the positive x-axis is rotated counterclockwise
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 363
+
+into the positive y-axis, a right handed (standard) screw would advance in the direction
+of the positive z-axis (Fig 10.22(i)).
+
+In a right handed coordinate system, the thumb of the right hand points in the
+direction of the positive z-axis when the fingers are curled in the direction away from
+the positive x-axis toward the positive y-axis (Fig 10.22(ii)).
+
+Z
+
+(ii)
+
+xX
+
+Fig 10.22 (i), (ii)
+Definition 3 The vector product of two nonzero vectors @ and b, is denoted by @ xb
+and defined as
+
+axb= |\a\/b|sinon,
+
+“
+
+A
+a n
+where, 0 is the angle between ad and b, OS$O9<7 and 7 isa
+
+unit vector perpendicular to both a and b, such that
+
+ay
+
+i A}
+a,b and n form a right handed system (Fig 10.23). i.e., the —”:
+. . oo: . : : v
+
+right handed system rotated from 4 to 5 moves in the direction Fig 10.23
+
+of n.
+
+If either @=0 orb =0 , then 9 is not defined and in this case, we define @xb=0.
+
+Observations
+
+1. axb isa vector.
+
+2. Let Gand bd be two nonzero vectors. Then @x5 = 0 if and only if @ and bare
+
+parallel (or collinear) to each other, i.e.,
+
+axb=- 0@4||b
+
+Reprint 2025-26
+
+364 MATHEMATICS
+
+In particular, @xa@=0 and a x(-a) = 0, since in the first situation, 9 = 0 and
+
+in the second one, 8 = 7, making the value of sin @ to be 0.
+
+3. If @=* then axb =|4||5|. ”
+4. In view of the Observations 2 and 3, for mutually perpendicular
+unit vectors 7 , j and k (Fig 10.24), we have h A
+ix? = jxjokxb=0 NO
+ixjek, jxk=i, kxi=j Fig 10.24
+
+5. In terms of vector product, the angle between two vectors a and b may be
+
+given as
+. |axd |
+m= lab
+6. Itis always true that the vector product is not commutative, as a x b= -bxa
+
+Indeed, @xb=|G||b|sin@A, where G,b and A form a right handed system,
+i.e., 0 is traversed from @ to 5, Fig 10.25 (i). While, b xa =|a||b | sin®n, , where
+
+b,aandf, form a right handed system i.e. 0 is traversed from 5 to a ,
+Fig 10.25(ii).
+
+s>
+
+ay
+
+(i) (ii)
+Fig 10.25 (i), (ii)
+
+Thus, if we assume 4 and bto lie in the plane of the paper, then 7 and 7, both
+
+will be perpendicular to the plane of the paper. But, 7 being directed above the
+
+paper while 7, directed below the paper. i.e. 7, =—/.
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 365
+
+Hence axb = |a||b|sinoa
+= —|a||b|sin@A, =-b xa
+In view of the Observations 4 and 6, we have
+
+jxiz=—k, kxj=-iand ixk=-j.
+
+If @ and b represent the adjacent sides of a triangle then its area is given as
+
+1 -
+
+—|axb|.
+
+5 | | Cc
+By definition of the area of atriangle, we have from a
+Fig 10.26, .
+
+L\
+1 A B
+
+Area of triangle ABC = 5 8B ‘CD. DF
+
+Fig 10.26
+But AB=|5| (as given), and CD =|4|sin9.
+
+1 =, -). loos
+Thus, Area of triangle ABC = 5 le lla|sinO=—|axo|.
+
+If a and b represent the adjacent sides of a parallelogram, then its area is given
+
+by |axb|, D Cc
+From Fig 10.27, we have z
+Area of parallelogram ABCD = AB. DE. .
+
+But AB=|5| (as given), and
+AD
+
+DE=|a|sin@. E rd
+
+Thus, Fig 10.27
+
+Area of parallelogram ABCD = |b ||a|sin@=|a xb].
+
+We now state two important properties of vector product.
+
+Property 3 (Distributivity of vector product over addition): If a, b andé
+are any three vectors and A be a scalar, then
+
+(i) @x(b+é@)=axb+axé
+
+(ii) A(G@xb) =(AG)Xb =ax (AD)
+
+Reprint 2025-26
+
+366 MATHEMATICS
+
+Let aandb be two vectors given in component form as ai +a, j+4a,k and
+
+bi + b,j + bk , respectively. Then their cross product may be given by
+
+™»
+mn.
+>
+
+Explanation We have
+axb = (aita,j+ak)x(bitb,j+bk)
+= ab,(ixi)+ab,(?x j) +a,b,i xk) +a,b,(j x?)
++ ab, (JX j) +a,b,(7xk)
++ a,b, (k x7) + a,b, (k x ])+ a,b, (k x k) (by Property 1)
+= ab, (ix j)—a,b,(k xi) — a,b, 7x j)
++ ayb,(7xXk)+ a,b, (kXi)— a,b,(7xk)
+(as ixi=jxj=kxk=0 and ixk=-kxi, jxi=-ixj and kxj=-jxk)
+= abyk - a,b;j % abk + a,b,i + a,b, j ~azbyi
+(as ixj=k, jxk=i and kxi =))
+
+= (ayb; —ayb)i —(ayb, — axb,)j + (a,b, — ayb )k
+
+A
+
+i jk
+=|dq, a 4,
+b 1 b, b 3
+
+Example 22 Find |@xb|, if @=27+7+3k and b=37+5j-2k
+
+Solution We have
+
+i jk
+axb=|2 1 3
+35 2
+
+i(-2-15)—(-4—9)j + (10—3)k =-177 +137 +7k
+
+V(-17)° +13)? +(7)° =J/507
+
+Reprint 2025-26
+
+Hence |axb|
+
+VECTOR ALGEBRA 367
+
+Example 23 Find a unit vector perpendicular to each of the vectors (@ +b) and
+(4—b), where G@=i+j+k, b=i+2j+3k.
+
+Solution We have 4@+b =2'+3j+4k and @—b =—j-2k
+
+A vector which is perpendicular to both g+6 and G—b is given by
+
+(a+b)x(@—-b) = (2 3 4/=-27+47-2k (ZW, say)
+0 -l -2
+Now lél= J44+16+4 =/24 =26
+Therefore, the required unit vector is
+c -l,> 2, 1a
+
+— J k
+Ic Jo v6” V6
+There are two perpendicular directions to any plane. Thus, another unit
+1 1 «
+
+vector perpendicular to @+b andd=b will be i— j k. But that will
+6 Ye
+
+6
+
+be a consequence of (@-b)x(a+5).
+
+Example 24 Find the area of a triangle having the points A(1, 1, 1), BC, 2, 3)
+and C(2, 3, 1) as its vertices.
+
+Solution We have AB=7+2k and AC=i+2/). The area of the given triangle
+
+l1— —
+is 5 | ABXAC|.
+
+Now, ABxAC =|0 1 2\=-47+2j-k
+1 2 0
+Therefore | ABxXAC| = J16+44+1=/21
+
+1
+Thus, the required area is 5 V21
+
+Reprint 2025-26
+
+368 MATHEMATICS
+
+Example 25 Find the area of a parallelogram whose adjacent sides are given
+by the vectors a@=3i+j+4k and b =i-j+k
+
+Solution The area of a parallelogram with @ and bas its adjacent sides is given
+
+by |4xb|,
+i jk
+
+Now axb=-(3 1 4)=5i+j-4k
+1-1 1
+
+Therefore |axb| = /254+14+16 = 42
+
+and hence, the required area is ¥42.
+
+EXERCISE 10.4
+
+Find |@xb|, if @=i-7j7+7k and b =37 27 +2k,
+2. Find a unit vector perpendicular to each of the vector @+b and G—b, where
+a@=31+2j7+2k and b=i+2j—2k.
+
+3. Ifa unit vector @ makes angles * with 7, “ with 7 and an acute angle 6 with
+
+k , then find 6 and hence, the components of 4.
+4. Show that
+
+(4—b)x(G@+b) =2(4xb)
+5. Find Vand pif (27+67+27k)x@+Aj+uk)=0,
+6. Given that @-5=0 and @xb=0. What can you conclude about the vectors
+d and b?
+7. Let the vectors G,b,é@ be given as ai+a,j+a,k, bitb,j+byk,
+ci +¢)j+c¢,k . Then show that @x(b+2@)=axb +4xé.
+
+8. If either @=0 or b=0, then 4xb=0. Is the converse true? Justify your
+answer with an example.
+9. Find the area of the triangle with vertices ACI, 1, 2), B(2, 3, 5) and C(1, 5, 5).
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 369
+
+10. Find the area of the parallelogram whose adjacent sides are determined by the
+vectors @=i—j+3k and b=2;)-7j+k.
+a _ ~_ v2 <r, ;
+11. Let the vectors @ and bbe such that |@|=3 and {4 |= 3° then 4 xb is a unit
+
+vector, if the angle between a and bis
+(A) 1/6 (B) 1/4 (C) 7/3 (D) 1/2
+12. Area of a rectangle having vertices A, B, C and D with position vectors
+
+A 1, A” 1, ~ A A A A A A
+“t+ S I+ ak, i+ Stak, ij +4b and ~1-5 J +4k respectively is
+
+1
+(A) ry (B) 1
+(C) 2 (D) 4
+Miscellaneous Examples
+Example 26 Write all the unit vectors in XY-plane.
+
+Solution Let # = xi+ yi be a unit vector in XY-plane (Fig 10.28). Then, from the
+figure, we have x = cos 8 and y = sin 0 (since |7l = 1). So, we may write the vector 7 as
+
+7(=OP) = cos0i+sin® j .. (1)
+Clearly, 71 = cos? 6+sin* 6 =1
+Y
+
+or sin®)
+oP’ = = cos0?
+“oT X PP P= sind}
+
+y’
+Fig 10.28
+
+Also, as 8 varies from 0 to 27, the point P (Fig 10.28) traces the circle x°+ y* = 1
+counterclockwise, and this covers all possible directions. So, (1) gives every unit vector
+in the X Y-plane.
+
+Reprint 2025-26
+
+370 MATHEMATICS
+
+Example 27 If 7+ j+k, 22+5j, 3'+2j-3k and ?—6j—-k are the position
+vectors of points A, B, C and D respectively, then find the angle between AB and CD.
+Deduce that AB and CD are collinear.
+
+Solution Note that if @ is the angle between AB and CD, then 0 is also the angle
+between AB and CD.
+
+Now AB = Position vector of B — Position vector of A
+= (29+5j)-(@+j+k=i+4j-k
+
+Therefore IABI = ,/(1)? +(4)? + (-1)? =3V2
+
+Similarly CD =—27 -87+2k and |CD|- 6V2
+AB-CD
+Thus cos@ = |ABIICD|
+
+4 1(—2) + 4(-8) + (-1)(2) _ —36 _
+(3V2)(6V2) 36
+
+Since 0 < 0< 7, it follows that 6 = 2. This shows that AB and CD are collinear.
+
+Alternatively, AB = 5 CD which implies that AB and CD are collinear vectors.
+
+Example 28 Let a,b and é@ be three vectors such that |a|=3,|b|=4,|@|=5 and
+each one of them being perpendicular to the sum of the other two, find |@+4+é|.
+Solution Given G-(b +2)=0, b-(€+)=0, @-(@+b)=0.
+Now \at+b+éP=(G@+b+0) =(44+b+2):(4+b+2)
+
+= G@-G+4-(b+2)+b-b+b-(G+2)
+
+4+ G(G+b)+é2
+
+= |aP+|b? +e?
+
+=9+16+25=50
+Therefore |d+b+é| = V50 =5V/2
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 371
+
+Example 29 Three vectors a, b and@_ satisfy the condition 4+ b+é=0, Evaluate
+
+the quantity W=d4-b+b-@+é-d, if |G|=3, |b] 4 and |é|=2.
+
+Solution Since 4+6+2=0 , we have
+
+or G-A4+a-b+4a-c
+
+=0
+Therefore G-b+a-¢=-|a| =-—9 .. (1)
+Again, b-(4+5 +2) =0
+or a-b+b-é=-|b{ =-16 2)
+Similarly G@-é+b-€ = 4, .. B)
+
+Adding (1), (2) and (3), we have
+2(G@-b+b-E+a-2) =~29
+
+—29
+or 2u=-29,1e.,uU= >
+
+Example 30 If with reference to the right handed system of mutually perpendicular
+
+unit vectors 7, j and k, a=3i-/, B= 2i + j-3k, then express B in the form
+
+B=f,+ ,, where 8, is parallel to & and, is perpendicular to &-
+
+Solution Let B, =AG, A isa scalar, i.e., B, =3Ai—-A).
+
+Now B, =B-B, = (2-3Ay' + (1+ A)j-3k.
+
+Now, since B, is to be perpendicular to q, we should have &-B, =0 .ie.,
+3(2-3A)-(1+A) =0
+
+1
+or x
+
+mor
+
+Therefore ;
+
+~ 2
+3 4 1, m4 1. 3 ~
+= Bld and Bo=St+ 5s —3k
+
+Reprint 2025-26
+
+372
+
+10.
+
+11.
+
+12.
+
+13.
+
+14.
+
+MATHEMATICS
+
+Miscellaneous Exercise on Chapter 10
+
+Write down a unit vector in XY-plane, making an angle of 30° with the positive
+direction of x-axis.
+
+Find the scalar components and magnitude of the vector joining the points
+A girl walks 4 km towards west, then she walks 3 km in a direction 30° east of
+north and stops. Determine the girl’s displacement from her initial point of
+departure.
+
+If @=b +2, then is it true that |4|=|5|+|¢| 9 Justify your answer.
+
+Find the value of x for which x(7 + 7+) is a unit vector.
+
+Find a vector of magnitude 5 units, and parallel to the resultant of the vectors
+G@=27+3j-k and b=i-2j+k.
+If a=it+jtk, b= 2i — j+3k and é=i-2j+k, find a unit vector parallel
+
+to the vector 24 — b +32.
+Show that the points A (1, —2, —8), B (5, 0, —2) and C(11, 3, 7) are collinear, and
+find the ratio in which B divides AC.
+
+Find the position vector of a point R which divides the line joining two points
+
+P and Q whose position vectors are (24 + b) and (a — 3b) externally in the ratio
+1 : 2. Also, show that P is the mid point of the line segment RQ.
+
+The two adjacent sides of a parallelogram are 27 -~47+5k and 7 —2} -3k.
+
+Find the unit vector parallel to its diagonal. Also, find its area.
+Show that the direction cosines of a vector equally inclined to the axes OX, OY
+
+1 1 1
+and OZ are +{ + wee a
+Let a@=i+47+2k, b =3i -2j7+7k and c= 2i — 7 + 4k. Finda vector d which
+is perpendicular to both d and b, and @-d =15.
+The scalar product of the vector 7 + 7 +k with a unit vector along the sum of
+
+vectors 27+47—5k and Ai+27+3k is equal to one. Find the value of A.
+If a, b,é are mutually perpendicular vectors of equal magnitudes, show that the
+
+vector @-d =15 is equally inclined to 4, b and é,
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 373
+
+15. Prove that (@+5):(@+6)=|4[ +|b , if and only if a, b are perpendicular, given
+a#0,b <0.
+Choose the correct answer in Exercises 16 to 19.
+
+16. If @ is the angle between two vectors a and b , then g-6 >0 only when
+
+(A) 0<0<2 (B) 0<0<>
+(C) 0<0<n (D) 0<0<x
+
+17. Let @ and b be two unit vectors and 0 is the angle between them. Then d +b is
+
+a unit vector if
+
+Tt Tt Tt 20
+(A) 1 (B) 3 (C) 5 (D) .
+18. The value of .(jxk)+j-Gxk+k-@x j) is
+(A) 0 (B) -l (C) 1 (D) 3
+19. If is the angle between any two vectors a and b, then|a@-6 |=|axb| when 0
+is equal to
+A) 0 B x C © D
+(A) (B) J © 5 (D) x
+
+Summary
+
+@ Position vector of a point P(x, y, z) is given as OP(=7) = xi + yj + zk, and its
+
+magnitude by ./x? + y*+z°.
+
+© The scalar components of a vector are its direction ratios, and represent its
+projections along the respective axes.
+
+@ The magnitude (7), direction ratios (a, b, c) and direction cosines (/, m, n) of
+any vector are related as:
+
+Reprint 2025-26
+
+374
+
+MATHEMATICS
+
+The vector sum of the three sides of a triangle taken in order is 0.
+
+The vector sum of two coinitial vectors is given by the diagonal of the
+parallelogram whose adjacent sides are the given vectors.
+
+The multiplication of a given vector by a scalar A, changes the magnitude of
+
+the vector by the multiple [A 1, and keeps the direction same (or makes it
+opposite) according as the value of A is positive (or negative).
+
+Jas
+
+For a given vector a, the vector 4 = — gives the unit vector in the direction
+
+Qi
+
+of a.
+The position vector of a point R dividing a line segment joining the points
+
+P and Q whose position vectors are a and b respectively, in the ratio m:n
+
+(i) internally, is given by Ea LD
+m+n
+
+(ii) externally, is given by mb = ya
+m-n
+
+The scalar product of two given vectors @ and bhaving angle @ between
+them is defined as
+
+a-b =|a||b|cos0.
+
+Also, when 4-6 is given, the angle ‘0’ between the vectors @ and 6 may be
+determined by
+
+QI
+joa
+
+cos® =
+
+~
+
+Q!
+
+If @ is the angle between two vectors @ and b, then their cross product is
+given as
+
+axb =|a||b|sinon
+where fi is a unit vector perpendicular to the plane containing ad and b. Such
+that d,b, A form right handed system of coordinate axes.
+
+If we have two vectors dandb, given in component form as
+
+G=aitajt+ ayk and b = bitb,jt+ bk and A any scalar,
+
+Reprint 2025-26
+
+VECTOR ALGEBRA 375
+
+i jk
+and a@xb=|a, b ¢}.
+by
+
+ay Cy
+
+Historical Note
+
+The word vector has been derived from a Latin word vectus, which means
+“to carry”. The germinal ideas of modern vector theory date from around 1800
+when Caspar Wessel (1745-1818) and Jean Robert Argand (1768-1822) described
+that how a complex number a + ib could be given a geometric interpretation with
+the help of a directed line segment in a coordinate plane. William Rowen Hamilton
+(1805-1865) an Irish mathematician was the first to use the term vector for a
+directed line segment in his book Lectures on Quaternions (1853). Hamilton’s
+method of quaternions (an ordered set of four real numbers given as:
+
+at+bi+c+ dk, i, hs k following certain algebraic rules) was a solution to the
+
+problem of multiplying vectors in three dimensional space. Though, we must
+mention here that in practice, the idea of vector concept and their addition was
+known much earlier ever since the time of Aristotle (384-322 B.C.), a Greek
+philosopher, and pupil of Plato (427-348 B.C.). That time it was supposed to be
+known that the combined action of two or more forces could be seen by adding
+them according to parallelogram law. The correct law for the composition of
+forces, that forces add vectorially, had been discovered in the case of perpendicular
+forces by Stevin-Simon (1548-1620). In 1586 A.D., he analysed the principle of
+geometric addition of forces in his treatise DeBeghinselen der Weeghconst
+(“Principles of the Art of Weighing”), which caused a major breakthrough in the
+development of mechanics. But it took another 200 years for the general concept
+of vectors to form.
+
+In the 1880, Josaih Willard Gibbs (1839-1903), an American physicist and
+mathematician, and Oliver Heaviside (1850-1925), an English engineer, created
+what we now know as vector analysis, essentially by separating the real (scalar)
+
+Reprint 2025-26
+
+376 MATHEMATICS
+
+Reprint 2025-26
+
