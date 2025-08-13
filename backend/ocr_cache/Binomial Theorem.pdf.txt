@@ -1,0 +1,402 @@
+Chapter 7
+
+1o76cHos
+
+BINOMIAL THEOREM
+
+“¢ Mathematics is a most exact science and its conclusions are capable of
+absolute proofs. — C.P. STEINMETZ“
+
+7.1 Introduction
+
+In earlier classes, we have learnt how to find the squares
+and cubes of binomials like a + b and a — b. Using them, we
+could evaluate the numerical values of numbers like
+(98)° = (100 — 2)’, (999)? = (1000 — 1)?, etc. However, for
+higher powers like (98)°, (101)°, etc., the calculations become
+difficult by using repeated multiplication. This difficulty was
+overcome by a theorem known as binomial theorem. It gives
+an easier way to expand (a + b)", where n is an integer or a
+rational number. In this Chapter, we study binomial theorem
+for positive integral indices only.
+
+Blaise Pascal
+(1623-1662)
+
+7.2 Binomial Theorem for Positive Integral Indices
+
+Let us have a look at the following identities done earlier:
+(a+ b)=1 a+b#0
+(a+ b)'=at+b
+(a+ bP =a + 2ab+ b?
+(a+ bP =a + 3a°b + 3ab?+
+(a+ by = (at by (a+ b) =a* + 4a°b + 6a°b? + 4ab> + bt
+In these expansions, we observe that
+(i) The total number of terms in the expansion is one more than the index. For
+example, in the expansion of (a + b)’ , number of terms is 3 whereas the index of
+(a + by is 2.
+(ii) Powers of the first quantity ‘a’ go on decreasing by 1 whereas the powers of the
+second quantity ‘b’ increase by 1, in the successive terms.
+(iti) In each term of the expansion, the sum of the indices of a and b is the same and
+is equal to the index of a + b.
+
+Reprint 2025-26
+
+BINOMIAL THEOREM 127
+
+We now arrange the coefficients in these expansions as follows (Fig 7.1):
+
+Index Coefficients
+0 1
+1 1 1
+2 1 2 1
+3 1 3 3 1
+4 1 4 6 4 1
+Fig 7.1
+
+Do we observe any pattern in this table that will help us to write the next row? Yes we
+do. It can be seen that the addition of 1’s in the row for index | gives rise to 2 in the row
+for index 2. The addition of 1, 2 and 2, | in the row for index 2, gives rise to 3 and 3 in
+the row for index 3 and so on. Also, | is present at the beginning and at the end of each
+row. This can be continued till any index of our interest.
+
+We can extend the pattern given in Fig 7.2 by writing a few more rows.
+
+Index Coefficients
+
+0 1
+
+1 1 V 1
+
+2 1 V 2 V 1
+3 3
+
+Pascal’s Triangle
+The structure given in Fig 7.2 looks like a triangle with | at the top vertex and running
+down the two slanting sides. This array of numbers is known as Pascal’: triangle,
+after the name of French mathematician Blaise Pascal. It is also known as Meru
+Prastara by Pingla.
+
+Expansions for the higher powers of a binomial are also possible by using Pascal’s
+triangle. Let us expand (2x + 3y)° by using Pascal’s triangle. The row for index 5 is
+
+1 5 100 10 5 1
+Using this row and our observations (i), (ii) and (iii), we get
+(2x + 3y)P = (2x)? + 5(2x)* (3y) + 10(2x)? By)’ +10 (2x) By) + 52x)By)" +3y)°
+= 32x° + 240xty + 720x3y? + 1080x273 + 810xy4 + 243 7°.
+
+Reprint 2025-26
+
+128 MATHEMATICS
+
+Now, if we want to find the expansion of (2x + 3y)'’, we are first required to get
+the row for index 12. This can be done by writing all the rows of the Pascal’s triangle
+till index 12. This is a slightly lengthy process. The process, as you observe, will become
+more difficult, if we need the expansions involving still larger powers.
+
+We thus try to find a rule that will help us to find the expansion of the binomial for
+any power without writing all the rows of the Pascal’s triangle, that come before the
+row of the desired index.
+
+For this, we make use of the concept of combinations studied earlier to rewrite
+
+h n!
+the numbers in the Pascal’s triangle. We know that C, = rr)! ,0< r<nand
+n is a non-negative integer. Also, "C,=1="C_
+The Pascal’s triangle can now be rewritten as (Fig 7.3)
+Index Coefficients
+0 "C,
+(=)
+1 cc » 'C
+GED E€)
+2 OK OF OF
+FD © ED
+3 *“c, © °c, “CG,
+ED & C&) ED
+4 vc, “ca “cc, ‘“c, “ce,
+FD 4 CF Cf ED
+5 | Cy CG ,; "G, Cs
+(=1) (=5) (10) (10) 65) (=1)
+
+Fig 7.3 Pascal’s triangle
+Observing this pattern, we can now write the row of the Pascal’s triangle for any index
+without writing the earlier rows. For example, for the index 7 the row would be
+
+7, 1C, 7C, 'C, 7C, 7C, 7C, 7C,
+Thus, using this row and the observations (1), (ii) and (iii), we have
+(a + b)’="C,a’+ TC aeb + 'C,a°b? + 7C,a*h? + 7C,a°b* + 7C.a°b> + 1C,ab® + 7Cb!
+An expansion of a binomial to any positive integral index say n can now be visualised
+
+using these observations. We are now in a position to write the expansion of a binomial
+to any positive integral index.
+
+Reprint 2025-26
+
+BINOMIAL THEOREM 129
+
+7.2.1 Binomial theorem for any positive integer n,
+(a + by"= "Coa" + "Cath + "Cia"? b? + + "Cy a.bt! + "C BY”
+Proof The proof is obtained by applying principle of mathematical induction.
+Let the given statement be
+P(n) : (a + by’ = "Cia" + "Cia" 'b + "Cia" 7b? + + "Cab"! + "Cb"
+For n = 1, we have
+P(1): (a+b)! ='Ca'+'Cb'=at+b
+Thus, P (1) is true.
+
+Suppose P (4) is true for some positive integer k, i.e.
+(a + by ='Cyat + ‘Cat 'b + ‘Cat ?*b? + + CB
+(1)
+We shall prove that P(A + 1) is also true, i-e.,
+(a + bye! —kt+ ‘Cate! tk+ 'C,a’b + k+ ‘Ca 1p + oot k+ ‘Cay bee!
+Now, (a + b)'*! = (a+ b) (a + by
+
+= (a 4 b) ('C, aé + ‘Cat 1 b + 'C, a? b+... +'C, ; ab’ + 'C, b')
+[from (1)]
+
+='Cyak 450, db +! CaP Ht IC. e+ 'C, alk +C, ab
++ Cat + Cat B+ IC, abi + IC bE!
+
+[by actual multiplication]
+= "Catt! + (C+'C,) ab + FC, +'C Jak! B+ ...
++ ('C,+4C,_,) ab’ + *C BS*! [grouping like terms]
+
+—kt+l k+1 k+1 ke k+1 k—1p,2 k+1 kia k+1 k +1
+HEC aE EE Cath +8 IC ah "be tt IC abl + Cb
+4 k+1 = ki ky — k+l ky — Jakt+l
+(by using “"'C=1, “C+ °C = IC, and “C,=1=**"'C
+
+Thus, it has been proved that P (k + 1) is true whenever P(A) is true. Therefore, by
+principle of mathematical induction, P(7) is true for every positive integer n.
+
+hed
+
+We illustrate this theorem by expanding (x + 2)°:
+(x +2) = °Cx® + C.x°.2 + °C,x42? + °C? 2? + °C x?.24 + °C x.2° + °C,.2°.
+= x° + 12x° + 60x* + 160x7+240x° + 192x + 64
+Thus (x + 2)° =x° + 12x° + 60x* + 160x?+240x? + 192x + 64.
+
+Reprint 2025-26
+
+130 MATHEMATICS
+
+Observations
+
+n
+-kpk
+1. The notation > "C, a" "b" stands for
+k=0
+
+"Ca"b? + "Ca" 'bl + + "Cah! + ...+"C ab", where b°= 1 = a”.
+Hence the theorem can also be stated as
+n
+(a+b)"=>)"C, a" *b*
+k=0
+2. The coefficients "C, occuring in the binomial theorem are known as binomial
+coefficients.
+3. There are (n+1) terms in the expansion of (a+b)’, 1.e., one more than the index.
+4. In the successive terms of the expansion the index of a goes on decreasing by
+unity. It is 7 in the first term, (7-1) in the second term, and so on ending with zero
+in the last term. At the same time the index of 5 increases by unity, starting with
+zero in the first term, 1 in the second and so on ending with 7 in the last term.
+5. Inthe expansion of (a+b)", the sum of the indices of a and b is n + 0 =n in the
+first term, (7 — 1) + 1 = in the second term and so on 0 + = nin the last term.
+Thus, it can be seen that the sum of the indices ofa and b is n in every term of the
+expansion.
+
+7.2.2 Some special cases In the expansion of (a + 6)’,
+GQ) Takinga =x andb=~—y, we obtain
+a-y" =[—k+C)I"
+= "Cx" + "Cx '~) + "Cx" (yl + "Cx" (avy + ee + "C, (-y)"
+
+= "Cx" = Cx ty + Cyt 22 = Cyt 38 + + LY", y"
+Thus (x—y)" = "Cx" = "Cx" by + "Cx 72 +. + CD) "Cy"
+Using this, we have (x-2yp = PCy? — PC x4 (2y) + OC? (2yy —PC x? (2yyP +
+°C, x(2y)*— °C.(2yy°
+= x5 —10xty + 40x37? — 80x71° + 80xy* — 32°.
+(ii) Taking a = 1, b= x, we obtain
+(1 + xy" = "C,(1)" + "Cyr tx + "C7? + + Cx"
+= "C, + "Cx + "Cx? + C8 +... + "Cx"
+
+Thus (1 + xy" = "C, + "Cx + "Cx? + "Cy? + "Cx"
+
+Reprint 2025-26
+
+BINOMIAL THEOREM 131
+
+In particular, for x = 1, we have
+
+2" ="C, + °C, +"C, +2. + °C
+
+2 n
+
+(iti) Taking a = 1, b =— x, we obtain
+(l- x)" = "C,— "Cx + "Cy? = 1. + GC IY" "C x"
+In particular, for x = 1, we get
+
+0="C,-"C, +"C,-.. + CD" "C,
+
+4
+3
+Example 1 Expand G + 3) ,x #0
+
+Solution By using binomial theorem, we have
+
+230, 24 4 4 » [2] 4 ww (3)., 2 3) 4 3)"
+x x = *C,0°)* + AC") x + 4Ci(x’) ., + 4C,(x") 4 + 4C, x
+
+3 9 278i
+x x x x
+108 81
+= x8 + 12x° + 54x? 4 +.
+x x
+
+Example 2 Compute (98)°.
+Solution We express 98 as the sum or difference of two numbers whose powers are
+easier to calculate, and then use Binomial Theorem.
+Write 98 = 100 — 2
+Therefore, (98)° = (100 — 2)°
+= °C, (100) — °C, (100)*.2 + °C, (100)°2?
+— °C, (100) (2) + °C, (100) (2)* — °C, (2)°
+= 10000000000 — 5 x 100000000 = 2 + 10 x 1000000 x 4—10 x10000
+x 8+5 x 100 x 16—32
+
+= 10040008000 — 1000800032 = 9039207968.
+Example 3 Which is larger (1.01)! or 10,000?
+
+Solution Splitting 1.01 and using binomial theorem to write the first few terms we
+have
+
+Reprint 2025-26
+
+132 MATHEMATICS
+(1.01)100 = (1 + 0.01)10°°°
+
+= 1000000, + 100000C (0.01) + other positive terms
+
+= 1 + 1000000 x 0.01 + other positive terms
+
+= 1+ 10000 + other positive terms
+> 10000
+Hence (1.01)! > 10000
+Example 4 Using binomial theorem, prove that 6’"-5n always leaves remainder
+1 when divided by 25.
+
+Solution For two numbers a and 6 if we can find numbers g and r such that
+a= bq +r, then we say that 6 divides a with g as quotient and 7 as remainder. Thus, in
+order to show that 6"— 5n leaves remainder 1 when divided by 25, we prove that
+6"— 5n = 25k + 1, where k is some natural number.
+
+We have
+(+ ay ="C, + "Cat "Ca? +... + "Ca"
+
+Fora =5, we get
+
+(1 + 5)" s7C, + "C5 + "C5? +... + "CS"
+i.e. (6)"= 1+ 5n + 5°."C, + 5°."C, +... + 5”
+i.e. 6” — 5n= 1+5? ("C,+"C,5 +... + 5”)
+or 6" — Sn= 14 25 (*C, + 5.."C, +... + 5”)
+or 6"—5n=25k+1 where k= "C,+5."C, +... + 5".
+
+This shows that when divided by 25, 6” — 5” leaves remainder 1.
+
+EXERCISE 7.1
+
+Expand each of the expressions in Exercises | to 5.
+
+2 x)
+1. (1-2x) 2. (2-2) 3. (2x — 3)°
+
+Reprint 2025-26
+
+BINOMIAL THEOREM 133
+
+Gel Gel
+—+— 5, |x+t—
+3 x x
+
+Using binomial theorem, evaluate each of the following:
+
+6.
+
+9.
+10.
+
+11.
+
+12.
+13.
+
+14.
+
+(96)3 7. (102)5 8. (101)!
+(99)°
+Using Binomial Theorem, indicate which number is larger (1.1)'°°°° or 1000.
+
+Find (a + b)* — (a — b)*. Hence, evaluate (3 +/2)*— (3 — J2)'.
+
+Find (x + 1)° + (x— 1)®. Hence or otherwise evaluate (./2 + 1)°+ (,/2 - 1%
+
+Show that 9”"' — 8n — 9 is divisible by 64, whenever z is a positive integer.
+
+Prove that 3" "C,=4" |
+
+r=0
+
+Miscellaneous Exercise on Chapter7
+
+If a and b are distinct integers, prove that a — b is a factor of a" — b”, whenever
+nis a positive integer.
+[Hint write a” = (a — b + b)" and expand]
+
+Evaluate (V3 + v2) — (V3 — v2) :
+4 4
+Find the value of G +a? -1) +(a° -Va° -1] .
+
+Find an approximation of (0.99)° using the first three terms of its expansion.
+
+2
+
+4
+x
+Expand using Binomial Theorem [ + 7 2) x40,
+
+Find the expansion of (3x? — 2ax + 3a’)* using binomial theorem.
+
+Summary
+
+@ The expansion of a binomial for any positive integral n is given by Binomial
+
+Theorem, which is (a + b)” = "C,a" + "C,a"~'b + "Cia" *b? + +
+"C,_,a.b"—! + °C br".
+
+@ The coefficients of the expansions are arranged in an array. This array is
+
+called Pascal’s triangle.
+
+Reprint 2025-26
+
+134 MATHEMATICS
+
+Historical Note
+
+The ancient Indian mathematicians knew about the coefficients in the
+expansions of (x + y)", 0 <n <7. The arrangement of these coefficients was in
+the form of a diagram called Meru-Prastara, provided by Pingla in his book
+Chhanda shastra (200B.C.). This triangular arrangement is also found in the
+work of Chinese mathematician Chu-shi-kie in 1303. The term binomial coefficients
+was first introduced by the German mathematician, Michael Stipel (1486-1567) in
+approximately 1544. Bombelli (1572) also gave the coefficients in the expansion of
+(a+ b)’, for n= 1,2 ...,7 and Oughtred (1631) gave them for = 1, 2,..., 10. The
+arithmetic triangle, popularly known as Pascal ’s triangle and similar to the Meru-
+Prastara of Pingla was constructed by the French mathematician Blaise Pascal
+(1623-1662) in 1665.
+
+The present form of the binomial theorem for integral values of n appeared in
+Trate du triange arithmetic, written by Pascal and published posthumously in
+1665.
+
+>,
+— ~~ —
+
+Reprint 2025-26
+
