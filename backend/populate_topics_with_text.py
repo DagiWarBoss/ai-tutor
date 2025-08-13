@@ -248,5 +248,5 @@ def main():
     conn.close()
     log(f"\n[COMPLETE] Script finished. Processed {processed_chapters_count} chapters, skipped {skipped_chapters_count} chapters.")
 
-if __name__ == 'main':
+if __name__ == '__main__':
     main()
