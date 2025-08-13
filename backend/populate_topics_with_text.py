@@ -167,14 +167,10 @@ def main():
 
 
     for chapter_info in csv_chapters:
-        original_pdf_filename = chapter_info['chapter_file']
-        # Normalize filename for path by removing hyphens, commas, and other non-alphanumeric characters except the extension
-        base_name, ext = os.path.splitext(original_pdf_filename)
-        pdf_filename = normalize_name(base_name) + ext
+        pdf_filename = chapter_info['chapter_file']
+        chapter_name = os.path.splitext(pdf_filename)[0]
         
-        chapter_name = os.path.splitext(original_pdf_filename)[0]  # Use original for chapter_name to keep normalization separate
-        
-        log(f"\n--- Processing: {original_pdf_filename} (using normalized {pdf_filename} for path) ---")
+        log(f"\n--- Processing: {pdf_filename} ---")
         
         chapter_id = db_chapters.get(normalize_name(chapter_name))
         if not chapter_id:
@@ -186,7 +182,7 @@ def main():
             log(f"  [WARNING] PDF file not found at '{pdf_path}'. Skipping.")
             continue
             
-        chapter_topics_df = master_df[master_df['chapter_file'] == original_pdf_filename]
+        chapter_topics_df = master_df[master_df['chapter_file'] == pdf_filename]
         
         ocr_text = get_text_from_pdf_with_caching(pdf_path)
         if ocr_text:
