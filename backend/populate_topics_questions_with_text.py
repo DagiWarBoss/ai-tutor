@@ -41,9 +41,7 @@ def run_ocr_on_pdf(pdf_path: str) -> str:
         return ""
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
-    """
-    Extracts both topics and questions using a reliable split-based method.
-    """
+    """Extracts both topics and questions using a reliable split-based method."""
     extracted_topics = []
     
     topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
@@ -61,43 +59,30 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                     end_pos = next_pos
             
             content = ocr_text[start_pos:end_pos].strip()
-            title = content.split('\n')[0].strip()
+            title_from_content = content.split('\n')[0].strip()
             
             extracted_topics.append({
                 'topic_number': topic_num,
-                'title': title,
+                'title': title_from_content, # Use the title found in the OCR
                 'content': content
             })
 
-    # --- NEW, MORE ROBUST QUESTION EXTRACTION LOGIC ---
+    # --- FIXED & ROBUST QUESTION EXTRACTION LOGIC ---
     questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
     if exercises_match:
-        log("  - Found 'EXERCISES' section, attempting to parse questions...")
-        # Get all text *after* the exercises header
-        exercises_text = ocr_text[exercises_match.end():]
-        
-        # This pattern finds a newline, then a number like 4.25, then a space
-        question_start_pattern = re.compile(r'\n(\d+\.\d+)\s+')
-        
-        # Split the text by this pattern. The result is [junk, q_num1, q_text1, q_num2, q_text2, ...]
-        chunks = question_start_pattern.split(exercises_text)
-        
-        # Iterate over the chunks in pairs (number, text)
-        for i in range(1, len(chunks), 2):
-            q_num = chunks[i]
-            q_text = chunks[i+1].strip()
-            questions.append({'question_number': q_num, 'question_text': q_text})
-            
-        log(f"  - Successfully parsed {len(questions)} questions.")
-    else:
-        log("  - No 'EXERCISES' section found in this chapter.")
+        exercises_text = ocr_text[exercises_match.start():]
+        # This flexible regex finds a number, whitespace, and then the question text
+        question_pattern = re.compile(r'(\d+\.\d+)\s+(.+?)(?=\n\d+\.\d+|\Z)', re.DOTALL)
+        found_questions = question_pattern.findall(exercises_text)
+        for q_num, q_text in found_questions:
+            questions.append({'question_number': q_num, 'question_text': q_text.strip()})
             
     return extracted_topics, questions
 
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
-    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
+    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions in the database.")
     for topic in topics:
         cursor.execute(
             "UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
