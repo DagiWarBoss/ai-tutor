@@ -1,65 +1,169 @@
 import os
-import fitz  # PyMuPDF
-import pytesseract
-from pdf2image import convert_from_path
+import re
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
+import pandas as pd
+from google.cloud import vision
+import io
 
+# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
+# =======================================================
+
+# --- Configuration ---
 load_dotenv()
+SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
+os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
-# Configure Tesseract executable path if needed
-# pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'  # Update path if necessary
+def log(msg: str):
+    print(msg, flush=True)
 
-def extract_text_from_pdf(pdf_path):
-    text_data = []
-    doc = fitz.open(pdf_path)
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        text = page.get_text()
-        if text.strip():
-            text_data.append(text)
-        else:
-            # Convert page to image, then OCR if no text found
-            images = convert_from_path(pdf_path, first_page=page_num + 1, last_page=page_num + 1)
-            for img in images:
-                text = pytesseract.image_to_string(img)
-                text_data.append(text)
-    return text_data
+def get_chapter_map_from_db(cursor):
+    """Fetches all chapters from the DB to create a name-to-ID map."""
+    cursor.execute("SELECT name, id FROM chapters")
+    return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
-def connect_db():
-    conn = psycopg2.connect(
-        dbname=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASSWORD'),
-        host=os.getenv('DB_HOST'),
-        port=os.getenv('DB_PORT')
-    )
-    return conn
+def run_google_ocr_on_pdf(pdf_path: str) -> str:
+    """
+    Performs OCR on a PDF using the Google Cloud Vision API.
+    """
+    log("  - Sending PDF to Google Cloud Vision API for OCR...")
+    try:
+        client = vision.ImageAnnotatorClient()
+        
+        with io.open(pdf_path, 'rb') as pdf_file:
+            content = pdf_file.read()
 
-def insert_text_data(conn, chapter_name, page_texts):
-    with conn.cursor() as curs:
-        records = [(chapter_name, idx + 1, text) for idx, text in enumerate(page_texts)]
-        execute_values(curs,
-                       "INSERT INTO ncert_text_data (chapter, page_number, text_content) VALUES %s",
-                       records)
-    conn.commit()
+        # Set up the request
+        feature = vision.Feature(type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
+        input_config = vision.InputConfig(content=content, mime_type='application/pdf')
+        request = vision.AnnotateFileRequest(features=[feature], input_config=input_config)
+
+        # Make the API call
+        response = client.batch_annotate_files(requests=[request])
+        
+        full_text = ""
+        # Process the response for each page
+        for image_response in response.responses[0].responses:
+            full_text += image_response.full_text_annotation.text + "\n"
+        
+        log("  - OCR complete.")
+        return full_text
+    except Exception as e:
+        log(f"  [ERROR] Google Cloud Vision API process failed for {os.path.basename(pdf_path)}: {e}")
+        return ""
+
+def get_text_from_pdf_with_caching(pdf_path: str) -> str:
+    """Uses Google Cloud Vision for OCR and caches the result."""
+    pdf_filename = os.path.basename(pdf_path)
+    cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
+    
+    if os.path.exists(cache_filepath):
+        log(f"  - Reading from cache: '{pdf_filename}'")
+        with open(cache_filepath, 'r', encoding='utf-8') as f:
+            return f.read()
+
+    # If no cache, run the powerful OCR
+    full_text = run_google_ocr_on_pdf(pdf_path)
+    if full_text:
+        with open(cache_filepath, 'w', encoding='utf-8') as f:
+            f.write(full_text)
+        log(f"  - Saved new OCR text to cache for '{pdf_filename}'")
+    return full_text
+
+def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
+    """Extracts topics and questions from the clean OCR text."""
+    extracted_topics, questions = [], []
+    
+    topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
+    heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
+    matches = list(heading_pattern.finditer(ocr_text))
+    topic_locations = {match.group(1).strip(): match.start() for match in matches}
+
+    for topic_num in topic_numbers:
+        start_pos = topic_locations.get(topic_num)
+        if start_pos is not None:
+            end_pos = len(ocr_text)
+            for next_num, next_pos in topic_locations.items():
+                if next_pos > start_pos and next_pos < end_pos:
+                    end_pos = next_pos
+            content = ocr_text[start_pos:end_pos].strip()
+            title = content.split('\n')[0].strip()
+            extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
+
+    exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
+    if exercises_match:
+        exercises_text = ocr_text[exercises_match.start():]
+        question_pattern = re.compile(r'(\d+\.\d+)\s+(.+?)(?=\n\d+\.\d+|\Z)', re.DOTALL)
+        found_questions = question_pattern.findall(exercises_text)
+        for q_num, q_text in found_questions:
+            questions.append({'question_number': q_num, 'question_text': q_text.strip()})
+            
+    return extracted_topics, questions
+
+def update_database(cursor, chapter_id: int, topics: list, questions: list):
+    """Updates the database with the extracted topics and questions."""
+    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
+    for topic in topics:
+        cursor.execute("UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
+                       (topic['content'], topic['title'], chapter_id, topic['topic_number']))
+    cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
+    for q in questions:
+        cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
+                       (chapter_id, q['question_number'], q['question_text']))
+    log(f"  - Database update commands sent.")
 
 def main():
-    pdf_path = 'path_to_your_ncert_chapter.pdf'  # Specify your PDF file here
-    chapter_name = 'Chapter 1: Example Chapter'  # Modify as needed
+    try:
+        conn = psycopg2.connect(SUPABASE_URI)
+        cursor = conn.cursor()
+        log("[INFO] Successfully connected to Supabase.")
+    except Exception as e:
+        log(f"[ERROR] Could not connect to Supabase: {e}")
+        return
+        
+    try:
+        master_df = pd.read_csv(CSV_PATH, dtype=str).apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        log(f"[INFO] Loaded master topic list from {CSV_PATH}.")
+    except FileNotFoundError:
+        log(f"[ERROR] CSV file not found at: {CSV_PATH}")
+        return
 
-    print(f'Extracting text from {pdf_path}...')
-    page_texts = extract_text_from_pdf(pdf_path)
+    chapter_map = get_chapter_map_from_db(cursor)
+    all_pdf_paths = [os.path.join(root, filename) for root, _, files in os.walk(PDF_ROOT_FOLDER) for filename in files if filename.lower().endswith('.pdf')]
+    all_pdf_paths.sort()
+    
+    log(f"[INFO] Found {len(all_pdf_paths)} PDF files to process.")
 
-    print('Connecting to database...')
-    conn = connect_db()
+    for pdf_path in all_pdf_paths:
+        filename = os.path.basename(pdf_path)
+        chapter_name = os.path.splitext(filename)[0]
+        
+        log(f"\n--- Processing: {filename} ---")
+        
+        chapter_id = chapter_map.get(chapter_name)
+        if not chapter_id:
+            log(f"  [WARNING] Chapter '{chapter_name}' not found in the database. Skipping.")
+            continue
+        
+        chapter_topics_df = master_df[master_df['chapter_file'] == filename]
+        if chapter_topics_df.empty:
+            log(f"  [WARNING] No topics for this chapter in the CSV. Skipping.")
+            continue
 
-    print('Inserting text data into database...')
-    insert_text_data(conn, chapter_name, page_texts)
+        ocr_text = get_text_from_pdf_with_caching(pdf_path)
+        if ocr_text:
+            topics, questions = extract_topics_and_questions(ocr_text, chapter_topics_df)
+            log(f"  - Extracted {len(topics)} topics and {len(questions)} questions.")
+            update_database(cursor, chapter_id, topics, questions)
+            conn.commit()
+            log(f"  [SUCCESS] Saved data for '{chapter_name}' to Supabase.")
 
+    cursor.close()
     conn.close()
-    print('Process completed successfully.')
+    log("\n[COMPLETE] Script finished.")
 
 if __name__ == '__main__':
     main()
