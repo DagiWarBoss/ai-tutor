@@ -5,12 +5,11 @@ from dotenv import load_dotenv
 from pdf2image import convert_from_path
 import pytesseract
 import pandas as pd
-from rapidfuzz import process, fuzz
 from dataclasses import dataclass, field
 from typing import List
 
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai--tutor\backend\NCERT_PCM_ChapterWise"
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -25,6 +24,11 @@ os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
 def log(msg: str):
     print(msg, flush=True)
+
+# --- THIS IS THE MISSING FUNCTION THAT HAS BEEN ADDED ---
+def normalize_name(name: str) -> str:
+    """Creates a consistent, searchable key from a name by removing spaces, hyphens, and making it lowercase."""
+    return re.sub(r'[\s\-_]', '', name.lower())
 
 @dataclass
 class TextBlock:
@@ -57,8 +61,6 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
 def extract_all_text_blocks(doc_text: str) -> List[TextBlock]:
     """Converts raw OCR text into a list of located text blocks."""
     all_blocks = []
-    # This is a placeholder; real block extraction from OCR is complex.
-    # We will split by lines for a simpler, more direct approach.
     for i, line in enumerate(doc_text.split('\n')):
         if line.strip():
             all_blocks.append(TextBlock(text=line.strip(), page=0, y=float(i)))
@@ -66,16 +68,14 @@ def extract_all_text_blocks(doc_text: str) -> List[TextBlock]:
 
 def find_anchor_locations(topics_from_csv: pd.DataFrame, all_blocks: List[TextBlock]) -> List[TopicAnchor]:
     """Uses fuzzy matching to find the exact location of each topic from the CSV in the OCR text."""
+    from rapidfuzz import process, fuzz
     anchors = []
     block_texts = [block.text for block in all_blocks]
     
     for _, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
         topic_title = str(row['heading_text'])
-        
-        # Create a combined search query for better accuracy
         search_query = f"{topic_num} {topic_title}"
-        
         best_match = process.extractOne(search_query, block_texts, scorer=fuzz.WRatio, score_cutoff=85)
         
         if best_match:
@@ -95,11 +95,9 @@ def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextB
         content_blocks = []
         start_y = current_anchor.y
         end_y = anchors[i+1].y if i + 1 < len(anchors) else float('inf')
-
         for block in all_blocks:
             if start_y < block.y < end_y:
                 content_blocks.append(block.text)
-        
         current_anchor.content = "\n".join(content_blocks).strip()
     return anchors
 
