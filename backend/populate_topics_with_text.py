@@ -8,13 +8,13 @@ import pandas as pd
 from dataclasses import dataclass, field
 from typing import List
 
-# ======= 1. ALL PATHS HAVE BEEN CORRECTED TO MATCH YOUR SCREENSHOTS =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
-POPPLER_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
+# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai--tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
+POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
-# ==============================================================================
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
+# =======================================================
 
 # --- Configuration ---
 load_dotenv()
@@ -25,9 +25,19 @@ os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 def log(msg: str):
     print(msg, flush=True)
 
-def get_chapter_map_from_db(cursor):
-    cursor.execute("SELECT name, id FROM chapters")
-    return {name: chapter_id for name, chapter_id in cursor.fetchall()}
+# --- THIS IS THE MISSING FUNCTION THAT HAS BEEN ADDED ---
+def normalize_name(name: str) -> str:
+    """Creates a consistent, searchable key from a name by removing spaces, hyphens, and making it lowercase."""
+    return re.sub(r'[\s\-_]', '', name.lower())
+
+@dataclass
+class TextBlock:
+    text: str; page: int; y: float
+
+@dataclass
+class TopicAnchor:
+    topic_number: str; title: str; page: int; y: float
+    content: str = field(default="")
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
@@ -48,25 +58,19 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         log(f"  [ERROR] OCR process failed for {pdf_filename}: {e}")
         return ""
 
-def normalize_name(name: str) -> str:
-    return re.sub(r'[\s\-_]', '', name.lower())
-
-@dataclass
-class TopicAnchor:
-    topic_number: str; title: str; page: int; y: float
-    content: str = field(default="")
-
-def extract_all_text_blocks(doc_text: str) -> List[dict]:
+def extract_all_text_blocks(doc_text: str) -> List[TextBlock]:
+    """Converts raw OCR text into a list of located text blocks."""
     all_blocks = []
     for i, line in enumerate(doc_text.split('\n')):
         if line.strip():
-            all_blocks.append({'text': line.strip(), 'page': 0, 'y': float(i)})
+            all_blocks.append(TextBlock(text=line.strip(), page=0, y=float(i)))
     return all_blocks
 
-def find_anchor_locations(topics_from_csv: pd.DataFrame, all_blocks: List[dict]) -> List[TopicAnchor]:
+def find_anchor_locations(topics_from_csv: pd.DataFrame, all_blocks: List[TextBlock]) -> List[TopicAnchor]:
+    """Uses fuzzy matching to find the exact location of each topic from the CSV in the OCR text."""
     from rapidfuzz import process, fuzz
     anchors = []
-    block_texts = [block['text'] for block in all_blocks]
+    block_texts = [block.text for block in all_blocks]
     
     for _, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
@@ -78,21 +82,22 @@ def find_anchor_locations(topics_from_csv: pd.DataFrame, all_blocks: List[dict])
             match_text, score, index = best_match
             found_block = all_blocks[index]
             log(f"  [ANCHOR FOUND] {topic_num} {topic_title} (Score: {score:.0f})")
-            anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block['page'], y=found_block['y']))
+            anchors.append(TopicAnchor(topic_number=topic_num, title=topic_title, page=found_block.page, y=found_block.y))
         else:
             log(f"  [ANCHOR FAILED] Could not find: {topic_num} {topic_title}")
 
     anchors.sort(key=lambda a: (a.page, a.y))
     return list({(a.page, a.y): a for a in anchors}.values())
 
-def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[dict]):
+def assign_content_to_anchors(anchors: List[TopicAnchor], all_blocks: List[TextBlock]):
+    """Assigns all text that appears between two anchors to the first anchor."""
     for i, current_anchor in enumerate(anchors):
         content_blocks = []
         start_y = current_anchor.y
         end_y = anchors[i+1].y if i + 1 < len(anchors) else float('inf')
         for block in all_blocks:
-            if start_y < block['y'] < end_y:
-                content_blocks.append(block['text'])
+            if start_y < block.y < end_y:
+                content_blocks.append(block.text)
         current_anchor.content = "\n".join(content_blocks).strip()
     return anchors
 
@@ -108,6 +113,7 @@ def extract_questions(ocr_text: str) -> List[dict]:
     return questions
 
 def update_database(cursor, chapter_id: int, topics: List[TopicAnchor], questions: list):
+    """Updates the database."""
     log(f"  - Updating {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
         if topic.content:
@@ -136,7 +142,8 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
-    db_chapters = {normalize_name(name): chap_id for name, chap_id in cursor.execute("SELECT name, id FROM chapters").fetchall()}
+    cursor.execute("SELECT name, id FROM chapters")
+    db_chapters = {normalize_name(name): chap_id for name, chap_id in cursor.fetchall()}
 
     csv_chapters = master_df[['subject', 'class', 'chapter_file']].drop_duplicates().to_dict('records')
 
