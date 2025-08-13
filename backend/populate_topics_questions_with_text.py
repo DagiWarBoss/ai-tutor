@@ -136,18 +136,15 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         return ""
 
 def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
-    # Clean the OCR text first
     ocr_text = clean_ocr_text(ocr_text)
     
     extracted_topics = []
     
-    # Robust topic regex: more forgiving for spaces, dots, dashes, etc.
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
     heading_pattern = re.compile(r'^\s*(' + '|'.join(topic_numbers) + r')\s*(?:[\.\- ]*)?\s*', re.MULTILINE | re.IGNORECASE)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {match.group(1): match.start() for match in matches}
     
-    # Log expected vs found for debugging missing topics
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
     found_topics = set(topic_locations.keys())
     missing_topics = expected_topics - found_topics
@@ -169,7 +166,7 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
     return extracted_topics
 
 def update_database(cursor, chapter_id: int, topics: list):
-    log(f"    - Preparing to update topics for chapter_id {chapter_id}.")
+    log(f"    - Checking for empty topics in chapter_id {chapter_id}.")
     
     # Query for topics with empty full_text
     cursor.execute("""
@@ -179,12 +176,17 @@ def update_database(cursor, chapter_id: int, topics: list):
     """, (chapter_id,))
     empty_topics = {row[0] for row in cursor.fetchall()}
     
+    if not empty_topics:
+        log("    - No empty topics found. Skipping update.")
+        return
+    
     updated_count = 0
     for topic in topics:
         if topic['topic_number'] in empty_topics:
             cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", 
                            (topic['content'], chapter_id, topic['topic_number']))
             updated_count += 1
+            log(f"      - Updated topic {topic['topic_number']} (was empty).")
     
     log(f"    - Updated {updated_count} empty topics in the database.")
 
