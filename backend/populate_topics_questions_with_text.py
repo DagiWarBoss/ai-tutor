@@ -163,6 +163,28 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
     
+    # Fallback extraction logic (as in your log, it's working well)
+    loose_pattern = re.compile(r'(?m)^ \s*(\d+(?:\.\d+)?)[\.\)]?\s*(.+?)(?=\n \s*\d+\.\d+[\.\)]|\nEXERCISES|\nQUESTIONS|$)', re.MULTILINE | re.DOTALL)
+    for topic in extracted_topics[:]:
+        content = topic['content']
+        sub_matches = loose_pattern.finditer(content)
+        for sub_match in sub_matches:
+            sub_cleaned = sub_match.group(1)
+            if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
+                sub_start = sub_match.start() + topic_locations[topic['topic_number']]
+                topic_locations[sub_cleaned] = sub_start
+                sub_end = len(ocr_text)
+                for next_num, next_pos in topic_locations.items():
+                    if next_pos > sub_start:
+                        sub_end = next_pos
+                        break
+                sub_content = ocr_text[sub_start:sub_end].strip()
+                row = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]
+                title = row['heading_text'].values[0] if not row.empty else ''
+                extracted_topics.append({'topic_number': sub_cleaned, 'title': title, 'content': sub_content})
+                log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
+                missing_topics.remove(sub_cleaned)
+
     return extracted_topics
 
 def update_database(cursor, chapter_id: int, topics: list):
@@ -186,7 +208,7 @@ def update_database(cursor, chapter_id: int, topics: list):
             cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", 
                            (topic['content'], chapter_id, topic['topic_number']))
             updated_count += 1
-            log(f"      - Updated topic {topic['topic_number']} (was empty).")
+            log(f"      - Updated empty topic {topic['topic_number']}.")
     
     log(f"    - Updated {updated_count} empty topics in the database.")
 
