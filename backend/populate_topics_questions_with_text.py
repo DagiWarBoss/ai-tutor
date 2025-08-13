@@ -104,6 +104,13 @@ def get_chapter_map_from_db(cursor):
     cursor.execute("SELECT name, id FROM chapters")
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
+def clean_ocr_text(text: str) -> str:
+    # Normalize spaces and newlines to handle OCR artifacts
+    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
+    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines and remove extra empty lines
+    text = re.sub(r'(\d+)\s*\.\s*(\d+)', r'\1.\2', text)  # Fix split numbers like "4 . 1" -> "4.1"
+    return text.strip()
+
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
     cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
@@ -129,15 +136,24 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         return ""
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
+    # Clean the OCR text first
+    ocr_text = clean_ocr_text(ocr_text)
+    
     extracted_topics = []
     
-    # This is your exact, preferred topic logic
+    # Robust topic regex: more forgiving for spaces, dots, dashes, etc.
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'^(%s)\s+' % '|'.join(topic_numbers), re.MULTILINE)
+    heading_pattern = re.compile(r'^\s*(?:' + '|'.join(topic_numbers) + r')\s*(?:\.|\-)?\s*', re.MULTILINE | re.IGNORECASE)
     matches = list(heading_pattern.finditer(ocr_text))
-    topic_locations = {match.group(1): match.start() for match in matches}
-
+    topic_locations = {match.group(0).strip().split()[0]: match.start() for match in matches}  # Key by cleaned number
+    
+    # Log expected vs found for debugging missing topics
+    expected_topics = set(topics_from_csv['heading_number'].astype(str))
+    found_topics = set(topic_locations.keys())
+    missing_topics = expected_topics - found_topics
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
+    if missing_topics:
+        log(f"    - Missing topics: {', '.join(missing_topics)} (check OCR for artifacts or adjust regex).")
 
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
@@ -149,8 +165,8 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                     end_pos = next_pos
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
-
-    # This is the improved question logic
+    
+    # Improved question extraction: stricter boundaries to prevent stuffing
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
@@ -161,7 +177,11 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
-        question_pattern = re.compile(r'^\s*(\d+(?:\.\d+)?)\s*[\.\)]?\s*(.+?)(?=\n\s*\d+\.\d+|\Z)', re.MULTILINE | re.DOTALL)
+        # Robust question regex: captures number (e.g., 4.25) and text until next number or end
+        question_pattern = re.compile(
+            r'^\s*(\d+(?:\.\d+)?)[\.\)]\s*(.+?)(?=\n\s*\d+(?:\.\d+)?[\.\)]|\nEXERCISES|\nQUESTIONS|\Z)',
+            re.MULTILINE | re.DOTALL
+        )
         found_questions = question_pattern.findall(exercises_text)
         
         log(f"    - Found {len(found_questions)} potential questions.")
