@@ -6,15 +6,16 @@ import pandas as pd
 from google.cloud import vision
 import io
 
-# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
+# ======= 1. THIS PATH HAS BEEN CORRECTED =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
 # =======================================================
 
 # --- Configuration ---
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
+# Assumes GOOGLE_APPLICATION_CREDENTIALS is set in your .env file
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
 def log(msg: str):
@@ -26,26 +27,20 @@ def get_chapter_map_from_db(cursor):
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
 def run_google_ocr_on_pdf(pdf_path: str) -> str:
-    """
-    Performs OCR on a PDF using the Google Cloud Vision API.
-    """
+    """Performs OCR on a PDF using the Google Cloud Vision API."""
     log("  - Sending PDF to Google Cloud Vision API for OCR...")
     try:
         client = vision.ImageAnnotatorClient()
-        
         with io.open(pdf_path, 'rb') as pdf_file:
             content = pdf_file.read()
 
-        # Set up the request
         feature = vision.Feature(type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
         input_config = vision.InputConfig(content=content, mime_type='application/pdf')
         request = vision.AnnotateFileRequest(features=[feature], input_config=input_config)
-
-        # Make the API call
+        
         response = client.batch_annotate_files(requests=[request])
         
         full_text = ""
-        # Process the response for each page
         for image_response in response.responses[0].responses:
             full_text += image_response.full_text_annotation.text + "\n"
         
@@ -65,7 +60,6 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         with open(cache_filepath, 'r', encoding='utf-8') as f:
             return f.read()
 
-    # If no cache, run the powerful OCR
     full_text = run_google_ocr_on_pdf(pdf_path)
     if full_text:
         with open(cache_filepath, 'w', encoding='utf-8') as f:
