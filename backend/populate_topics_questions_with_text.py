@@ -8,7 +8,8 @@ import pandas as pd
 
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = "extracted_headings_all_subjects.csv"
+# --- FILENAME CORRECTED HERE ---
+CSV_PATH = "final_verified_topics.csv" 
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # =======================================================
@@ -59,20 +60,18 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                     end_pos = next_pos
             
             content = ocr_text[start_pos:end_pos].strip()
-            title_from_content = content.split('\n')[0].strip()
+            title = content.split('\n')[0].strip()
             
             extracted_topics.append({
                 'topic_number': topic_num,
-                'title': title_from_content, # Use the title found in the OCR
+                'title': title,
                 'content': content
             })
 
-    # --- FIXED & ROBUST QUESTION EXTRACTION LOGIC ---
     questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
-        # This flexible regex finds a number, whitespace, and then the question text
         question_pattern = re.compile(r'(\d+\.\d+)\s+(.+?)(?=\n\d+\.\d+|\Z)', re.DOTALL)
         found_questions = question_pattern.findall(exercises_text)
         for q_num, q_text in found_questions:
@@ -82,7 +81,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
 
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
-    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions in the database.")
+    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
         cursor.execute(
             "UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
@@ -109,7 +108,7 @@ def main():
         master_df = pd.read_csv(CSV_PATH, dtype=str).apply(lambda x: x.str.strip() if x.dtype == "object" else x)
         log(f"[INFO] Loaded master topic list from {CSV_PATH}.")
     except FileNotFoundError:
-        log(f"[ERROR] CSV file not found at: {CSV_PATH}")
+        log(f"[ERROR] CSV file not found. Please make sure the name is set correctly at the top of the script.")
         return
 
     chapter_map = get_chapter_map_from_db(cursor)
