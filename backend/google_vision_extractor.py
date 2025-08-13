@@ -2,81 +2,64 @@ import os
 import re
 import psycopg2
 from dotenv import load_dotenv
+from pdf2image import convert_from_path
+import pytesseract
 import pandas as pd
-from google.cloud import vision
-import io
 
-# ======= 1. THIS PATH HAS BEEN CORRECTED =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
+# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
+POPPLER_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
+TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
 # =======================================================
 
 # --- Configuration ---
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
-# Assumes GOOGLE_APPLICATION_CREDENTIALS is set in your .env file
+pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
 def log(msg: str):
     print(msg, flush=True)
 
+def normalize_name(name: str) -> str:
+    """Creates a consistent, searchable key from a name."""
+    return re.sub(r'[\s\-_]', '', name.lower())
+
 def get_chapter_map_from_db(cursor):
-    """Fetches all chapters from the DB to create a name-to-ID map."""
+    """Fetches all chapters from the DB and creates a NORMALIZED name-to-ID map."""
     cursor.execute("SELECT name, id FROM chapters")
-    return {name: chapter_id for name, chapter_id in cursor.fetchall()}
-
-def run_google_ocr_on_pdf(pdf_path: str) -> str:
-    """Performs OCR on a PDF using the Google Cloud Vision API."""
-    log("  - Sending PDF to Google Cloud Vision API for OCR...")
-    try:
-        client = vision.ImageAnnotatorClient()
-        with io.open(pdf_path, 'rb') as pdf_file:
-            content = pdf_file.read()
-
-        feature = vision.Feature(type_=vision.Feature.Type.DOCUMENT_TEXT_DETECTION)
-        input_config = vision.InputConfig(content=content, mime_type='application/pdf')
-        request = vision.AnnotateFileRequest(features=[feature], input_config=input_config)
-        
-        response = client.batch_annotate_files(requests=[request])
-        
-        full_text = ""
-        for image_response in response.responses[0].responses:
-            full_text += image_response.full_text_annotation.text + "\n"
-        
-        log("  - OCR complete.")
-        return full_text
-    except Exception as e:
-        log(f"  [ERROR] Google Cloud Vision API process failed for {os.path.basename(pdf_path)}: {e}")
-        return ""
+    return {normalize_name(name): chapter_id for name, chapter_id in cursor.fetchall()}
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
-    """Uses Google Cloud Vision for OCR and caches the result."""
     pdf_filename = os.path.basename(pdf_path)
     cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
-    
     if os.path.exists(cache_filepath):
         log(f"  - Reading from cache: '{pdf_filename}'")
         with open(cache_filepath, 'r', encoding='utf-8') as f:
             return f.read()
-
-    full_text = run_google_ocr_on_pdf(pdf_path)
-    if full_text:
+    log(f"  - No cache found. Running OCR...")
+    try:
+        images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
+        full_text = "".join(pytesseract.image_to_string(img) + "\n" for img in images)
         with open(cache_filepath, 'w', encoding='utf-8') as f:
             f.write(full_text)
-        log(f"  - Saved new OCR text to cache for '{pdf_filename}'")
-    return full_text
+        log("  - OCR complete and text cached.")
+        return full_text
+    except Exception as e:
+        log(f"  [ERROR] OCR process failed for {os.path.basename(pdf_path)}: {e}")
+        return ""
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
-    """Extracts topics and questions from the clean OCR text."""
-    extracted_topics, questions = [], []
-    
+    extracted_topics = []
     topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
     heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {match.group(1).strip(): match.start() for match in matches}
 
-    for topic_num in topic_numbers:
+    for index, row in topics_from_csv.iterrows():
+        topic_num = str(row['heading_number'])
         start_pos = topic_locations.get(topic_num)
         if start_pos is not None:
             end_pos = len(ocr_text)
@@ -87,6 +70,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             title = content.split('\n')[0].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
 
+    questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
@@ -99,7 +83,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
 
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
-    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
+    log(f"  - Updating {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
         cursor.execute("UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
                        (topic['content'], topic['title'], chapter_id, topic['topic_number']))
@@ -107,7 +91,7 @@ def update_database(cursor, chapter_id: int, topics: list, questions: list):
     for q in questions:
         cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
                        (chapter_id, q['question_number'], q['question_text']))
-    log(f"  - Database update commands sent.")
+    log(f"  - Database updates complete.")
 
 def main():
     try:
@@ -115,7 +99,7 @@ def main():
         cursor = conn.cursor()
         log("[INFO] Successfully connected to Supabase.")
     except Exception as e:
-        log(f"[ERROR] Could not connect to Supabase: {e}")
+        log(f"[ERROR] Connection failed: {e}")
         return
         
     try:
@@ -125,35 +109,40 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
-    chapter_map = get_chapter_map_from_db(cursor)
-    all_pdf_paths = [os.path.join(root, filename) for root, _, files in os.walk(PDF_ROOT_FOLDER) for filename in files if filename.lower().endswith('.pdf')]
-    all_pdf_paths.sort()
-    
-    log(f"[INFO] Found {len(all_pdf_paths)} PDF files to process.")
+    db_chapter_map = get_chapter_map_from_db(cursor)
 
-    for pdf_path in all_pdf_paths:
-        filename = os.path.basename(pdf_path)
-        chapter_name = os.path.splitext(filename)[0]
+    # Get a unique list of chapters from the CSV, our source of truth
+    csv_chapters = master_df[['subject', 'class', 'chapter_file']].drop_duplicates().to_dict('records')
+    log(f"[INFO] Found {len(csv_chapters)} unique chapters in the CSV to process.")
+
+    for chapter_info in csv_chapters:
+        pdf_filename = chapter_info['chapter_file']
+        chapter_name = os.path.splitext(pdf_filename)[0]
         
-        log(f"\n--- Processing: {filename} ---")
+        log(f"\n--- Processing: {pdf_filename} ---")
         
-        chapter_id = chapter_map.get(chapter_name)
+        # --- ROBUST MATCHING using normalized names ---
+        normalized_name = normalize_name(chapter_name)
+        chapter_id = db_chapter_map.get(normalized_name)
+        
         if not chapter_id:
-            log(f"  [WARNING] Chapter '{chapter_name}' not found in the database. Skipping.")
+            log(f"  [WARNING] Chapter '{chapter_name}' not found in DB using normalized name. Skipping.")
             continue
+            
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, chapter_info['subject'], chapter_info['class'], pdf_filename)
+        if not os.path.exists(pdf_path):
+            log(f"  [WARNING] PDF file not found at '{pdf_path}'. Skipping.")
+            continue
+            
+        chapter_topics_df = master_df[master_df['chapter_file'] == pdf_filename]
         
-        chapter_topics_df = master_df[master_df['chapter_file'] == filename]
-        if chapter_topics_df.empty:
-            log(f"  [WARNING] No topics for this chapter in the CSV. Skipping.")
-            continue
-
         ocr_text = get_text_from_pdf_with_caching(pdf_path)
         if ocr_text:
             topics, questions = extract_topics_and_questions(ocr_text, chapter_topics_df)
             log(f"  - Extracted {len(topics)} topics and {len(questions)} questions.")
             update_database(cursor, chapter_id, topics, questions)
             conn.commit()
-            log(f"  [SUCCESS] Saved data for '{chapter_name}' to Supabase.")
+            log(f"  [SUCCESS] Saved data for '{chapter_name}'.")
 
     cursor.close()
     conn.close()
