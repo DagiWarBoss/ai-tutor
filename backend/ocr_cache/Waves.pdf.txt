@@ -1,0 +1,2198 @@
+Introduction
+
+Transverse and
+longitudinal waves
+Displacement relation in a
+progressive wave
+
+The speed of a travelling
+wave
+
+The principle of
+superposition of waves
+
+Reflection of waves
+Beats
+
+Summary
+
+Points to ponder
+Exercises
+
+CHAPTER FOURTEEN
+
+JIDB7CHIS
+
+14.1 INTRODUCTION
+
+In the previous Chapter, we studied the motion of objects
+oscillating in isolation. What happens in a system, which is
+a collection of such objects? A material medium provides
+such an example. Here, elastic forces bind the constituents
+to each other and, therefore, the motion of one affects that of
+the other. If you drop a little pebble in a pond of still water,
+the water surface gets disturbed. The disturbance does not
+remain confined to one place, but propagates outward along
+a circle. If you continue dropping pebbles in the pond, you
+see circles rapidly moving outward from the point where the
+water surface is disturbed. It gives a feeling as if the water is
+moving outward from the point of disturbance. If you put
+some cork pieces on the disturbed surface, it is seen that
+the cork pieces move up and down but do not move away
+from the centre of disturbance. This shows that the water
+mass does not flow outward with the circles, but rather a
+moving disturbance is created. Similarly, when we speak,
+the sound moves outward from us, without any flow of air
+from one part of the medium to another. The disturbances
+produced in air are much less obvious and only our ears or
+a microphone can detect them. These patterns, which move
+without the actual physical transfer or flow of matter as a
+whole, are called waves. In this Chapter, we will study such
+waves.
+
+Waves transport energy and the pattern of disturbance has
+information that propagate from one point to another. All our
+communications essentially depend on transmission of sig-
+nals through waves. Speech means production of sound
+waves in air and hearing amounts to their detection. Often,
+communication involves different kinds of waves. For exam-
+ple, sound waves may be first converted into an electric cur-
+rent signal which in turn may generate an electromagnetic
+wave that may be transmitted by an optical cable or via a
+
+Reprint 2025-26
+
+
+WAVES
+
+279
+
+satellite. Detection of the original signal will usu-
+ally involve these steps in reverse order.
+
+Not all waves require a medium for their
+propagation. We know that light waves can
+travel through vacuum. The light emitted by
+stars, which are hundreds of light years away,
+reaches us through inter-stellar space, which
+is practically a vacuum.
+
+The most familiar type of waves such as waves
+on a string, water waves, sound waves, seismic
+waves, etc. is the so-called mechanical waves.
+These waves require a medium for propagation,
+they cannot propagate through vacuum. They
+involve oscillations of constituent particles and
+depend on the elastic properties of the medium.
+The electromagnetic waves that you will learn
+in Class XII are a different type of wave.
+Electromagnetic waves do not necessarily require
+a medium - they can travel through vacuum.
+Light, radiowaves, X-rays, are all electromagnetic
+waves. In vacuum, all electromagnetic waves
+have the same speed c, whose value is :
+
+c= 299, 792, 458 ms"!. (14.1)
+
+A third kind of wave is the so-called Matter
+waves. They are associated with constituents of
+matter : electrons, protons, neutrons, atoms and
+molecules. They arise in quantum mechanical
+description of nature that you will learn in your
+later studies. Though conceptually more abstract
+than mechanical or electro-magnetic waves, they
+have already found applications in several
+devices basic to modern technology; matter
+waves associated with electrons are employed
+in electron microscopes.
+
+In this chapter we will study mechanical
+waves, which require a material medium for
+their propagation.
+
+The aesthetic influence of waves on art and
+literature is seen from very early times; yet the
+first scientific analysis of wave motion dates back
+to the seventeenth century. Some of the famous
+scientists associated with the physics of wave
+motion are Christiaan Huygens (1629-1695),
+Robert Hooke and Isaac Newton. The
+understanding of physics of waves followed the
+physics of oscillations of masses tied to springs
+and physics of the simple pendulum. Waves in
+elastic media are intimately connected with
+harmonic oscillations. (Stretched strings, coiled
+springs, air, etc., are examples of elastic media).
+
+We shall illustrate this connection through
+simple examples.
+
+Consider a collection of springs connected to
+one another as shown in Fig. 14.1. If the spring
+at one end is pulled suddenly and released, the
+disturbance travels to the other end. What has
+
+<<
+
+A
+Fig. 14.1 Acollection of springs connected to each
+other. The end A is pulled suddenly
+generating a disturbance, which then
+propagates to the other end.
+
+happened? The first spring is disturbed from its
+equilibrium length. Since the second spring is
+connected to the first, it is also stretched or
+compressed, and so on. The disturbance moves
+from one end to the other; but each spring only
+executes small oscillations about its equilibrium
+position. As a practical example of this situation,
+consider a stationary train at a railway station.
+Different bogies of the train are coupled to each
+other through a spring coupling. When an
+engine is attached at one end, it gives a push to
+the bogie next to it; this push is transmitted from
+one bogie to another without the entire train
+being bodily displaced.
+
+Now let us consider the propagation of sound
+waves in air. As the wave passes through air, it
+compresses or expands a small region of air. This
+causes a change in the density of that region,
+say dp, this change induces a change in pressure,
+dp, in that region. Pressure is force per unit area,
+so there is a restoring force proportional to
+the disturbance, just like in a spring. In this
+case, the quantity similar to extension or
+compression of the spring is the change in
+density. If a region is compressed, the molecules
+in that region are packed together, and they tend
+to move out to the adjoining region, thereby
+increasing the density or creating compression
+in the adjoining region. Consequently, the air
+in the first region undergoes rarefaction. If a
+region is comparatively rarefied the surrounding
+air will rush in making the rarefaction move to
+the adjoining region. Thus, the compression or
+rarefaction moves from one region to another,
+making the propagation of a disturbance
+possible in air.
+
+Reprint 2025-26
+
+280
+
+PHYSICS
+
+In solids, similar arguments can be made. In
+a crystalline solid, atoms or group of atoms are
+arranged in a periodic lattice. In these, each
+atom or group of atoms is in equilibrium, due to
+forces from the surrounding atoms. Displacing
+one atom, keeping the others fixed, leads to
+restoring forces, exactly as in a spring. So we
+can think of atoms in a lattice as end points,
+with springs between pairs of them.
+
+In the subsequent sections of this chapter
+we are going to discuss various characteristic
+properties of waves.
+
+14.2. TRANSVERSE AND LONGITUDINAL
+WAVES
+
+We have seen that motion of mechanical waves
+involves oscillations of constituents of the
+medium. If the constituents of the medium
+oscillate perpendicular to the direction of wave
+propagation, we call the wave a transverse wave.
+If they oscillate along the direction of wave
+propagation, we call the wave a longitudinal
+wave.
+
+Fig.14.2 shows the propagation of a single
+pulse along a string, resulting from a single up
+and down jerk. If the string is very long compared
+
+AIA AAAAAAAA III 7
+
+Fig. 14.2 Whena pulse travels along the length ofa
+stretched string (x-direction), the elements
+of the string oscillate up and down (y-
+direction)
+
+to the size of the pulse, the pulse will damp out
+before it reaches the other end and reflection
+from that end may be ignored. Fig. 14.3 shows a
+similar situation, but this time the external
+agent gives a continuous periodic sinusoidal up
+and down jerk to one end of the string. The
+resulting disturbance on the string is then a
+sinusoidal wave. In either case the elements of
+the string oscillate about their equilibrium mean
+
+Harmonic ———> | x
+
+wave
+
+Fig. 14.3 A harmonic (sinusoidal) wave travelling
+along a stretched string is an example ofa
+transverse wave. An element of the string
+in the region of the wave oscillates about
+its equilibrium position perpendicular to the
+direction of wave propagation.
+
+position as the pulse or wave passes through
+them. The oscillations are normal to the
+direction of wave motion along the string, so this
+is an example of transverse wave.
+
+We can look at a wave in two ways. We can fix
+an instant of time and picture the wave in space.
+This will give us the shape of the wave as a
+whole in space at a given instant. Another way
+is to fix a location i.e. fix our attention on a
+particular element of string and see its
+oscillatory motion in time.
+
+Fig. 14.4 describes the situation for
+longitudinal waves in the most familiar example
+of the propagation of sound waves. A long pipe
+filled with air has a piston at one end. A single
+sudden push forward and pull back of the piston
+will generate a pulse of condensations (higher
+density) and rarefactions (lower density) in the
+medium (air). If the push-pull of the piston is
+continuous and periodic (sinusoidal), a
+
+Fig. 14.4 Longitudinal waves (sound) generated in a
+pipe filled with air by moving the piston up
+and down. A volume element of air oscillates
+in the direction parallel to the direction of
+wave propagation.
+
+Reprint 2025-26
+
+WAVES
+
+281
+
+sinusoidal wave will be generated propagating
+in air along the length of the pipe. This is clearly
+an example of longitudinal waves.
+
+The waves considered above, transverse or
+longitudinal, are travelling or progressive waves
+since they travel from one part of the medium
+to another. The material medium as a whole
+does not move, as already noted. A stream, for
+example, constitutes motion of water as a whole.
+In a water wave, it is the disturbance that moves,
+not water as a whole. Likewise a wind (motion
+of air as a whole) should not be confused witha
+sound wave which is a propagation of
+disturbance (in pressure density) in air, without
+the motion of air medium as a whole.
+
+In transverse waves, the particle motion is
+normal to the direction of propagation of the
+wave. Therefore, as the wave propagates, each
+element of the medium undergoes a shearing
+strain. Transverse waves can, therefore, be
+propagated only in those media, which can
+sustain shearing stress, such as solids and not
+in fluids. Fluids, as well as, solids can sustain
+compressive strain; therefore, longitudinal
+waves can be propagated in all elastic media.
+For example, in medium like steel, both
+transverse and longitudinal waves can
+propagate, while air can sustain only
+longitudinal waves. The waves on the surface
+of water are of two kinds: capillary waves and
+gravity waves. The former are ripples of fairly
+short wavelength—not more than a few
+centimetre—and the restoring force that
+produces them is the surface tension of water.
+Gravity waves have wavelengths typically
+ranging from several metres to several hundred
+meters. The restoring force that produces these
+waves is the pull of gravity, which tends to keep
+the water surface at its lowest level. The
+oscillations of the particles in these waves are
+not confined to the surface only, but extend with
+diminishing amplitude to the very bottom. The
+particle motion in water waves involves a
+complicated motion—they not only move up and
+down but also back and forth. The waves in an
+ocean are the combination of both longitudinal
+and transverse waves.
+
+It is found that, generally, transverse and
+longitudinal waves travel with different speed
+in the same medium.
+
+Example 14.1 Given below are some
+
+examples of wave motion. State in each case
+
+ifthe wave motion is transverse, longitudinal
+
+or a combination of both:
+
+(a) Motion ofa kink in a longitudinal spring
+produced by displacing one end of the
+spring sideways.
+
+(b) Waves produced in a cylinder
+containing a liquid by moving its piston
+back and forth.
+
+Waves produced by a motorboat sailing
+in water.
+
+Ultrasonic waves in air produced by a
+vibrating quartz crystal.
+
+Answer
+(a) Transverse and longitudinal
+(b) Longitudinal
+(c) Transverse and longitudinal
+(d) Longitudinal <
+
+14.3 DISPLACEMENT RELATION IN
+A PROGRESSIVE WAVE
+
+For mathematical description of a travelling
+wave, we need a function of both position xand
+time ¢. Such a function at every instant should
+give the shape of the wave at that instant. Also,
+at every given location, it should describe the
+motion of the constituent of the medium at that
+location. If we wish to describe a sinusoidal
+travelling wave (such as the one shown in Fig.
+14.3) the corresponding function must also be
+sinusoidal. For convenience, we shall take the
+wave to be transverse so that if the position of
+the constituents of the medium is denoted by x,
+the displacement from the equilibrium position
+may be denoted by y. A sinusoidal travelling
+wave is then described by:
+
+y(x,t)=asin(kx t+ ) (14.2)
+The term ¢ in the argument of sine function
+
+means equivalently that we are considering a
+linear combination of sine and cosine functions:
+
+y(x,t) = Asin(kx t)+ Bcos(kx t) (14.3)
+From Equations (14.2) and (14.3),
+
+B
+a=VA?+B? and =tan' A
+
+To understand why Equation (14.2)
+represents a sinusoidal travelling wave, take a
+fixed instant, say t= ¢,. Then, the argument of
+the sine function in Equation (14.2) is simply
+
+Reprint 2025-26
+
+
+282
+
+PHYSICS
+
+kx + constant. Thus, the shape of the wave (at
+any fixed instant) as a function of x is a sine
+wave. Similarly, take a fixed location, say x= x).
+Then, the argument of the sine function in
+Equation (14.2) is constant -ot. The
+displacement y, at a fixed location, thus, varies
+sinusoidally with time. That is, the constituents
+of the medium at different positions execute
+simple harmonic motion. Finally, as tincreases,
+xmust increase in the positive direction to keep
+kx-ot+ constant. Thus, Eq. (14.2) represents
+a sinusiodal (harmonic) wave travelling along
+the positive direction of the x-axis. On the other
+hand, a function
+
+y(x,t) =asin(kx+ t+ ) (14.4)
+represents a wave travelling in the negative
+direction of x-axis. Fig. (14.5) gives the names of
+the various physical quantities appearing in Eq.
+(14.2) that we now interpret.
+
+displacement as a function of
+position x and time t
+amplitude of a wave
+
+angular frequency of the wave
+angular wave number
+initial phase angle (a+x= 0, t= 0)
+
+Fig. 14.5 The meaning of standard symbols in
+Eq. (14.2)
+
+Fig. 14.6 shows the plots of Eq. (14.2) for
+different values of time differing by equal
+intervals of time. In a wave, the crest is the
+point of maximum positive displacement, the
+trough is the point of maximum negative
+displacement. To see how a wave travels, we
+can fix attention on a crest and see how it
+progresses with time. In the figure, this is
+shown by a cross () on the crest. In the same
+manner, we can see the motion of a particular
+constituent of the medium at a fixed location,
+say at the origin of the x-axis. This is shown
+by a solid dot (¢). The plots of Fig. 14.6 show
+that with time, the solid dot (¢) at the origin
+moves periodically, i.e., the particle at the
+origin oscillates about its mean position as
+the wave progresses. This is true for any other
+location also. We also see that during the time
+the solid dot (¢) has completed one full
+oscillation, the crest has moved further by a
+certain distance.
+
+y
+
+xX ———>
+
+a x
+
+)
+
+re
+
+(e)
+
+Fig. 14.6 A harmonic wave progressing along the
+positive direction of x-axis at different times.
+
+Using the plots of Fig. 14.6, we now define
+the various quantities of Eq. (14.2).
+
+14.3.1 Amplitude and Phase
+
+In Eq. (14.2), since the sine function varies
+between 1 and -1, the displacement y (x, d varies
+between a and —a. We can take a to be a positive
+constant, without any loss of generality. Then,
+arepresents the maximum displacement of the
+constituents of the medium from their
+equilibrium position. Note that the displacement
+y may be positive or negative, but a is positive.
+It is called the amplitude of the wave.
+
+The quantity (kx- wt + ¢) appearing as the
+argument of the sine function in Eq. (14.2) is
+called the phase of the wave. Given the
+amplitude a, the phase determines the
+displacement of the wave at any position and
+at any instant. Clearly ¢ is the phase at x= 0
+and t= 0. Hence, ¢ is called the initial phase
+angle. By suitable choice of origin on the x-axis
+and the intial time, it is possible to have ¢ = 0.
+Thus there is no loss of generality in dropping
+g, i.e., in taking Eq. (14.2) with ¢ = 0.
+
+Reprint 2025-26
+
+WAVES
+
+14.3.2 Wavelength and Angular Wave
+Number
+
+The minimum distance between two points
+having the same phase is called the wavelength
+of the wave, usually denoted by 2. For simplicity,
+we can choose points of the same phase to be
+crests or troughs. The wavelength is then the
+distance between two consecutive crests or
+troughs in a wave. Taking ¢= 0 in Eq. (14.2),
+the displacement at t= 0 is given by
+
+y(x,0) = asinkx (14.5)
+
+Since the sine function repeats its value after
+every 27 change in angle,
+
+sinkx = sin(kx + 2n7) = sin k{ x + a)
+
+That is the displacements at points x and at
+
+2nz
+x +—
+k
+
+are the same, where n=1,2,3,... The least
+distance between points with the same
+displacement (at any given instant of time) is
+obtained by taking n= 1. ) is then given by
+
+24 2+
+FO or k=— (14.6)
+
+kis the angular wave number or propagation
+
+constant; its SI unit is radian per metre or
+
+rad m™'*
+
+14.3.3 Period, Angular Frequency and
+Frequency
+
+Fig. 14.7 shows again a sinusoidal plot. It
+describes not the shape of the wave at a certain
+instant but the displacement of an element (at
+any fixed location) of the medium as a function
+of time. We may for, simplicity, take Eq. (14.2)
+with 6 = O and monitor the motion of the element
+say at x =(). We then get
+
+y(0,t)=asin( t)
+
+= asin t
+
+283
+
+— T ———>
+
+Fig. 14.7 An element of a string at a fixed location
+oscillates in time with amplitude a and
+period T, as the wave passes over it.
+
+Now, the period of oscillation of the wave is the
+time it takes for an element to complete one full
+oscillation. That is
+
+asin t= asin (t+T)
+= asin( t+ T)
+
+Since sine function repeats after every 27,
+
+2s
+T=22 or = TT (14.7)
+
+© is called the angular frequency of the wave.
+
+Its SI unit is rad s~'. The frequency v is the
+number of oscillations per second. Therefore,
+
+_— 1 _—
+T 24
+
+v is usually measured in hertz.
+
+In the discussion above, reference has always
+been made to a wave travelling along a string or
+a transverse wave. In a longitudinal wave, the
+displacement of an element of the medium is
+parallel to the direction of propagation of the
+wave. In Eq. (14.2), the displacement function
+for a longitudinal wave is written as,
+
+s(x, 0 = asin (kx-ot+ 9) (14.9)
+
+(14.8)
+
+where s(x, t) is the displacement of an element
+of the medium in the direction of propagation
+of the wave at position xand time t. In Eq. (14.9),
+ais the displacement amplitude; other
+quantities have the same meaning as in case
+of a transverse wave except that the
+displacement function y (x, t) is to be replaced
+by the function s (x, #).
+
+* Here again, ‘radian’ could be dropped and the units could be written merely as nr‘. Thus, k represents 21
+times the number of waves (or the total phase difference) that can be accommodated per unit length, with SI
+
+units nr'.
+
+Reprint 2025-26
+
+284
+
+PHYSICS
+
+Example 14.2 A wave travelling along a
+string is described by,
+
+yx, t)= 0.005 sin (80.0 x- 3.0 0),
+
+in which the numerical constants are in
+SI units (0.005 m, 80.0 rad m"™!, and
+
+3.0 rad s'). Calculate (a) the amplitude,
+(b) the wavelength, and (c) the period and
+frequency of the wave. Also, calculate the
+displacement y of the wave at a distance
+x =30.0 cm and time t=20s?
+
+Answer On comparing this displacement
+equation with Eq. (14.2),
+
+VY ts, t)= asin (kx - ot),
+
+we find
+
+(a) the amplitude of the wave is 0.005 m = 5mm.
+
+(b) the angular wave number &k and angular
+frequency @ are
+
+k=80.0 m' and @=3.0s"
+We, then, relate the wavelength 4 to k through
+Eq. (14.6),
+A=2n/k
+_ 2n
+~ 80.0 m7?
+= 7.85cm
+(c) Now, we relate Tto by the relation
+T=2n/o
+
+_ 2a
+3.0s*
+=2.09s
+and frequency, v = 1/T=0.48 Hz
+The displacement y at x = 30.0 cm and
+time t = 20s is given by
+y =(0.005 m) sin (80.0 x 0.3 — 3.0 x 20)
+= (0.005 m) sin (-36 + 127)
+= (0.005 m) sin (1.699)
+= (0.005 m) sin (97°) ~ 5 mm <
+14.4 THE SPEED OF A TRAVELLING WAVE
+
+To determine the speed of propagation of a
+travelling wave, we can fix our attention on any
+particular point on the wave (characterised by
+some value of the phase) and see how that point
+moves in time. It is convenient to look at the
+motion of the crest of the wave. Fig. 14.8 gives
+
+the shape of the wave at two instants of time,
+which differ by a small time internal At. The
+entire wave pattern is seen to shift to the right
+(positive direction of x-axis) by a distance Ax. In
+particular, the crest shown by a dot («) moves a
+
+y
+
+ax ttt
+<>
+
+—_—_
+
+t
+
+Fig. 14.8 Progression ofa harmonic wave from time
+t tot + At. where At is a small interval.
+The wave pattern as a whole shifts to the
+right. The crest of the wave (or a point with
+any fixed phase) moves right by the distance
+Ax in time At.
+
+distance Ax in time At. The speed of the wave is
+then Ax/At. We can put the dot («) on a point
+with any other phase. It will move with the same
+speed v (otherwise the wave pattern will not
+remain fixed). The motion of a fixed phase point
+on the wave is given by
+
+kx -ot= constant (14.10)
+
+Thus, as time ¢ changes, the position x of the
+fixed phase point must change so that the phase
+remains constant. Thus,
+
+kx - a@t= k(x+Ax) - @(H Ad
+or k Ax- @At=0
+Taking Ax, Atvanishingly small, this gives
+
+oe (14.11)
+dt k
+Relating to Tand kK toi, we get
+v= ae
+“oz/. OT (14.12)
+
+Eq. (14.12), a general relation for all progressive
+waves, shows that in the time required for one full
+oscillation by any constituent of the medium, the
+wave pattern travels a distance equal to the
+wavelength of the wave. It should be noted that
+the speed of a mechanical wave is determined by
+the inertial (linear mass density for strings, mass
+density in general) and elastic properties (Young’s
+modulus for linear media/ shear modulus, bulk
+modulus) of the medium. The medium determines
+
+Reprint 2025-26
+
+WAVES
+
+285
+
+the speed; Eq. (14.12) then relates wavelength to
+frequency for the given speed. Of course, as
+remarked earlier, the medium can support both
+transverse and longitudinal waves, which will have
+different speeds in the same medium. Later in this
+chapter, we shall obtain specific expressions for
+the speed of mechanical waves in some media.
+
+14.4.1 Speed of a Transverse Wave on
+Stretched String
+
+The speed of a mechanical wave is determined
+by the restoring force setup in the medium when
+it is disturbed and the inertial properties (mass
+density) of the medium. The speed is expected to
+be directly related to the former and inversely to
+the latter. For waves on a string, the restoring
+force is provided by the tension Tin the string.
+The inertial property will in this case be linear
+mass density , which is mass m of the string
+divided by its length L. Using Newton’s Laws of
+Motion, an exact formula for the wave speed on
+a string can be derived, but this derivation is
+outside the scope of this book. We shall,
+therefore, use dimensional analysis. We already
+know that dimensional analysis alone can never
+yield the exact formula. The overall
+dimensionless constant is always left
+undetermined by dimensional analysis.
+
+The dimension of u is [ML"] and that of Tis
+like force, namely [MLT?]. We need to combine
+these dimensions to get the dimension of speed
+v [LT]. Simple inspection shows that the
+quantity T/p has the relevant dimension
+
+[MLT*] _
+[ML]
+
+Thus if T and u are assumed to be the only
+relevant physical quantities,
+
+vec [eZ (14.13)
+o
+where C is the undetermined constant of
+dimensional analysis. In the exact formula, it
+turms out, C=1. The speed of transverse waves
+on a stretched string is given by
+
+v= {2 (14.14)
+
+u
+Note the important point that the speed v
+depends only on the properties of the medium T
+and uw (Tis a property of the stretched string
+
+arising due to an external force). It does not
+depend on wavelength or frequency of the wave
+itself. In higher studies, you will come across
+waves whose speed is not independent of
+frequency of the wave. Of the two parameters 4
+and v the source of disturbance determines the
+frequency of the wave generated. Given the
+speed of the wave in the medium and the
+frequency Eq. (14.12) then fixes the wavelength
+
+= (14.15)
+
+Example 14.3 A steel wire 0.72 m long
+has a mass of 5.0 x 10° kg. If the wire is
+
+under a tension of 60 N, what is the speed
+of transverse waves on the wire ?
+
+Answer Mass per unit length of the wire,
+
+_ 5.0x103 kg
+~  0.72m
+
+= 6.9*10° kg m7?
+
+Tension, T= 60N
+The speed of wave on the wire is given by
+
+60N 4
+——_.— = 93ms
+6.9x10°kgm?! <
+14.4.2 Speed of a Longitudinal Wave
+
+(Speed of Sound)
+
+In a longitudinal wave, the constituents of the
+medium oscillate forward and backward in the
+direction of propagation of the wave. We have
+already seen that the sound waves travel in the
+form of compressions and rarefactions of small
+volume elements of air. The elastic property that
+determines the stress under compressional
+strain is the bulk modulus of the medium defined
+by (see Chapter 8)
+
+<P
+
+B= wiv (14.16)
+
+Here, the change in pressure AP produces a
+
+QW
+volumetric strain Vv . Bhas the same dimension
+
+as pressure and given in SI units in terms of
+pascal (Pa). The inertial property relevant for the
+propagation of wave is the mass density p, with
+dimensions [ML*]. Simple inspection reveals
+that quantity B/p has the relevant dimension:
+
+Reprint 2025-26
+
+286
+
+PHYSICS
+
+[ ML°T~ |
+
+= =| LT 14.17
+[ ML~* | l ( )
+Thus, if Band p are considered to be the only
+relevant physical quantities,
+
+v=C \? (14.18)
+
+where, as before, Cis the undetermined constant
+from dimensional analysis. The exact derivation
+shows that C=1. Thus, the general formula for
+longitudinal waves in a medium is:
+
+v= |B (14.19)
+
+pP
+
+For a linear medium, like a solid bar, the
+lateral expansion of the bar is negligible and we
+may consider it to be only under longitudinal
+strain. In that case, the relevant modulus of
+elasticity is Young’s modulus, which has the
+same dimension as the Bulk modulus.
+Dimensional analysis for this case is the same
+as before and yields a relation like Eq. (14.18),
+with an undetermined C, which the exact
+derivation shows to be unity. Thus, the speed of
+longitudinal waves in a solid bar is given by
+
+v= fa (14.20)
+
+where Y is the Young’s modulus of the material
+of the bar. Table 14.1 gives the speed of sound
+in some media.
+
+Table 14.1 Speed of Sound in some Media
+
+Medium Speed (m s’)
+
+Gases
+Air (0 °C)
+Air (20°C)
+Helium
+Hydrogen
+
+Liquids
+Water (0 °C)
+
+Water (20 °C)
+Seawater
+
+Solids
+Aluminium
+Copper
+Steel
+Granite
+Vulcanised
+Rubber
+
+Liquids and solids generally have higher speed
+of sound than gases. [Note for solids, the speed
+being referred to is the speed of longitudinal
+waves in the solid]. This happens because they
+are much more difficult to compress than gases
+and so have much higher values of bulk modulus.
+Now, see Eq. (14.19). Solids and liquids have
+higher mass densities ( ) than gases. But the
+corresponding increase in both the modulus (B)
+of solids and liquids is much higher. This is the
+reason why the sound waves travel faster in
+solids and liquids.
+
+We can estimate the speed of sound in a gas
+in the ideal gas approximation. For an ideal gas,
+the pressure P, volume Vand temperature T are
+related by (see Chapter 10).
+
+PV= Nk,T (14.21)
+
+where Nis the number of molecules in volume
+V, k_is the Boltzmann constant and T the
+temperature of the gas (in Kelvin). Therefore, for
+an isothermal change it follows from Eq.(14.21)
+that
+
+VAP + PAV =0
+AP
+or __*_ ez
+AV/V P
+Hence, substituting in Eq. (14.16), we have
+B=P
+
+Therefore, from Eq. (14.19) the speed of a
+longitudinal wave in an ideal gas is given by,
+
+v= |b (14.22)
+
+fa)
+
+This relation was first given by Newton and
+is known as Newton’s formula.
+
+Example 14.4 Estimate the speed of
+sound in air at standard temperature and
+
+pressure. The mass of 1 mole of air is
+29.0 x10* kg.
+
+Answer We know that 1 mole of any gas occupies
+22.4 litres at STP. Therefore, density of air at
+STP is:
+
+p,= (mass of one mole of air)/ (volume of one
+mole of air at STP)
+_ 29.0 10 ° kg
+22.4 10° m?
+= 1.29kg m®?
+
+Reprint 2025-26
+
+WAVES
+
+287
+
+According to Newton’s formula for the speed
+of sound in a medium, we get for the speed of
+sound in air at STP,
+
+1.01x10°N m? ]””
+= ~1.29kgm> =280ms! (14.23)
+
+<
+
+The result shown in Eq.(14.23) is about 15%
+smaller as compared to the experimental value
+of 331 m s’ as given in Table 14.1. Where
+did we go wrong ? If we examine the basic
+assumption made by Newton that the pressure
+variations in a medium during propagation of
+sound are isothermal, we find that this is not
+correct. It was pointed out by Laplace that the
+pressure variations in the propagation of sound
+waves are so fast that there is little time for the
+heat flow to maintain constant temperature.
+These variations, therefore, are adiabatic and
+not isothermal. For adiabatic processes the ideal
+gas satisfies the relation (see Section 11.8),
+
+PV" =constant
+
+ie. A(PV’) =0
+
+or Py V’" AV+ V'AP=0
+
+where y is the ratio of two specific heats,
+C,/C,,.
+
+Thus, for an ideal gas the adiabatic bulk
+modulus is given by,
+
+_ AP
+ad “AV/V
+= yP
+The speed of sound is, therefore, from Eq.
+(14.19), given by,
+
+v= jyP (14.24)
+a)
+
+This modification of Newton’s formula is referred
+to as the Laplace correction. For air
+y=7/5. Now using Eq. (14.24) to estimate the speed
+of sound in air at STP, we get a value 331.3ms",
+which agrees with the measured speed.
+
+14.5 THE PRINCIPLE. OF SUPERPOSITION
+OF WAVES
+
+What happens when two wave pulses travelling
+in opposite directions cross each other
+(Fig. 14.9)? It turns out that wave pulses
+continue to retain their identities after they have
+crossed. However, during the time they overlap,
+the wave pattern is different from either of the
+
+t=4s
+
+gr S
+
+en
+Fig. 14.9 Two pulses having equal and opposite
+displacements moving in opposite
+directions. The overlapping pulses add up
+to zero displacement in curve (c).
+
+pulses. Figure 14.9 shows the situation when
+two pulses of equal and opposite shapes move
+towards each other. When the pulses overlap,
+the resultant displacement is the algebraic sum
+of the displacement due to each pulse. This is
+known as the principle of superposition of waves.
+According to this principle, each pulse moves
+as if others are not present. The constituents of
+the medium, therefore, suffer displacments due
+to both and since the displacements can be
+positive and negative, the net displacement is
+an algebraic sum of the two. Fig. 14.9 gives
+graphs of the wave shape at different times. Note
+the dramatic effect in the graph (c); the
+displacements due to the two pulses have exactly
+cancelled each other and there is zero
+displacement throughout.
+
+To put the principle of superposition
+mathematically, let y, (x,Q and y, (x, be the
+displacements due to two wave disturbances in
+the medium. If the waves arrive in a region
+simultaneously, and therefore, overlap, the net
+displacement y (x,d) is given by
+
+yix% O= Vx o+ V(x t) (14.25)
+
+If we have two or more waves moving in the
+medium the resultant waveform is the sum of
+wave functions of individual waves. That is, if
+the wave functions of the moving waves are
+
+Reprint 2025-26
+
+288 PHYSICS
+
+Y, =f (x-vd, y y
+
+Y, = £(x-vd, 2a
+
+seveeeees a _, a ,
+
+beveeeeees 0 x 6 x
+
+JY, = f, vd) -a
+
+g=0 “a
+then the wave function describing the Da
+disturbance in the medium is (2)
+a
+yv=t(x-vi+f£(x-vi+ ...+£(x- vo y y
+n
+= 2 f, (x-vt) (14.26) —>
+i=1 a 7 oN
+7 N 4 oN
+The principle of superposition is basic to the OTF a, x x
+phenomenon of interference. -af ‘27
+=Trad
+For simplicity, consider two harmonic on
+
+travelling waves on a stretched string, both with
+
+the same o (angular frequency) and k (wave
+number), and, therefore, the same wavelength
+A. Their wave speed will be identical. Let us
+further assume that their amplitudes are equal
+and they are both travelling in the positive
+direction of x-axis. The waves only differ in their
+initial phase. According to Eq. (14.2), the two
+waves are described by the functions:
+
+Vx H=asin (kx-oaod (14.27)
+
+and V(x, H= asin (kx-oat+ $) (14.28)
+
+The net displacement is then, by the principle
+of superposition, given by
+
+y (& t)= asin (kx-od +asin (kx-ot+@)
+(14.29)
+
+=a) 2sin| Be 8) of
+
+(14.30)
+where we have used the familiar trignometric
+
+identity for sin A +sin B . We then have
+
+y(x,t)=2a cost sin{ tron 5 (14.31)
+
+Eq. (14.31) is also a harmonic travelling wave in
+the positive direction of x-axis, with the same
+frequency and wavelength. However, its initial
+
+phase angle is . The significant thing is that
+
+its amplitude is a function of the phase difference
+
+(b)
+
+Fig. 14.10 The resultant of two harmonic waves of
+equal amplitude and wavelength
+according to the principle of superposition.
+The amplitude of the resultant wave
+depends on the phase difference ¢, which
+is zero for (a) and x for (b)
+
+¢ between the constituent two waves:
+
+A(¢d) = 2acos (14.32)
+For ¢ = 0, when the waves are in phase,
+y(x,t) =2a sin(kx— at) (14.33)
+
+ie., the resultant wave has amplitude 2a, the
+
+largest possible value for A. For g¢=7, the
+
+waves are completely, out of phase and the
+resultant wave has zero displacement
+everywhere at all times
+
+y (x t) =0 (14.34)
+Eq. (14.33) refers to the so-called constructive
+interference of the two waves where the
+amplitudes add up in the resultant wave. Eq.
+(14.34) is the case of destructive intereference
+where the amplitudes subtract out in the
+resultant wave. Fig. 14.10 shows these two cases
+of interference of waves arising from the
+principle of superposition.
+
+14.6 REFLECTION OF WAVES
+
+So far we considered waves propagating in an
+unbounded medium. What happens if a pulse
+or a wave meets a boundary? If the boundary is
+rigid, the pulse or wave gets reflected. The
+
+Reprint 2025-26
+
+WAVES
+
+289
+
+phenomenon of echo is an example of reflection
+by a rigid boundary. If the boundary is not
+completely rigid or is an interface between two
+different elastic media, the situation is some
+what complicated. A part of the incident wave is
+reflected and a part is transmitted into the
+second medium. If a wave is incident obliquely
+on the boundary between two different media
+the transmitted wave is called the refracted
+wave. The incident and refracted waves obey
+Snell’s law of refraction, and the incident and
+reflected waves obey the usual laws of
+reflection.
+
+Fig. 14.11 shows a pulse travelling along a
+stretched string and being reflected by the
+boundary. Assuming there is no absorption of
+energy by the boundary, the reflected wave has
+the same shape as the incident pulse but it
+suffers a phase change of z or 180° on reflection.
+This is because the boundary is rigid and the
+disturbance must have zero displacement at all
+times at the boundary. By the principle of
+superposition, this is possible only if the reflected
+and incident waves differ by a phase of z, so that
+the resultant displacement is zero. This
+reasoning is based on boundary condition on a
+rigid wall. We can arrive at the same conclusion
+dynamically also. As the pulse arrives at the wall,
+it exerts a force on the wall. By Newton’s Third
+Law, the wall exerts an equal and opposite force
+on the string generating a reflected pulse that
+differs by a phase of z.
+
+AAA AWRRRRRRRERREREEREERERRRRERREEEE wf
+
+cummed th
+BUREaaaadunanaaunauaanaauauny
+
+—
+x x Yt awY
+
+Le x AYYYYVANY XXX XXXNY
+
+NAAAARN!
+
+VIZITTTA
+
+Zz TITTTT ZTITT
+—
+
+Fig. 14.11 Reflection ofa pulse meeting a rigid
+boundary.
+
+If on the other hand, the boundary point is
+not rigid but completely free to move (such as in
+the case of a string tied to a freely moving ring
+on a rod), the reflected pulse has the same phase
+and amplitude (assuming no energy dissipation)
+as the incident pulse. The net maximum
+displacement at the boundary is then twice the
+amplitude of each pulse. An example of non- rigid
+boundary is the open end of an organ pipe.
+
+To summarise, a travelling wave or pulse
+suffers a phase change of z on reflection at a
+rigid boundary and no phase change on
+reflection at an open boundary. To put this
+mathematically, let the incident travelling
+wave be
+
+y> (x,t) =asin(Ax- at)
+At a rigid boundary, the reflected wave is given
+by
+Y (x 0) = asin (kx-ot+ x).
+=-— asin (kx- of) (14.35)
+At an open boundary, the reflected wave is given
+by
+yx t) = asin (kx-ot+ 0).
+= asin (kx- ot) (14.36)
+
+Clearly, at the rigid boundary, y=y,+y, =0
+at all times.
+14.6.1 Standing Waves and Normal Modes
+
+We considered above reflection at one boundary.
+But there are familiar situations (a string fixed
+at either end or an air column in a pipe with
+either end closed) in which reflection takes place
+at two or more boundaries. In a string, for
+example, a wave travelling in one direction will
+get reflected at one end, which in turn will travel
+and get reflected from the other end. This will
+go on until there is a steady wave pattern set
+up on the string. Such wave patterns are called
+standing waves or stationary waves. To see this
+mathematically, consider a wave travelling
+along the positive direction of x-axis and a
+reflected wave of the same amplitude and
+wavelength in the negative direction of x-axis.
+From Eggs. (14.2) and (14.4), with 6 = 0, we get:
+
+Vx j=asin (kx-ot)
+
+YAx, 1) = asin (kx + of)
+
+The resultant wave on the string is, according
+to the principle of superposition:
+
+V(X 0= y(% O+y [x O
+
+Reprint 2025-26
+
+290
+
+PHYSICS
+
+=a (sin (kx-ot) +sin (kx + oD)
+
+Using the familiar trignometric identity
+Sin (A+B) + Sin (A-B) = 2 sin A cosB we get,
+
+(14.37)
+
+Note the important difference in the wave
+pattern described by Eq. (14.37) from that
+described by Eq. (14.2) or Eq. (14.4). The terms
+kx and wt appear separately, not in the
+combination kx - wt. The amplitude of this wave
+is 2a sin kx. Thus, in this wave pattern, the
+amplitude varies from point-to-point, but each
+element of the string oscillates with the same
+angular frequency @ or time period. There is no
+phase difference between oscillations of different
+elements of the wave. The string as a whole
+vibrates in phase with differing amplitudes at
+different points. The wave pattern is neither
+moving to the right nor to the left. Hence, they
+are called standing or stationary waves. The
+amplitude is fixed at a given location but, as
+remarked earlier, it is different at different
+locations. The points at which the amplitude is
+zero (i.e., where there is no motion at all) are
+
+ylx, 0) =2asin kxcos ot
+
+nodes; the points at which the amplitude is the
+largest are called antinodes. Fig. 14.12 shows
+a stationary wave pattern resulting from
+superposition of two travelling waves in
+opposite directions.
+
+The most significant feature of stationary
+waves is that the boundary conditions constrain
+the possible wavelengths or frequencies of
+vibration of the system. The system cannot
+oscillate with any arbitrary frequency (contrast
+this with a harmonic travelling wave), but is
+characterised by a set of natural frequencies or
+normal modes of oscillation. Let us determine
+these normal modes for a stretched string fixed
+at both ends.
+
+First, from Eq. (14.37), the positions of nodes
+(where the amplitude is zero) are given by
+sin kx=0.
+which implies
+
+kx=na; n=0,1,2,3,...
+Since, k=27// , we get
+
+n
+x= ;n=0, 1, 2,3,... (14.38)
+
+Fig. 14.12 Stationary waves arising from superposition of two harmonic waves travelling in opposite directions.
+Note that the positions of zero displacement (nodes) remain fixed at all times.
+
+Reprint 2025-26
+
+WAVES
+
+291
+
+Clearly, the distance between any two
+
+successive nodes is 3 In the same way, the
+
+positions of antinodes (where the amplitude is
+the largest) are given by the largest value of sin
+
+lsin kx|=1
+which implies
+kx=(n+%)x27;n=0,1,2,3,...
+
+With k=27/1, we get
+
+x=(n+ v5) -n=0,1,2,3,... (14.39)
+
+Again the distance between any two consecutive
+
+antinodes is Z. Eq. (14.38) can be applied to
+
+the case of a stretched string of
+length L fixed at both ends. Taking
+one end to be at x= 0, the boundary
+conditions are that x= 0 and x= L
+are positions of nodes. The x = 0
+condition is already satisfied. The
+x = Lnode condition requires that
+the length Lis related to i by
+
+ANNAN
+
+AMY
+
+Mii
+
+L=n f; n=1,2,3,... (14.40)
+
+Thus, the possible wavelengths of
+stationary waves are constrained
+by the relation
+
+ANNAN
+
+gare. nH=1,2,3,... (14.41)
+
+n
+with corresponding frequencies
+
+v= for n=1,2,3, (14.42)
+QL
+
+We have thus obtained the natural
+frequencies - the normal modes of
+oscillation of the system. The lowest
+possible natural frequency of a
+system is called its fundamental
+mode or the first harmonic. For the
+stretched string fixed at either end
+
+EY
+
+AY
+
+D
+itis given by v= OL , corresponding
+
+speed of wave determined by the properties of
+the medium. The n = 2 frequency is called the
+second harmonic; n = 3 is the third harmonic
+and so on. We can label the various harmonics by
+the symbol v, (m= 1, 2, ...).
+
+Fig. 14.13 shows the first six harmonics ofa
+stretched string fixed at either end. A string
+need not vibrate in one of these modes only.
+Generally, the vibration of a string will be a
+superposition of different modes; some modes
+may be more strongly excited and some less.
+Musical instruments like sitar or violin are
+based on this principle. Where the string is
+plucked or bowed, determines which modes are
+more prominent than others.
+
+Let us next consider normal modes of
+oscillation of an air column with one end closed
+
+ANNNAANAY
+
+(a)
+Fundamental
+or first harmonic
+
+>
+
+(b)
+
+~ second harmonic
+
+(c)
+third harmonic
+
+ANNAN
+
+(d)
+
+fourth harmonic
+
+(e)
+
+fifth harmonic
+
+ANA}
+
+(f)
+
+sixth harmonic
+
+Fig. 14.13 The first six harmonics of vibrations of a stretched
+
+to n= 1 of Eq. (14.42). Here vis the
+
+string fixed at both ends.
+
+Reprint 2025-26
+
+292
+
+PHYSICS
+
+and the other open. A glass tube partially filled
+with water illustrates this system. The end in
+contact with water is a node, while the open end
+is an antinode. At the node the pressure
+changes are the largest, while the displacement
+is minimum (zero). At the open end - the
+antinode, it is just the other way - least pressure
+change and maximum amplitude of
+displacement. Taking the end in contact with
+water to be x= 0, the node condition (Eq. 14.38)
+is already satisfied. If the other end x= Lis an
+antinode, Eq. (14.39) gives
+
+1
+= nt+-— _ _
+L= 2 95 , for n=O, 1, 2, 8,...
+
+The possible wavelengths are then restricted by
+the relation :
+
+2L
+A =————.,, for n =0, 1, 2, 3,.... (14.43)
+(n + 1/2)
+
+The normal modes - the natural frequencies -
+of the system are
+
+an)
+—~— nt+—- —-yE
+v= M+5 ppim=0,1,2,3,.. (14.44)
+
+The fundamental frequency corresponds to n= 0,
+
+and is given by | The higher frequencies
+
+are odd harmonics, i.e., odd multiples of the
+
+D
+fundamental frequency : 34, 5—., etc.
+
+4L 4L
+Fig. 14.14 shows the first six odd harmonics of
+air column with one end closed and the other
+open. For a pipe open at both ends, each end is
+an antinode. It is then easily seen that an open
+air column at both ends generates all harmonics
+(See Fig. 14.15).
+
+The systems above, strings and air columns,
+can also undergo forced oscillations (Chapter
+13). If the external frequency is close to one of
+the natural frequencies, the system shows
+resonance.
+
+Normal modes of a circular membrane rigidly
+clamped to the circumference as in a tabla are
+determined by the boundary condition that no
+point on the circumference of the membrane
+vibrates. Estimation of the frequencies of normal
+
+modes of this system is more complex. This
+problem involves wave propagation in two
+dimensions. However, the underlying physics is
+the same.
+
+Example 14.5 A pipe, 30.0 cm long, is open
+at both ends. Which harmonic mode of the
+pipe resonates a 1.1 kHz source? Will
+
+resonance with the same source be
+observed if one end of the pipe is closed ?
+Take the speed of sound in air as
+330m s71.
+
+Answer The first harmonic frequency is given
+by
+D DvD :
+Y= ZA 3E (open pipe)
+where L is the length of the pipe. The frequency
+of its nth harmonic is:
+
+nv
+
+Yn = OD!
+
+for n= 1, 2, 3, ... (open pipe)
+First few modes of an open pipe are shown in
+Fig. 14.15.
+
+For L= 30.0 cm, v= 330ms",
+
+1
+v= n330 (ms _) =550ns1!
+" 0.6 (m)
+
+Clearly, a source of frequency 1.1 kHz will
+resonate at v,, i.e. the second harmonic.
+
+(a) (b) (c)
+
+>
+
+Fundamental
+or third fifth
+first harmonic harmonic harmonic
+
+Reprint 2025-26
+
+WAVES
+
+293
+
+seventh ninth eleventh
+harmonic harmonic harmonic
+
+Fig. 14.14 Normal modes of an air column open at
+one end and closed at the other end. Only
+the odd harmonics are seen to be possible.
+
+Now if one end of the pipe is closed (Fig. 14.15),
+it follows from Eq. (14.15) that the fundamental
+frequency is
+
+V,= LL (pipe closed at one end)
+and only the odd numbered harmonics are
+present :
+oe 8 ond
+Vs= Gp’ Ys= Gp: and so on.
+
+For L = 30 cm and v = 330 m s", the
+fundamental frequency of the pipe closed at one
+end is 275 Hz and the source frequency
+corresponds to its fourth harmonic. Since this
+harmonic is not a possible mode, no resonance
+will be observed with the source, the moment
+one end is closed. <
+
+14.7 BEATS
+
+‘Beats’ is an interesting phenomenon arising
+from interference of waves. When two harmonic
+sound waves of close (but not equal) frequencies
+are heard at the same time, we hear a sound of
+similar frequency (the average of two close
+frequencies), but we hear something else also.
+We hear audibly distinct waxing and waning of
+the intensity of the sound, with a frequency
+equal to the difference in the two close
+frequencies. Artists use this phenomenon often
+
+Fundamental Second harmonic
+
+A
+
+first harmonic
+
+Third harmonic
+
+NOOO
+
+Fourth harmonic
+
+Fig. 14.15 Standing waves in an open pipe, first four
+harmonics are depicted.
+
+while tuning their instruments with each other.
+They go on tuning until their sensitive ears do
+not detect any beats.
+
+To see this mathematically, let us consider
+two harmonic sound waves of nearly equal
+angular frequency o, and , and fix the location
+to be x = O for convenience. Eq. (14.2) with a
+suitable choice of phase ( = 1/2 for each) and,
+assuming equal amplitudes, gives
+s,=acosa@,t and s,=acosa,t (14.45)
+
+Here we have replaced the symbol y by s,
+since we are referring to longitudinal not
+transverse displacement. Let w, be the (slightly)
+greater of the two frequencies. The resultant
+displacement is, by the principle of
+superposition,
+
+S= s,+5S,=a(cosa,t+cos a, )
+Using the familiar trignometric identity for
+cos A + cosB, we get
+
+( 1 »)t ( < »)t (14.46)
+
+= 2 a cos———— cos
+2
+which may be written as :
+s=[2a cos@,t] cos a,t (14.47)
+If |o,-@,! <<o,, @,, @, >> ,, th
+where
+
+@, = (@-%) and @,= (a+@)
+
+Now if we assume | @, -@, | <<@,, which means
+@, >> ©,, we can interpret Eq. (14.47) as follows.
+The resultant wave is oscillating with the average
+angular frequency o,; however its amplitude is
+not constant in time, unlike a pure harmonic
+wave. The amplitude is the largest when the
+term cos @, t takes its limit +1 or —1. In other
+words, the intensity of the resultant wave waxes
+and wanes with a frequency which is 2@, = @, -
+
+Reprint 2025-26
+
+294
+
+PHYSICS
+
+Sue
+t eh
+
+Musical Pillars
+
+Temples often have some pillars portraying
+human figures playing musical instru-
+ments, but seldom do these pillars
+themselves produce music. At the
+Nellaiappar temple in Tamil Nadu, gentle
+taps on a cluster of pillars carved out ‘of a
+single piece of rock produce the basic notes
+of Indian classical music, viz. Sa, Re, Ga,
+Ma, Pa, Dha, Ni, Sa. Vibrations ofthese
+pillars depend on elasticity of the.stone used,
+its density and shape.
+
+Musical pillars are categorised into three
+types: The first is called the Shruti Pillar,
+as it can produce the basic notes —.the
+“swaras”. The second type is the Gana
+Thoongal, which generates the basic tunes
+that make up the “ragas”. The third variety
+is the Laya Thoongal pillars that produce
+“taal” (beats) when tapped/The pillars at the
+Nellaiappar temple are a combination of the
+Shruti and Laya types.
+
+Archaeologists date the Nelliappar
+temple to the 7th century and claim it was
+built by successive rulers of the Pandyan
+dynasty.
+
+The musical pillars of Nelliappar and
+several other temples in southern India like
+those at Hampi (picture), Kanyakumari, and
+Thiruvananthapuram are unique to the
+country and have no parallel in any other
+part of the world.
+
+@,. Since @ = 2zv, the beat frequency v is
+
+given by
+
+beat?
+
+Vicat = V1 7 Vo (14.48)
+
+Fig. 14.16 illustrates the phenomenon of
+
+beats for two harmonic waves of frequencies 11
+
+Hz and 9 Hz. The amplitude of the resultant wave
+shows beats at a frequency of 2 Hz.
+
+Fig. 14.16 Superposition of two harmonic waves, one
+of frequency 11 Hz (a), and the other of
+frequency 9Hz (b), giving rise to beats of
+frequency 2 Hz, as shown in (c).
+
+Example 14.6 Two sitar strings A and B
+playing the note ‘Dha’ are slightly out of
+tune and produce beats of frequency 5 Hz.
+The tension of the string B is slightly
+
+increased and the beat frequency is found
+to decrease to 3 Hz. What is the original
+frequency of B if the frequency of A is
+427 Hz?
+
+Answer Increase in the tension of a string
+increases its frequency. If the original frequency
+of B (v,) were greater than that of A (v,), further
+increase in v, should have resulted in an
+increase in the beat frequency. But the beat
+frequency is found to decrease. This shows that
+Vz < Vv, Since v,— v,=5 Hz, and v,= 427 Hz, we
+get v,,= 422 Hz. <
+
+Reprint 2025-26
+
+WAVES
+
+10.
+
+11.
+
+295
+
+SUMMARY
+
+Mechanical waves can exist in material media and are governed by Newton’s Laws.
+
+Transverse waves are waves in which the particles of the medium oscillate perpendicular
+to the direction of wave propagation.
+
+Longitudinal waves are waves in which the particles of the medium oscillate along the
+direction of wave propagation.
+
+Progressive wave is a wave that moves from one point of medium to another.
+
+The displacement in a sinusoidal wave propagating in the positive x direction is given
+by
+
+V(x, 0 =a sin (kx- ot + 9)
+where a is the amplitude of the wave, kis the angular wave number, @ is the angular
+frequency, (kx- wt + ¢) is the phase, and ¢ is the phase constant or phase angle.
+
+Wavelength A of a progressive wave is the distance between two consecutive points of
+the same phase at a given time. In a stationary wave, it is twice the distance between
+two consecutive nodes or antinodes.
+
+Period T of oscillation of a wave is defined as the time any element of the medium
+
+takes to move through one complete oscillation. It is related to the angular frequency o
+through the relation
+
+T= 2n
+
+2)
+
+Frequency v of a wave is defined as 1/T and is related to angular frequency by
+
+2#
+
+Speed of a progressive wave is given by yp = we
+T
+The speed of a transverse wave on a stretched string is set by the properties of the
+string. The speed on a string with tension T and linear mass density p is
+
+v= |—
+u
+
+Sound waves are longitudinal mechanical waves that can travel through solids, liquids,
+or gases. The speed vof sound wave in a fluid having bulk modulus Band density pis
+
+F
+v= J—
+p
+
+The speed of longitudinal waves in a metallic bar is
+
+F
+v= |—
+Pp
+
+For gases, since B =P, the speed of sound is
+
+yP
+v= xo
+ye)
+
+Reprint 2025-26
+
+296
+
+PHYSICS
+
+12.
+
+13.
+
+14.
+
+15.
+
+16.
+
+17.
+
+When two or more waves traverse simultaneously in the same medium, the
+displacement of any element of the medium is the algebraic sum of the displacements
+due to each wave. This is known as the principle of superposition of waves
+
+y=> file — ut)
+
+Two sinusoidal waves on the same string exhibit interference, adding or cancelling
+according to the principle of superposition. If the two are travelling in the same
+direction and have the same amplitude a and frequency but differ in phase by a phase
+constant ¢, the result is a single wave with the same frequency @:
+
+yixy 0 = 2acos +9 sin kx at +50
+
+If ¢= 0 or an integral multiple of 27, the waves are exactly in phase and the interference
+is constructive; if ¢= 2, they are exactly out of phase and the interference is destructive.
+
+A travelling wave, at a rigid boundary or a closed end, is reflected with a phase
+reversal but the reflection at an open boundary takes place without any phase change.
+
+For an incident wave
+y,(x% 0 = asin (kx - ot)
+the reflected wave at a rigid boundary is
+
+y.(x 0 =- asin (kx+ at)
+For reflection at an open boundary
+
+y,(%t) = asin (kx + of)
+The interference of two identical waves moving in opposite directions produces standing
+waves. For a string with fixed ends, the standing wave is given by
+
+ylx, 0 = [2a sin kx] cos ot
+
+Standing waves are characterised by fixed locations of zero displacement called nodes
+and fixed locations of maximum displacements called antinodes. The separation
+between two consecutive nodes or antinodes is 4/2.
+
+A stretched string of length L fixed at both the ends vibrates with frequencies given by
+
+~~ TY" n=1,2,3,...
+2L
+The set of frequencies given by the above relation are called the normal modes of
+oscillation of the system. The oscillation mode with lowest frequency is called the
+fundamental mode or the first harmonic. The second harmonic is the oscillation mode
+with n = 2 and so on.
+
+A pipe of length L with one end closed and other end open (such as air columns)
+vibrates with frequencies given by
+
+v =(n+%) >, n=0, 1, 2,3, ...
+
+The set of frequencies represented by the above relation are the normal modes of
+oscillation of such a system. The lowest frequency given by v/4L is the fundamental
+mode or the first harmonic.
+
+A string of length L fixed at both ends or an air column closed at one end and open
+at the other end or open at both the ends, vibrates with certain frequencies called
+their normal modes. Each of these frequencies is a resonant frequency of the system.
+
+Beats arise when two waves having slightly different frequencies, v, and v, and
+comparable amplitudes, are superposed. The beat frequency is
+
+Vpeat = ii ~ Vy
+
+Reprint 2025-26
+
+WAVES
+
+297
+
+Physical quantity
+
+Wavelength Distance between two consecutive
+points with the same phase.
+
+Propagation k (L™] m' 4-20
+
+constant A
+
+Wave speed D [LT] ms’ v=W
+
+Beat frequency Voeat (T"] s' Difference of two close frequencies
+
+Remarks
+
+symbol] Dimensons | Unt
+a {L] m
+
+of superposing waves.
+
+POINTS TO PONDER
+
+1.
+
+14.1
+
+14.2
+
+14.3
+
+14.4
+
+A wave is not motion of matter as a whole in a medium. A wind is different from the
+sound wave in air. The former involves motion of air from one place to the other. The
+latter involves compressions and rarefactions of layers of air.
+
+In a wave, energy and not the matter is transferred from one point to the other.
+
+In a mechanical wave, energy transfer takes place because of the coupling through
+elastic forces between neighbouring oscillating parts of the medium.
+
+Transverse waves can propagate only in medium with shear modulus. of elasticity,
+Longitudinal waves need bulk modulus of elasticity and are therefore, possible in all
+media, solids, liquids and gases.
+
+In a harmonic progressive wave of a given frequency, all particles have the same
+amplitude but different phases at a given instant of time. Ina stationary wave, all
+particles between two nodes have the same phase at a given instant but have different
+amplitudes.
+
+Relative to an observer at rest in a medium the speed of a mechanical wave in that
+medium (v) depends only on elastic and other properties (such as mass density) of
+the medium. It does not depend:on the velocity of the source.
+
+EXERCISES
+
+A string of mass 2.50 kg is under a tension of 200 N. The length of the stretched
+string is 20.0 m. If the transverse jerk is struck at one end of the string, how long
+does the disturbance take to reach the other end?
+
+A stone dropped from the top of a tower of height 300 m splashes into the water of
+a pond near the base of the tower. When is the splash heard at the top given that
+the speed of sound in air is 340 ms!? (g=9.8ms7”)
+
+A steel wire has a length of 12.0 m and a mass of 2.10 kg. What should be the
+tension in the wire so that speed of a transverse wave on the wire equals the speed
+of sound in dry air at 20°C = 343 ms".
+
+yP
+Use the formula v = i to explain why the speed of sound in air
+ye)
+
+(a) is independent of pressure,
+(b) increases with temperature,
+
+(c) increases with humidity.
+
+Reprint 2025-26
+
+298
+
+PHYSICS
+
+14.5
+
+14.6
+
+14.7
+
+14.8
+
+14.9
+
+14.10
+
+14.11
+
+You have learnt that a travelling wave in one dimension is represented by a function
+y = f (x, }) where x and ¢ must appear in the combination x - v tor x + vt ice.
+y=f(x+vvU. Is the converse true? Examine if the following functions for y can
+possibly represent a travelling wave :
+
+(a) (x-vt)
+(b) log [x + v/x,]
+(c) 1/(x+ vd
+
+A bat emits ultrasonic sound of frequency 1000 kHz in air. If the sound meets a
+water surface, what is the wavelength of (a) the reflected sound, (b) the transmitted
+sound? Speed of sound in air is 340 ms” and in water 1486 ms".
+
+A hospital uses an ultrasonic scanner to locate tumours in a tissue. What is the
+wavelength of sound in the tissue in which the speed of sound is 1.7 km s!? The
+operating frequency of the scanner is 4.2 MHz.
+
+A transverse harmonic wave on a string is described by
+ys, t) =3.0 sin (836 t+ 0.018 x+ 2/4)
+where x and yare in cm and (tins. The positive direction of xis from left to right.
+(a) Is this a travelling wave or a stationary wave ?
+If it is travelling, what are the speed and direction of its propagation ?
+(b) What are its amplitude and frequency ?
+(c) What is the initial phase at the origin ?
+
+(d) What is the least distance between two successive crests in the wave ?
+
+For the wave described in Exercise 14.8, plot the displacement (y) versus (4 graphs
+for x = 0, 2 and 4cm. What are the shapes of these graphs? In which aspects does
+the oscillatory motion in travelling wave differ from one point to another: amplitude,
+frequency or phase ?
+
+For the travelling harmonic wave
+
+Vx, 0 = 2.0 cos 27 (10t- 0.0080 x + 0.35)
+
+where xand yare in cm and fins. Calculate the phase difference between oscillatory
+motion of two points separated by a distance of
+
+(a) 4m,
+(b) O.5m,
+(c) 4/2,
+(d) 3A/4
+
+The transverse displacement of a string (clamped at its both ends) is given by
+
+21
+yx, 0) = 0.06 sin 3 * cos (120 zd)
+
+where x and yare in m and tins. The length of the string is 1.5 m and its mass is
+3.0x10? kg.
+
+Answer the following :
+
+(a) Does the function represent a travelling wave or a stationary wave?
+
+(b) Interpret the wave as a superposition of two waves travelling in opposite
+directions. What is the wavelength, frequency, and speed of each wave ?
+
+Reprint 2025-26
+
+WAVES
+
+299
+
+14.12
+
+14.13
+
+14.14
+
+14.15
+
+14.16
+
+14.17
+
+14.18
+
+14.19
+
+(c) Determine the tension in the string.
+(i) For the wave on a string described in Exercise 15.11, do all the points on the
+
+string oscillate with the same (a) frequency, (b) phase, (c) amplitude? Explain
+your answers. (ii) What is the amplitude of a point 0.375 m away from one end?
+
+Given below are some functions of xand tto represent the displacement (transverse
+or longitudinal) of an elastic wave. State which of these represent (i) a travelling
+wave, (ii) a stationary wave or (iii) none at all:
+
+(a) y=2 cos (3x) sin (109
+
+(b) y =2Vx —- vt
+(c) y=S8sin (5x- 0.59 + 4 cos (5x- 0.59
+
+(d) y=cos xsin t+ cos 2xsin 2t
+
+Awire stretched between two rigid supports vibrates in its fundamental mode with
+a frequency of 45 Hz. The mass of the wire is 3.5 x 10° kg and its linear mass density
+is 4.0 x 10? kg m™. What is (a) the speed of a transverse wave on the string, and
+(b) the tension in the string?
+
+A metre-long tube open at one end, with a movable piston at the other end, shows
+resonance with a fixed frequency source (a tuning fork of frequency 340 Hz) when
+the tube length is 25.5 cm or 79.3 cm. Estimate the speed of sound in air at the
+temperature of the experiment. The edge effects may be neglected.
+
+A steel rod 100 cm long is clamped at its middle. The fundamental frequency of
+longitudinal vibrations of the rod are given to be 2.53 kHz. What is the speed of
+sound in steel?
+
+A pipe 20 cm long is closed at one end. Which harmonic mode of the pipe is
+resonantly excited by a 430 Hz source ? Will the same source be in resonance with
+the pipe if both ends are open? (speed of sound in air is 340 ms’).
+
+Two sitar strings A and B playing the note ‘Ga’ are slightly out of tune and produce
+beats of frequency 6 Hz. The tension in the string A is slightly reduced and the
+beat frequency is found to reduce to 3 Hz. If the original frequency of A is 324 Hz,
+what is the frequency of B?
+
+Explain why (or how):
+(a) inasound wave, a displacement node is a pressure antinode and vice versa,
+
+(b) bats can ascertain distances, directions, nature, and sizes of the obstacles
+without any “eyes”,
+
+(c) a violin note and sitar note may have the same frequency, yet we can
+distinguish between the two notes,
+
+(d) solids can support both longitudinal and transverse waves, but only
+longitudinal waves can propagate in gases, and
+
+(e) the shape ofa pulse gets distorted during propagation in a dispersive medium.
+
+Reprint 2025-26
+
