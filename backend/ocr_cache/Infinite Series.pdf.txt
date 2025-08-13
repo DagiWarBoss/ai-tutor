@@ -1,0 +1,413 @@
+Appendix 1
+
+INFINITE SERIES
+
+A.1.1 Introduction
+
+As discussed in the Chapter 9 on Sequences and Series, a sequence d,, d,, ..., 4,5»
+
+n
+
+having infinite number of terms is called infinite sequence and its indicated sum, i.e.,
+a,+a,+a,+..+a,+... is called an infinte series associated with infinite sequence.
+
+This series can also be expressed in abbreviated form using the sigma notation, 1.e.,
+
+ioe)
+a,ta,+a,+... bat... = Dm
+
+k=1
+
+In this Chapter, we shall study about some special types of series which may be
+required in different problem situations.
+
+A.1.2 Binomial Theorem forany Index
+
+In Chapter 8, we discussed the Binomial Theorem in which the index was a positive
+integer. In this Section, we state a more general form of the theorem in which the
+index is not necessarily a whole number. It gives us a particular type of infinite series,
+called Binomial Series. We illustrate few applications, by examples.
+
+We know the formula
+
+(l+xy"="C, t"C, xt... +"C, x"
+
+Here, 7 is non-negative integer. Observe that if we replace index n by negative
+
+integer or a fraction, then the combinations "C, do not make any sense.
+
+We now state (without proof), the Binomial Theorem, giving an infinite series in
+which the index is negative or a fraction and not a whole number.
+
+Theorem The formula
+
+(1+x)" =l+mx+ m(m =) 2 + m(m—1)(m—2) 5 +...
+1.2 1.2.3
+
+holds whenever || <1.
+
+Reprint 2025-26
+
+INFINITE SERIES 315
+
+Remark 1. Note carefully the condition | x | < 1, i.e.,-— 1<x< 1 is necessary when m
+is negative integer or a fraction. For example, if we take x = — 2 andm = —2, we
+obtain
+
+(1-2)° =14+ (-2)(-2) + 2) ay $a
+
+or 1=1+4+4+12+...
+This is not possible
+
+2. Note that there are infinite number of terms in the expansion of (1+ x)”, when m
+is a negative integer or a fraction
+
+n b\]" nf, bY"
+Consider (a+b)" = |4 I+ =q I+
+2
+_ a" ta meg mma) (>) +...
+a 1.2 a
+
+m(m —
+1.2
+
+bh 1)
+= a"+ma™'b+ an a
+
+a <1 or equivalently when | b| <| a].
+
+This expansion is valid when
+
+The general term in the expansion of (a + b)” is
+
+m(m —1)(m —2)..(m—r+l)a""b"
+1.2.3.7
+
+We give below certain particular cases of Binomial Theorem, when we assume
+
+|| <1, these are left to students as exercises:
+lL (tx) l=1-x+x-x +...
+2. exp t=ltxtxrrxet...
+3. (tx)? =12x4+3r —- 464+...
+4. (1 — x)? =142x+3VP +40+...
+
+2
+Example 1 Expand [1-2] , when | x | < 2.
+
+Reprint 2025-26
+
+316 MATHEMATICS
+
+Solution We have
+
+1 2 1.2 2
+x 3x?
+= ]+—+—+
+4 32
+A.1.3 Infinite Geometric Series
+From Chapter 9, Section 9.5, a sequence a,, a,, d,, ..., a, 18 called G.P., if
+Ant
+
+aT (constant) for k = 1, 2, 3, ..., n-1. Particularly, if we take a, = a, then the
+k
+
+resulting sequence a, ar, ar’, ..., ar”! is taken as the standard form of G.P., where a is
+
+first term and r, the common ratio of G.P.
+Earlier, we have discussed the formula to find the sum of finite series
+
+atar+ar + ...+ar"~' which is given by
+5 ale")
+" l-r
+
+In this section, we state the formula to find the sum of infinite geometric series
+
+atart+ar+...+ar'—' +... and illustrate the same by examples.
+2 4
+Let us consider the G.P. 1, 3 97
+
+2
+Here a=1,r= 3° We have
+
+MG) py
+
+S, = "2 1 (2) (1)
+3
+
+Let us study the behaviour of (5) as n becomes larger and larger.
+
+Reprint 2025-26
+
+INFINITE SERIES 317
+
+2 n
+0.6667 0.1316872428 0.01734152992 0.00030072866
+
+n
+We observe that as n becomes larger and larger, (5) becomes closer and closer to
+
+zero. Mathematically, we say that as n becomes sufficiently large, G becomes
+
+sufficiently small. In other words, as 7 ©, (3) — 0. Consequently, we find that
+
+the sum of infinitely many terms is given by S=3.
+Thus, for infinite geometric progression a, ar, ar’, ..., ifnumerical value of common
+ratio r is less than 1, then
+
+5 a(1-r") a ar"
+
+" l-r =r I-r
+
+n
+; . ar
+In this case, +” »(@ aS n— oo since |r|<1 and then Lp — 0. Therefore,
+—r
+
+a
+Ss, as n> 00.
+l-r
+
+Symbolically, sum to infinity of infinite geometric series is denoted by S. Thus,
+
+we have S=—
+l-r
+For example
+; 1 1 1 1
+(1) yh oe tastes?
+2
+(i) 1 _! 1 1 1 2
+ut _ rs) = = =
+2 2? 2 1-(-3) ii 3
+2 2
+
+Reprint 2025-26
+
+318 MATHEMATICS
+
+Example 2 Find the sum to infinity of the G.P. ;
+
+es
+4°16) 64°"
+—5 1
+Solution Here a= and r=—7 Also |r|<l.
+Hence, the sum to infinity is 4 1 =i= 1
+1+—  —
+4 4
+
+A.1.4 Exponential Series
+Leonhard Euler (1707 — 1783), the great Swiss mathematician introduced the number
+e in his calculus text in 1748. The number e is useful in calculus as zx in the study of the
+circle.
+
+Consider the following infinite series of numbers
+
+1 n 1 1 n 1
+The sum of the series given in (1) is denoted by the number e
+Let us estimate the value of the number e.
+
+Since every term of the series (1) is positive, itis clear that its sum is also positive.
+Consider the two sums
+
+1 1 1 1
+
+1+
+
+at alta .. (2)
+1 1 1 1
+and 2 + = + x tant yA +... . 3)
+
+Observe that
+1 1 1 1 1 1
+
+_ _ . . fe
+31 6 and 7 q° Which gives 31
+1 1 d 1 hich ©; c 1
+4124 an : g > Which gives 7 s
+1 1 1 1 hich oj le 1
+5! 120 and 4 16° ich gives 514°
+
+Reprint 2025-26
+
+INFINITE SERIES 319
+
+Therefore, by analogy, we can say that
+1 1
+— < ——_
+n! gr ?
+
+We observe that each term in (2) is less than the corresponding term in (3),
+
+when n > 2
+
+Pity sy jeft tity. ty,
+1 1 ;
+Adding 1+ Tl + >, } on both sides of (4), we get,
+1 *) 1 1 1
+1+—+ +) —+—+—+..4—+...
+I! 2! 3! 4! 5! n!
+
+c 1 1 1 . (5)
+“ They }Gepteh}f
+1 1 1
+[13 5 sigtytt sate
+1
+= 1+——=1+2 =3
+1
+]-—
+2
+
+Left hand side of (5) represents the series (1). Therefore e <3 and also e > 2 and
+hence 2<e <3.
+
+Remark The exponential series involving variable x can be expressed as
+
+2 3
+‘ x x Xx x"
+
+e =l14 +4 a
+I! 2! 3) n!
+
+Example 3 Find the coefficient of x* in the expansion of e* as a series in
+powers of x.
+
+Solution In the exponential series
+
+x x fea
+e =1l4+—+ +
+1! a 3!
+
+replacing x by (2x + 3), we get
+
+Reprint 2025-26
+
+320 MATHEMATICS
+
+2
+(2x +3) . (2x +3) .
+I! 2!
+
+2x43 = [+
+
+e
+
+(2x+3)" — (3+2x)"
+
+n! n!
+
+Here, the general term is
+
+. This can be expanded by the
+
+Binomial Theorem as
+
+1 nin n- n n- n
+—|3 +" C3 (2x) 4" C32 (2x) +...4(2x)" |
+
+372 2
+
+Here, the coefficient of x? is . Therefore, the coefficient of x” in the whole
+
+series iS
+
+o n O23 292 00 (n- 1)3"" 2
+yess ayn
+n=2 I
+
+[using nm! =n (n—1)(m — 2)!]
+
+2 3
+= pid Saee.
+I! 2! 3!
+
+= 2e.
+Thus 2e? is the coefficient of x? in the expansion of e”°.
+Alternatively e”* = e° . e*
+
+2 3
+e r 42% xy", 2x) +
+= 1! 2! 3!
+
+32° 23
+Thus, the coefficient of x? in the expansion of e?** is e°. Fe
+Example 4 Find the value of e’, rounded off to one decimal place.
+
+Solution Using the formula of exponential series involving x, we have
+
+I! 2! 3! a!
+
+Reprint 2025-26
+
+INFINITE SERIES
+Putting x = 2, we get
+
+2 22 2 2* 2 2°
++—+
+
+e =14+—4+2424—4
+I! 2! 3! 4! 3S! 6!
+
+14242444244 ,44
+3 3 15 45
+
+> the sum of first seven terms > 7.355.
+On the other hand, we have
+
+5 2 2 2 2*\ 2 22 2
+e </1+—+—+—+ + l+>+ 54+...
+I! 2! 3! 4!) OS! 6 6 6
+
+321
+
+Thus, e” lies between 7.355 and 7.4. Therefore, the value of e, rounded off to one
+
+decimal place, is 7.4.
+
+A.1.5 Logarithmic Series
+
+Another very important series is logarithmic series which 1s also in the form of infinite
+series. We state the following result without proof and illustrate its application with an
+
+example.
+Theorem If|x |< 1, then
+
+2 3
+log, (It.x)=x- + —..
+
+The series on the right hand side of the above is called the /ogarithmic series.
+
+The expansion of log, (1+x) is valid for x = 1. Substituting x = | in the
+
+expansion of log, (1+x), we get
+
+1 11
+
+log, 2 =1—-—+—-— +...
+oe 23 4
+
+Reprint 2025-26
+
+322 MATHEMATICS
+
+Example 5 If a, B are the roots of the equation x? — px +q =0, prove that
+
+2,2 3,73
+log, (1+ px +x”) =(a+B)x on +B 4 +B x
+
+2 3
+ax? atx? Bx? Bx?
+Solution Right hand side = | °%~—> + 3 ~ | Bo 5 + ra
+= log, (1+ax)+log(1+Bx)
+= log, (1+(a+B)x + ax" )
+
+= log, (1 + px t+ qx" ) = Left hand side.
+
+Here, we have used the facts a+B=p and aB=q . We know this from the
+given roots of the quadratic equation. We have also assumed that both |ax|< 1 and
+
+|Bx|<1.
+
+>,
+— % —
+
+Reprint 2025-26
+
