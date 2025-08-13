@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import pandas as pd
 from pdf2image import convert_from_path
 import pytesseract
+import glob  # For flexible PDF search
 
 # ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
@@ -20,9 +21,9 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
-# --- Comprehensive Name Mapping (expanded for mismatches) ---
+# --- Comprehensive Name Mapping (expanded for common mismatches) ---
 NAME_MAPPING = {
-    # Your full list, with added variations for skipped Physics chapters
+    # Expanded for Physics and other skips
     'Kinetic Theory': 'Kinetic-Theory',
     'Laws Of Motion': 'Laws-Of-Motion',
     'Continuity And Differentiability': 'Continuity And Differentiability',
@@ -41,8 +42,7 @@ NAME_MAPPING = {
     'Wave Optics': 'Wave Optics',
     'Mechanical Properties Of Fluids': 'Mechanical-Properties-Of-Fluids',
     'Mechanical Properties Of Solids': 'Mechanical-Properties-Of-Solids',
-    # ... add any other mismatched names from your skips
-    # (rest of your original mapping here)
+    # Your full original mapping here...
     'Some Basic Concepts Of Chemistry': 'Some Basic Concepts Of Chemistry',
     'Structure Of Atom': 'Structure Of Atom',
     'Classification Of Elements And Periodicity': 'Classification Of Elements And Periodicity',
@@ -118,6 +118,9 @@ NAME_MAPPING = {
     'Vector Algebra': 'Vector Algebra'
 }
 
+# Appendix chapters to skip (as per your note)
+APPENDIX_CHAPTERS = ['Infinite Series', 'Proofs In Mathematics']
+
 def log(msg: str):
     print(msg, flush=True)
 
@@ -128,12 +131,24 @@ def get_chapter_map_from_db(cursor):
 def clean_ocr_text(text: str, subject: str) -> str:
     text = re.sub(r'[^\S\r\n]+', ' ', text)  # Multiple spaces to single
     text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
-    if 'physics' in subject.lower():
+    if 'physics' in subject.lower() or 'math' in subject.lower():
         text = re.sub(r'(\d+)\s*[\.=:\-]\s*(\d+)', r'\1.\2', text)  # Fix "2=1", "2 : 1" to "2.1"
         text = re.sub(r'\[\s*(\d+)\s*\]', r'\1', text)  # Clean equation artifacts
-    # Handle commas: Convert in numbers (e.g., "4,1" -> "4.1") but keep in text
-    text = re.sub(r'(\d+),(\d+)', r'\1.\2', text)  # Comma as separator artifact
+        text = re.sub(r'(\d+),(\d+)', r'\1.\2', text)  # Comma in numbers to dot
     return text.strip()
+
+def find_pdf_path(folder_path, pdf_filename):
+    # Try exact match first
+    pdf_path = os.path.join(folder_path, pdf_filename)
+    if os.path.exists(pdf_path):
+        return pdf_path
+    # Flexible search: ignore case, hyphens, spaces
+    search_pattern = os.path.join(folder_path, pdf_filename.replace('-', '?').replace(' ', '?') + '.*')  # ? for optional char
+    matches = glob.glob(search_pattern, recursive=False)
+    if matches:
+        log(f"    [INFO] Found matching PDF: {matches[0]} (instead of {pdf_filename})")
+        return matches[0]
+    return None
 
 def get_text_from_pdf_with_caching(pdf_path: str, subject: str) -> str:
     pdf_filename = os.path.basename(pdf_path)
@@ -146,11 +161,11 @@ def get_text_from_pdf_with_caching(pdf_path: str, subject: str) -> str:
 
     log("    - No cache found. Converting PDF to images and running OCR...")
     try:
-        images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
+        images = convert_from_path(pdf_path, dpi=400 if 'physics' in subject.lower() or 'math' in subject.lower() else 300, poppler_path=POPPLER_PATH)
         full_text = ""
         config = '--psm 3'  # Default
-        if 'physics' in subject.lower():
-            config = '--psm 4'  # Better for single-column with diagrams
+        if 'physics' in subject.lower() or 'math' in subject.lower():
+            config = '--psm 4'  # Better for diagrams/equations
         for i, image in enumerate(images):
             full_text += pytesseract.image_to_string(image, config=config) + "\n"
         log("    - OCR complete.")
@@ -168,19 +183,19 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
     # Normalize CSV headings: Strip commas for matching but keep original for output
     topics_from_csv['heading_text_normalized'] = topics_from_csv['heading_text'].str.replace(',', '', regex=False)
     
-    # Enhanced regex: Tolerant for commas (treat as dots in numbers)
-    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', r'(?:[\.\s:\-,])?') for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'(?m)^\s*(' + '|'.join(topic_numbers_escaped) + r')(?:\s*[\.\s:\-,]?|$)', re.IGNORECASE | re.DOTALL)
+    # Enhanced regex: Very flexible for artifacts
+    topic_numbers_escaped = [re.escape(str(num)).replace('\\.', r'(?:[\.\s:\-,;])?') for num in topics_from_csv['heading_number']]
+    heading_pattern = re.compile(r'(?m)^\s*(' + '|'.join(topic_numbers_escaped) + r')(?:\s*[\.\s:\-,;]?|$)', re.IGNORECASE | re.DOTALL)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {}
     text_length = len(ocr_text)
     for match in matches:
-        cleaned_num = re.sub(r'[\s:\-,]+', '.', match.group(1)).strip('.')
+        cleaned_num = re.sub(r'[\s:\-,;]+', '.', match.group(1)).strip('.')
         pos = match.start()
         if pos < text_length * 0.8 and cleaned_num not in topic_locations:
             topic_locations[cleaned_num] = pos
             log(f"    - Matched heading: {cleaned_num} at position {pos}")
-    
+
     # Log expected vs found
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
     found_topics = set(topic_locations.keys())
@@ -194,36 +209,37 @@ def extract_topics(ocr_text: str, topics_from_csv: pd.DataFrame):
                 snippet = ocr_text[max(0, miss_pos-50):miss_pos+50].replace('\n', ' ')
                 log(f"      - Snippet around missing '{miss}': ...{snippet}...")
 
-    # Extract content for found topics
+    # Extract content
     sorted_locations = sorted(topic_locations.items(), key=lambda x: x[1])
     for i, (topic_num, start_pos) in enumerate(sorted_locations):
         end_pos = sorted_locations[i+1][1] if i+1 < len(sorted_locations) else text_length
         content = ocr_text[start_pos:end_pos].strip()
         row = topics_from_csv[topics_from_csv['heading_number'] == topic_num]
-        title = row['heading_text'].values[0] if not row.empty else ''  # Use original title with commas if present
+        title = row['heading_text'].values[0] if not row.empty else ''
         extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
-    
-    # Stronger fallback: Deeper scan with looser pattern for misses, handling commas
-    loose_pattern = re.compile(r'(?m)(?:^|\n)\s*(\d+(?:[\.\s,\-]\d+)?(?:[\.\s,\-]\d+)?)\s*[\.:]?\s*', re.IGNORECASE)
-    for topic in extracted_topics[:]:
-        content = topic['content']
-        sub_matches = loose_pattern.finditer(content)
-        for sub_match in sub_matches:
-            sub_cleaned = re.sub(r'[\s,\-]+', '.', sub_match.group(1)).strip('.')
-            if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
-                sub_start = sub_match.start() + topic_locations[topic['topic_number']]
-                topic_locations[sub_cleaned] = sub_start
-                sub_end = text_length
-                for next_num, next_pos in sorted_locations:
-                    if next_pos > sub_start:
-                        sub_end = next_pos
-                        break
-                sub_content = ocr_text[sub_start:sub_end].strip()
-                sub_row = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]
-                sub_title = sub_row['heading_text'].values[0] if not sub_row.empty else ''
-                extracted_topics.append({'topic_number': sub_cleaned, 'title': sub_title, 'content': sub_content})
-                log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
-                missing_topics.remove(sub_cleaned)
+
+    # Even stronger fallback: Looser pattern, scan multiple times if needed
+    loose_pattern = re.compile(r'(?m)(?:^|\n)\s*(\d+(?:[\.\s,\-;:]\d+)?(?:[\.\s,\-;:]\d+)?)\s*[\.:;]?\s*', re.IGNORECASE)
+    for _ in range(2):  # Scan twice for deeper nesting
+        for topic in extracted_topics[:]:
+            content = topic['content']
+            sub_matches = loose_pattern.finditer(content)
+            for sub_match in sub_matches:
+                sub_cleaned = re.sub(r'[\s,\-;:]+', '.', sub_match.group(1)).strip('.')
+                if sub_cleaned in missing_topics and sub_cleaned not in topic_locations:
+                    sub_start = sub_match.start() + topic_locations[topic['topic_number']]
+                    topic_locations[sub_cleaned] = sub_start
+                    sub_end = text_length
+                    for next_num, next_pos in sorted_locations:
+                        if next_pos > sub_start:
+                            sub_end = next_pos
+                            break
+                    sub_content = ocr_text[sub_start:sub_end].strip()
+                    sub_row = topics_from_csv[topics_from_csv['heading_number'] == sub_cleaned]
+                    sub_title = sub_row['heading_text'].values[0] if not sub_row.empty else ''
+                    extracted_topics.append({'topic_number': sub_cleaned, 'title': sub_title, 'content': sub_content})
+                    log(f"    - Fallback match for subtopic: {sub_cleaned} at position {sub_start}")
+                    missing_topics.remove(sub_cleaned)
 
     return extracted_topics
 
@@ -245,15 +261,19 @@ def update_database(cursor, chapter_id: int, topics: list):
     log(f"    - Found {len(empty_topics)} empty topics in DB: {', '.join(sorted(empty_topics))}.")
     
     updated_count = 0
+    missed_empties = set(empty_topics)
     for topic in topics:
         if topic['topic_number'] in empty_topics:
             cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", 
                            (topic['content'], chapter_id, topic['topic_number']))
             updated_count += 1
             log(f"      - Updated empty topic {topic['topic_number']}: {topic['title']}")
+            missed_empties.remove(topic['topic_number'])
         else:
             log(f"      - Skipping populated topic {topic['topic_number']}: {topic['title']}")
 
+    if missed_empties:
+        log(f"      - Missed extracting {len(missed_empties)} empty topics: {', '.join(sorted(missed_empties))} (improve regex or OCR).")
     log(f"    - Updated {updated_count} empty topics in the database (out of {len(topics)} extracted).")
 
 def main():
@@ -285,17 +305,21 @@ def main():
     db_chapters = cursor.fetchall()
 
     for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
+        if any(app in chapter_name_db for app in APPENDIX_CHAPTERS):
+            log(f"    [INFO] Skipping appendix chapter '{chapter_name_db}'.")
+            skipped_chapters_count += 1
+            continue
+        
         log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
         folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
         mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
         pdf_filename = f"{mapped_pdf_filename_base}.pdf"
         class_folder = f"Class {class_number}"
         folder_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder)
-        pdf_path = os.path.join(folder_path, pdf_filename)
         
-        log(f"    [DEBUG] Looking for PDF at: {pdf_path}")
-        if not os.path.exists(pdf_path):
-            log(f"    [WARNING] PDF not found for '{chapter_name_db}'. Skipping chapter.")
+        pdf_path = find_pdf_path(folder_path, pdf_filename)  # Flexible search
+        if not pdf_path:
+            log(f"    [WARNING] PDF not found for '{chapter_name_db}' (tried variations). Skipping chapter.")
             skipped_chapters_count += 1
             continue
 
@@ -319,7 +343,7 @@ def main():
         else:
             update_database(cursor, chapter_id, topics_data)
             conn.commit()
-            log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}'.")
+            log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}' (updated {updated_count} topics).")
             processed_chapters_count += 1
 
     cursor.close()
