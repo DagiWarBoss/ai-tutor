@@ -1,0 +1,3700 @@
+12080CHO7
+
+INTEGRALS
+
+¢ Just as a mountaineer climbs a mountain — because it is there, so
+a good mathematics student studies new material because
+it is there. — JAMES B. BRISTOL
+
+7.1 Introduction
+
+Differential Calculus is centred on the concept of the
+derivative. The original motivation for the derivative was
+the problem of defining tangent lines to the graphs of
+functions and calculating the slope of such lines. Integral
+Calculus is motivated by the problem of defining and
+calculating the area of the region bounded by the graph of
+the functions.
+
+If a function f is differentiable in an interval I, 1.e., its
+derivative f ‘exists at each point of I, then a natural question
+arises that given f’at each point of I, can we determine
+the function? The functions that could possibly have given
+function as a derivative are called anti derivatives (or G .W. Leibnitz
+primitive) of the function. Further, the formula that gives (1646 -1716)
+all these anti derivatives is called the indefinite integral of the function and such
+process of finding anti derivatives is called integration. Such type of problems arise in
+many practical situations. For instance, if we know the instantaneous velocity of an
+object at any instant, then there arises a natural question, i.e., can we determine the
+position of the object at any instant? There are several such practical and theoretical
+situations where the process of integration is involved. The development of integral
+calculus arises out of the efforts of solving the problems of the following types:
+
+(a) the problem of finding a function whenever its derivative is given,
+
+(b) the problem of finding the area bounded by the graph of a function under certain
+conditions.
+
+These two problems lead to the two forms of the integrals, e.g., indefinite and
+definite integrals, which together constitute the Integral Calculus.
+
+Reprint 2025-26
+
+226 MATHEMATICS
+
+There is a connection, known as the Fundamental Theorem of Calculus, between
+indefinite integral and definite integral which makes the definite integral as a practical
+tool for science and engineering. The definite integral is also used to solve many interesting
+problems from various disciplines like economics, finance and probability.
+
+In this Chapter, we shall confine ourselves to the study of indefinite and definite
+integrals and their elementary properties including some techniques of integration.
+
+7.2 Integration as an Inverse Process of Differentiation
+
+Integration is the inverse process of differentiation. Instead of differentiating a function,
+we are given the derivative of a function and asked to find its primitive, i.e., the original
+function. Such a process is called integration or anti differentiation.
+
+Let us consider the following examples:
+
+We know that a (sin x) = cos x .. (1)
+dx
+d x 5
+—(—)= . (2
+aS 3 )=x (2)
+d
+and —(e*)=e . GB)
+dx
+
+We observe that in (1), the function cos x is the derived function of sin x. We say
+3
+x
+that sin x is an anti derivative (or an integral) of cos x. Similarly, in (2) and (3), 3 and
+
+e* are the anti derivatives (or integrals) of x* and e*, respectively. Again, we note that
+for any real number C, treated as constant function, its derivative is zero and hence, we
+can write (1), (2) and (3) as follows :
+d_. d x d
+— (sin x+C)=cos x, — (—+C)=x°' and —(e+C)=e"
+. x, . . dx 3 . dx . .
+Thus, anti derivatives (or integrals) of the above cited functions are not unique.
+
+Actually, there exist infinitely many anti derivatives of each of these functions which
+
+can be obtained by choosing C arbitrarily from the set of real numbers. For this reason
+
+C is customarily referred to as arbitrary constant. In fact, C is the parameter by
+
+varying which one gets different anti derivatives (or integrals) of the given function.
+; ; ; d ;
+
+More generally, if there is a function F such that a F(x) =f (*), vy xe I (interval),
+
+then for any arbitrary real number C, (also called constant of integration)
+
+4 TE +C] = f(x), xe I
+dx
+
+Reprint 2025-26
+
+INTEGRALS 227
+
+Thus, {F+C, C € R} denotes a family of anti derivatives of f-
+
+Remark Functions with same derivatives differ by a constant. To show this, let g and h
+be two functions having the same derivatives on an interval I.
+
+Consider the function f= g —h defined by f(x) = g(x) -h(@®), vxel
+
+d,
+Then a =f=2 -W giving f(xy)=¢'(x)-W vxel
+Nx
+or f (x) = 0, Vx € I by hypothesis,
+
+1.e., the rate of change of f with respect to x is zero on I and hence fis constant.
+
+In view of the above remark, it is justified to infer that the family {F+C, Ce R}
+provides all possible anti derivatives of f.
+
+We introduce a new symbol, namely, | f (x) dx which will represent the entire
+
+class of anti derivatives read as the indefinite integral of f with respect to x.
+Symbolically, we write | f(x) dx =F(x)+C.
+ar dy ;
+Notation Given that on f () , we write y = [fr (x) dx.
+he
+
+For the sake of convenience, we mention below the following symbols/terms/phrases
+with their meanings as given in the Table (7.1).
+
+Table 7.1
+
+[f (x) dx Integral of f with respect to x
+
+xin [f (x) dx Variable of integration
+
+Integrate Find the integral
+
+An integral of f A function F such that
+F(x) =f @)
+
+Integration The process of finding the integral
+
+Constant of Integration Any real number C, considered as
+constant function
+
+Reprint 2025-26
+
+228 MATHEMATICS
+
+We already know the formulae for the derivatives of many important functions.
+From these formulae, we can write down immediately the corresponding formulae
+(referred to as standard formulae) for the integrals of these functions, as listed below
+which will be used to find integrals of other functions.
+
+Derivatives
+
+d tt!
+
+Particularly, we note that
+
+d
+“ (x)=1-
+# ()a1,
+
+(ii) — (sin x) =cos x ;
+dx
+
+(iii) — (-cos x) =sin x ;
+dx
+
+(iv) —(tan x) =sec’x ;
+dx
+
+(v) — (-cot x) =cosec*x .
+dx
+
+d
+(vi) — (sec x) =secxtan x ;
+dx
+
+. a
+(vii) — (- cosec x) =cosec x cot x :
+
+dx
+(viii) =, (sin! x)= =
+(ix) =, (-e08 | x)= —
+«) Stan x)=
+
+d
+(xi) Te (e")=e ;
+
+Integrals (Anti derivatives)
+
++C,n#-1
+1
+
+x n+1
+fx" dx =
+n
+
+[ac=x+C
+cos xdx=sinx+C
+sin x dx =—cos x+C
+
+sec’ xdx=tanx+C
+
+sec x tanx dx=secx+C
+
+cosec x cot x dx =— cosec x +C
+
+= sin''x+C
+
+J
+J
+J
+Jeosec? xdx=—cotx+C
+J
+J
+4
+
+_ —cos!x+C
+fasta ec
+fe'dv=e"+C
+
+Reprint 2025-26
+
+INTEGRALS 229
+
+1 1
+(xii) # (ogixl) =~: [=r =log! x1+C
+dx x x
+d{ a a’
+ee -q. *dx= +C
+(xil) é(<] O43 Ja * log a
+
+In practice, we normally do not mention the interval over which the various
+
+functions are defined. However, in any specific problem one has to keep it in mind.
+
+7.2.1 Some properties of indefinite integral
+In this sub section, we shall derive some properties of indefinite integrals.
+(1) The process of differentiation and integration are inverses of each other in the
+sense of the following results :
+
+d
+a) £0 de = £00)
+
+and [sf “(x) dx = f(x) + C, where C is any arbitrary constant.
+
+Proof Let F be any anti derivative of f, i.e.,
+
+Fx) =f)
+
+Then [f@ dx =F(x)+C
+d d
+Therefore ke [f@ dx = ke (F(x) +C)
+
+d
+= BE wale
+
+Similarly, we note that
+
+fx)
+
+d
+ni
+
+and hence [sf (x) dx =f(x) +C
+
+where C is arbitrary constant called constant of integration.
+
+(11) Two indefinite integrals with the same derivative lead to the same family of
+curves and so they are equivalent.
+
+Reprint 2025-26
+
+230
+
+MATHEMATICS
+
+Proof Let f and g be two functions such that
+
+d d
+=) fe dx = aL (x) dx
+
+or “Thre dx—[g@) dx | =0
+
+Hence [¢@ dx — Je (x) dx= C, where C is any real number (Why?)
+or [ fo) de = fg @ax+C
+
+So the families of curves {f f(x) dx+C,,C,e R}
+
+and {[g@ dx+C,,C,€ R} are identical.
+
+Hence, in this sense, } Ff (x) dx and [s@ dx are equivalent.
+
+(w= Note|The equivalence of the families [¢@ dx+C,,C,e R} and
+
+J g(x) dx+C,,C, € R} is customarily expressed by writing [f (x) dx = Ie (x) dx ,
+
+without mentioning the parameter.
+
+(Mt) f[f@)+g@]dv=ff@ d+] g@) dv
+
+Proof By Property (I), we have
+d
+<Lir@ + 9(x)] dx | = f(x) + g(x) ()
+On the otherhand, we find that
+cK, [fre dx+ | g(x) dx | _f [f@de+ a [gc ax
+dx dx dx
+
+=f(x) + g() (2)
+Thus, in view of Property (II), it follows by (1) and (2) that
+
+[(FO) +g) de= [ fo) drt fata,
+
+(IV) For any real number k, fx f(x) dx=k | f(x) dx
+
+Reprint 2025-26
+
+INTEGRALS 231
+
+Proof By the Property (1), “fk f(x) dx=k f(x).
+x
+
+Also “Tk fro dx | = J roo dx=k f(x)
+
+Therefore, using the Property (II, we have fx f(x) dx=k | f(x) dx.
+
+(V) Properties (III) and (IV) can be generalised to a finite number of functions
+fit wolf, and the real numbers, k, k,, bey k giving
+
+[[eA@ thf W)+..+k,f,0)] de
+
+= k,[ fodxtk,[ fp @dxt..tk, | fQ) de.
+
+To find an anti derivative of a given function, we search intuitively for a function
+whose derivative is the given function. The search for the requisite function for finding
+an anti derivative is known as integration by the method of inspection. We illustrate it
+
+through some examples.
+
+Example 1 Write an anti derivative for each of the following functions using the
+method of inspection:
+
+1
+(i) cos 2x (ii) 3x2 + 4x3 (ii) ~.x#0
+
+Solution
+(i) We look for a function whose derivative is cos 2x. Recall that
+
+— sin 2x = 2 cos 2x
+
+dx
+
+lds a [ sin 2]
+or cos 2x = D dk (sin 2x) = dx\2
+
+1.
+Therefore, an anti derivative of cos 2x is 3 sin 2x ,
+
+(ii) We look for a function whose derivative is 3x” + 4x°. Note that
+d
+a (x° +x") = 3x + 4x.
+
+Therefore, an anti derivative of 3x? + 4x3 is x3 + x*.
+
+Reprint 2025-26
+
+232 MATHEMATICS
+
+(iti) We know that
+
+# dog x)=4,x>0and “ flog(—-x)]= 1 (~- =), x<0
+dx x dx —x x
+
+a d 1
+Combining above, we get ke (log |x|) = x x #0
+
+! ; rr !
+Therefore, \- dx = log |x| is one of the anti derivatives of x
+
+Example 2 Find the following integrals:
+
+>] 2 By
+(i) J « (ii) [Qe +1) dx (iii) [2 +2e ~~) de
+
+x
+
+Solution
+(i) We have
+
+[estas frav— fred (by Property V)
+x
+
+xitl x 2+!
+~ ya] + 24] +C, |; C,, C, are constants of integration
+
+x x! x]
+= +C C, = +
+3 1 2 5 + x C, -C,
+x]
+- > +—+C, where C = C, —C, is another constant of integration.
+x
+
+From now onwards, we shall write only one constant of integration in the
+final answer.
+
+(ii) We have
+2 2
+[oe +l) dx= [xe dx + fax
+—+1
+3 5
+=5 #xtC =3 3 4x40
+
++1
+3
+
+Reprint 2025-26
+
+INTEGRALS 233
+
+(iii) We have Joe +2e hava fx dx + [2e" dx — fax
+
+341
+
+x2
+
+I— +2e* —log |x|+C
+3
+
+at!
+
+5
+
+5x7 +2e%—log|x|+C
+
+Example 3 Find the following integrals:
+
+(i) (sin x + cos x) dx (ii) [cosec x (cosec x + cot x) dx
+
+~sin x
+
+diy J
+
+Solution
+(i) We have
+
+(sin x +cOs x) dx = [sin xdx+ [cos x dx
+
+= —cosx+sinx+C
+
+cos” Xx
+
+(ii) We have
+
+[ (cosec x (cosec x + cot x) dx = [cosec*x dx + [ cosec x cot x dx
+
+= —cot x—cosecx+C
+(iil) We have
+
+[ete ax dx=(— dx fa
+
+COS XxX cos? x cos’x
+
+[sec?x dx — [tan x sec x dx
+
+= tan x—secx+C
+
+Example 4 Find the anti derivative F of f defined by f (x) = 4x° — 6, where F (0)
+Solution One anti derivative of f (x) is x* — 6x since
+
+4 OA —6x) = 4x3 - 6
+dx
+Therefore, the anti derivative F is given by
+
+F(x) = x* — 6x + C, where C is constant.
+
+Reprint 2025-26
+
+234 MATHEMATICS
+
+Given that F(0) = 3, which gives,
+
+3=0-6x0+C or C=3
+Hence, the required anti derivative is the unique function F defined by
+F(x) = x* — 6x + 3.
+Remarks
+
+(i) We see that if F is an anti derivative of f, then so is F + C, where C is any
+constant. Thus, if we know one anti derivative F of a function f, we can write
+down an infinite number of anti derivatives of f by adding any constant to F
+expressed by F(x) +C, Ce R. In applications, it is often necessary to satisfy an
+additional condition which then determines a specific value of C giving unique
+anti derivative of the given function.
+
+(ii) Sometimes, F is not expressible in terms of elementary functions viz., polynomial,
+logarithmic, exponential, trigonometric functions and their inverses etc. We are
+
+therefore blocked for finding | f (x) dx. For example, it is not possible to find
+
+fe * dx by inspection since we can not find a function whose derivative is e *
+
+(iii) When the variable of integration is denoted by a variable other than x, the integral
+formulae are modified accordingly. For instance
+441
+
+4 y ls
+dy = +C=—y +C
+J> a4 5°
+
+EXERCISE 7.1
+
+Find an anti derivative (or integral) of the following functions by the method of inspection.
+
+1. sin 2x 2. cos 3x 3. er
+4. (ax + by 5. sin 2x — 4 e*
+
+Find the following integrals in Exercises 6 to 20:
+
+1
+6. f4e™+Dde 7, fda de 8, lax? thet eax
+9, [2x7 +e")dx 10. i{ e+e} dx Al. pets =4 a
+, F :
+
++3x+4 ae
+12. pe de 13, FRAP lea, fay Vea
+x-1
+
+Reprint 2025-26
+
+INTEGRALS 235
+
+15. [Vx(3x? + 2x43) dx 16. [ (2x -3c0s x+e") de
+17. fax — 3sin x+ 5x) dx 18. [sec x (sec x + tan x) dx
+sec” x 2—3si
+dx — SSIn Xx
+19. Jo 20. J * as.
+
+Choose the correct answer in Exercises 21 and 22.
+
+1
+21. The anti derivative of vs + =| equals
+Vx
+
+1 1 2
+
+(A) 5H +2x7 +C (B) Sx tps +C
+73 1 33 41
+
+(C) =x? 4+2x?74+C (D) =x? +=x?4+C
+3 2 2
+
+d 3
+22. If mi =4x° —-z such that f(2) = 0. Then f(x) is
+he x
+
+4, 1 129 3, 1 , 129
+
+Oe 8 eee se
+
+, 1. 129 3 1 129
+
+(C) ¥ +yt+— (D) © +4-—
+x 8 x 8
+
+7.3 Methods of Integration
+
+In previous section, we discussed integrals of those functions which were readily
+obtainable from derivatives of some functions. It was based on inspection, i.e., on the
+search of a function F whose derivative is f which led us to the integral of f. However,
+this method, which depends on inspection, is not very suitable for many functions.
+Hence, we need to develop additional techniques or methods for finding the integrals
+by reducing them into standard forms. Prominent among them are methods based on:
+
+1. Integration by Substitution
+2. Integration using Partial Fractions
+
+3. Integration by Parts
+
+7.3.1 Integration by substitution
+In this section, we consider the method of integration by substitution.
+
+The given integral [fr (x) dx can be transformed into another form by changing
+
+the independent variable x to t by substituting x = g (A).
+
+Reprint 2025-26
+
+236 MATHEMATICS
+
+Consider I= | f@)dx
+
+Put x = g(t) so that “ = g(t).
+
+We write dx = g(t) dt
+
+Thus I= [ f() dx=[ f(g) ¢'Oadt
+
+This change of variable formula is one of the important tools available to us in the
+name of integration by substitution. It is often important to guess what will be the useful
+substitution. Usually, we make a substitution for a function whose derivative also occurs
+in the integrand as illustrated in the following examples.
+
+Example 5 Integrate the following functions w.r.t. x:
+
+(i) sin mx (ii) 2x sin (x? + 1)
+__ tan* Vx sec? Vx ; sin (tan~' x)
+(iii) Tk (vy) “Ty
+Solution
+
+(i) We know that derivative of mx is m. Thus, we make the substitution
+mx = t so that mdx = dt.
+
+/ lr. 1 1
+Therefore, [sin mx dx =— | sint dt = ——cost+C =— —cosmx+C
+m m m
+
+(ii) Derivative of x? + 1 is 2x. Thus, we use the substitution x° + 1 = ¢ so that
+2x dx = dt.
+
+Therefore, [2x sin (x* +1) dx = [sin tdt = —cost+C =-cos(’+1)+C
+
+1 -2
+(ii) Derivative of x is —x 7 =
+
+1
+2 2Vx
+
+Vx =t so that — dx = dt giving dx = 2t dt.
+
+2x
+
+. Thus, we use the substitution
+
+4 2 4 2
+tan” Vx sec” Vx 2t tant sec*t dt
+Thus, } vx dx = |———— =2 [tan‘s sec’t dt
+ix i
+Again, we make another substitution tan ¢ = u so that sec’ t dt = du
+
+Reprint 2025-26
+
+INTEGRALS 237
+
+5
+Therefore, 2 ftan‘s sec’t dt =2 fut du = 2 > +C
+
+2
+5 tan? t+C (since w = tan f)
+
+: tan? Jx +C (since t = Vx)
+
+i x sec? Jx
+Vx
+
+Alternatively, make the substitution tanJx =t
+
+2
+Hence, dx = 5 tan? Vx +C
+
+(iv) Derivative of tan™ 'x= . Thus, we use the substitution
+
+l+x
+
+dx
+tan"! x = t so that ine = dt.
++X
+
+sin (tan 'x)
+
+Therefore , } dx = [sin tdt = —cost+C=-—cos(tan'x) +C
+
+14x
+
+Now, we discuss some important integrals involving trigonometric functions and
+their standard integrals using substitution technique. These will be used later without
+reference.
+
+(i) [tan x dx = log|sec x|+C
+
+We have
+[tan xdx= | qin dx
+cos x
+Put cos x =tso that sin x dx = — dt
+Then fan xdx=~ |= —tog)}|+C= tog eos x] +C
+or [tan x dx =log |sec x| +C
+
+(ii) [cot x dx =log|sinx |+C
+
+COS Xx
+
+We have [cot x dx =| dx
+
+sin x
+
+Reprint 2025-26
+
+238 MATHEMATICS
+Put sin x =¢ so that cos x dx = dt
+dt .
+Then J oot x dx = J = log|t|+C = log|sin x|+C
+
+(iii) [sec x dx =log|sec x + tan x|+C
+
+We have
+
+sec x (Sec x + tan x
+[sec x dx =f ( ) ox
+
+sec x + tan x
+
+Put sec x + tan x = ¢ so that sec x (tan x + sec x) dx = dt
+
+Therefore, Jee x dv = [= tog | + C= log lsec x + tan x|+C
+
+(iv) [cosee x dx = log |cosec x — cot x|+C
+We have
+cosec x (cosec x + cot x)
+
+[cosec x dx= }
+(cosec x + cot x)
+
+Put cosec x + cot x = ¢ so that — cosec x (cosec x + cot x) dx = dt
+
+dt
+So J cosec x de =—J— =—log| 1|=—log|cosec x +cotx|+C
+
+cosec” x —cot” x
++C
+
+= —log
+cosec x —cot x
+
+= log |cosec x—cot x| +C
+
+Example 6 Find the following integrals:
+
+: +3 2 sin x
+sin” x cos” x dx
+0 J * % @) lSnaew sin (x + a) (iy lan x 1+ tan x
+Solution
+(i) We have
+
+[sin’ x cos’x dx = [sin? x cos’x (sin x) dx
+= fa —cos*x) cos*x (sin x) dx
+
+Put t= cos x so that dt = — sin x dx
+
+Reprint 2025-26
+
+INTEGRALS 239
+
+Therefore, [sin?x cos*x (sin x) dx = -fa-?)P dt
+3 5
+= -f( =") dr=- Pi! lie
+3 5
+1 3 1 5
+= ——COs 1+ Cos x+C
+
+(ii) Put x +a=t. Then dx = dt. Therefore
+
+f sin x dx = [9
+
+sin (x+ a) sin ¢
+
+dt
+
+pomtcosa—costsina
+sin t
+
+cos a fac —sina [cot t dt
+
+(cos a) t — (sin a) [ log [sin t + C, |
+
+= (cos a) (x +a) — (sin a) | log|sin (x + a)|+C, |
+
+x cos a+acos a —(sin a) log [sin (x+ a)| —C, sina
+
+sin x
+
+—— dx
+Hence, J sin (x +a)
+
+=x cos a—sin a log Isin (x + al +C,
+
+where, C =— C, sin a + a cos a, is another arbitrary constant.
+
+dx =| cos x dx
+
+(iti) leans cos x+sin x
+
+1 ¢ (cos x +sin x + cos x — sin x) dx
+
+~ 2 cos x+sin x
+
+fdx+ 1 f cos x — sin x
+2
+
+dx
+
+cos x+sin x
+
+x CC, 1 Ff cos x-sin x
++—l+ |
+2 2 2
+
+dx .. (1)
+
+cos x +sin x
+
+Reprint 2025-26
+
+240
+
+MATHEMATICS
+
+cos x —sin x
+
+dx
+
+Now, consider I = |
+
+cos x+sin x
+
+Put cos x + sin x = ¢ so that (cos x — sin x) dx = dt
+
+Therefore
+
+Putting it in (1), we get
+
+{ dx _x,C¢
+Il+tanx 2 2
+
+1
+
+a
+2 2
+1
+
+= * 4=log |cos x+sin x|+C,
+2 2
+
+tyltio
+2
+
+CG
+g |cos x+sin x]+—>
+
+C,
+
+. C,
++— log |cos x+sin xf+—t+—
+
+2 2
+
+EXERCISE 7.2
+
+Integrate the functions in Exercises 1 to 37:
+
+12.
+
+15.
+
+18.
+
+2x
+
+~ 14x
+
+sin x sin (cos x)
+
+. .fax+b
+. (4x42) fx 4x41
+
+1
+3 —13 ©
+
+9— 4x?
+
+tan”! x
+
+14x
+
+2.
+
+5.
+
+10.
+
+16.
+
+(log x)”
+
+x
+
+3.
+
+sin (ax + b) cos (ax +b)
+
+x./x+2
+
+19. —=—
+
+Reprint 2025-26
+
+8.
+
+11.
+
+14.
+
+17.
+
+20.
+
+1= [= log |+C, = log |cos x + sin x +C,
+t
+
+2 2
+
+e~ -e
+
+2 _
+e+e
+
+2x
+
+21. tan? (2x — 3)
+
+2cos x — 3sin x
+
+24. 6cos x + 4sin x
+
+27. ./sin 2x cos 2x
+
+sin x
+
+30. 1+cos x
+
+1
+
+33. l—tan x
+
+ae, CED (x+log x)”
+
+Xx
+
+22.
+
+25.
+
+28.
+
+31.
+
+34.
+
+37.
+
+INTEGRALS 241
+
+sec’ (7 — 4x) 23.
+
+1 COS Vx
+
+cos*x (1— tan x)” 26. Jx
+
+cos x
+Ji+sin x 29. cot x log sin x
+sin x 1
+(1+cos x) 32. Ty cot x
+,/tan x 14]
++ 35, Utlee
+sin x cos x x
+
+xsin (tan~ 4 )
+
+1+x°
+
+Choose the correct answer in Exercises 38 and 39.
+
+38. |
+
+10x? +10* log, 10 dx
+
+x? +10"
+
+(A) 10*-x!°+C
+(C) dO - x")! +C
+
+dx
+
+39. | equals
+
+sin” x cos” x
+(A) tanx+cotx+C
+(C) tanxcotx+C
+
+equals
+
+(B) 10°+x'°+C
+(D) log (10% + x") +C
+
+(B) tanx-—cotx+C
+(D) tan x—cot 2x+C
+
+7.3.2 Integration using trigonometric identities
+
+When the integrand involves some trigonometric functions, we use some known identities
+to find the integral as illustrated through the following example.
+
+Example 7 Find (i) [cos*x dx (ii) [sin 2x cos3xdx (iii) [sin?x dx
+
+Reprint 2025-26
+
+242 MATHEMATICS
+
+Solution
+(i) Recall the identity cos 2x = 2 cos? x — 1, which gives
+1+ cos 2x
+2
+
+cos*x =
+
+1 1 1
+2
+Therefore, Joos xdx = ~{( +cos 2x) dx = 5 saets [cos 2x dx
+
+2
+= 4 I sin 2x+C
+2 4
+(ti) Recall the identity sin x cos y= 5 [sin (x + y) + sin (x — y)] (Why?)
+
+Then Jain 2xcos3xdx = ' [ fsin 5x dx — Jsin x dx |
+
+$| —Feos5x +c05 5] ¥C
+2| 5
+
+1
+= Ns 5x +e cts xt C
+10 2
+
+(iii) From the identity sin 3x = 3 sin x — 4 sin? x, we find that
+3sin x — sin 3x
+
+4
+
+sin? x
+
+3 3¢. lr.
+Therefore, [sin xdx = {sin x dx — 4 [asin 3x dx
+
+3 cos xtticos3x+C
+4 12
+
+Alternatively, [sin’x dx = [sin?x sin x dx = fa ~cos*x) sin x dx
+
+Put cos x = ft so that — sin x dx = dt
+
+Therefore, [sin’x dx = -~|(1-?) a = — fat +]? ar=—1+£ +c
+
+1
+= = cos x +5 cos'x +C
+
+Remark It can be shown using trigonometric identities that both answers are equivalent.
+
+Reprint 2025-26
+
+INTEGRALS 243
+
+EXERCISE 7.3
+
+Find the integrals of the functions in Exercises 1 to 22:
+
+1. sin? (2x +5) 2. sin 3x cos 4x 3. cos 2x cos 4x cos 6x
+4. sin’ (2x + 1) 5. sin? x cos* x 6. sin x sin 2x sin 3x
+. ; 1—cos x COs x
+7. sin 4x sin 8x 8. —__ 9, ——
+1+cosx 1+cosx
+sin? x
+10. sin* x 11. cos* 2x 12. ——
+1+cos x
+cos 2x —cos 2@ cos x — sin x
+13... ———___ 14. ——_ 15. tan? 2x sec 2x
+cos x —cos @ 1+sin 2x
+3 3 a)
+sin” x+cos” x cos 2x + 2sin“x
+16. tan*x 17. rr a 18. Cina
+sin” x cos” x cos” x
+1 cos 2x y
+19. ——,- 20. ———— 21. sin“! (cos x)
+sin x COS’ x (cos x+sin x)
+1
+
+cos (x — a) cos (x — b)
+Choose the correct answer in Exercises 23 and 24.
+
+sin? x —cos” x
+
+23. |—.———_ dis equal to
+J sin? x cos” x 4
+(A) tanx+cotx+C (B) tan x + cosecx+C
+(C) —tanx+cotx+C (D) tanx+secx+C
+24. [£o** ax equals
+cos’ (e* x)
+(A) — cot (ex) + C (B) tan (xe) + C
+(C) tan (e*)+C (D) cot (e)+C
+
+7.4 Integrals of Some Particular Functions
+
+In this section, we mention below some important formulae of integrals and apply them
+for integrating many other related standard integrals:
+
+(1) f dx = tog
+x?-a’ 2a
+
+x-a
++C
+
+x+a
+
+Reprint 2025-26
+
+244 MATHEMATICS
+
+dx 1 atx
+2 =— lo +C
+(2) Pee Slax
+dx 1x
+=— tan +C
+(3) ae a a
+
++C
+
+= log avs? -a’
+
+dx
+o le
+
+4x
+=sin-'—+C
+a
+
+d.
+© la
+(6) le = log x +Vx7 +a
+
+We now prove the above results:
+
++C
+
+1 1
+(1) We have xa (x-a) (+a)
+
+1 | +a)-(@-a)|_ -| 1 1
+~ 2a (x -a) (x+a) ~2alx—-a x+ta
+
+dx _ 1 dx dx
+Therefore, laa \—— l—
+
+= = [log x - al—togi (x + a)l]+C
+a
+
+(2) In view of (1) above, we have
+1 1 [ierneen ifo4 |
+= = +
+a—x 2a (a+ x) (a-x) 2ala-x atx
+
+Reprint 2025-26
+
+
+INTEGRALS 245
+
+Therefore, } a 2 = fA .
+
+a —-x 2a atx
+
+1
+eee
+
+atx
+
+1 og
+
+~ Qa a-x
+
+The technique used in (1) will be explained in Section 7.5.
+
+(3) Put x =a tan 0. Then dx =a sec’ 6 dO.
+{ dx -f asec” 0 dO
+~ 4 q? tan?0+a?
+
++C
+
+Therefore,
+
+1 x
+
+1 1 1
+= —[d0=—0+C=—tan
+a a a a
+(4) Let x =a sec. Then dx = a secé tané dé.
+
+f dx asec tan8 dé
+Therefore, Jena
+
+lr sec’0—a?
+
+[seco d0 = log lsecé + tand| +C,
+
+2
+xX xX
+
+= log} —+,/; -
+a
+
+= log| x+Vx° -a@
+= log| x +x? —a*
+
+(5) Let x =a sin@. Then dx = a cos dé.
+
+1/+C,
+
+— log ja|+C,
+
++C, where C = C, — log lal
+
+Theref { dx { acos@ d@
+erefore, =
+Ja ~ x? Ja -a’ sin’
+
+= [d0=0+C=sin"'~+C
+a
+(6) Let x =a tan®. Then dx = a sec’0 dO.
+
+asec’ dé
+
+ia lTaeae tan°0+a’
+
+= [seco d0 = log |(secd + tan6)| +C,
+
+Therefore,
+
+Reprint 2025-26
+
+246
+
+(7)
+
+(8)
+
+(9)
+
+MATHEMATICS
+
+2
+
+x x
+
+= log + 7 tl
+a a
+
+log |x + Vx? +a?
+= log|x+Vx? +a?
+
+Applying these standard formulae, we now obtain some more formulae which
+are useful from applications point of view and can be applied directly to evaluate
+other integrals.
+
++C,
+
+—log|a|+C,
+
++C, where C = C, — log |a|
+
+To find the integral | —;—————
+' mres peer
+
+2 2
+cet neve= ofstetras]nal(roS) +s |
+“ 3 2a a 4a
+
+2
+
+atk. We find the
+a
+
+dt c. ~
+
+1
+integral reduced to the form a layz depending upon the sign of : dae
+
+, we write
+
+b i €
+Now, put x +3 =tso that dx = dt and writing —
+a
+
+and hence can be evaluated.
+
+To find the integral of the type J , proceeding as in (7), we
+
+dx
+Vax? +bx+e
+obtain the integral using the standard formulae.
+px+q
+ax’ +bx +c
+constants, we are to find real numbers A, B such that
+
+To find the integral of the type dx , where p, g, a, b, c are
+d, >
+px+ qu A (ax +bx+c)+B=A (2ax+b)+B
+
+To determine A and B, we equate from both sides the coefficients of x and the
+constant terms. A and B are thus obtained and hence the integral is reduced to
+one of the known forms.
+
+Reprint 2025-26
+
+INTEGRALS 247
+
+(10) For the evaluation of the integral of the type ——— (px) & , we proceed
+Vax’ +bx+ce
+
+as in (9) and transform the integral into known standard forms.
+
+Let us illustrate the above methods by some examples.
+
+Example 8 Find the following integrals:
+0 J i) J“
+
+Y 16 oxox?
+Solution
+
+dx dx 1 x
+i) We have = = —lo
+@ Peer Jp 8 ae
+
+; +C [by 7.4 (1)]
+
+(ii) | dx =| dx
+V2x-x?  * f1-(r-1/y
+
+Put x — 1 =f. Then dx = dt.
+
+dx dt - -1
+= = sin (t)+C .
+Therefore, | Toxae } Tot sin” (t) [by 7.4 (5)]
+
+in| (x-1)+C
+
+Example 9 Find the following integrals :
+
+dx dx
+@ Peereesr “exes eescessT) (a) as
+Solution
+(i) We have °-6x + 13=2—6x4+ 32-324 13 =(x-3)24+4
+
+So, laa laa
+
+5 —a a dx
+x —6x+13 (x-3) +2
+Let x —3 =t. Then dx = dt
+dx dt 1. _,t
+
+= =— tan +C
+Therefore, laa la 5 5 [by 7.4 (3)]
+
+= Lan! x36
+
+2
+
+Reprint 2025-26
+
+248 MATHEMATICS
+
+(ti) The given integral is of the form 7.4 (7). We write the denominator of the integrand,
+
+13x 10
+3x° +13x—-10 = (2 E-2)
+
+13) (17)
+3} ) xt 6) (6 (completing the square)
+dx 1 f dx
+
+3x2 +13x-10 3 ( a) (7)
+xt—] -|—
+6 6
+
+Thus }
+
+13
+Put eet. Then dx = dt.
+
+Theref f dx | dt
+erefore, =
+3x° +13x-10 3 e-(7)
+
+= log|—®&|+¢, [by 7.4 (i)]
+
+1 3x-2
+17 x+5
+
+1 1
++C where c= Ci +77 los;
+
+Reprint 2025-26
+
+INTEGRALS 249
+
+ae dx = a
+(iii) We have ee Te 2
+5
+-4 j dx
+ed
+
+1
+Put x 5t. Then dx = dt.
+
+(completing the square)
+
+Theref f dx 1 f dt
+erefore, =
+V5 -2x V5 2 (1)
+5
+Log t+,/0° (4) +C bv 7.4 (4
+= 5 [by 7.4 (4)]
+= ! log |x Y x 2x1 LC
+V5 5 5
+Example 10 Find the following integrals:
+be ».
+@ 2x 46x45 (i) V5—4x—-x2 Ax — x?
+
+Solution
+(i) Using the formula 7.4 (9), we express
+
+x42 Ax (2x7 +6x+5)+B = - A(4x+6)+B
+
+Equating the coefficients of x and the constant terms from both sides, we get
+
+1 1
+4A=1and6A+B=2 or = 7 andB= 7.
+x+2 1 4x+6 1 dx
+= dx+
+Therefore, reewaee. re reawaee 2a aenas
+1 1
+= —I,+-I
+a.1152 (say) C1)
+
+Reprint 2025-26
+
+250
+
+(ii)
+
+MATHEMATICS
+In I, put 2x? + 6x + 5 = 14, so that (4x + 6) dx = dt
+t
+Therefore, I= [a =tog |t|+C,
+
+= log|2x* +6x+51+C,
+
+dx 1 dx
+and I= )
+
+2x7 46x45 2 e43r42
+
+Put xtoet, so that dx = dt, we get
+
+1 t
+= } d = ! tan'2t+C,
+2 2 1 2 1
+p+{—) 2x,
+2 2
+
+= ta"2{ 243} C, = tan! (2x+3)+C,
+
+Using (2) and (3) in (1), we get
+
+} ae dx =+ log |2x? + 6x+5|+* tan! (2x+3)+C
+2x° +6x+5 4 2
+
+C, C,
+where, C= —+—
+
+4° 2
+
+This integral is of the form given in 7.4 (10). Let us express
+
+d
+x4+3= A G-4x—2°) + B= A(-4-2x) +B
+
+. (2)
+
+[by 7.4 (3)]
+
+.. (3)
+
+Equating the coefficients of x and the constant terms from both sides, we get
+
+1
+—2A=1and—4A+B =3,1e,A= 5 and B = |
+
+Reprint 2025-26
+
+INTEGRALS 251
+
+therefore, [tar = {G24
+erenors, V5—4x—x2 J5- 4x— x? = 4x—x°
+1
+= ay L+L .. C1)
+
+In I,, put 5 — 4x — x° = #, so that (— 4 — 2x) dx = dt.
+
+4 — 2x)dx =[i= wise
+
+iS 4x— x?
+
+2V5-4x—x° +C, .. (2)
+
+Therefore, I
+
+N
+
+dx dx
+Now consider = J V5 —4x—-22 =| J9-@+2)”
+
+Put x + 2 = ¢, so that dx = dt.
+
+_,¢
+Therefore, L= {-— cS =sin “>+C, [by 7.4 (5)]
+
+i a .. B)
+3
+Substituting (2) and (3) in (1), we obtain
+
+———- 5 4r—a" ysin“! “22 44C, where c=C,-2
+5-4x-x
+
+EXERCISE 7.4
+
+Integrate the functions in Exercises 1 to 23.
+
+3x2 5 1 3 1
+x +1 44x? : (2x) +1
+1 3x 6 x?
+9 —25x2 14+2x 1-x°
+x-1 x sec’x
+
+Pi eal re
+x1 x°+a° Vtan°x+4
+
+Reprint 2025-26
+
+252
+
+10.
+
+1
+| ht wad
+Je-G-2)
+4x+1
+16. (>
+2x°+x-—3
+7 6x+7
+, (x-5)(x-4)
+oo —2t3
+© x? 9x5
+
+MATHEMATICS
+
+1
+
+Vx? +2x+2
+
+1
+iL. 9x° +6x+5 2
+14 a 1
+. 5.
+{8+ 3x—x°
+x+2
+17. 5 18.
+x —1
+x+2
+20. 5 21
+4x-x
+5x+3
+
+1
+
+V7 -6x—x°
+
+1
+
+(x-a)(x—b)
+
+5x-2
+
+14+2x+3x?
+
+x+2
+
+: Vx’ +2x43
+
+Choose the correct answer in Exercises 24 and 25.
+
+dx equals
+x’ +2x+2
+(A) xtan'(@+1)+C
+
+(C) (x +1) tam'x+C
+
+24. f
+
+equals
+
+os —
+. V9x—4x?
+
+(A) sein (28) +c
+9 8
+
+(D)
+
+(B)
+
+(D)
+
+7.5 Integration by Partial Fractions
+
+Recall that a rational function is defined as the ratio of two polynomials in the form
+
+P(x
+
+x
+
+is less than the degree of Q(x), then the rational function is called proper, otherwise, it
+is called improper. The improper rational functions can be reduced to the proper rational
+
+tan! (x+1)+C
+tan'x+C
+
+Ow) , where P (x) and Q(x) are polynomials in x and Q(x) + 0. If the degree of P(x)
+
+Reprint 2025-26
+
+INTEGRALS 253
+
+PO) ayy AO,
+Qa) Qa)
+
+P
+functions by long division process. Thus, if ) is improper, then
+
+where T(x) is a polynomial in x and is a proper rational function. As we know
+
+P(x
+Q(x)
+how to integrate polynomials, the integration of any rational function is reduced to the
+integration of a proper rational function. The rational functions which we shall consider
+here for integration purposes will be those whose denominators can be factorised into
+P(x) P(x)
+
+linear and quadratic factors. Assume that we want to evaluate | ~— dx , where
+
+Qi) Qa)
+
+is proper rational function. It is always possible to write the integrand as a sum of
+simpler rational functions by a method called partial fraction decomposition. After this,
+the integration can be carried out easily using the already known methods. The following
+Table 7.2 indicates the types of simpler partial fractions that are to be associated with
+various kind of rational functions.
+
+Table 7.2
+
+Form of the rational function Form of the partial fraction
+A B
+
+_PX*9T agp
+(x—a) (x—b)
+pxt+q
+(x-a)
+
+px’ +qx+r
+(x — a) (x =b) (x-c)
+
+px’ +qx+r +
+(x —a)? (x—b) x-a (x-a)
+
+px’ +qxtr A, Br+C
+(x— a) (x +bx +c) x-a x 4+bxte
+
+where x” + bx + c cannot be factorised further
+
+In the above table, A, B and C are real numbers to be determined suitably.
+
+Reprint 2025-26
+
+254 MATHEMATICS
+
+dx
+
+Example 11 Find lWahaad
+Solution The integrand is a proper rational function. Therefore, by using the form of
+partial fraction [Table 7.2 (1)], we write
+
+1 A B
+
+(x+1) (x+2) ~ x41 x42
+
+(1)
+
+where, real numbers A and B are to be determined suitably. This gives
+1=A(x+2)+B(x+ 1).
+
+Equating the coefficients of x and the constant term, we get
+
+A+B=0
+and 2A+B=1
+Solving these equations, we get A=1 and B =— 1.
+Thus, the integrand is given by
+
+1 1 —1
+G+Da+d etl x42
+
+f dx _ dx (=
+(x+1)(w+2) ~ 2 x41 % x42
+
+Therefore,
+
+= log |x +1|—log|x+2|+C
+
+x+l1 We
+2
+
+= log
+xX+
+
+Remark The equation (1) above is an identity, i.e. a statement true for all (permissible)
+values of x. Some authors use the symbol ‘=’ to indicate that the statement is an
+identity and use the symbol ‘=’ to indicate that the statement is an equation, i.e., to
+indicate that the statement is true only for certain values of x.
+
+2
+: x +1
+Example 12 Find la
+X IX
+
+2
+
+x +1
+Solution Here the integrand ——————
+& x —5x+6
+
+x + 1 by x — 5x + 6 and find that
+
+is not proper rational function, so we divide
+
+Reprint 2025-26
+
+INTEGRALS 255
+
+2 _ _—
+x +1 i+ 5x-5 =14 5x-5
+
+5x46. 5X +6 (x —2) (x—3)
+Let 5x-5 _ A i B
+© (x-2)(-3) x-2. x-3
+So that 5x—5 =A (x—3) +B (x-2)
+
+Equating the coefficients of x and constant terms on both sides, we get A+ B =5
+and 3A + 2B =5. Solving these equations, we get A=-—5 and B = 10
+
+Th x +1 ;-3_, 10
+us, x 5x46 x-2 x-3
+2
+x +1 1 dx
+Theref dy = | dx-5 dx +10
+erefore, la x } I> I
+
+=x-—5 loglx—21+ 10 log lx-314+C.
+3x-2
+
+Example 13 Find Seapead x
+
+Solution The integrand is of the type as given in Table 7.2 (4). We write
+
+3x—2 A,B C
+(x+1)?(x+3) x41 (x41?) x43
+So that 3x-2=A (xt 1) (x +3) + B(x + 3)+C (rt 1)
+
+=A (x? 4+ 4x4+3)4+B44+3)4+C (0X? +2x4+1)
+Comparing coefficient of x*, x and constant term on both sides, we get
+A+C=0,4A+B+2C =3 and 3A + 3B + C =— 2. Solving these equations, we get
+
+A= un B= = and C= “ft . Thus the integrand is given by
+2 4
+
+4
+3x—-2 11 5 11
+(x41)? (x43) ~ 4(¢4+1) 2(x41)) 4 (x43)
+Theret j 3x-2 ay dx Sy dx Hy dx
+oTeTOR’s (41243) 4% x41 244d? 44x43
+=F hog| x+1|+ a a hog | x43 |+C
+4 2(x+1) 4
+_Uy.| 24! 5c
+4 x+3] 2(x+1)
+
+Reprint 2025-26
+
+256 MATHEMATICS
+
+2
+xX
+
+Example 14 Find lempern"
+
+2
+
+Solution Consider and put x° = y.
+
+Xe
+(x? +1) (x? +4)
+
+2
+
+Then 5 5 = >
+4h +4) (ytD(y+4)
+Wut y _ A n B
+me (ytD(y+4) ytl yt4
+So that y= A(y+4)4+BQ4)
+
+Comparing coefficients of y and constant terms on both sides, we get A+ B = 1
+and 4A + B =0, which give
+
+1 4
+A=-- and B=—
+3 3
+
+x? 1 4
+Thus, 5 5 = 5 + 5)
+(x? +1) (x? +4) 3(x° +1) 30x? +4)
+Theref j x°dx ai dx Af dx
+ererore =
+, (x? +1) (x? +4) 32x41 384x744
+
+ian txt txt tan !=+C
+3 3 2 2
+
+1
+dan 4 2 tan 240
+3 3 2
+
+In the above example, the substitution was made only for the partial fraction part
+and not for the integration part. Now, we consider an example, where the integration
+involves a combination of the substitution method and the partial fraction method.
+
+3 sin @—2)cos
+
+—cos’o—4 sin
+
+Example 15 Find ji
+
+Solution Let y = sing
+Then dy =cos@ do
+
+Reprint 2025-26
+
+INTEGRALS 257
+
+(3 sing — 2) )cosd o = fo (3y — 2) dy
+
+Therefore, }
+
+5 —cos*— qsino 5-(l-y*)-4y
+3y—-2
+[Bata
+y —4y+4
+_| 3y= = =I (say)
+(y-2)°
+N it sy=? _ A, #B [by Table 7.2 (2)]
+ow, we write = able 7.
+(y-2) y-2 2? »
+Therefore, 3y-2=A(y-2)+B
+
+Comparing the coefficients of y and constant term, we get A= 3 and B- 2A=— 2,
+which gives A= 3 and B = 4.
+Therefore, the required a is given by
+
+dy dy
+I= fl ae sy sly =3[544 (Se
+
+= 3log| y-2|eq{-— je
+y-2
+
+= 3 log | sin @-2|+——-— +
+2—sin
+
+= 3 log (2-sin 0) + 4 +C (since, 2 — sing is always positive)
+2—-sino
+
+x +x4+ldx
+
+Example 16 Find eae aD
+
+Solution The integrand is a proper rational function. Decompose the rational function
+into partial fraction [Table 2.2(5)]. Write
+
+x +x4tl A Bx+C
+(x? +1) (x+2) x42 (x? 41)
+
+Therefore, VP+x4+1=Ae+1) + (Bxt+C) (v4 2)
+
+Reprint 2025-26
+
+258 MATHEMATICS
+
+Equating the coefficients of x’, x and of constant term of both sides, we get
+A+B =1, 2B + C = 1 and A+ 2C = 1. Solving these equations, we get
+
+A=2,B=7andc=1
+5 5 5
+Thus, the integrand is given by
+2 !
+e+xtl] 3 55 3 (24)
+(+I) +2) S0e+2) 41 S(xH2) SLY? 41
+2
+x°+x4+1 3 dx 1lr¢ 2x 1 1
+= + x
+Therefore, lempasy™ sya sla 5} Pal
+
+3 1 2 Lo
+= 5 os | x+2|+ log) x +1] += tan x+C
+
+EXERCISE 7.5
+
+Integrate the rational functions in Exercises | to 21.
+
+1 2e— 3 ae
+* (+l) («4+ 2) “37 _9 ~ @-1) (-2) @-3)
+4 x : 2x 6 1_x?
+~  (e=1) (w-2) (x-3) © x? +3x42 * x (1-2x)
+x x 3x+5
+/. (x? +1) (x—-1) . (x—1)? (x +2) 9 PP aes
+o 2x-3 7 5x b xe+xtl
+~ @? =1) (2x43) ~ (xt) -4) ras
+2 3x-1 1
+13. (—x) (+x?) 14. (x+2) 15. Yo]
+1
+16. x(x" +1) [Hint: multiply numerator and denominator by x"~' and put x” = ¢ ]
+cos x
+17. [Hint : Put sin x = ¢]
+
+(1—sin x) (2—sin x)
+
+Reprint 2025-26
+
+INTEGRALS 259
+
+ig (x? +1) (x? +2) 2x 50 1
+(x? +3) (x? + 4) 7 +1) (x? +3) ~ x (x4 -1)
+
+1
+21. (e" —1) [Hint : Put e* = ¢]
+
+Choose the correct answer in each of the Exercises 22 and 23.
+
+xd
+22. ary equals
+
+(x—1) (x- 2)
+(A) log} (B) log >| 5 C
+x-1 °
+(C) log cay, +C (D) log|(x-1) (x-2)|+C
+dx
+
+23. |——— l
+
+Satan “ae
+
+(A) loglx| - log (x°41) +C (B) loglx! + log (x41) +C
+
+1
+(C) =log |x|+ slog Q@+l)+C  () 5 ol +log (x? +1) +C
+
+7.6 Integration by Parts
+In this section, we describe one more method of integration, that is found quite useful in
+integrating products of functions.
+
+If wand v are any two differentiable functions of a single variable x (say). Then, by
+the product rule of differentiation, we have
+
+d dv du
+
+— (uv) = u— +v—
+
+dx dx dx
+Integrating both sides, we get
+
+uv = fue aes fr dx
+dv du
+or Jus ae = uy — [ved . (1)
+dv
+
+Let u = f(x) and ke g(x). Then
+
+—~ f’(x) and v = [s@ dx
+
+Reprint 2025-26
+
+260 MATHEMATICS
+
+Therefore, expression (1) can be rewritten as
+
+[f@ g@adx = f@O[g@de-[[[g@al fd
+ie. [f@g @adx = fg @adx-[If @ [g@ dele
+
+If we take f as the first function and g as the second function, then this formula
+may be stated as follows:
+
+“The integral of the product of two functions = (first function) x (integral
+of the second function) — Integral of [(differential coefficient of the first function)
+x (integral of the second function)]”
+
+Example 17 Find fx cos x dx
+
+Solution Put f (x) = x (first function) and g (x) = cos x (second function).
+Then, integration by parts gives
+
+[xcos xdx =x [cos x dx — jie [cos x dx] dx
+
+= xsin x— [sin x dx =xsinx+cosx+C
+
+Suppose, we take f(x) =cos x and g(x) = x. Then
+
+[xcos x dx = cos x fx dx ft (0s x) [x dx] dx
+
+2 2
+Xx ._ Xx
+= (cos x) —+ [sin x—dx
+2 2
+Thus, it shows that the integral fx cos x dx is reduced to the comparatively more
+
+complicated integral having more power of x. Therefore, the proper choice of the first
+function and the second function is significant.
+
+Remarks
+(i) It is worth mentioning that integration by parts is not applicable to product of
+functions in all cases. For instance, the method does not work for [vo sin x dx,
+The reason is that there does not exist any function whose derivative is
+
+Jx sin x.
+
+(ii) Observe that while finding the integral of the second function, we did not add
+any constant of integration. If we write the integral of the second function cos x
+
+Reprint 2025-26
+
+INTEGRALS 261
+
+as sin x + k, where & is any constant, then
+
+[ xcos x dx = x (sin x+k)— [(sin x+k) de
+= x (sin x+k)— [(sin x dx-[k dx
+
+x(sinx+k)—cosx—kx+C = xsin x+cos x+C
+
+This shows that adding a constant to the integral of the second function is
+superfluous so far as the final result is concerned while applying the method of
+integration by parts.
+
+(iii) Usually, if any function is a power of x or a polynomial in x, then we take it as the
+first function. However, in cases where other function is inverse trigonometric
+function or logarithmic function, then we take them as first function.
+
+Example 18 Find flog x dx
+
+Solution To start with, we are unable to guess a function whose derivative is log x. We
+take log x as the first function and the constant function 1 as the second function. Then,
+the integral of the second function is x.
+
+d
+Hence, [ dogx.1) dx = log x fi dx — Ji (log x) fi dx] dx
+= (log x)ex=[+xdv=xlogx-x+C.
+x
+Example 19 Find [xe*dx
+
+Solution Take first function as x and second function as e*. The integral of the second
+function is e*.
+
+Therefore, [xe*dx =xe- fi -e'dx = xe’—e +C.
+
+x sin xy
+
+Example 20 Find | —_ jae
+
+Solution Let first function be sin ~!x and second function be
+
+1-x? |
+
+x dx
+
+V1-x? )
+
+First we find the integral of the second function, i.e., |
+
+Put ¢t =1 — x. Then dt = — 2x dx
+
+Reprint 2025-26
+
+262 MATHEMATICS
+
+d 1 > dt
+Therefore, } oO - —Jf=-V1-x°
+1-x° 2° Jt
+
+|
+Hence, [Sa = (sin 9 V1 | J V1—x?) dx
+
+= —Vl—x° sin''x+x+C = x-V1—-2x° sin’ 'x+C
+Alternatively, this integral can also be worked out by making substitution sin'x = 0 and
+then integrating by parts.
+
+Example 21 Find fe: sin x dx
+
+Solution Take e* as the first function and sin x as second function. Then, integrating
+by parts, we have
+
+I=[e sin x dx =e" (—cos x) + [e*cos x dx
+
+=—e*cos x +I, (say) . C1)
+Taking e*and cos x as the first and second functions, respectively, in I,, we get
+
+L= e” sin x—fe'sin x dx
+
+Substituting the value of I, in (1), we get
+I=-e*cosx+e‘sinx—I or 21 = e* (sin x — cos x)
+
+x
+
+Hence, I= fe sin x dx = = (sin x —cosx)+C
+
+Alternatively, above integral can also be determined by taking sin x as the first function
+and e* the second function.
+
+7.6.1 Integral of the type fe’ [ fx) + f’ @)] dx
+We have I= fe’ [ f@)+ f'@]dx = esa) dx + Jere dx
+
+= I, + fe" f(x) dx, where I,= fe" f(x) dx .()
+Taking f(x) and e* as the first function and second function, respectively, in I, and
+integrating it by parts, we have I, = f (x) e*— } f (x) edx+C
+Substituting I, in (1), we get
+I= e'f)—J fd erde+ fe fe) de+C =e f@+C
+
+Reprint 2025-26
+
+INTEGRALS 263
+Thus, Jel f(a)+ fdr = e* f(x) +
+2 1 x
+Example 22 Find (i) fe‘(tan-!x+—, =) dx (ii) } @ bet dx
+l+x
+
+Solution
+
+x _ 1
+(i) We have I=[e (tan7!x + x) dx
+l+x
+
+Consider f(x) = tan” !x, then f’(x) = ee
+
+Thus, the given integrand is of the form e* [ f (x) + f’(x)].
+
+1
+Therefore, I= fe’ (tan” ‘x + 5) dx = e* tan” x+C
+l+x
+
+. Q?+De* | = —1+1+1)
+We have I= | —————dx = dx
+(1) We have (x +1)? dv= fer (x +1)? > eae
+=e" “ =," dx =[e*[ 5 | dx
+(x+1)° rend x+1. a
+2
+
+-] +.
+Consider f (x)= 4 , then f (x)= th?
+Thus, the given integrand is of the form e’ [f (x) + f’(x)].
+2
+1 -1
+| x7 + - ode x
+(x+1) x+1
+
+EXERCISE 7.6
+
+Integrate the functions in Exercises 1 to 22.
+
+e+C
+
+Therefore,
+
+1. x sin x 2. x sin 3x 3. xe 4. xlogx
+5. x log 2x 6. x log x 7. x sin'x 8. x tan! x
+9. x cos! x 10. (sin!x)? 11 xcos tx 12. x sec? x
+V1-x°
+13. tan-'x 14. x (log x) 15. (+1) log x
+
+Reprint 2025-26
+
+264 MATHEMATICS
+
+. xe ° 1+sin x
+16. e* (sinx + cosx) 17. (+x) 18. 1+cos x
+
+o(L A} ag, SBE -
+19. x w 20. G@_b 21. e* sin x
+
+22. sin-'( =.)
+1+x
+
+Choose the correct answer in Exercises 23 and 24.
+
+23. [rev de equals
+
+ly lp
+(A) 3° +C (B) 3° +C
+c) te“ ac Dd) te" +
+(©) 5 (D) Se
+
+24. fe’ sec x (1+ tan x) dx equals
+
+(A) e*cosx+C (B) e* sec x+C
+(C) e*sinx+C (D) e*tanx+C
+
+7.6.2 Integrals of some-more types
+
+Here, we discuss some special types of standard integrals based on the technique of
+integration by parts :
+
+(i) [Ve -@ dx (ii) [Veta dx (iii) | a —x° dx
+(i) Let I=[Vx? =a" de
+
+Taking constant function | as the second function and integrating by parts, we
+have
+
+[= xVx°-a *- |; dx
+rH
+
+a’
+
+= xVx°-a’ - a dx = NP pee nate
+
+Reprint 2025-26
+
+INTEGRALS 265
+
+xv -a’ -[vie -a dx a?{ —O
+
+xV¥x°-a’ -I-a
+
+(s
+
+or 21 = xx? -a’-a ‘TS
+2
+
+or 1=[ x? -a’ dx= sve -a? log xtVx7-a?
+
+Similarly, integrating other two integrals by parts, taking constant function | as the
+second function, we get
+
+2
+2
+(ill) [Va —Pae=5 xa? x? +S sin ** +
+a
+
+Alternatively, integrals (i), (ii) and (i11) can also be found by making trigonometric
+substitution x = a sec@ in (i), x =a tanO in (ii) and x = a sin@ in (iii) respectively.
+
+Example 23 Find Iv x +2x+5 dx
+
+Solution Note that
+
+[Vx +2245 de = [V@r+b? +4 de
+
+Put x+1=y, so that dx = dy. Then
+
+[V2? +2245 dx = [vy? +2? dy
+1 4
+= 5 Vy +445 log yyy +4]+e [using 7.6.2 (ii)]
+= 5 Ot Dali +2045 + 20g xt1t¢Vx?°+2x45 +c
+
+Example 24 Find [V¥3-2x-x* dx
+Solution Note that [v3 —2x-x" dx= [Vv4- (x+1)? dx
+
++C
+
+Reprint 2025-26
+
+266 MATHEMATICS
+Put x + 1 = y so that dx = dy.
+
+Thus } 3-2x-x? dx = [v4-y dy
+
+1 2 4.
+=—y4-y +=sin
+2° » 2
+
+Ite
+2
+
+[using 7.6.2 (iii)]
+
+_ 5+ V3—-2x-2? +2sin! A} +c
+
+EXERCISE 7.7
+
+Integrate the functions in Exercises 1 to 9.
+
+Ll. V4-x° 2. V1-4x° 3. Vx? +4x4+6
+
+4. x? 44x41 5. Vl-4x-x° 6. Vx? +4x=-5
+
+2
+Xx
+7. 143x—x° 8. x? 43x 9. NO
+
+Choose the correct answer in Exercises 10 to 11.
+
+10. [vi +x’ dxis equal to
+
+(A) svite + Flog (x4 Vi) +C
+2 5 2 5
+(B) zdte yr +c (C) zr dtxyP +C
+
+2
+
+(D) <Vi+ x? +524 og xeVlex2
+11. [vi? 8x47 de is equal to
+(A) 5 (x4) 8x47 + 9l0g
+(B) 5 (+4? 8147 + 90g
+(C) 5 (x4? 8147-3 Vlog
+(D) 5 (x4? 8x47 ~S log
+
++C
+
+Reprint 2025-26
+
+etd yi? 8447 |+C
+
+INTEGRALS 267
+
+7.7 Definite Integral
+In the previous sections, we have studied about the indefinite integrals and discussed
+
+few methods of finding them including integrals of some special functions. In this
+section, we shall study what is called definite integral of a function. The definite integral
+
+b
+has a unique value. A definite integral is denoted by | f(x) dx, where a is called the
+
+lower limit of the integral and b is called the upper limit of the integral. The definite
+integral is introduced either as the limit of a sum or if it has an anti derivative F in the
+interval [a, b], then its value is the difference between the values of F at the end
+points, i.e., F(b) — F(a).
+
+7.8 Fundamental Theorem of Calculus
+
+7.8.1 Area function
+
+b
+We have defined | f(x) dx as the area of
+
+the region bounded by the curve y = f(x),
+the ordinates x = a and x = b and x-axis. Let x
+
+be a given point in [a, b]. Then J . f(x) dx
+
+represents the area of the light shaded region
+in Fig 7.1 [Here it is assumed that f(x) > 0 for
+x € [a, b], the assertion made below is
+equally true for other functions as well].
+The area of this shaded region depends upon
+the value of x.
+
+Y’ Fig 7.1
+
+In other words, the area of this shaded region is a function of x. We denote this
+function of x by A(x). We call the function A(x) as Area function and is given by
+
+A(x) = |. f@)ax .. (1)
+
+Based on this definition, the two basic fundamental theorems have been given.
+However, we only state them as their proofs are beyond the scope of this text book.
+
+7.8.2 First fundamental theorem of integral calculus
+
+Theorem 1 Let fbe a continuous function on the closed interval [a, b] and let A (x) be
+the area function. Then A’(x) =f (x), for all x € [a, b].
+
+Reprint 2025-26
+
+268
+
+MATHEMATICS
+
+7.8.3 Second fundamental theorem of integral calculus
+
+We state below an important theorem which enables us to evaluate definite integrals
+by making use of anti derivative.
+
+Theorem 2 Let f be continuous function defined on the closed interval [a, b] and F be
+
+an anti derivative of f. Then f° re) dx = [F(x)]2 = F (b) - F@).
+
+Remarks
+
+(i)
+
+(ii)
+
+(iit)
+
+(iv)
+
+Gi)
+
+(ii)
+
+b
+In words, the Theorem 2 tells us that } Ff (x) dx = (value of the anti derivative F
+of f at the upper limit b — value of the same anti derivative at the lower limit a).
+
+This theorem is very useful, because it gives us a method of calculating the
+definite integral more easily, without calculating the limit of a sum.
+
+The crucial operation in evaluating a definite integral is that of finding a function
+whose derivative is equal to the integrand. This strengthens the relationship
+between differentiation and integration.
+
+b
+In } f (x) dx, the function f needs to be well defined and continuous in [a, 5].
+
+I
+For instance, the consideration of definite integral } 5 x(x° —1)? dx is erroneous
+
+1
+since the function f expressed by f(x) = x(x° —1)? is not defined in a portion
+
+—1<x< 1 of the closed interval [— 2, 3].
+b
+Steps for calculating | f(x) dx.
+Find the indefinite integral | f (x) dx . Let this be F(x). There is no need to keep
+integration constant C because if we consider F(x) + C instead of F(x), we get
+b
+} F(x) dx =[F (x) + cy’ =[F(b) + C] -[F(a) + C] = Fb) - F(a).
+
+Thus, the arbitrary constant disappears in evaluating the value of the definite
+integral.
+
+Evaluate F(b) — F(a) = [F (x)]? , which is the value of } ° f(x) dx.
+
+We now consider some examples
+
+Reprint 2025-26
+
+INTEGRALS 269
+
+Example 25 Evaluate the following integrals:
+
+3 9 Sx
+(i) [jx a (ii) |, —~«
+(30— x2)?
+x dx : .
+(iii) —— Gt) (x42) (iv) J ésin 2t cos2 t dt
+Solution
+
+, _f3.2 . 2
+(i) Let I=[>x dx . Since [x dx =—-= F(x),
+
+Therefore, by the second fundamental theorem, we get
+
+27 8 19
+I= F(3)-F(Q) =—--==—
+(3)-FQ)= 3°43
+(ii) Let I= I, —— dx . We first find the anti derivative of the integrand.
+(30 — x2)?
+
+3
+5 2
+Put 30— x? =t. Then ~Svi dx=dt or VX dx=—> dt
+
+Jx 2edt 21 2 1 _
+Thus, | yo de= ak: =3/5)= 5) [Fo
+(30-x2)? (30 - x?)
+Therefore, by the second fundamental theorem of calculus, we have
+
+9
+
+1
+
+T= F9)-F(4)= 2
+
+3
+
+(30 - x?) |,
+
+2, 1 1 2f1 1 |_19
+~ 3| (30-27) 30-8] 313 22] 99
+
+x dx
+1 (x+1) (x+2)
+
+(ii) Let I= [:
+
+Reprint 2025-26
+
+270 MATHEMATICS
+
+-l 2
+=—_+
+(xt+]1)(x+2) x4+1 2x42
+
+Using partial fraction, we get
+
+So f x dx
+
+GiDGtD = log | x+1]+2log | x+2|=F(x)
+
+Therefore, by the second fundamental theorem of calculus, we have
+I = F(2) — F(1) = [- log 3 + 2 log 4] - [— log 2 + 2 log 3]
+
+32
+=-—3log3+log2+2log4= log a
+x
+(iv) Let I= I? sin® 2t cos 2 t dt. Consider Jasin’ 2t cos 2t dt
+
+1
+Put sin 2t = u so that 2 cos 2t dt = du or cos 2t dt = 5 du
+
+3 lr 3
+So [asin 2t cos 2t dt = 5 tH du
+
+1 4 1 - 4
+= —[u']=—sin" 2t=F (ft) sa
+3 Z (t) say
+Therefore, by the second fundamental theorem of integral calculus
+Tt 1.4 1.4 1
+I=F(—) —F(0)=—[sin® —- sin“ 0] =—
+( y (0) gl ] 7
+
+EXERCISE 7.8
+
+Evaluate the definite integrals in Exercises 1 to 20.
+
+2
+1 fi@epde 2. fax 3. J Gx* 5x? +6x+9) de
+- x
+x ud 5 x
+4, | sin 2x dex 5. | > cos 2x dx 6. [eae 7. J ftanxax
+i 1 dx 1 dx 3 dx
+8. J ;oosee x ds 9. I, 2 10. Jone 11. eon
+
+Reprint 2025-26
+
+r 3 xdx 12x4+3
+Joseuq
+
+12. J 2cos* x dx 13. peer
+[: 5x?
+x? 44x43
+
+jose
+
+0x44
+
+19,
+
+1 x, WX
+dx 20. [xe +sin =) dx
+Choose the correct answer in Exercises 21 and 22.
+
+21. {~ dx equals
+
+2
+
+' l4+x
+
+ye py 2% o =
+(A) 3 ‘B) 5 ©
+2
+
+3 ax
+
+Io toe equals
+
+ae ay = o =
+(A) | (B) 5 © x
+
+7.9 Evaluation of Definite Integrals by Substitution
+
+INTEGRALS 271
+
+1 x
+15. Joe dx
+
+17. | 6@sec? x+x° +2) de 18. J 5 (sin? = —cos” 5) ax
+
+(D) 75
+
+TU
+(D) rm
+
+In the previous sections, we have discussed several methods for finding the indefinite
+integral. One of the important methods for finding the indefinite integral is the method
+
+of substitution.
+
+b
+To evaluate } J (x) dx, by substitution, the steps could be as follows:
+
+1. Consider the integral without limits and substitute, y = f(x) or x = g(y) to reduce
+
+the given integral to a known form.
+
+2. Integrate the new integrand with respect to the new variable without mentioning
+
+the constant of integration.
+
+3. Resubstitute for the new variable and write the answer in terms of the original
+
+variable.
+
+4. Find the values of answers obtained in (3) at the given limits of integral and find
+the difference of the values at the upper and lower limits.
+
+Reprint 2025-26
+
+272 MATHEMATICS
+
+|= Note |In order to quicken this method, we can proceed as follows: After
+performing steps 1, and 2, there is no need of step 3. Here, the integral will be kept
+
+in the new variable itself, and the limits of the integral will accordingly be changed,
+so that we can perform the last step.
+
+Let us illustrate this by examples.
+1
+Example 26 Evaluate fo" x +1dx.
+
+Solution Put t= x° + 1, then dt = 5x‘ dx.
+
+3
+(x° +1)?
+
+Ni] w
+
+Therefore, fox" x +ldx = [vear = st = :
+
+_ 37!
+1 _¥
+Hence, [_5x" +1 dx (°° “|
+-1
+
+wl rw
+
+[ 3 3
+= =/(P+)2-(C° “}
+
+3
+
+_2 > _¢? 2% 5) 4v2
+=5|2 0 Fev 3
+
+Alternatively, first we transform the integral and then evaluate the transformed integral
+with new limits.
+
+Let t=x+ 1. Then dt=5 x* dx.
+Note that, when x=-—1,t=Oand whenx=1,t=2
+Thus, as x varies from — | to 1, t varies from 0 to 2
+
+1 2
+Therefore fo" e+ldx = I, Jt dt
+
+-1
+It
+Example 27 Evaluate I, a =
++x
+
+Reprint 2025-26
+
+INTEGRALS 273
+
+Solution Let t= tan~'x, then dt =
+
+ne dx . The new limits are, when x = 0, t= 0 and
++X
+
+when x = 1, rat. Thus, as x varies from 0 to 1, t varies from 0 to 7
+nt 1
+-1 r 2 ]4 2 2
+1 tan” x 4 t 1| 2 _T
+Therefore J, ae dx = I, a ET = iz 0-=
+
+EXERCISE 7.9
+
+Evaluate the integrals in Exercises | to 8 using substitution.
+
+x 2
+[. “dx 2. J 2 Jsin 6 cos* o do 3. hea
+
+x
+a
+
+Ox +1
+2
+4. JoxVx+2 Purx+2=2) 5. [2 + sy
+0 1+ cos? x x4
+2 dx 1 dx 21 1),
+a 7. _&f 8. —-~—~ |e“dx
+loeace a ne 1)
+
+Choose the correct answer in Exercises 9 and 10.
+
+_ 393
+9. The value of the integral } ' oxy dx is
+5 OX
+3
+
+(A) 6 (B) 0 (C) 3 (D) 4
+10. If f(a) = J, rsine dr, then f/x) is
+
+(A) cosx +x sin x (B) x sinx
+(C) x cosx (D) sinx + x cosx
+
+7.10 Some Properties of Definite Integrals
+
+We list below some important properties of definite integrals. These will be useful in
+evaluating the definite integrals more easily.
+
+P,: [- feoar=[" roa
+Pi: [- feyav=-f" fear. In particular, [-f@)ax=0
+
+1
+
+[fedae=f< foydrs J fonax
+
+Reprint 2025-26
+
+274 MATHEMATICS
+
+a]
+
+wt ff @de=[" flatb—xdx
+
+P, : pede dx = |, f@ ~x)dx
+
+(Note that P, is a particular case of P,)
+2a _ a a
+P.: I, fadr=| F(xdx+ J fQa-x)dx
+
+P,: J. f(aydv=2)" fod. if fax) = f(x) and
+0 if f(2a — x) =— f(x)
+P_: (i) [Ef@ dx = 2) f(xax , if fis an even function, i.e., if f(—x) = f(x).
+
+(ii) in f(x)dx=0, if fis an odd function, ice., if f(— x) =— f(x).
+
+We give the proofs of these properties one by one.
+
+Proof of P, It follows directly by making the substitution x = t.
+
+Proof of P, Let F be anti derivative of f: Then, by the second fundamental theorem of
+calculus, we have } °F (xdx =F(b)-F(a)=-[F(a)-F(d)]= -[ > fax
+Here, we observe that, if a = b, then [-f@ dx =0,
+
+Proof of P, Let F be anti derivative of f, Then
+
+[Fo dx = F(b) — F(a) .. (1)
+[(f (x) dx = F(c) — F(a) (2)
+and [ir (x) dx = F(b) — F(c) .. 3)
+
+Adding (2) and (3), we get } * f(x) dx + | ” F(x) dx = F(b) — F(a) =| ° F(X) dx
+This proves the property P.,,.
+
+Proof of P, Let t= a+ b—x. Then dt =— dx. When x = a, t= b and when x = b, t= a.
+Therefore
+
+exe dx = -["f(atb-nat
+
+Reprint 2025-26
+
+INTEGRALS 275
+
+- [/ flatb-nat (by P,)
+
+b
+=| f(a+b-x) dx by P,
+
+Proof of P,, Put t= a—x. Then dt =— dx. When x = 0, t= a and when x =a, t= 0. Now
+proceed as in P..
+
+Proof of P, Using P,, we have f° F(x) dx =[° se) dx+ | * f(x) dx.
+
+Let t = 2a —x in the second integral on the right hand side. Then
+dt = — dx. When x = a, t= a and when x = 2a, t= 0. Also x = 2a —t.
+
+Therefore, the second integral becomes
+
+[-" Fear = -f° fQa-n ar = [° fQa-nat =f" fOa—x ax
+
+2a a a
+Hence I, f(x) dx = I. f(x) de+]" fQa—x) dx
+
+Proof of P, Using P., we have [°F dx = [-£@) dx+|° fa- x) dx w (1)
+Now, if f(a — x) =f(x), then (1) becomes
+[Fedde = [top de+] © fe) de=2) "£00 de,
+
+and if f(a — x) =— f(x), then (1) becomes
+
+[ro dx [> f@ dx—|° F(x) dx=0
+
+Proof of P, Using P,, we have
+
+[_,f@ dr = [ fadde+" foo dx. Then
+
+Let t = —x in the first integral on the right hand side.
+
+dt = — dx. When x = — a, t= a and when
+x=0,t=0. Also x =-t.
+
+a 0 a
+Therefore in f(x)dx = - | ; f(t) dt +] ; f(x) dx
+
+Ji fCH dx +f £0) dx (by P,) ... (I)
+
+Reprint 2025-26
+
+276 MATHEMATICS
+(i) Now, if fis an even function, then f(—x) = f(x) and so (1) becomes
+[i f@axc=J_ flajdx+[- f(x)dx= 2]. f(x)dx
+(ii) If fis an odd function, then f(—x) = — f(x) and so (1) becomes
+
+[5 f@dx=-[° f@dx+ |" f(dx=0
+
+2
+Example 28 Evaluate } ; | xx lax
+
+Solution We note that x* — x => 0 on [- 1, 0] and x* — x < 0 on [0, 1] and that
+x*°—x 20 on [1, 2]. So by P, we write
+
+f., | xx Jax = [ie —X) d+ 08 —Xx) dx+ [OS —x) dx
+
+= [208 a de+ fae )drt fx) dx
+
+4 27° 2 4]! 4 272
+x’ x x x x x
+-|—- p= - +|—-
+E |. 3 | E |
+
+4
+
+4
+
+Example 29 Evaluate ) sin” x dx
+
+Solution We observe that sin’ x is an even function. Therefore, by P,, (i), we get
+TT
+
+TT
+4: 7:2
+i sin? x dx = 2f tsin x dx
+
+=|
+
+TT
+af sG-s0s 2x)
+0
+
+_faq_
+5 dx = [4 cos 2x)dx
+
+Reprint 2025-26
+
+INTEGRALS 277
+
+TT
+= x—_ sin 2x ‘ = (E-Zsin)-0- 4-3
+2 0 4 2 2 4 2
+
+Example 30 Evaluate eer
++cos” x
+
+xsin x
+
+T
+Solution Let I = }
+
+0 lscosx dx . Then, by P,, we have
+
+- [. (™— x) sin (1— x) dx
+1+cos’(m— x)
+
+=f; (m— x) sin x dx x) sin x dx _ xf sin x dx _]
+
+1+cos? x 0 14cos? x
+
+nm sin x dx
+or 21= 2] ——j—
+9 1+cos* x
+
+nx sin x dx
+or 1=5 J,
+
+0 14c0s? x x
+
+Put cos x = ft so that — sin x dx = dt. When x = 0, t= 1 and when x= 7, t=-— 1.
+Therefore, (by P,) we get
+“Fy dt yl dt
+2 114+P
+
+l= =
+14+? 2
+
+n[ a by P., since l functi
+= Ned pe (by P lee is even function)
+
+= n[tan-'1 | sen’ eete#
+
+1
+Example 31 Evaluate } ; sin? x cos* x dx
+
+1
+Solution Let I = i sin’ xcos* x dx . Let f(x) = sin? x cos* x. Then
+
+f(x) = sin’ (— x) cos* (— x) = — sin? x cos* x = — f(x), ie., fis an odd function.
+Therefore, by P, (ii), l= 0
+
+Reprint 2025-26
+
+278 MATHEMATICS
+
+T - 4
+5 sin’ x
+Example 32 Evaluate } * dx
+9 sin” x+cos' x
+. sin’
+5 x
+Solution Let I = f° —__——— dx
+0 sintx+cos* x
+Then, by P
+. Tl
+T sin’ G —x) t cos!
+5 x
+[= 2 dx = } * dx
+x) 9 cos’ x+sin" x
+
+0 . 40 4/1
+sin’ (—— x)+ cos‘ (——
+G ) G
+
+Adding (1) and (2), we get
+
+; Ea
+Hence I="
+< dx
+3
+Example 33 Evaluate IF 1+Jtanx
+cos x dx
+
+Solution Let I = i
+
+‘Te “| cosx ++/sinx
+
+x cos[ FE)
+3 3 6
+Then, by P, I= J;
+6 foos| = +2-x|+,Jsin| 4+ 7-x
+3 6 3 6
+=f: Jsin x __vsinx
+
+6 sin x +Vcos x
+
+Adding (1) and (2), we act
+
+1 1
+~ [3a=[xP =2-7= _*t
+21 F bel, = 36 6 . Hence | D
+
+Reprint 2025-26
+
+(1)
+
+(2)
+
+(1)
+
+(2)
+
+INTEGRALS 279
+
+Tv
+
+Example 34 Evaluate J Zloz sin x dx
+
+1
+Solution Let I = I log sin x dx
+
+Then, by P,
+
+™ ™
+— [2 {| [2
+I= I, log sn( 3 vJae=f, log cos x dx
+
+Adding the two values of I, we get
+
+Tv
+
+21= J 7(og sin x + logcos x) dx
+
+Nla
+
+= | , (log sin x cos x + log 2— log 2) dx (by adding and subtracting log 2)
+
+= J Zlog sin 2x dx -| *log2dx (Why?)
+
+0
+
+Put 2x = ¢ in the first integral. Then 2 dx = dt, when x = 0, t=0 and when x= . ;
+
+t=T.
+lex Tl
+Theref 21= —|_ log sint dt——log2
+erefore so g 5 g
+27s, 1
+& 5 J, logsine dt — log? [by P. as sin (1% — f) = sin f)
+TT
+= if log sin x dx + log2 (by changing variable ¢ to x)
+Tl
+= I-—log2
+5 8
+; Tl
+Hence I? log sinx dx = > 182.
+
+Reprint 2025-26
+
+280 MATHEMATICS
+
+EXERCISE 7.10
+
+By using the properties of definite integrals, evaluate the integrals in Exercises | to 19.
+
+3
+T o>
+Jsin x __vsinx > ~~ «sin? x dx
+3 iF 3 3
+sin? x+ cos? x
+
+T
+1. J Zc0s” xdx 2. [2
+sinx +Jcos x
+
+m 5
+3 «cos? x dx 5 8
+——— 5. lx+2|dx 6. x-5}dx
+iF sin? x +cos> x iP J, |
+1 x 2
+7. J x-x)"dx 8. ftlogdttanayde 9, fox V2=xdx
+10. J? log sin x—log sin 2x) dx uu. [ 2, sin? x dx
+“2
+
+n xdx 5 7 ans
+12. } - 13. [? sin’ x dx 14. } cos” x dx
+
+9 1+sin x = 0
+
+ove
+J
+
+9J/x+VJVa-x
+
+T :
+15 {2 sin x — COs x dx
+
+dx 16. J [log U+cos.x) dx 17.
+
+09 1+sinxcosx
+
+18. J, [xia
+
+19. Show that [, f@e@ dx =2 eae dx , if fand g are defined as f(x) = f(a—x)
+
+and g(x) + g(a—x)=4
+Choose the correct answer in Exercises 20 and 21.
+
+TT
+20. The value of 2 (x +x cosx+ tan? x+1) dx is
+2
+
+(A) 0 (B) 2 (C) % (D) 1
+
+3S | is
+
+Tw
+21. The value of I. log 4 3
++3cosx
+
+3
+(A) 2 (B) 7 (C) 0 (D) -2
+
+Reprint 2025-26
+
+INTEGRALS 281
+Miscellaneous Examples
+
+Example 35 Find [cos 6x .j1+sin 6x dx
+
+Solution Put t= 1 + sin 6x, so that dt = 6 cos 6x dx
+
+1
+: les
+Therefore [cos 6x,/1+sin 6x dx= r; [erar
+
+12: 1 3
+= —x=(1)2+C= —(1+sin 6x)2 +C
+6 3 9
+
+1
+4_ ya
+Example 36 Find [ CO"
+
+5
+xX
+
+1
+1 4
+4g (l-—,)4
+Solution We have js —) : dx =| xe dx
+xX
+
+4
+Xx
+
+1
+
+Put t-te =t,s0 that > dv =dt
+x
+
+X
+u ; 6 5
+(x* —x)4 lp; 145 *( a)
+Therefore =—|t4 dt = —x—t*+C=—]1-—~] +C
+[satay Jt 3X xe
+; f x! dx
+Example 37 Find G@_D@ +) D Oe +)
+Solution We have
+4
+XxX
+<< = (x + I) +——_
+(x—-1)(x* +1) xx +x-1
+(x+)+—_1_ 1
+~ (x—1) (x* +1) ~ @)
+1 A Bx+C
+
+Now express (x) ce +1 = (x) + me oD .. (2)
+
+Reprint 2025-26
+
+282 MATHEMATICS
+
+So 1=A(?4+1)+ (Bx +0) (x- 1)
+=(A+B)x+(C-B)x+A-C
+Equating coefficients on both sides, we getA+ B=0,C-B=OandA-C #1,
+
+which give A = I ,B=C=- I . Substituting values of A, B and C in (2), we get
+2 2
+
+1 1 lx
+(x-—DO? +1 Ax-l) 2007 41) 2x? +1)
+Again, substituting (3) in (1), we have
+x 1 1 x 1
+
+= 1 - -
+(x-1) (x° +x4+1) (r+ aes, 2(x° +1) 2x? +1)
+
+.. (3)
+
+Therefore
+
+4 2
+} = dx =~ +x++log| x 1| dog (x2 +1) = tan
+(x-1) (x +x+4+1) 2 2 4 2
+
+'y+C
+
+1
+Example 38 Find | oe (log x) + (oz. | ax
+
+Solution Let I= ike (log x) + ( b y | dx
+og x
+
+= flog (log x) act fo dx
+
+In the first integral, let us take 1 as the second function. Then integrating it by
+parts, we get
+
+~ xlog (log x)— | | x dx-+ |
+
+x log x (log x)*
+dx dx
+= xlog os) | oox*! Gow? . (1)
+
+Again, consider iF dk
+og x
+
+dx x 1 1
+we have a jx) (log x)” (+}| | .. (2)
+
+Reprint 2025-26
+
+, take 1 as the second function and integrate it by parts,
+
+
+INTEGRALS 283
+
+Putting (2) in (1), we get
+
+dx dx x
+I= xlog (log x) — + = xlog (og x) -———-+C
+Sues log x ox Goew SToew? g§ (log) log x
+
+Example 39 Find | | cot x + tan x | dx
+
+Solution We have
+
+= f{ cot x + tanx | dx = [ Jtanx( +cot.x) dx
+
+Put tan x = f, so that sec?.x dx = 2t dt
+
+2t dt
+or xX = 4
+1+t
+Th I= felt +) e dt
+<n ~ 2 Jasry
+
+= 2) Ca 2f =2{+—
+
+eH
+
+1 1
+Put fos = y, so that [is =| dt = dy. Then
+
+1)
+=2 A = /2 an7! C= 2 ak f
+I ar tan 4 t F
+
+tan x—-1
+_ V2 tan] £ +C= V2 tan7 { Jee
+i V2tanx
+sin 2xcos 2x dx
+{9 — cos*(2x)
+
+sin 2xcos 2x
+
+V9 —cos rie
+
+Example 40 Find }
+
+Solution Let I= |
+
+Reprint 2025-26
+
+284 MATHEMATICS
+
+Put cos? (2x) = t so that 4 sin 2x cos 2x dx = — dt
+
+Therefore
+
+I= | } a_i sin“
+4 V9 _ r 4 3
+3
+Example 41 Evaluate | ‘ | x sin (1 x) |dx
+
+xsint x for-l<x<l
+
+Solution H = Ix sin tx | =
+olution Here f(x) = |x sin ~xsinz x for sx 3
+
+3 3
+3 Lo 3
+Therefore [2 lesinaxlde = | xsintxdx+{ ?—xsinaxdx
+
+3
+1 . ~ 3
+- | x sing x dx—[ 2 xsinn x dx
+
+Integrating both integrals on righthand side, we get
+
+3
+
+Sac sin" cos? 2x }+C
+4 3
+
+[2 lxsinaxlde =
+
+2 2
+
+Tu TU TU Tu
+=-|-4a1|-3,
+“1 rr nul x wv
+x dx
+
+T
+Example 42 Evaluate J, cos x 4b sin? x
+
+3
+: 1 : —
+—X COST Xx sin 7 Xx —X COST X sin 7 x }2
++ +
+-1
+
+Tt x dx Tt T— x) dx
+Solution Let I | = | ( )
+
+0a cos*x+b* sin? x °° a? cos’(n—x)+b’ sin’ (n— x)
+
+=x{" dx f. x dx
+
+2 2 2.2. 2 2 2.2
+9 a cos’ x+b°sin* x °° a’ cos’ x+b* sin’ x
+
+f. dx -y
+
+2.2 2.2
+9 a cos’ x+ b* sin* x
+
+1 dx
+Thus r= iF a’ cos’ x +b’ sin? x
+
+Reprint 2025-26
+
+1
+
+(using P,)
+
+INTEGRALS 285
+
+Tpt dx Tt 5 dx
+3/ 2y)
+
+or I= 5~ (using P,)
+
+0 acos?x+b* sin? x 2 0 a> cos? x +b’ sin’ x
+1
+
+"liao pant
+
+0 a’ cos’ x +b’ sin’ x
+
+Nila
+
+dx
+x a’ cos’ x+b* sin? x
+4
+
+Tv
+
+[ 2 a 2
+rt ie sec’ x dx f cosec* x dx
+
+0 a’ +b’ tan’ x a’ cot? x +b?
+
+T
+4
+
+T {. dt {- du |(urtan.x=tand cots=u)
+oa tbr? 1 au +b?
+
+1 0 5
+* tan" A * tan om = x tan 2 +tant 4 |_
+ab a |, ab bi}, ab a b} 2ab
+
+Miscellaneous Exercise on Chapter 7
+
+Integrate the functions in Exercises 1 to 23.
+
+1 1
+1. 5 2
+
+1 a
+8 Hint Ptxr= =
+xXx-X X+at+ x+b x ax—-x l 1 |
+
+1 1 1 1
+
+4. OF 5. TT [Hint: T T => T\ > Put x= t°|
+x°(x* +1)4 x? + x3 x24x3 3 ca
+5x sin x e logx —e' log x
+6. a 7. wT 8. Whox Diosx
+(x+1) (x° +9) sin (x—d) e2 8% _ p2losx
+9 cos x 10 sin’ —cos® x “1 1
+*  I4—sin? x * 1-2sin? x cos” x * cos (x +a) cos (x +b)
+12 x 13 a 14 ee
+ys ~ (l+e*)(2+e") (x? +1) (x +4)
+15. cos?x eles sinx 16. ee ot + 1)! 17. f’ (ax + b) [f(ax + dD)"
+
+Reprint 2025-26
+
+286 MATHEMATICS
+
+is l 19 1-Jx 29 2+ sin 2x o
+*  J/sin? x sin (x +0) Vide *  14cos 2x
+5 x 4x41 33. tan7! 1-x
+1. 7, ay . tan ——
+(x+1)° (x+2) l+x
+
+Vx? +1| log (x? +1)-2 logx |
+
+4
+Xx
+
+Evaluate the definite integrals in Exercises 24 to 31.
+
+2s (oe (Saas. [3
+
+3 + sinx +cosx
+
+,/sin 2x
+
+30. J Zsin 2xtan (sin x) dx
+
+27, [Sa as. [,
+
+. ui 2
+sin x cosx > ~~ COS” x dx
+° cost x+sin* x 9 cos’ x+4sin* x
+
+un,
+4 sinx+cosx
+
+res Vx 29. IF 9+16sin2x
+
+[Ux-Ll+ly-21+lx=3i) de
+
+Prove the following (Exercises 32 to 37)
+
+3 ax 2
+| 5 =—+log
+Ix(x+l 3 3
+
+1
+34, i x’ cos* x dx=0
+
+36. | 62 tan’ xdx=1-log2
+
+1
+33. [,xe'dv=l
+
+Svia
+
+sin? x dx =
+
+35. f.
+
+mre
+
+——
+
+37. sin’! xdx=—~-1
+0 2
+
+Choose the correct answers in Exercises 38 to 40
+
+is equal to
+
+dx
+38.
+Ia +e
+(A) tan! (e)+C
+(C) log (e*’-—e*)+C
+
+cos 2x
+
+(B) tan! (ex) + C
+(D) log (e*+e*) +C
+
+39. |—— dx is equal to
+
+(sin x + cos x)
+
+Reprint 2025-26
+
+INTEGRALS 287
+
+-l
+—— +€ log Isin x + I+C
+(A) sin th cos x (B) loglsinx+cosx
+
+1
+
+(C) loglsinx—cosx|+C (D) (sin x-+cos x)?
+
+If f(a+ b—x) =f (0), then fix f(x) dx is equal to
+
+at+b
+
+(ay S [° fo-» ax (B) sf for ndy
+b-a ¢b atb eb
+©) J, faa (Dp) Sf roar
+
+Integration is the inverse process of differentiation. In the differential calculus,
+we are given a function and we have to find the derivative or differential of
+this function, but in the integral calculus, we are to find a function whose
+differential is given. Thus, integration is a process which is the inverse of
+differentiation.
+
+Let < F(x) = f(x). Then we write [foo dx =F (x)+C. These integrals
+
+are called indefinite integrals or general integrals, C is called constant of
+integration. All these integrals differ by a constant.
+Some properties of indefinite integrals are as follows:
+
+1. fIF@+g @ldx= [| f@) det] g Qo) de
+
+2. For any real number k, fx f(x) dx= k[ fo) dx
+
+More generally, if Jip dip diy heey f, are functions and k, k,, wee Jk are real
+numbers. Then
+
+[lp ROFL AO) +...4+k, fy Olde
+
+=k [f@act+k [A @dct..+k, [fd de
+
+n+l
+
+(i) [x'ax = +C,n#-1. Particularly, [ac= x+C
+
+x
+n+1
+
+Reprint 2025-26
+
+288
+
+MATHEMATICS
+(ii) [cosx dx =sinx+C (iii) [sin x dx =-cosx+C
+(iv) [sec? x dx =tanx+C (v) [cosec* x dx =—cotx+C
+(vi) [sec x tan x dx =secx+C
+(vii) [cosec x cot x dx =—cosec x+C (viii) Jo asin ec
+(ix) ee See eH O stan! x+C
+x
+(xi) } a =-cot 'x+C (xii) [e'dx=e' +
+Lae
+a 1
+(xiil) } loga (xiv) J— ax loglxl+C
+
+P(x)
+
+Q(x)’
+where P(x) and Q(x) are polynomials in x and Q(x) # 0. If degree of the
+polynomial P (x) is greater than the degree of the polynomial Q (x), then we
+
+POX) rey 4 BOD
+Q(x) Q(x)
+polynomial in x and degree of P, (x) is less than the degree of Q(x). T(x)
+
+Recall that a rational function is ratio of two polynomials of the form
+
+may divide P(x) by Q(%) so that
+
+being polynomial can be easily integrated. 7 can be integrated by
+
+expressing ~~~ 0 (x D as the sum of partial fractions of the following type:
+A
+1 Peta = a
+(x-a) (x—b) x-a x-b
+px+q A B
+2. (x-a)y ~ x-a (x—-a)’
+
+Reprint 2025-26
+
+INTEGRALS 289
+
+px’ +qx+r A B C
+3. = + +
+(x—a) (x—b)(x-c) x-a x-b x-c
+2
+px taxtr _ A n B -+ C
+(x—a)° (x—b) X-a (x-a) x-b
+; px’ +qxtr _ A. BrtC
+"  (x-a)(x°+bxtce) — — x-a) P + bx te
+
+where x* + bx +c can not be factorised further.
+
+A change in the variable of integration often reduces an integral to one of the
+fundamental integrals. The method in which we change the variable to some
+other variable is called the method of substitution. When the integrand involves
+some trigonometric functions, we use some well known identities to find the
+integrals. Using substitution technique, we obtain the following standard
+integrals.
+
+(i) [tan x dx = log |secx|+C (ii) [cot x dx=log| sin x|+C
+(iii) [secx dx =log | seex +tan.x|+C
+
+(iv) [cosecx dx = log | cosec x —cotx | +C
+
+dx 1 x-—a
+i =—lo +C
+@) lap 2a . x+a
+dx 1 at+x dx 1 _,x
+oe =—lo +C ope =—tan +C
+@) me 2a e a-x (itt) Jee a a
+. dx [,2_ 2 ee =sin)~+C
+©) Jy T08 | Naa" HC) eae
+
+=loglx+ Vx? +a’ l+C
+
+dx
+on Te
+
+For given functions f, and f,, we have
+
+Reprint 2025-26
+
+290 MATHEMATICS
+
+JAC: A) d= A) [AC ax I] 2 hoof A00 ara i.e., the
+
+integral of the product of two functions = first function x integral of the
+second function — integral of {differential coefficient of the first function x
+integral of the second function}. Care must be taken in choosing the first
+function and the second function. Obviously, we must take that function as
+the second function whose integral is well known to us.
+
+fe Lf) + fl de= fe* f(x) de +C
+
+2
+(i) [ve -@ dx= Nx" —a° — “log x+Vx°-a’ |+C
+
+2
+(ii) [ver ta? dx= Nx" +a" + Flog x+Vx +a°\+C
+
+2
+(iii) [Va =x dx= Na? =x" +5 sin'—+C
+
+a
+dx dx
+
+iv) Integrals of the types or can be
+) . t V3 ae ss
+
+transformed into standard form by expressing
+
+a 2
+Ge Sipe eS a) 42ers laa [x42] + cP
+a4 2a a 4a
+
++ +
+px+qdx or | px+qdx
+
+ax’ +bx +e Vax? +bxt+c¢ “°" be
+
+(v) Integrals of the types J
+
+transformed into standard form by expressing
+
+prtq= A“ (ax? +bx+0)4B=A Qar+b)+B , where A and B are
+X
+
+determined by comparing coefficients on both sides.
+
+We have defined | ° Ff (x) dx as the area of the region bounded by the curve
+
+y =f (x), a<x <b, the x-axis and the ordinates x = a and x = b. Let x bea
+
+Reprint 2025-26
+
+INTEGRALS 291
+
+given point in [a, b]. Then | 7 f(x) dx represents the Area function A (x).
+
+This concept of area function leads to the Fundamental Theorems of Integral
+Calculus.
+
+Let the area function be defined by A(x) = | . f (x) dx for all x = a, where
+
+the function fis assumed to be continuous on [a, b]. Then A’ (x) = f (x) for all
+x € [a, b].
+
+Let fbe a continuous function of x defined on the closed interval [a, b] and
+let F be another function such that a F(x) = f(x) for all x in the domain of
+x
+
+b b
+f, then |, f@) dx=[FO)+C]; =F(b)—F(a).
+
+This is called the definite integral of f over the range [a, b], where a and b
+are called the limits of integration, a being the lower limit and b the
+upper limit.
+
+Reprint 2025-26
+
