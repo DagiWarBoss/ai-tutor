@@ -131,7 +131,7 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     extracted_topics = []
     
-    # Reverted to your preferred, more reliable topic logic
+    # This is your exact, preferred topic logic
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
     heading_pattern = re.compile(r'^(%s)\s+' % '|'.join(topic_numbers), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
@@ -150,7 +150,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
 
-    # Fixed and improved question extraction logic
+    # This is the improved question logic
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
