@@ -2,137 +2,49 @@ import os
 import re
 import psycopg2
 from dotenv import load_dotenv
-import pandas as pd
 from pdf2image import convert_from_path
 import pytesseract
+import pandas as pd
 
-# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
+# ======= VERIFY THESE PATHS FOR YOUR SYSTEM =======
 PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
 # =======================================================
 
 # --- Configuration ---
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
-os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
-
-# --- Comprehensive Name Mapping ---
-NAME_MAPPING = {
-    'Some Basic Concepts Of Chemistry': 'Some Basic Concepts Of Chemistry',
-    'Structure Of Atom': 'Structure Of Atom',
-    'Classification Of Elements And Periodicity': 'Classification Of Elements And Periodicity',
-    'Chemical Bonding And Molecular Structure': 'Chemical Bonding And Molecular Structure',
-    'Thermodynamics': 'Thermodynamics',
-    'Equilibrium': 'Equilibrium',
-    'Redox Reactions': 'Redox Reactions',
-    'Organic Chemistry Basics': 'Organic Chemistry Basics',
-    'Hydrocarbons': 'Hydrocarbons',
-    'Solutions': 'Solutions',
-    'Electrochemistry': 'Electrochemistry',
-    'Chemical Kinetics': 'Chemical Kinetics',
-    'D And F Block': 'D And F Block',
-    'Coordination Compounds': 'Coordination Compounds',
-    'Haloalkanes And Haloarenes': 'Haloalkanes And Haloarenes',
-    'Alcohol Phenols Ethers': 'Alcohol Phenols Ethers',
-    'Aldehydes, Ketones And Carboxylic Acid': 'Aldehydes, Ketones And Carboxylic Acid',
-    'Amines': 'Amines',
-    'Biomolecules': 'Biomolecules',
-    'Units And Measurements': 'Units And Measurements',
-    'Motion In A Straight Line': 'Motion In A Straight Line',
-    'Motion In A Plane': 'Motion In A Plane',
-    'Laws Of Motion': 'Laws Of Motion',
-    'Work Energy Power': 'Work Energy Power',
-    'System Of Particles And Rotational Motion': 'System Of Particles And Rotational Motion',
-    'Gravitation': 'Gravitation',
-    'Mechanical Properties Of Solids': 'Mechanical Properties Of Solids',
-    'Mechanical Properties Of Fluids': 'Mechanical Properties Of Fluids',
-    'Thermal Properties Of Matter': 'Thermal Properties Of Matter',
-    'Kinetic Theory': 'Kinetic Theory',
-    'Oscillations': 'Oscillations',
-    'Waves': 'Waves',
-    'Electric Charges And Fields': 'Electric Charges And Fields',
-    'Electrostatic Potential And Capacitance': 'Electrostatic Potential And Capacitance',
-    'Current Electricity': 'Current Electricity',
-    'Moving Charges And Magnetism': 'Moving Charges And Magnetism',
-    'Magnetism And Matter': 'Magnetism And Matter',
-    'Electromagnetic Induction': 'Electromagnetic Induction',
-    'Alternating Current': 'Alternating Current',
-    'Electromagnetic Waves': 'Electromagnetic Waves',
-    'Ray Optics': 'Ray Optics',
-    'Wave Optics': 'Wave Optics',
-    'Dual Nature Of Radiation And Matter': 'Dual Nature Of Radiation And Matter',
-    'Atoms': 'Atoms',
-    'Nuclei': 'Nuclei',
-    'Semiconductor Electronics': 'Semiconductor Electronics',
-    'Binomial Theorem': 'Binomial Theorem',
-    'Complex Numbers And Quadratic Equations': 'Complex Numbers And Quadratic Equations',
-    'Conic Sections': 'Conic Sections',
-    'Introduction to Three Dimensional Geometry': 'Introduction to Three Dimensional Geometry',
-    'Limits And Derivatives': 'Limits And Derivatives',
-    'Linear Inequalities': 'Linear Inequalities',
-    'Permutations And Combinations': 'Permutations And Combinations',
-    'Probability': 'Probability',
-    'Relations And Functions': 'Relations And Functions',
-    'Sequences And Series': 'Sequences And Series',
-    'Sets': 'Sets',
-    'Statistics': 'Statistics',
-    'Straight Lines': 'Straight Lines',
-    'Trigonometric Functions': 'Trigonometric Functions',
-    'Application Of Derivatives': 'Application Of Derivatives',
-    'Application Of Integrals': 'Application Of Integrals',
-    'Continuity And Differentiability': 'Continuity And Differentiability',
-    'Determinants': 'Determinants',
-    'Differential Equations': 'Differential Equations',
-    'Infinite Series': 'Infinite Series',
-    'Integrals': 'Integrals',
-    'Inverse Trigonometric Functions': 'Inverse Trigonometric Functions',
-    'Linear Programming': 'Linear Programming',
-    'Matrices': 'Matrices',
-    'Proofs In Mathematics': 'Proofs In Mathematics',
-    'Three Dimensional Geometry': 'Three Dimensional Geometry',
-    'Vector Algebra': 'Vector Algebra'
-}
 
 def log(msg: str):
     print(msg, flush=True)
 
-def get_text_from_pdf_with_caching(pdf_path: str) -> str:
-    pdf_filename = os.path.basename(pdf_path)
-    cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
+def normalize_name(name: str) -> str:
+    """Creates a consistent, searchable key from a name."""
+    return re.sub(r'[\s\-_]', '', name.lower())
 
-    if os.path.exists(cache_filepath):
-        log(f"    - Found cached OCR text for '{pdf_filename}'. Reading from cache.")
-        with open(cache_filepath, 'r', encoding='utf-8') as f:
-            return f.read()
-
-    log("    - No cache found. Converting PDF to images and running OCR...")
+def run_ocr_on_pdf(pdf_path: str) -> str:
+    """Performs OCR on every page of a PDF and returns the full text."""
+    log("  - Converting PDF to images and running OCR...")
     try:
         images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
         full_text = ""
         for i, image in enumerate(images):
-            full_text += pytesseract.image_to_string(image, config='--psm 3') + "\n"
-        log("    - OCR complete.")
-        with open(cache_filepath, 'w', encoding='utf-8') as f:
-            f.write(full_text)
-        log(f"    - Saved new OCR text to cache: '{os.path.basename(cache_filepath)}'")
+            full_text += pytesseract.image_to_string(image) + "\n"
+        log("  - OCR complete.")
         return full_text
     except Exception as e:
-        log(f"    [ERROR] OCR process failed for {pdf_filename}: {e}")
+        log(f"  [ERROR] OCR process failed for {os.path.basename(pdf_path)}: {e}")
         return ""
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     extracted_topics = []
-    
-    topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'^\s*(' + '|'.join(topic_numbers) + r')\s*', re.MULTILINE)
+    topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
+    heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
     topic_locations = {match.group(1).strip(): match.start() for match in matches}
-    
-    log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
 
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
@@ -143,40 +55,31 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
                 if next_pos > start_pos and next_pos < end_pos:
                     end_pos = next_pos
             content = ocr_text[start_pos:end_pos].strip()
-            extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
+            title = content.split('\n')[0].strip()
+            extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
 
     questions = []
-    exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
-    exercises_match = None
-    for marker in exercise_markers:
-        exercises_match = re.search(marker, ocr_text, re.IGNORECASE)
-        if exercises_match:
-            break
-            
+    exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
-        question_pattern = re.compile(r'^\s*(\d+(?:\.\d+)?)\s*[\.\)]?\s*(.+?)(?=\n\s*\d+\.\d+|\Z)', re.MULTILINE | re.DOTALL)
+        question_pattern = re.compile(r'(\d+\.\d+)\s+(.+?)(?=\n\d+\.\d+|\Z)', re.DOTALL)
         found_questions = question_pattern.findall(exercises_text)
-        
-        log(f"    - Found {len(found_questions)} potential questions.")
-        
         for q_num, q_text in found_questions:
-            if q_text.strip():
-                questions.append({'question_number': q_num.strip(), 'question_text': q_text.strip()})
-    else:
-        log(f"    - No obvious 'EXERCISES' or 'QUESTIONS' section found.")
+            questions.append({'question_number': q_num, 'question_text': q_text.strip()})
             
     return extracted_topics, questions
 
 def update_database(cursor, chapter_id: int, topics: list, questions: list):
-    log(f"    - Preparing to update {len(topics)} topics and {len(questions)} questions in the database.")
+    """Updates the database with the extracted topics and questions."""
+    log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
-        cursor.execute("UPDATE topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s", (topic['content'], chapter_id, topic['topic_number']))
-    if questions:
-        cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
-        for q in questions:
-            cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)", (chapter_id, q['question_number'], q['question_text']))
-    log(f"    - Database update commands sent.")
+        cursor.execute("UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
+                       (topic['content'], topic['title'], chapter_id, topic['topic_number']))
+    cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
+    for q in questions:
+        cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
+                       (chapter_id, q['question_number'], q['question_text']))
+    log(f"  - Database update commands sent.")
 
 def main():
     try:
@@ -194,67 +97,49 @@ def main():
         log(f"[ERROR] CSV file not found at: {CSV_PATH}")
         return
 
-    cursor.execute("""
-        SELECT c.id, c.name, c.class_number, s.name as subject_name_db
-        FROM chapters c
-        JOIN subjects s ON c.subject_id = s.id
-        ORDER BY s.name, c.class_number, c.name
-    """)
-    db_chapters = cursor.fetchall()
-    processed_chapters_count = 0
-    skipped_chapters_count = 0
+    # Create a normalized map of chapters from the database
+    cursor.execute("SELECT name, id FROM chapters")
+    db_chapter_map = {normalize_name(name): chapter_id for name, chapter_id in cursor.fetchall()}
 
-    for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
-        log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
+    # Get a unique list of chapters from the CSV, our source of truth
+    csv_chapters = master_df[['subject', 'class', 'chapter_file']].drop_duplicates().to_dict('records')
 
-        # --- NEW EFFICIENCY CHECK ---
-        cursor.execute("SELECT COUNT(*) FROM topics WHERE chapter_id = %s AND (full_text IS NULL OR TRIM(full_text) = '')", (chapter_id,))
-        missing_count = cursor.fetchone()[0]
+    log(f"[INFO] Found {len(csv_chapters)} unique chapters in the CSV to process.")
+
+    for chapter_info in csv_chapters:
+        csv_filename = chapter_info['chapter_file']
+        csv_chapter_name = os.path.splitext(csv_filename)[0]
         
-        if missing_count == 0:
-            log(f"  - All topics for this chapter are already populated. Skipping.")
-            skipped_chapters_count += 1
+        log(f"\n--- Processing: {csv_filename} ---")
+        
+        # Find the chapter in the database using the normalized name
+        normalized_name = normalize_name(csv_chapter_name)
+        chapter_id = db_chapter_map.get(normalized_name)
+        
+        if not chapter_id:
+            log(f"  [WARNING] Chapter '{csv_chapter_name}' not found in the database using normalized name. Skipping.")
             continue
-        else:
-            log(f"  - Found {missing_count} empty topics. Proceeding with extraction.")
-        # --- END OF CHECK ---
-
-        folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
-        mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
-        pdf_filename = f"{mapped_pdf_filename_base}.pdf"
-        class_folder = f"Class {class_number}"
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder, pdf_filename)
-        
+            
+        # Find the actual PDF file path
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, chapter_info['subject'], chapter_info['class'], csv_filename)
         if not os.path.exists(pdf_path):
-            log(f"    [WARNING] PDF not found for '{chapter_name_db}'. Skipping chapter.")
-            skipped_chapters_count += 1
-            continue
-
-        chapter_topics_df = master_df[master_df['chapter_file'] == pdf_filename].copy()
-        if chapter_topics_df.empty:
-            log(f"    [WARNING] No topics found in CSV for chapter '{pdf_filename}'. Skipping.")
-            skipped_chapters_count += 1
-            continue
-
-        full_chapter_text = get_text_from_pdf_with_caching(pdf_path)
-        if not full_chapter_text:
-            log(f"    [ERROR] Failed to get text from '{pdf_filename}'. Skipping.")
-            skipped_chapters_count += 1
+            log(f"  [WARNING] PDF file not found at '{pdf_path}'. Skipping.")
             continue
         
-        topics_data, questions_data = extract_topics_and_questions(full_chapter_text, chapter_topics_df)
-        
-        if not topics_data and not questions_data:
-            log(f"    [WARNING] No topics or questions extracted from text. Skipping database update.")
-        else:
-            update_database(cursor, chapter_id, topics_data, questions_data)
+        # Filter the master CSV for this specific chapter
+        chapter_topics_df = master_df[master_df['chapter_file'] == csv_filename]
+
+        ocr_text = run_ocr_on_pdf(pdf_path)
+        if ocr_text:
+            topics, questions = extract_topics_and_questions(ocr_text, chapter_topics_df)
+            log(f"  - Extracted {len(topics)} topics and {len(questions)} questions.")
+            update_database(cursor, chapter_id, topics, questions)
             conn.commit()
-            log(f"    [SUCCESS] Finished processing and saving data for '{chapter_name_db}'.")
-            processed_chapters_count += 1
+            log(f"  [SUCCESS] Saved data for '{csv_chapter_name}' to Supabase.")
 
     cursor.close()
     conn.close()
-    log(f"\n[COMPLETE] Script finished. Processed {processed_chapters_count} chapters, skipped {skipped_chapters_count} chapters.")
+    log("\n[COMPLETE] Script finished.")
 
 if __name__ == '__main__':
     main()
