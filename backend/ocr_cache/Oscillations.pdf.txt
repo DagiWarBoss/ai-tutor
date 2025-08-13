@@ -1,0 +1,1700 @@
+Introduction
+
+Periodic and oscillatory
+motions
+
+Simple harmonic motion
+Simple harmonic motion
+and uniform circular
+motion
+
+Velocity and acceleration
+in simple harmonic motion
+Force law for simple
+harmonic motion
+
+Energy in simple harmonic
+motion
+
+The simple pendulum
+
+Summary
+Points to ponder
+Exercises
+
+CHAPTER THIRTEEN
+
+11087CH14
+
+OSCILLATIONS
+
+13.1 INTRODUCTION
+
+In our daily life we come across various kinds of motions.
+You have already learnt about some of them, e.g., rectilinear
+motion and motion of a projectile. Both these motions are
+non-repetitive. We have also learnt about uniform circular
+motion and orbital motion of planets in the solar system. In
+these cases, the motion is repeated after a certain interval of
+time, that is, it is periodic. In your childhood, you must have
+enjoyed rocking in a cradle or swinging on a swing. Both
+these motions are repetitive in nature but different from the
+periodic motion of a planet. Here, the object moves to and fro
+about a mean position. The pendulum of a wall clock executes
+a similar motion. Examples of such periodic to and fro
+motion abound: a boat tossing up and down in a river, the
+piston in a steam engine going back and forth, etc. Such a
+motion is termed as oscillatory motion. In this chapter we
+study this motion.
+
+The study of oscillatory motion is basic to physics; its
+concepts are required for the understanding of many physical
+phenomena. In musical instruments, like the sitar, the guitar
+or the violin, we come across vibrating strings that produce
+pleasing sounds. The membranes in drums and diaphragms
+in telephone and speaker systems vibrate to and fro about
+their mean positions. The vibrations of air molecules make
+the propagation of sound possible. In a solid, the atoms vibrate
+about their equilibrium positions, the average energy of
+vibrations being proportional to temperature. AC power
+supply give voltage that oscillates alternately going positive
+and negative about the mean value (zero).
+
+The description of a periodic motion, in general, and
+oscillatory motion, in particular, requires some fundamental
+concepts, like period, frequency, displacement, amplitude
+and phase. These concepts are developed in the next section.
+
+Reprint 2025-26
+
+260
+
+PHYSICS
+
+13.2 PERIODIC AND OSCILLATORY MOTIONS
+
+Fig. 13.1 shows some periodic motions. Suppose
+an insect climbs up a ramp and falls down, it
+comes back to the initial point and repeats the
+process identically. If you draw a graph of its
+height above the ground versus time, it would
+look something like Fig. 13.1 (a). Ifa child climbs
+up a step, comes down, and repeats the process
+identically, its height above the ground would
+look like that in Fig. 13.1 (b). When you play the
+game of bouncing a ball off the ground, between
+your palm and the ground, its height versus time
+graph would look like the one in Fig. 13.1 (c).
+Note that both the curved parts in Fig. 13.1 (c)
+are sections of a parabola given by the Newton’s
+equation of motion (see section 2.6),
+
+1
+h=ut +5 gt” for downward motion, and
+
+1
+h=ut —- 3 gt” for upward motion,
+
+with different values of u in each case. These
+are examples of periodic motion. Thus, a motion
+that repeats itself at regular intervals of time is
+called periodic motion.
+
+x(t)
+(a)
+
+x(t)
+
+(b)
+
+x(t)
+
+(c) T
+
+Fig. 13.1 Examples of periodic motion. The period T
+is shown in each case.
+
+Very often, the body undergoing periodic
+motion has an equilibrium position somewhere
+inside its path. When the body is at this position
+no net external force acts on it. Therefore, if itis
+left there at rest, it remains there forever. If the
+body is given a small displacement from the
+position, a force comes into play which tries to
+bring the body back to the equilibrium point,
+giving rise to oscillations or vibrations. For
+example, a ball placed in a bowl will be in
+equilibrium at the bottom. If displaced a little
+from the point, it will perform oscillations in the
+bowl. Every oscillatory motion is periodic, but
+every periodic motion need not be oscillatory.
+Circular motion is a periodic motion, but it is
+not oscillatory.
+
+There is no significant difference between
+oscillations and vibrations. It seems that when
+the frequency is small, we call it oscillation (like,
+the oscillation of a branch of a tree), while when
+the frequency is high, we call it vibration (like,
+the vibration of a string of a musical instrument).
+
+Simple harmonic motion is the simplest form
+of oscillatory motion. This motion arises when
+the force on the oscillating body is directly
+proportional to its displacement from the mean
+position, which is also the equilibrium position.
+Further, at any point in its oscillation, this force
+is directed towards the mean position.
+
+In practice, oscillating bodies eventually
+come to rest at their equilibrium positions
+because of the damping due to friction and other
+dissipative causes. However, they can be forced
+to remain oscillating by means of some external
+periodic agency. We discuss the phenomena of
+damped and forced oscillations later in the
+chapter.
+
+Any material medium can be pictured as a
+collection of a large number of coupled
+oscillators. The collective oscillations of the
+constituents of a medium manifest themselves
+as waves. Examples of waves include water
+waves, seismic waves, electromagnetic waves.
+We shall study the wave phenomenon in the next
+chapter.
+
+13.2.1 Period and frequency
+
+We have seen that any motion that repeats itself
+at regular intervals of time is called periodic
+motion. The smallest interval of time after
+which the motion is repeated is called its
+period. Let us denote the period by the symbol
+T. Its SI unit is second. For periodic motions,
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+261
+
+which are either too fast or too slow on the scale
+of seconds, other convenient units of time are
+used. The period of vibrations of a quartz crystal
+is expressed in units of microseconds (10° s)
+abbreviated as us. On the other hand, the orbital
+period of the planet Mercury is 88 earth days.
+The Halley’s comet appears after every 76 years.
+
+The reciprocal of T gives the number of
+repetitions that occur per unit time. This
+quantity is called the frequency of the periodic
+motion. It is represented by the symbol v. The
+relation between v and Tis
+
+v =1/T (13.1)
+
+The unit of v is thus s'. After the discoverer of
+radio waves, Heinrich Rudolph Hertz (1857-1894),
+a special name has been given to the unit of
+frequency. It is called hertz (abbreviated as Hz).
+Thus,
+
+1 hertz = 1 Hz =1 oscillation per second =1 s"!
+(13.2)
+
+Note, that the frequency, v, is not necessarily
+an integer.
+
+Example 13.1 On an average, a human
+
+heart is found to beat 75 times in a minute.
+Calculate its frequency and period.
+
+Answer The beat frequency of heart = 75/(1 min)
+= 75/(60 s)
+=1.25s1
+
+= 1.25 Hz
+
+= 1/(1.25 s°})
+=0.8s <
+
+The time period T
+
+13.2.2 Displacement
+
+In section 3.2, we defined displacement of a
+particle as the change in its position vector. In
+this chapter, we use the term displacement
+in a more general sense. It refers to change
+with time of any physical property under
+consideration. For example, in case of rectilinear
+motion of a steel ball on a surface, the distance
+from the starting point as a function of time is
+its position displacement. The choice of origin
+is a matter of convenience. Consider a block
+attached to a spring, the other end of the spring
+is fixed to a rigid wall [see Fig. 13.2(a)]. Generally,
+it is convenient to measure displacement of the
+body from its equilibrium position. For an
+oscillating simple pendulum, the angle from the
+vertical as a function of time may be regarded
+
+as a displacement variable [see Fig. 13.2(b)]. The
+term displacement is not always to be referred
+
+TTT 1 7? TTI ATT II A ff ff ALA FIITT
+
+Fig. 13.2(a) A block attached to a spring, the other
+end of which is fixed to a rigid wall. The
+block moves on a frictionless surface. The
+motion of the block can be described in
+
+terms of its distance or displacement x
+from the equilibrium position.
+
+Fig.13.2(b) An oscillating simple pendulum; its
+motion can be described in terms of
+angular displacement 0 from the vertical.
+
+in the context of position only. There can be
+many other kinds of displacement variables. The
+voltage across a capacitor, changing with time
+in an AC circuit, is also a displacement variable.
+In the same way, pressure variations in time in
+the propagation of sound wave, the changing
+electric and magnetic fields in a light wave are
+examples of displacement in different contexts.
+The displacement variable may take both
+positive and negative values. In experiments on
+oscillations, the displacement is measured for
+different times.
+
+The displacement can be represented by a
+mathematical function of time. In case of periodic
+motion, this function is periodic in time. One of
+the simplest periodic functions is given by
+
+f(t =Acos ot (13.3a)
+If the argument of this function, ot, is
+
+increased by an integral multiple of 27 radians,
+the value of the function remains the same. The
+
+Reprint 2025-26
+
+262
+
+PHYSICS
+
+function f(t) is then periodic and its period, T,
+is given by
+
+_ 20
+
+T (13.3b)
+
+a)
+Thus, the function f(d) is periodic with period T,
+
+f(0 =f(t+T)
+
+The same result is obviously correct if we
+consider a sine function, f(t) =A sin ot. Further,
+a linear combination of sine and cosine functions
+like,
+
+f(t) = Asin ot + Bcos ot (13.3c)
+is also a periodic function with the same period
+T. Taking,
+
+A=Dcos ¢ and B=Dsin ¢
+Eq. (13.3c) can be written as,
+f() =Dsin (at + 6), (13.3d)
+
+Here Dand ¢ are constant given by
+
+B
+
+p=,/A?+B? and = tan! A
+
+The great importance of periodic sine and
+
+cosine functions is due to a remarkable result
+
+proved by the French mathematician, Jean
+
+Baptiste Joseph Fourier (1768-1830): Any
+
+periodic function can be expressed as a
+
+superposition of sine and cosine functions
+
+of different time periods with suitable
+coefficients.
+
+Example 13.2 Which of the following
+functions of time represent (a) periodic and
+(b) non-periodic motion? Give the period for
+each case of periodic motion [mis any
+
+positive constant].
+
+(i) sin wt+cos ot
+
+(ii) sin ot + cos 2 of sin 4 ot
+(iii) e
+
+(iv) log (ad)
+
+Answer
+
+(i) sin wt+cos otis a periodic function, it can
+also be written as J2 sin (ot + 1/4).
+
+Nowy2 sin (ot +2/H=/2 sin (at + 1/44+27)
+= /2 sin [a(t + 2z/o) + 7/4]
+
+The periodic time of the function is 2x/o.
+
+(ii) This is an example of a periodic motion. It
+can be noted that each term represents a
+periodic function with a different angular
+frequency. Since period is the least interval
+of time after which a function repeats its
+value, sin thas a period T,= 2n/@ ; cos 2 ot
+has a period r/@=T,/2; and sin 4 othasa
+period 2/4 = T,/4. The period of the first
+term is a multiple of the periods of the last
+two terms. Therefore, the smallest interval
+of time after which the sum of the three
+terms repeats is T,, and thus, the sum isa
+periodic function with a period 21/a.
+
+(iii) The function e® is not periodic, it
+decreases monotonically with increasing
+time and tends to zero as t—> o and thus,
+never repeats its value.
+
+(iv) The function log(@t) increases
+monotonically with time ¢. It, therefore,
+never repeats its value and is a non-
+periodic function. It may be noted that as
+t > «, log(wé) diverges to o. It, therefore,
+cannot represent any kind of physical
+displacement.
+
+13.3. SIMPLE HARMONIC MOTION
+
+Consider a particle oscillating back and forth
+about the origin of an x-axis between the limits
++A and —Aas shown in Fig. 13.3. This oscillatory
+motion is said to be simple harmonic if the
+displacement x of the particle from the origin
+varies with time as :
+
+x(Q =Acos (@ t+ ¢) (13.4)
+
+-A tA
+SS
+Fig. 13.3 A particle vibrating back and forth about
+
+the origin of x-axis, between the limits +A
+and —A.
+
+where A, wand ¢are constants.
+
+Thus, simple harmonic motion (SHM) is not
+any periodic motion but one in which
+displacement is a sinusoidal function of time.
+Fig. 13.4 shows the positions of a particle
+executing SHM at discrete value of time, each
+interval of time being T/4, where Tis the period
+of motion. Fig. 13.5 plots the graph of xversus f,
+which gives the values of displacement as a
+continuous function of time. The quantities A,
+
+Reprint 2025-26
+
+263
+
+OSCILLATIONS
+<— Vmax
+5 ————_e—___
+-A fe) A -A O A
+t=0 t=T/4
+—> Ynmax
+o—___e—__ ———_e—___—_
+-A fe) A -A O A
+t=T/2 t= 3T/4
+<— Vmax
+a oO A AOA
+t=T t=5T/4
+
+Fig. 13.4 The location of the particle in SHM at the
+discrete values t = O, T/4, T/2, 3T/4, T,
+5T/4. The time after which motion repeats
+itself is T. T will remain fixed, no matter
+what location you choose as the initial (t =
+O) location. The speed is maximum for zero
+displacement (at x = O) and zero at the
+extremes of motion.
+
+o and ¢ which characterize a given SHM have
+standard names, as summarised in Fig. 13.6.
+Let us understand these quantities.
+
+The amplitutde A of SHM is the magnitude
+of maximum displacement of the particle.
+[Note, A can be taken to be positive without
+
+x
+
+Displacement —>
+
+Fig. 13.5 Displacement as a continuous function of
+time for simple harmonic motion.
+
+: displacement x as a function of time ¢t
+: amplitude
+: angular frequency
+
+phase (time-dependent)
+: phase constant
+
+Fig. 13.6 The meaning of standard symbols
+in Eq. (13.4)
+
+any loss of generality]. As the cosine function
+of time varies from +1 to -1, the displacement
+varies between the extremes A and - A. Two
+simple harmonic motions may have same @
+and @¢ but different amplitudes A and B, as
+shown in Fig. 13.7 (a).
+
+While the amplitude A is fixed for a given
+SHM, the state of motion (position and velocity)
+of the particle at any time tis determined by the
+
+*
+N
+
+> W
+
+t—>»
+
+Displacement —>
+oO
+
+> oy
+
+Fig. 13.7 (a) A plot of displacement as a function of
+time as obtained from Eq. (14.4) with
+@ = 0. The curves I and 2 are for two
+different amplitudes A and B.
+
+argument (at + ¢) in the cosine function. This
+time-dependent quantity, (@t + ¢) is called the
+phase of the motion. The value of plase at t= 0
+is ¢ and is called the phase constant (or phase
+angle). If the amplitude is known, ¢ can be
+determined from the displacement at t= 0. Two
+simple harmonic motions may have the same A
+and @ but different phase angle ¢, as shown in
+Fig. 13.7 (b).
+
+Finally, the quantity @ can be seen to be
+related to the period of motion T. Taking, for
+simplicity, » = 0 in Eq. (13.4), we have
+
+Displacement —>
+
+Fig. 13.7 (b) A plot obtained from Eq. (13.4). The
+curves 3 and 4 are for $ = O and -1/4
+respectively. The amplitude A is same for
+both the plots.
+
+Reprint 2025-26
+
+264
+
+PHYSICS
+
+x(t) = Acos ot (13.5)
+
+Since the motion has a period T, x (#) is equal to
+xX (t+ T). That is,
+
+Acos ot=Acos a(t + T) (13.6)
+
+Now the cosine function is periodic with period
+2n, i.e., it first repeats itself when the argument
+changes by 27. Therefore,
+
+A&(t+T)= ot+ 2n
+
+that is @ = 2n/ T (13.7)
+
+o is called the angular frequency of SHM. Its
+S.I. unit is radians per second. Since the
+frequency of oscillations is simply 1/T, o is 2x
+times the frequency of oscillation. Two simple
+harmonic motions may have the same A and 9,
+but different w, as seen in Fig. 13.8. In this plot
+the curve (b) has half the period and twice the
+frequency of the curve (a).
+
+tad
+
+>
+
+Displacement —
+> os
+
+Fig. 13.8 Plots of Eq. (13.4) for ¢ = 0 for two different
+periods.
+
+Example 13.3 Which of,the following
+functions of time represent (a) simple
+harmonic motion and (b) periodic but not
+
+simple harmonic? Give the period for each
+case.
+
+(1) sin wt- cos ot
+
+(2) sin? of
+
+Answer
+(a) sin wt-cos at
+= sin owt- sin (x/2- of)
+=2 cos (x/4) sin (@t- 1/4)
+= V2 sin (wt - 1/4)
+
+This function represents a simple harmonic
+motion having a period T = 2n/m anda
+phase angle (-1/4) or (72/4)
+(b) sin? wt
+= '/2- '/2 cos 2 at
+The function is periodic having a period
+T = n/a. It also represents a harmonic
+motion with the point of equilibrium
+occurring at '/2 instead of zero. <
+
+13.4 SIMPLE HARMONIC MOTION AND
+UNIFORM CIRCULAR MOTION
+
+In this section, we show that the projection of
+uniform circular motion on a diameter of the
+circle follows simple harmonic motion. A
+simple experiment (Fig. 13.9) helps us visualise
+this connection. Tie a ball to the end of a string
+and make it move in a horizontal plane about
+a fixed point with a constant angular speed.
+The ball would then perform a uniform circular
+motion in the horizontal plane. Observe the
+ball sideways or from the front, fixing your
+attention in the plane of motion. The ball will
+appear to execute to and fro motion along a
+horizontal line with the point of rotation as
+the midpoint. You could alternatively observe
+the shadow of the ball on a wall which is
+perpendicular to the plane of the circle. In this
+process what we are observing is the motion
+of the ball on a diameter of the circle normal
+to the direction of viewing.
+
+Fig. 13.9 Circular motion ofa ballin a plane viewed
+edge-on is SHM.
+
+Fig. 13.10 describes the same situation
+mathematically. Suppose a particle P is moving
+uniformly on a circle of radius A with angular
+speed w. The sense of rotation is anticlockwise.
+The initial position vector of the particle, i-e.,
+
+the vector Op at t= 0 makes an angle of ¢ with
+
+the positive direction of x-axis. In time ¢ it will
+cover a further angle wt and its position vector
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+Fig. 13.10
+
+will make an angle of wt + ¢ with the +ve
+x-axis. Next, consider the projection of the
+position vector OP on the x-axis. This will be
+OP’. The position of P’ on the x-axis, as the
+particle P moves on the circle, is given by
+x(t) = Acos (@t+ ¢)
+
+which is the defining equation of SHM. This
+shows that if P moves uniformly on a circle,
+its projection P’ on a diameter of the circle
+executes SHM. The particle P and the circle
+on which it moves are sometimes referred to
+as the reference particle and the reference circle,
+respectively.
+
+We can take projection of the motion of P on
+any diameter, say the y-axis. In that case, the
+displacement y(4 of P’ on the y-axis is given by
+
+y=Asin (ot + ¢)
+which is also an SHM of the same amplitude
+as that of the projection on x-axis, but differing
+by a phase of 2/2.
+
+In spite of this connection between circular
+motion and SHM, the force acting on a particle
+in linear simple harmonic motion is very
+different from the centripetal force needed to
+keep a particle in uniform circular motion.
+
+265
+
+Example 13.4 The figure given below
+depicts two circular motions. The radius
+of the circle, the period of revolution, the
+initial position and the sense of revolution
+are indicated in the figures. Obtain the
+simple harmonic motions of the
+x-projection of the radius vector of the
+rotating particle P in each case.
+
+Answer
+
+(a) At t=0, OP makes an angle of 45° = 1/4 rad
+with the (positive direction of) x-axis. After
+
+time ¢, it covers an angle 2m, in the
+T
+anticlockwise sense, and makes an angle
+of 27,4 with the x-axis.
+T 4
+
+The projection of OP on the x-axis at time t
+
+is given by,
+
+x(8 =Acos 2m 4%
+T 4
+
+For T=4s,
+
+x(8 =Acos a r+8
+
+4
+which is a SHM of amplitude A, period 4 s,
+
+2.
+4
+
+and an initial phase* =
+
+* The natural unit of angle is radian, defined through the ratio of arc to radius. Angle is a dimensionless
+quantity. Therefore it is not always necessary to mention the unit ‘radian’ when we use 7, its multiples
+or submultiples. The conversion between radian and degree is not similar to that between metre and
+centimetre or mile. Ifthe argument of a trigonometric function is stated without units, it is understood
+that the unit is radian. On the other hand, if degree is to be used as the unit of angle, then it must be
+shown explicitly. For example, sin(15°) means sine of 15 degree, but sin(15) means sine of 15 radians.
+Hereafter, we will often drop ‘rad’ as the unit, and it should be understood that whenever angle is
+mentioned as a numerical value, without units, it is to be taken as radians.
+
+Reprint 2025-26
+
+266
+
+PHYSICS
+
+(b) In this case at t= 0, OP makes an angle of
+
+90° = z with the x-axis. After a time ¢, it
+2
+
+covers an angle of 24, in the clockwise
+T
+
+sense and makes an angle of < =
+
+with the x-axis. The projection of OP on the
+x-axis at time tis given by
+
+x()=Boos = 2%}
+2 T
+
+= Bsin 2a,
+T
+For T= 30s,
+x(§ =Bsin ca
+15
+ays . u u
+Writing this as x(t) = Bcos Tu 3 , and
+
+comparing with Eq. (13.4). We find that this
+represents a SHM of amplitude B, period 30 s,
+
+and an initial phase of = . <
+
+13.5 VELOCITY AND ACCELERATION, IN
+SIMPLE HARMONIC MOTION
+
+The speed of a particle v in uniform circular
+motion is its angular speed @ times the radius
+of the circle A.
+
+V=0A (13.8)
+
+The direction of velocity y at a time tis along
+the tangent to the circle at the point where the
+particle is located at that instant. From the
+geometry of Fig. 13.11, it is clear that the velocity
+of the projection particle P’ at time tis
+
+V(t) = -@A sin (at + ¢) (13.9)
+
+Fig. 13.11 The velocity, v (t), of the particle P’ is
+the projection of the velocity w of the
+reference particle, P.
+
+where the negative sign shows that v(t) has a
+direction opposite to the positive direction of
+x-axis. Eq. (13.9) gives the instantaneous
+velocity of a particle executing SHM, where
+displacement is given by Eq. (13.4). We can, of
+course, obtain this equation without using
+geometrical argument, directly by differentiating
+(Eq. 13.4) with respect of t:
+
+v(t = x(t) (13.10)
+
+The method of reference circle can be similarly
+used for obtaining instantaneous acceleration
+of a particle undergoing SHM. We know that the
+centripetal acceleration of a particle P in uniform
+circular motion has a magnitude v/A or A,
+and it is directed towards the centre i.e., the
+direction is along PO. The instantaneous
+acceleration of the projection particle P’ is then
+(See Fig. 13.12)
+
+a(Q =-a@*Acos (at + ¢)
+= -«2x (0 (13.11)
+
+Fig. 13.12 The acceleration, a(t), of the particle P’ is
+the projection of the acceleration a of the
+reference particle P.
+
+Eq. (13.11) gives the acceleration of a particle
+in SHM. The same equation can again be
+obtained directly by differentiating velocity Vd
+given by Eq. (13.9) with respect to time:
+
+d
+= (13.12)
+a(t) ae v(t)
+
+We note from Eq. (13.11) the important
+property that acceleration of a particle in SHM
+is proportional to displacement. For x(t) > 0,
+a(Q <Oand for x( < 0, a(t > 0. Thus, whatever
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+267
+
+the value of xbetween —A and A, the acceleration
+a(t) is always directed towards the centre.
+
+For simplicity, let us put ¢ = O and write the
+expression for x (4, v(Q and a()
+
+x() =Acos of, V( =— w Asin owt, a(A=-w? A cos wt
+The corresponding plots are shown in Fig. 13.13.
+All quantities vary sinusoidally with time; only
+their maxima differ and the different plots differ
+in phase. x varies between —A to A; v({) varies
+from —@A to w@A and a(f) from —@*A to w?A. With
+respect to displacement plot, velocity plot has a
+phase difference of z/2 and acceleration plot has
+a phase difference of z.
+
+x
+
++
+>
+
+Displacement >
+Oo
+
+>
+
+Velocity»
+e
+So >
+
+€
+>
+
++
+
+&
+nN
+
+>
+
+€
+>
+
+Acceleration >
+Oo
+
+(c)
+
+Fig. 13.13 Displacement, velocity and acceleration of
+a particle in simple harmonic motion have
+the same period T, but they differ in phase
+
+Example 13.5 A body oscillates with SHM
+according to the equation (in SI units),
+
+x=5 cos [2n t+ 1/4].
+
+At t=1.5s, calculate the (a) displacement,
+(b) speed and (c) acceleration of the body.
+
+Answer The angular frequency @ of the body
+= 22s" and its time period T= 1s.
+
+Att=1.5s
+(a) displacement = (5.0 m) cos [(2z s”')x
+158+ 7/4]
+= (5.0 m) cos [(37 + 2/4)]
+=-5.0 x 0.707 m
+=-3.535 m
+
+(b) Using Eq. (13.9), the speed of the body
+
+= - (5.0 m)(2zx s') sin [(2Qz s?') x1.5 s
++ 2/4]
+=-(5.0 m)(2zs°) sin [(37+ 2/4)]
+=10zx0.707ms"1
+=22ms!
+(c) Using Eq.(13.10), the acceleration of the
+body
+=-—(27 s"')? x displacement
+=- (22s) x (-3.535 m)
+
+=140ms? <
+13.6 FORCE LAW FOR SIMPLE HARMONIC
+MOTION
+
+Using Newton’s second law of motion, and the
+expression for acceleration of a particle
+undergoing SHM (Eq. 13.11), the force acting
+on a particle of mass min SHM is
+
+F(t) =ma
+= mw? x (t)
+ie., F(t) =-k x(t) (13.13)
+where k=ma (13.14a)
+or o= Ke (13.14b)
+m
+
+Like acceleration, force is always directed
+towards the mean position—hence it is sometimes
+called the restoring force in SHM. To summarise
+the discussion so far, simple harmonic motion can
+be defined in two equivalent ways, either by Eq.
+(13.4) for displacement or by Eq. (13.13) that gives
+its force law. Going from Eq. (13.4) to Eq. (13.13)
+required us to differentiate two times. Likewise,
+by integrating the force law Eq. (13.13) two times,
+we can get back Eq. (13.4).
+
+Note that the force in Eq. (13.13) is linearly
+proportional to x(). A particle oscillating under
+such a force is, therefore, calling a linear
+harmonic oscillator. In the real world, the force
+may contain small additional terms proportional
+to x’, x°, etc. These then are called non-linear
+oscillators.
+
+Example 13.6 Two identical springs of
+spring constant k are attached to a block
+of mass mand to fixed supports as shown
+
+in Fig. 13.14. Show that when the mass is
+displaced from its equilibrium position on
+either side, it executes a simple harmonic
+motion. Find the period of oscillations.
+
+Reprint 2025-26
+
+Fig. 13.14
+
+Answer Let the mass be displaced by a small
+distance x to the right side of the equilibrium
+position, as shown in Fig. 13.15. Under this
+situation the spring on the left side gets
+
+Fig. 13.15
+
+elongated by a length equal to x and that on
+the right side gets compressed by the same
+length. The forces acting on the mass are
+then,
+
+F, =-k-x (force exerted by the spring on
+the left side, trying to pull the
+mass towards the mean
+position)
+
+F, = -kx (force exerted by the spring on
+the right side, trying to push the
+mass towards the mean
+position)
+
+The net force, F, acting on the mass is then
+given by,
+
+F =-2kx
+
+Hence the force acting on the mass is
+proportional to the displacement and is directed
+towards the mean position; therefore, the motion
+executed by the mass is simple harmonic. The
+time period of oscillations is,
+
+jm
+T=22 ,|—
+2k <
+
+PHYSICS
+13.7 ENERGY IN SIMPLE HARMONIC MOTION
+
+Both kinetic and potential energies of a particle
+in SHM vary between zero and their maximum
+values.
+
+In section 13.5 we have seen that the velocity
+of a particle executing SHM, is a periodic
+function of time. It is zero at the extreme positions
+of displacement. Therefore, the kinetic energy (A)
+of such a particle, which is defined as
+
+2
+
+= , mo’ A’ sin” (at + ¢)
+
+= Sk A? sin*(ot + §) (13.15)
+
+is also a periodic function of time, being zero
+when the displacement is maximum and
+maximum when the particle is at the mean
+position. Note, since the sign of vis immaterial
+in K, the period of Kis T/2.
+
+What is the potential energy (U) of a particle
+executing simple harmonic motion? In
+Chapter 6, we have seen that the concept of
+potential energy is possible only for conservative
+forces. The spring force F = —kxis a conservative
+force, with associated potential energy
+
+1
+“5k x? (13.16)
+
+Hence the potential energy of a particle
+executing simple harmonic motion is,
+
+Ux) = Skex?
+
+=ok A’ cos” (at + g) (13.17)
+
+Thus, the potential energy of a particle
+executing simple harmonic motion is also
+periodic, with period T/2, being zero at the mean
+position and maximum at the extreme
+displacements.
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+269
+
+It follows from Eqs. (13.15) and (13.17) that
+the total energy, E, of the system is,
+
+E=U+K
+
+=o kA cos’ (at + ¢) oka sin’ (at + )
+
+= , k A? [ cos” (ct + ¢)+ sin’ (ot + ¢)|
+
+Using the familiar trigonometric identity, the
+value of the expression in the brackets is unity.
+Thus,
+
+1
+E=SkA’ (13.18)
+
+The total mechanical energy of a harmonic
+oscillator is thus independent of time as
+expected for motion under any conservative
+force. The time and displacement dependence
+of the potential and kinetic energies of a
+linear simple harmonic oscillator are shown
+in Fig. 13.16.
+
+E=k(t) + U(d
+e u(t
+>
+oo
+FS
+faa]
+K()
+O T/2 T t
+(a)
+k(x) + UW)
+| Yer
+i K(x)
+- (e) +A x
+(b)
+
+Fig. 13.16 Kinetic energy, potential energy and total
+energy as a function of time [shown in (a)]
+and displacement [shown in (b)] ofa particle
+in SHM. The kinetic energy and potential
+energy both repeat after a period T/2. The
+total energy remains constant at all t or x.
+
+Observe that both kinetic energy and
+potential energy in SHM are seen to be always
+positive in Fig. 13.16. Kinetic energy can, of
+course, be never negative, since it is
+proportional to the square of speed. Potential
+energy is positive by choice of the undermined
+constant in potential energy. Both kinetic
+energy and potential energy peak twice during
+each period of SHM. For x = 0, the energy is
+kinetic; at the extremes x = +A, it is all
+potential energy. In the course of motion
+between these limits, kinetic energy increases
+at the expense of potential energy or
+vice-versa.
+
+Example 13.7 A block whose mass is) 1 kg
+is fastened to a spring. The’spring has a
+spring constant of 50 N m*. The block is
+pulled. to a distance x= 10 em from its
+equilibrium position atx= 0 on a frictionless
+
+surface from rest at. t =0. Calculate the
+kinetic, potential and total energies of the
+block when it is 5 cm away from the mean
+position.
+
+Answer The block executes SHM, its angular
+frequency, as given by Eq. (13.14b), is
+
+| k
+@O = —
+
+m
+50Nm}
+lkg
+
+= 7.07 rad s?
+Its displacement at any time t is then given by,
+
+x(t) = 0.1 cos (7.0712)
+
+Therefore, when the particle is 5 cm away from
+
+the mean position, we have
+
+0.05 = 0.1 cos (7.072)
+
+Reprint 2025-26
+
+270
+
+PHYSICS
+
+Or cos (7.070) = 0.5 and hence
+
+sin (7.070) 8 = 0.866
+Then, the velocity of the block at x= 5 cm is
+=0.1x 7.07 0.866ms"
+=0.61ms"?
+
+Hence the K.E. of the block,
+
+1
+=—mv”
+
+= ¥4[1lkg x (0.6123 ms!) ]
+=0.19J
+The P.E. of the block,
+=-14 42
+2
+= (50 N m'! x 0.05 m x 0.05 m)
+
+= 0.0625 J
+The total energy of the block at x= 5 cm,
+
+= K.E. + P.E.
+= 0.25J
+
+we also know that at maximum displacement,
+K.E. is zero and hence the total energy of the
+system is equal to the P.E. Therefore, the total
+
+energy of the system,
+= %(50 Nm! x 0.1 mx 0.1m)
+
+=0.25J
+which is same as the sum of the two energies at
+a displacement of 5 cm. This is in conformity
+with the principle of conservation ofenergy. <4
+
+13.8 The Simple Pendulum
+
+It is said that Galileo measured the periods ofa
+swinging chandelier in a church by his pulse
+beats. He observed that the motion of the
+chandelier was periodic. The system is a kind
+of pendulum. You can also make your own
+pendulum by tying a piece of stone to a long
+unstretchable thread, approximately 100 cm
+long. Suspend your pendulum from a suitable
+support so that it is free to oscillate. Displace
+the stone to one side by a small distance and
+
+let it go. The stone executes a to and fro motion,
+it is periodic with a period of about two seconds.
+
+We shall show that this periodic motion is
+simple harmonic for small displacements from
+
+Rigid Support
+
+(a)
+
+(b)
+
+Fig. 13.17 (a) A bob oscillating about its mean
+position. (b) The radial force T-mg cos0
+provides centripetal force but no torque
+about the support. The tangential force
+mg sin0 provides the restoring torque.
+
+the mean position. Consider simple pendulum
+—asmall bob of mass m tied to an inextensible
+massless string of length L. The other end of
+the string is fixed to a rigid support. The bob
+oscillates in a plane about the vertical line
+through the support. Fig. 13.17(a) shows this
+system. Fig. 13.17(b) is a kind of ‘free-body’
+diagram of the simple pendulum showing the
+forces acting on the bob.
+
+Let 6 be the angle made by the string with
+the vertical. When the bob is at the mean
+position, 0=0
+
+There are only two forces acting on the bob;
+the tension T along the string and the vertical
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+271
+
+force due to gravity (=mg). The force mg can be
+resolved into the component mg cos0 along the
+string and mg sin@ perpendicular to it. Since
+the motion of the bob is along a circle of length
+Land centre at the support point, the bob has
+a radial acceleration (@’Z) and also a tangental
+acceleration; the latter arises since motion along
+the arc of the circle is not uniform. The radial
+acceleration is provided by the net radial force
+T-mg cos, while the tangential acceleration is
+provided by mg sin®. It is more convenient to
+work with torque about the support since the
+radial force gives zero torque. Torque t about
+the support is entirely provided by the tangental
+component of force
+
+t= -L(mgsin@) (13.19)
+
+This is the restoring torque that tends to reduce
+angular displacement — hence the negative
+sign. By Newton’s law of rotational motion,
+
+t =lIa (13.20)
+
+where J is the moment of inertia of the system
+about the support and oa is the angular
+acceleration. Thus,
+
+Ta=-mgsind L (13.21)
+Or,
+a = mon sin (13.22)
+
+We can simplify Eq. (13.22) if we assume that
+the displacement 6 is small. We know that sin 0
+can be expressed as,
+
+3 5
+
+sin = —+—t... (13.23)
+3! 5!
+
+where @is in radians.
+Now if 6 is small, sin 0 can be approximated
+by @ and Eq. (13.22) can then be written as,
+
+a= -——8@ (13.24)
+
+In Table 13.1, we have listed the angle 9 in
+degrees, its equivalent in radians, and the
+value of the function sin 0. From this table it
+can be seen that for 6 as large as 20 degrees,
+sin 9 is nearly the same as 9 expressed
+in radians.
+
+Table 13.1 sin 6 as ma function of angle 0
+
+0
+
+0.087
+0.174
+0.262
+0.349
+
+Equation (13.24) is mathematically, identical to
+Eq. (13.11) except that the variable is angular
+displacement. Hence we have proved that for
+small q, the motion of the bob is simple harmonic.
+From Eggs. (13.24) and (13.11),
+
+and
+
+I
+T = 2 OL (13.25)
+
+Now since the string of the simple pendulum
+is massless, the moment of inertia Jis simply
+mL”. Eq. (13.25) then gives the well-known
+formula for time period of a simple pendulum.
+
+L
+T = 24 [— 13.26
+Example 13.8 What is the length of a
+simple pendulum, which ticks seconds ?
+
+Answer From Eq. (13.26), the time period of a
+
+simple pendulum is given by,
+T = 24 fe
+g
+From this relation one gets,
+gt”
+4
+
+The time period of a simple pendulum, which
+
+L=
+
+ticks seconds, is 2 s. Therefore, for g= 9.8 ms?
+
+and T =2s, Lis
+_ 9.8(ms*) 4(s?)
+
+AZ
+
+Reprint 2025-26
+
+272 PHYSICS
+
+SUMMARY
+
+The motion that repeats itself is called periodlic motion.
+The period Tis the time reequired for one complete oscillation, or cycle. It is related to
+the frequency v by,
+
+T=
+v
+
+The frequency v of periodic or oscillatory motion is the number of oscillations per
+unit time. In the SI, it is measured in hertz :
+
+1 hertz = 1 Hz = 1 oscillation per second = Is?
+
+In simple harmonic motion (SHM), the displacement x (4) of a particle from its
+equilibrium position is given by,
+
+x(Q =Acos (at + ¢) (displacement),
+
+in which A is the amplitude of the displacement, the quantity (wt + ¢) is the phase of
+the motion, and ¢ is the phase constant. The angular frequency o is related to the
+period and frequency of the motion by,
+
+24
+= =24 (angular frequency).
+
+Simple harmonic motion can also be viewed as the projection of uniform circular
+motion on the diameter of the circle in which the latter motion occurs.
+
+The particle velocity and acceleration during SHM as functions of time are given by,
+v(Q = -@A sin (@t+ ¢) (velocity),
+
+a(Q = -ow’Acos (at + ¢)
+
+-w°x (0 (acceleration),
+
+Thus we see that both velocity and acceleration of a body executing simple harmonic
+motion are periodic functions, having the velocity amplitude v,=@ A and acceleration
+amplitude a, =o 7A, respectively.
+
+The force acting in a simple harmonic motion is proportional to the displacement and
+is always directed towards the centre of motion.
+
+A particle executing simple harmonic motion has, at any time, kinetic energy
+K = % mv’ and potential energy U = 4% kx’. If no friction is present the mechanical
+energy of the system, E = K + Ualways remains constant even though Kand Uchange
+with time.
+
+A particle of mass m oscillating under the influence of Hooke’s law restoring force
+given by F =- k x exhibits simple harmonic motion with
+
+(angular frequency)
+
+T=22 {ez (period)
+
+Such a system is also called a linear oscillator.
+
+The motion of a simple pendulum swinging through small angles is approximately
+simple harmonic. The period of oscillation is given by,
+
+T= 2/6
+g
+
+Reprint 2025-26
+
+OSCILLATIONS 273
+
+Physical quantity
+
+POINTS TO PONDER
+
+The period Tis the least time after which motion repeats itself. Thus, motion repeats
+itself after nT where n is an integer.
+
+Every periodic motion is not simple harmonic motion. Only that periodic motion
+governed by the force law F = — k xis simple harmonic.
+
+Circular motion can arise due to an inverse-square law force (as in:planetary motion)
+as well as due to simple harmonic force in two,dimensions equal to:-—mo?r. In the
+latter case, the phases of motion, in two perpendicular directions (x and y) must differ
+by 1/2. Thus, for example, a particle subject to a force -mwr with initial position (0,
+A) and velocity (@A, 0) will move uniformly in a circle of radius A.
+
+For linear simple harmonic motion with a given @, two initial conditions are necessary
+and sufficient to determine the motion completely. The initial conditions may be (i)
+initial position and initial velocity or (ii) amplitude and phase or (iii) energy
+and phase.
+
+From point 4 above, given amplitude or energy, phase of motion is determined by the
+initial position or initial velocity:
+
+A combination of two simple harmonic motions with arbitrary amplitudes and phases
+is not necessarily periodic. It is periodic only if frequency of one motion is an integral
+multiple of the other’sfrequency. However, a periodic motion can always be expressed
+as a sum of infinite number of harmonic motions with appropriate amplitudes.
+
+The period of SHM does not depend on amplitude or energy or the phase constant.
+Contrast this with the periods of planetary orbits under gravitation (Kepler’s third law).
+
+The motion of a simple pendulum is simple harmonic for small angular displacement.
+
+For motion of a particle to be simple harmonic, its displacement x must be expressible
+in either of the following forms :
+
+x=Acos ot + Bsin at
+x=Acos (at+a), x= Bsin (at + B)
+
+The three forms are completely equivalent (any one can be expressed in terms of any
+other two forms).
+
+Thus, damped simple harmonic motion is not strictly simple harmonic. It is
+approximately so only for time intervals much less than 2m/b where bis the damping
+constant.
+
+Reprint 2025-26
+
+274
+
+PHYSICS
+
+13.1
+
+13.2
+
+13.3
+
+Exercises
+
+Which of the following examples represent periodic motion?
+
+(a)
+
+(b)
+(c)
+(d)
+
+A swimmer completing one (return) trip from one bank of a river to the other
+and back.
+A freely suspended bar magnet displaced from its N-S direction and released.
+A hydrogen molecule rotating about its centre of mass.
+An arrow released from a bow.
+
+Which of the following examples represent (nearly) simple harmonic motion and
+which represent periodic but not simple harmonic motion?
+
+(a)
+(b)
+(c)
+
+(d)
+
+the rotation of earth about its axis.
+
+motion of an oscillating mercury column in a U-tube.
+motion of a ball bearing inside a smooth curved bowl, when released from a
+point slightly above the lower most point.
+general vibrations of a polyatomic molecule about its equilibrium position.
+
+Fig. 13.18 depicts four x-t plots for linear motion of a particle. Which of the plots
+represent periodic motion? What is the period of motion (in case of periodic motion) ?
+
+t(s)
+
+(b)
+
+(c)
+
+Fig. 18.18
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+275
+
+13.4
+
+13.5
+
+13.6
+
+13.7
+
+13.8
+
+13.9
+
+Which of the following functions of time represent (a) simple harmonic, (b) periodic
+but not simple harmonic, and (c) non-periodic motion? Give period for each case of
+periodic motion (@ is any positive constant):
+
+(a) sin wt- cos at
+
+(b)  sin® ot
+
+(ec) S3cos (x/4- 2a)
+
+(d) cos wt+ cos 3at+ cos 5at
+
+(e) exp a’)
+
+(f) 1l+oat+o0°f
+
+A particle is in linear simple harmonic motion between two points, A and B, 10 cm
+apart. Take the direction from A to B as the positive direction and give the signs of
+velocity, acceleration and force on the particle when it is
+
+(a) atthe end A,
+
+(b) at the end B,
+
+(c) at the mid-point of AB going towards A,
+
+(d) at 2cm away from B going towards A,
+
+(e) at 3 cm away from A going towards B, and
+
+() at 4cm away from B going towards A.
+
+Which of the following relationships between the acceleration a and the displacement
+x of a particle involve simple harmonic motion?
+
+(a) a=0.7x
+(b) a=-200x?
+(ec) a=-lOx
+(d) a=100x°
+
+The motion of a particle executing simple harmonic motion is described by the
+displacement function,
+
+x(Q) = Acos (at + ¢).
+If the initial (¢ = 0) position of the particle is 1 cm and its initial velocity is @ cm/s,
+what are its amplitude and initial phase angle ? The angular frequency of the particle
+is xs. If instead of the cosine function, we choose the sine function to describe the
+
+SHM : x = B sin (@t + a), what are the amplitude and initial phase of the particle
+with the above initial conditions.
+
+A spring balance has a scale that reads from 0 to 50 kg. The length of the scale is 20
+cm. A body suspended from this balance, when displaced and released, oscillates
+with a period of 0.6 s. What is the weight of the body ?
+
+A spring having with a spring constant 1200 N m'’ is mounted on a horizontal table
+as shown in Fig. 13.19. A mass of 3 kg is attached to the free end of the spring. The
+mass is then pulled sideways to a distance of 2.0 cm and released.
+
+Fig. 13.19
+
+Determine (i) the frequency of oscillations, (ii) maximum acceleration of the mass,
+and (iii) the maximum speed of the mass.
+
+Reprint 2025-26
+
+276 PHYSICS
+Coenen rere eee ee eee re ee ee
+
+13.10
+
+13.11
+
+13.12
+
+13.13
+
+ke m m k m
+7 Jf
+(a) (b)
+
+In Exercise 13.9, let us take the position of mass when the spring is unstreched as
+x = 0, and the direction from left to right as the positive direction of
+x-axis. Give x as a function of time ¢ for the oscillating mass if at the moment we
+start the stopwatch (t= 0), the mass is
+
+(a) at the mean position,
+
+(b) at the maximum stretched position, and
+
+(c) at the maximum compressed position.
+
+In what way do these functions for SHM differ from each other, in frequency, in
+amplitude or the initial phase?
+
+Figures 13.20 correspond to two circular motions. The radius of the circle, the
+period of revolution, the initial position, and the sense of revolution (i.e. clockwise
+or anti-clockwise) are indicated on each figure.
+
+y
+T=2s
+
+P(t=0)
+
+(a) (b)
+
+Fig. 13.20
+
+Obtain the corresponding simple harmonic motions of the x-projection of the radius
+vector of the revolving particle P, in each case.
+
+Plot the corresponding reference circle for each of the following simple harmonic
+motions. Indicate the initial (t =O) position of the particle, the radius of the circle,
+and the angular speed of the rotating particle. For simplicity, the sense of rotation
+may be fixed to be anticlockwise in every case: (xis in cm and fis in s).
+
+(a) x=-2 sin (8t+ 7/3)
+
+(b) x=cos (x/6- 0
+
+(ec) x=S3 sin (2Qxnt+ 7/4)
+
+(d) x=2cos nxt
+
+Figure 13.21(a) shows a spring of force constant k clamped rigidly at one end anda
+mass m attached to its free end. A force F applied at the free end stretches the
+spring. Figure 13.21 (b) shows the same spring with both ends free and attached to
+
+amass mat either end. Each end of the spring in Fig. 13.21(b) is stretched by the
+same force F.
+
+Fig. 13.21
+
+(a) What is the maximum extension of the spring in the two cases ?
+(b) If the mass in Fig. (a) and the two masses in Fig. (b) are released, what is the
+period of oscillation in each case ?
+
+Reprint 2025-26
+
+OSCILLATIONS
+
+277
+
+13.14
+
+13.15
+
+13.16
+
+13.17
+
+13.18
+
+The piston in the cylinder head of a locomotive has a stroke (twice the amplitude)
+of 1.0 m. If the piston moves with simple harmonic motion with an angular frequency
+of 200 rad/min, what is its maximum speed ?
+
+The acceleration due to gravity on the surface of moon is 1.7 ms”. What is the time
+period of a simple pendulum on the surface of moon if its time period on the surface
+of earth is 3.5 s ? (gon the surface of earth is 9.8 m s”)
+
+A simple pendulum of length J and having a bob of mass Mis suspended in a car.
+The car is moving on a circular track of radius R with a uniform speed v. If the
+pendulum makes small oscillations in a radial direction about its equilibrium
+position, what will be its time period ?
+
+A cylindrical piece of cork of density of base area A and height h floats in a liquid of
+density p,The cork is depressed slightly and then released. Show that the cork
+oscillates up and down simple harmonically with a period
+
+T=2n fe
+
+Pg
+where p is the density of cork. (Ignore damping due to viscosity of the liquid).
+
+One end of a U-tube containing mercury is connected to a suction pump and the
+other end to atmosphere. A small pressure difference is maintained between the
+two columns. Show that, when the suction pump is removed, the column of mercury
+in the U-tube executes simple harmonic motion.
+
+Reprint 2025-26
+
