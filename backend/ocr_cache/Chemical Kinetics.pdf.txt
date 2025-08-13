@@ -1,0 +1,1801 @@
+After studying this Unit, you will be
+able to
+
+define the average and
+instantaneous rate of a reaction;
+express the rate of a reaction in
+terms of change in concentration
+of either of the reactants or
+products with time;
+
+distinguish between elementary
+and complex reactions;
+differentiate between the
+molecularity and order of a
+reaction;
+
+define rate constant;
+
+discuss the dependence of rate of
+reactions on concentration,
+temperature and catalyst;
+
+derive integrated rate equations
+for the zero and first order
+reactions;
+
+determine the rate constants for
+zeroth and first order reactions;
+
+describe collision theory.
+
+HNartaal <Maitas
+
+Chemical Kinetics helps us to understand how chemical reactions
+occur.
+
+Chemistry, by its very nature, is concerned with change.
+
+Substances with well defined properties are converted
+
+by chemical reactions into other substances with
+
+different properties. For any chemical reaction, chemists
+
+try to find out
+
+(a) the feasibility of a chemical reaction which can be
+predicted by thermodynamics ( as you know that a
+reaction with AG < O, at constant temperature and
+pressure is feasible);
+
+(b) extent to which a reaction will proceed can be
+determined from chemical equilibrium;
+
+(c) speed of a reaction i.e. time taken by a reaction to
+reach equilibrium.
+
+Along with feasibility and extent, it is equally
+important to know the rate and the factors controlling
+the rate of a chemical reaction for its complete
+understanding. For example, which parameters
+determine as to how rapidly food gets spoiled? How
+to design a rapidly setting material for dental filling?
+Or what controls the rate at which fuel burns in an
+auto engine? All these questions can be answered by
+the branch of chemistry, which deals with the study
+of reaction rates and their mechanisms, called
+chemical kinetics. The word kinetics is derived from
+the Greek word ‘kinesis’ meaning movement.
+Thermodynamics tells only about the feasibility of a
+reaction whereas chemical kinetics tells about the rate
+of a reaction. For example, thermodynamic data
+indicate that diamond shall convert to graphite but
+in reality the conversion rate is so slow that the change
+is not perceptible at all. Therefore, most people think
+
+Reprint 2025-26
+
+3.1 Rate of a
+Chemical
+
+Reaction
+
+Chemistry p62u
+
+that diamond is forever. Kinetic studies not only help us to determine
+the speed or rate of a chemical reaction but also describe the
+conditions by which the reaction rates can be altered. The factors
+such as concentration, temperature, pressure and catalyst affect the
+rate of a reaction. At the macroscopic level, we are interested in
+amounts reacted or formed and the rates of their consumption or
+formation. At the molecular level, the reaction mechanisms involving
+orientation and energy of molecules undergoing collisions,
+are discussed.
+
+In this Unit, we shall be dealing with average and instantaneous
+rate of reaction and the factors affecting these. Some elementary
+ideas about the collision theory of reaction rates are also given.
+However, in order to understand all these, let us first learn about the
+reaction rate.
+
+Some reactions such as ionic reactions occur very fast, for example,
+precipitation of silver chloride occurs instantaneously by mixing of
+aqueous solutions of silver nitrate and sodium chloride. On the other
+hand, some reactions are very slow, for example, rusting of iron in
+the presence of air and moisture. Also there are reactions like inversion
+of cane sugar and hydrolysis of starch, which proceed with a moderate
+speed. Can you think of more examples from each category?
+
+You must be knowing that speed of an automobile is expressed in
+terms of change in the position or distance covered by it in a certain
+period of time. Similarly, the speed of a reaction or the rate of a
+reaction can be defined as the change in concentration of a reactant
+or product in unit time. To be more specific, it can be expressed in
+terms of:
+
+(i) the rate of decrease in concentration of any one of the
+reactants, or
+
+(ii) the rate of increase in concentration of any one of the products.
+
+Consider a hypothetical reaction, assuming that the volume of the
+system remains constant.
+
+RP
+One mole of the reactant R produces one mole of the product P. If
+
+[R], and [P], are the concentrations of R and P respectively at time t,
+and [R], and [P], are their concentrations at time t, then,
+
+At = t-t
+
+AIR] = [RI], - [RI],
+
+A [P] = [Pl], - [Pl,
+
+The square brackets in the above expressions are used to express
+molar concentration.
+
+Rate of disappearance of R
+
+_ Decrease in concentration of R__@{[R]
+Time taken Ot
+
+(3.1)
+
+Reprint 2025-26
+
+Concentration of reactants
+
+From the concentrations of C,H,Cl (butyl chloride) at different times given Exam:
+below, calculate the average rate of the reaction:
+
+C,H,Cl + H,O — C,H,OH + HCl
+during different intervals of time.
+
+t/s
+
+[C,H Cl]/mol L” 0.100 0.0905 0.0820 0.0741 0.0671 0.0549 0.0439 0.0210 0.017
+
+We can determine the difference in concentration over different intervals Solution
+of time and thus determine the average rate by dividing A[R] by At
+
+(Table 3.1).
+
+Rate of appearance of P
+
+_Increase in concentration of P SP]
+Time taken et
+
+Since, A[R] is a negative quantity (as concentration of reactants is
+decreasing), it is multiplied with -1 to make the rate of the reaction a
+positive quantity.
+
+Equations (3.1) and (3.2) given above represent the average rate of
+a reaction, r,..
+
+Average rate depends upon the change in concentration of reactants
+or products and the time taken for that change to occur (Fig. 3.1).
+
+(3.2)
+
+x
+
+Concentration of products ———>
+Gs
+
+(a)
+
+Fig. 3.1: Instantaneous and average rate of a reaction
+
+Units of rate of a reaction
+
+From equations (3.1) and (3.2), it is clear that units of rate are
+concentration time™'. For example, if concentration is in mol L"' and
+time is in seconds then the units will be mol L's’. However, in gaseous
+reactions, when the concentration of gases is expressed in terms of their
+partial pressures, then the units of the rate equation will be atm s’.
+
+O 50 100 150 200 300 400 700 800
+
+63 Chemical Kinetics
+
+Reprint 2025-26
+
+
+Table 3.1: Average rates of hydrolysis of butyl chloride
+
+IC,H,Cl, / ICH,Cl, / t/s  t,/s__r,, * 10*/mol Ls”
+mol L mol L2 =- {[C,H,Cl], -[C,H,Cl], /(t, t,)} 104
+
+0.100 0.0905 oO 50
+
+0.0905 100 1.70
+0.0820 100 | 150 1.58
+0.0741 150 | 200 1.40
+0.0671 200 | 300 1.22
+0.0549 300 | 400 1.10
+0.0439 400 | 500 1.04
+
+0.0210 0.017 700 800 0.4
+
+It can be seen (Table 3. 1) that the average rate falls from 1.90 x 0* mol Ls" to
+0.4 x 10* mol L's‘. However, average rate cannot be used to predict the
+rate of a reaction at a particular instant as it would be constant for the
+time interval for which it is calculated. So, to express the rate at a particular
+moment of time we determine the instantaneous rate. It is obtained
+when we consider the average rate at the smallest time interval say dt (i.e.
+when At approaches zero). Hence, mathematically for an infinitesimally
+small dt instantaneous rate is given by
+
+QR] _ PP]
+r= 4
+a OF OK (3.3)
+As At>0O or Tnst = —dIR] _ d IPI
+dt dt
+0.12
+0.1
+0.08
+=
+5 0.06
+Instantaneous rate
+oO at t = 600 sec
+— 0.04
+0.02
+Fig 3.2
+Instantaneous rate (0)
+of hydrolysis of butyl 200 400 600 800 1000
+chloride(C,H,CU Time (s)_ ————>
+Chemistry pGdeu
+
+Reprint 2025-26
+
+
+It can be determined graphically by drawing a tangent at time t on
+either of the curves for concentration of R and P vs time t and calculating
+its slope (Fig. 3.1). So in problem 3.1, r,,,, at 600s for example, can be
+
+calculated by plotting concentration of butyl chloride as a function of
+time. A tangent is drawn that touches the curve at t= 600 s (Fig. 3.2).
+
+The slope of this tangent gives the instantaneous rate.
+
+0.0165 —-0.037 ’
+
+— 5 -1Q-1
+(800-400)s_, ML =5.12x 10" mol L's
+
+So, r.., at 600s =-
+
+inst
+Att=250s r,.,= 1.22 10*molL's’
+=1.0x 10* mol L's?
+
+t=350s fr.
+=6.4 xx 10° mol Ls?
+
+inst
+
+t=450s r.
+
+inst
+Now consider a reaction
+Hg(l) + Cl, (g) > HgCl,(s)
+
+Where stoichiometric coefficients of the reactants and products are
+same, then rate of the reaction is given as
+
+Q@Hg] QCl,]_ 2[HgCl,]
+Zt Zt
+
+i.e., rate of disappearance of any of the reactants is same as_ the rate
+of appearance of the products. But in the following reaction, two moles of
+HI decompose to produce one mole each of H, and 1,
+
+2HI(g) > Hg) + Lig)
+
+For expressing the rate of such a reaction where stoichiometric
+coefficients of reactants or products are not equal to one, rate of
+disappearance of any of the reactants or the rate of appearance of
+products is divided by their respective stoichiometric coefficients. Since
+rate of consumption of HI is twice the rate of formation of H, or I,, to
+make them equal, the term A[HI] is divided by 2. The rate of this reaction
+is given by
+
+Rate of reaction = —
+
+12H] 2H] Pl]
+2 ot al at
+
+Similarly, for the reaction
+
+5 Br (aq) + BrO, (aq) + 6 H® (aq) > 3 Br, (aq) +3 H,O ()
+
+Rate ofreaction =
+
+Rate. 12Br]_ 2 Bro, _ 12@H*] 12[Br,] 1 2[H,0]
+5 & a 624 3 @&@ 8 a
+
+For a gaseous reaction at constant temperature, concentration is
+directly proportional to the partial pressure of a species and hence, rate
+can also be expressed as rate of change in partial pressure of the reactant
+or the product.
+
+65) Chemical Kinetics
+
+Reprint 2025-26
+
+
+Example 3.2
+
+Solution
+
+Intext
+
+The decomposition of N,O, in CCl, at 318K has been studied by
+monitoring the concentration of N,O, in the solution. Initially the
+concentration of N,O, is 2.33 mol L" and after 184 minutes, it is reduced
+to 2.08 mol L’’. The reaction takes place according to the equation
+
+2 N,O, (g) > 4 NO, (g) + O, (g)
+
+Calculate the average rate of this reaction in terms of hours, minutes
+and seconds. What is the rate of production of NO, during this period?
+
+Average Rate = 2
+
+1 Q[N,0O;] _ 1 (2.08 2.33)molL '
+tt 2 184 min
+6.79 x 107% mol L/min = (6.79 x 10* mol L™ min‘) x (60 min/ 1h)
+4.07 x 10° mol L'/h
+6.79 x 10* mol L"! x Imin/60s
+1.13 x 10° mol L's"!
+
+It may be remembered that
+
+Rate = I INO, |
+4 @
+NO
+E al. 6.79 x 107 x 4 mol L™ min = 2.72 x 10° mol L'min'!
+uestions
+
+3.1 For the reaction R= P, the concentration of a reactant changes from 0.03M
+to 0.02M in 25 minutes. Calculate the average rate of reaction using units
+of time both in minutes and seconds.
+
+3.2 Ina reaction, 2A — Products, the concentration of A decreases from 0.5
+mol L” to 0.4 mol L" in 10 minutes. Calculate the rate during this interval?
+
+3.2 Factors Influencing Rate of reaction depends upon the experimental conditions such
+Rate of a Reaction @S concentration of reactants (pressure in case of gases),
+
+3.2.1 Dependence
+of Rate on
+Concentration
+
+3.2.2 Rate
+Expression
+and Rate
+Constant
+
+Chemistry »6Gu
+
+temperature and catalyst.
+
+The rate of a chemical reaction at a given temperature may depend on
+the concentration of one or more reactants and products. The
+representation of rate of reaction in terms of concentration of the
+reactants is known as rate law. It is also called as rate equation or
+rate expression.
+
+The results in Table 3.1 clearly show that rate of a reaction decreases with
+the passage of time as the concentration of reactants decrease. Conversely,
+rates generally increase when reactant concentrations increase. So, rate of
+a reaction depends upon the concentration of reactants.
+
+Reprint 2025-26
+
+Consider a general reaction
+aA+bB — cC+dD
+where a, b, c and d are the stoichiometric coefficients of reactants
+and products.
+The rate expression for this reaction is
+Rate « [A]" [B]” (3.4)
+where exponents x and y may or may not be equal to the
+stoichiometric coefficients (a and b) of the reactants. Above equation
+can also be written as
+
+Rate = k [A]* [BI’ (3.4a)
+d[R] _ x ro
+tr = k[ A} [B] (3.4b)
+
+This form of equation (3.4 b) is known as differential rate equation,
+where’ k is a proportionality constant called rate constant. The
+equation like (3.4), which relates the rate of a reaction to concentration
+of reactants is called rate law or rate expression. Thus, rate law is the
+expression in which reaction rate is given in terms of molar
+concentration of reactants with each term raised to some
+power, which may or may not be same as the stoichiometric
+coefficient of the reacting species in a balanced chemical
+equation. For example:
+
+2NO(g) + O,(g) > 2NO, (g)
+
+We can measure the rate of this reaction as a function of initial
+concentrations either by keeping the concentration of one of the reactants
+constant and changing the concentration of the other reactant or by
+changing the concentration of both the reactants. The following results
+are obtained (Table 3.2).
+
+Table 3.2: Initial rate of formation of NO,
+
+Experiment Initial [NO]/ mol L’ Initial [O,]/ mol L* Initial rate of
+formation of NO,/ mol Ls*
+
+080 0a
+eS ee ee
+
+It is obvious, after looking at the results, that when the concentration
+of NO is doubled and that of O, is kept constant then the initial rate
+increases by a factor of four from 0.096 to 0.384 mol L's”. This
+indicates that the rate depends upon the square of the concentration of
+NO. When concentration of NO is kept constant and concentration of
+O, is doubled the rate also gets doubled indicating that rate depends
+on concentration of O, to the first power. Hence, the rate equation for
+this reaction will be
+
+Rate = k [NO]’[O,]
+
+67 Chemical Kinetics
+
+Reprint 2025-26
+
+
+3.2.3 Order of a
+Reaction
+
+Chemistry »6Su
+
+The differential form of this rate expression is given as
+d
+ote = k[No}’[0,]
+
+Now, we observe that for this reaction in the rate equation derived
+from the experimental data, the exponents of the concentration terms
+are the same as their stoichiometric coefficients in the balanced
+chemical equation.
+
+Some other examples are given below:
+Reaction Experimental rate expression
+1. CHCL, + Cl, > CCl, + HCl Rate = k [CHC1, ] oni ?
+2. CH,COOC,H, + H,O + CH,COOH + C,H.OH Rate = k [CH,COOC,H,]' [H,0)°
+In these reactions, the exponents of the concentration terms are not
+the same as their stoichiometric coefficients. Thus, we can say that:
+
+Rate law for any reaction cannot be predicted by merely looking at
+the balanced chemical equation, i.e., theoretically but must be determined
+experimentally.
+
+In the rate equation (3.4)
+
+Rate = k [A]* [BI’
+
+x and y indicate how sensitive the rate is to the change in concentration
+of Aand B. Sum of these exponents, i.e., x + y in (3.4) gives the overall
+order of a reaction whereas x and y represent the order with respect
+to the reactants A and B respectively.
+
+Hence, the sum of powers of the concentration of the
+reactants in the rate law expression is called the order of that
+chemical reaction.
+
+Order of a reaction can be O, 1, 2, 3 and even a fraction. A zero
+order reaction means that the rate of reaction is independent of the
+concentration of reactants.
+
+Example 3.3 Calculate the overall order of a reaction which
+has the rate expression
+
+(a) Rate = k [A]'”? [B]}°”?
+(b) Rate = k [A]}®” [By
+(a) Rate = k [A]* [B]”
+order =x ty
+So order = 1/2 + 3/2 = 2, i.e., second order
+(b) order = 3/2 + (-1) = 1/2, i.e., half order.
+
+Solution
+
+A balanced chemical equation never gives us a true picture of how
+a reaction takes place since rarely a reaction gets completed in one
+step. The reactions taking place in one step are called elementary
+reactions. When a sequence of elementary reactions (called mechanism)
+gives us the products, the reactions are called complex reactions.
+
+Reprint 2025-26
+
+These may be consecutive reactions (e.g., oxidation of ethane to CO,
+and H,O passes through a series of intermediate steps in which alcohol,
+aldehyde and acid are formed), reverse reactions and side reactions
+(e.g., nitration of phenol yields o-nitrophenol and p-nitrophenol).
+Units of rate constant
+For a general reaction
+
+aA + bB > cC + dD
+
+Rate = k [A]* [B]’
+
+Where x + y = n = order of the reaction
+
+_ Rate
+~ [AF [BP
+concentration 1
+= s x = where [A]=[B]
+time (concentration) ( )
+
+Taking SI units of concentration, mol L” and time, s, the units of
+k for different reaction order are listed in Table 3.3
+
+Table 3.3: Units of rate constant
+
+Reaction Units of rate constant
+
+Zero order reaction
+
+First order reaction
+
+Second order reaction
+
+Identify the reaction order from each of the following rate constants.
+) k= 2.3 x 10° L mol! s!
+(i) k= 3x 10% s"
+
+(i) The unit of second order rate constant is L mol” s"', therefore Solution
+k = 2.3 x 10° L mol! s’ represents a second order reaction.
+
+(i) The unit of a first order rate constant is s' therefore
+k = 3 x 10* s” represents a first order reaction.
+
+3.2.4 Molecularity Another property of a reaction called molecularity helps in
+of a understanding its mechanism. The number of reacting species
+Reaction (atoms, ions or molecules) taking part in an elementary
+
+reaction, which must collide simultaneously in order to bring
+about a chemical reaction is called molecularity of a reaction.
+The reaction can be unimolecular when one reacting species is involved,
+for example, decomposition of ammonium nitrite.
+
+69 Chemical Kinetics
+
+Reprint 2025-26
+
+
+Chemistry ~%Qm
+
+NH,NO, > N, + 2H,O
+Bimolecular reactions involve simultaneous collision between two
+species, for example, dissociation of hydrogen iodide.
+
+2HI > H, + 1,
+
+Trimolecular or termolecular reactions involve simultaneous collision
+between three reacting species, for example,
+
+2NO + O, > 2NO,
+
+The probability that more than three molecules can collide and
+react simultaneously is very small. Hence, reactions with the
+molecularity three are very rare and slow to proceed.
+
+It is, therefore, evident that complex reactions involving more than
+three molecules in the stoichiometric equation must take place in more
+than one step.
+
+KCIO, + 6FeSO, + 3H,SO, > KCl + 3Fe,(SO,), + 3H,O
+
+This reaction which apparently seems to be of tenth order is actually
+a second order reaction. This shows that this reaction takes place in
+several steps. Which step controls the rate of the overall reaction? The
+question can be answered if we go through the mechanism of reaction,
+for example, chances to win the relay race competition by a team
+depend upon the slowest person in the team. Similarly, the overall rate
+of the reaction is controlled by the slowest step in a reaction called the
+rate determining step. Consider the decomposition of hydrogen
+peroxide which is catalysed by iodide ion in an alkaline medium.
+
+rc
+
+Alkaline medium
+
+2H,0, 2H,0 + O,
+
+The rate equation for this reaction is found to be
+
+—d[H,O, |
+dt
+
+Rate = =k[H,O, ][1]
+
+This reaction is first order with respect to both H,O, and IT. Evidences
+suggest that this reaction takes place in two steps
+
+(1) H,O, +f > H,O + IO”
+
+(2) HO, +10: > H,O+T +O,
+
+Both the steps are bimolecular elementary reactions. Species IO is
+called as an intermediate since it is formed during the course of the
+reaction but not in the overall balanced equation. The first step, being
+slow, is the rate determining step. Thus, the rate of formation of
+intermediate will determine the rate of this reaction.
+
+Thus, from the discussion, till now, we conclude the following:
+(i) Order of a reaction is an experimental quantity. It can be zero and
+even a fraction but molecularity cannot be zero or a non integer.
+(ii) Order is applicable to elementary as well as complex reactions
+whereas molecularity is applicable only for elementary reactions.
+For complex reaction molecularity has no meaning.
+
+Reprint 2025-26
+
+(iii) For complex reaction, order is given by the slowest step and
+molecularity of the slowest step is same as the order of the overall
+reaction.
+
+Intext (Questions
+
+3.3 For areaction, A + B > Product; the rate law is given by, r = k[ A]’/” [B]?.
+What is the order of the reaction?
+
+3.4 The conversion of molecules X to Y follows second order kinetics. If
+concentration of X is increased to three times how will it affect the rate of
+formation of Y ?
+
+3.3 Integrated We have already noted that the concentration dependence of rate is
+Rate called differential rate equation. It is not always convenient to
+
+. determine the instantaneous rate, as it is measured by determination
+Equations of slope of the tangent at point ‘ft in concentration vs time plot
+
+(Fig. 3.1). This makes it difficult to determine the rate law and hence
+the order of the reaction. In order to avoid this difficulty, we can
+integrate the differential rate equation to give a relation between directly
+measured experimental data, i.e., concentrations at different times
+and rate constant.
+
+The integrated rate equations are different for the reactions of different
+reaction orders. We shall determine these equations only for zero and
+first order chemical reactions.
+
+3.3.1 Zero Order Zero order reaction means that the rate of the reaction is proportional
+
+Reactions to zero power of the concentration of reactants. Consider the reaction,
+R-~P
+d[R] 0
+= -———=k[R
+Rate dt [R]
+As any quantity raised to power zero is unity
+d[R]
+= 7 — k x 1
+Rate dt
+d[R] = - k dt
+
+Integrating both sides
+IR) =-ktt+lI (3.5)
+where, I is the constant of integration.
+
+At t=O, the concentration of the reactant R = [R]), where [R], is
+initial concentration of the reactant.
+
+Substituting in equation (3.5)
+[IR =-kxO+I
+
+Rl, =1
+Substituting the value of I in the equation (3.5)
+[R] = -kt + (RI, (3.6)
+
+710 Chemical Kinetics
+
+Reprint 2025-26
+
+
+[Rol
+
+Concentration of R ——~>
+
+k = -slope
+
+O Time ——>
+
+Fig. 3.3: Variation in the concentration
+vs time plot for a zero order
+
+reaction
+
+3.3.2 First Order
+Reactions
+
+Chemistry pfu
+
+Comparing (3.6) with equation of a straight line,
+y =mx+c, if we plot [R] against t, we get a straight
+line (Fig. 3.3) with slope = -k and intercept equal
+to [RI],.
+
+Further simplifying equation (3.6), we get the rate
+constant, k as
+
+= (Rb_RI 37)
+
+Zero order reactions are relatively uncommon but
+they occur under special conditions. Some enzyme
+catalysed reactions and reactions which occur on
+metal surfaces are a few examples of zero order
+reactions. The decomposition of gaseous ammonia
+on a hot platinum surface is a zero order reaction at
+high pressure.
+
+2NH, (8) pcatayst No (8)+3H, (8)
+
+Rate = k [NH,]° = k
+
+In this reaction, platinum metal acts as a catalyst. At high pressure,
+the metal surface gets saturated with gas molecules. So, a further
+change in reaction conditions is unable to alter the amount of ammonia
+on the surface of the catalyst making rate of the reaction independent
+of its concentration. The thermal decomposition of HI on gold surface
+is another example of zero order reaction.
+
+In this class of reactions, the rate of the reaction is proportional to the
+first power of the concentration of the reactant R. For example,
+
+R-~P
+
+Rate = oe =k[R]
+AUR] _ eat
+
+or [R]
+
+Integrating this equation, we get
+In [R] = —kt + I (3.8)
+
+Again, I is the constant of integration and its value can be determined
+
+easily.
+
+When t= 0, R= [R],, where [R], is the initial concentration of the
+
+reactant.
+
+Therefore, equation (3.8) can be written as
+In [R, =-k xO+I
+
+In [R], = 1
+
+Substituting the value of I in equation (3.8)
+In{R] = —kt + In[R], (3.9)
+
+Reprint 2025-26
+
+Rearranging this equation
+
+miBl ig
+[Ro
+R
+or k= 2 in Re (3.10)
+t  [R]
+
+At time t, from equation (3.8)
+
+*In[R], = — kt, + *In[R], (3.11)
+At time ¢,
+
+In{R], = — kt, + In[R], (3.12)
+
+where, [R], and [R], are the concentrations of the reactants at time
+t, and t, respectively.
+
+Subtracting (3.12) from (3.11)
+In[R],- In[R], = — kt, - kt)
+
+[Rh
+
+[Rl
+
+In
+
+=k(t, t)
+
+il [Rh
+i (t, t,) Rh (3.13)
+
+Equation (3.9) can also be written as
+[R] _
+[R]o
+Taking antilog of both sides
+[R] = [R], e™ (3.14)
+
+Comparing equation (3.9) with y = mx + c, if we plot In [R] against
+t (Fig. 3.4) we get a straight line with slope = —k and intercept equal to
+
+kt
+
+In [R],
+The first order rate equation (3.10) can also be written in the form
+2.303, _[R],
+eee OS TR] (3.15)
+[R] 2.303
+
+If we plot a graph between log [R],/[R] vs t, (Fig. 3.5),
+the slope = k/2.303
+
+Hydrogenation of ethene is an example of first order reaction.
+C,H,(g) + H, (g) > C,H,(g)
+Rate = k [C,H,]
+
+All natural and artificial radioactive decay of unstable nuclei take
+place by first order kinetics.
+
+* Refer to Appendix-IV for In and log (logarithms).
+
+73 Chemical Kinetics
+
+Reprint 2025-26
+
+
+Slope = k/2.303
+
+In[R] —~>
+~
+
+Il
+
+\o
+
+[o)
+
+ao}
+
+oO
+
+log ([R],/[R]) ———>»
+
+0 t— 0 Time ———>
+Fig. 3.4: A plot between In[R] and t Fig. 3.5: Plot of log [R],/[R] vs time for a
+for a first order reaction first order reaction
+
+ee Ra > 3He+ 22?Rn
+Rate = Kk [Ra]
+
+Decomposition of N,O,; and N,O are some more examples of first
+order reactions.
+
+Example 3.5 The initial concentration of N,O, in the following first order reaction
+N,O.(g) > 2 NO,(g) + 1/20, (g) was 1.24 x 107 mol L"?! at 318 K. The
+concentration of N,O, after 60 minutes was 0.20 x 107 mol L?. Calculate
+the rate constant of the reaction at 318 K.
+
+Solution For a first order reaction
+
+[Rh _ k(t4)
+
+log =
+[Rl> 2.303
+2.303 [Rl],
+_ lo
+k= (t, ~ t,) 6 [Rl].
+
+2.303 loo 1:24 x10 * mol L*
+~ (60min-Omin) ~0.20x10° molL!
+
+log 6.2 min
+
+2.303
+60
+
+0.0304 min?
+
+rom
+ll
+
+Let us consider a typical first order gas phase reaction
+
+A(g) > Big) + Cf)
+Let p, be the initial pressure of A and p, the total pressure at
+time ‘t. Integrated rate equation for such a reaction can be derived as
+
+Total pressure p, = P, + Pg + Po (pressure units)
+
+Chemistry fhe
+
+Reprint 2025-26
+
+
+P,, Pz and p, are the partial pressures of A, B and C, respectively.
+
+If x atm be the decrease in pressure of A at time t and one mole each
+of B and C is being formed, the increase in pressure of B and C will also
+be x atm each.
+
+A(g) > B(g) + C(g)
+At t=0 p, atm O atm O atm
+At time t (p-x) atm x atm x atm
+
+where, p, is the initial pressure at time t = 0.
+
+P= (p-x)+x+x=p,+x
+
+x= (p, ~ P)
+where, py = Pp; —- X = DP, - (D - PD)
+= 2p, — Pi
+2-508) DP;
+= | => || log —
+; (3.16)
+2.303 | P;
+
+O
+~ t * (2p, -P)
+
+The following data were obtained during the first order thermal
+decomposition of N,O, (g) at constant volume:
+
+2N,0;(g) 2N,0,(g)+0,(g)
+
+S.No. Time/s Total Pressure/(atm)
+1. O 0.5
+2. 100 0.512
+
+Calculate the rate constant.
+
+Let the pressure of N,O,(g) decrease by 2x atm. As two moles of Solution
+N,O, decompose to give two moles of N,O,(g) and one mole of O, (g),
+
+the pressure of N,O, (g) increases by 2x atm and that of O, (g)
+
+increases by x atm.
+
+2N,0; (g) 2N,0, (g) + O, (g)
+Start t= 0 0.5 atm O atm O atm
+At time t (0.5 — 2x) atm 2x atm x atm
+
+P, = Pn,o, + Pn,o, * Po,
+(0.5 —- 2x) + 2x+x=0.5+x
+xX=p, 0.5
+
+Py,o, = 0.5 - 2x
+
+0.5 — 2 (p,- 0.5) = 1.5 - 2p,
+100 s; p, = 0.512 atm
+
+At ¢
+
+75 Chemical Kinetics
+
+Reprint 2025-26
+
+
+Py,o, = 15-2 x 0.512 = 0.476 atm
+Using equation (3.16)
+
+2.303 DP; 2.303 0.5atm
+k= log— = lo
+t Pa 100s 0.476 atm
+_ 2.303
+
+x 0.0216 = 4.98x10%*s7*
+
+100s
+
+3.3.3 Half-Life of The half-life of a reaction is the time in which the concentration of a
+a Reaction reactant is reduced to one half of its initial concentration. It is
+represented as ty/9.
+
+For a zero order reaction, rate constant is given by equation 3.7.
+Rb _IR]
+t
+At t=t,., [R]= 5 Rh
+
+The rate constant at t becomes
+
+1/2
+
+Rl _1/21Rhb
+bye
+
+2 Ok
+
+It is clear that t, , for a zero order reaction is directly proportional
+to the initial concentration of the reactants and inversely proportional
+to the rate constant.
+
+For the first order reaction,
+
+k= 208 lo [RJo (3.15)
+t [R]
+at ti» [R]= be (3.16)
+So, the above equation becomes
+k= 2.303 lo IR]
+tye [R]/2
+2.303
+or tie = log2
+2.303
+1/2 = 0.301
+0.693
+tij2 = kk (3.17)
+
+Chemistry ~fGu
+
+Reprint 2025-26
+
+
+It can be seen that for a first order reaction, half-life period is
+constant, i.e., it is independent of initial concentration of the reacting
+species. The half-life of a first order equation is readily calculated from
+the rate constant and vice versa.
+
+For zero order reaction t, j2 © [R],- For first order reaction
+
+t,,. is independent of [R],.
+
+1/2
+
+A first order reaction is found to have a rate constant, k= 5.5 x 104 51. Example 3.
+Find the half-life of the reaction.
+
+Half-life for a first order reaction is Solution
+i _ 0.693
+1/2 ~~ k
+0.693
+
+tj = 55x10 “5s. = 1.26 x 10!%s
+
+Show that in a first order reaction, time required for completion of
+99.9% is 10 times of half-life (t, ja) of the reaction.
+
+When reaction is completed 99.9%, [R],, = [R], — 0.999IR], Example 3.8
+2.303 [Rlo ;
+=> log IR] Solution
+2.303 [R]o 2. =e
+= lo au log 10°
+i "IRL, -0.999[Rh = og10
+t = 6.909/k
+For half-life of the reaction
+ty = 0.693/k
+t 6909 k _
+tr  ~=~—SO 0.693
+
+Table 3.4 summarises the mathematical features of integrated laws of
+zero and first order reactions.
+
+Table 3.4: Integrated Rate Laws for the Reactions of Zero and First Order
+
+Order Reaction Differential Integrated Straight Half- Units of k
+type rate law rate law line plot life
+
+d[R]/dt = -k[R] | [R] = [R],e“ In[R] vs t In 2/k
+or kt =
+In{[R],/[R]}
+
+conc time?!
+or mol L's
+
+time?! or s?
+
+77 Chemical Kinetics
+
+Reprint 2025-26
+
+
+The order of a reaction is sometimes altered by conditions. There
+are many reactions which obey first order rate law although they are
+higher order reactions. Consider the hydrolysis of ethyl acetate which
+is a chemical reaction between ethyl acetate and water. In reality, it
+is a second order reaction and concentration of both ethyl acetate and
+water affect the rate of the reaction. But water is taken in large excess
+for hydrolysis, therefore, concentration of water is not altered much
+during the reaction. Thus, the rate of reaction is affected by
+concentration of ethyl acetate only. For example, during the hydrolysis
+of 0.01 mol of ethyl acetate with 10 mol of water, amounts of the
+reactants and products at the beginning (t = 0) and completion (0) of
+the reaction are given as under.
+
+CH,COOC,H, +H,O _H'_, CH,COOH + C,H,OH
+
+t=0 0.01 mol 10 mol O mol O mol
+t O mol 9.99 mol 0.01 mol 0.01 mol
+
+The concentration of water does not get altered much during the
+course of the reaction. So, the reaction behaves as first order reaction.
+Such reactions are called pseudo first order reactions.
+
+Inversion of cane sugar is another pseudo first order reaction.
+
+C,,H,.0O,, + H,O H C,H,,O, + C,H,,0,
+
+12°22
+Cane sugar Glucose Fructose
+
+Rate = k [C,,H,,0,,]
+
+3.5 A first order reaction has a rate constant 1.15 x 10° s'. How long will 5 g
+of this reactant take to reduce to 3 g?
+
+3.6 Time required to decompose SO,Cl, to half of its initial amount is 60
+minutes. If the decomposition is a first order reaction, calculate the rate
+constant of the reaction.
+
+3.4 ‘Temperature
+
+Dependence of
+the Rate of a
+
+Reaction
+
+Chemistry piSu
+
+Most of the chemical reactions are accelerated by increase in temperature.
+For example, in decomposition of N,O,, the time taken for half of the
+original amount of material to decompose is 12 min at 50°C, 5 h at
+25°C and 10 days at 0°C. You also know that in a mixture of potassium
+permanganate (KMnO,) and oxalic acid (H,C,O,), potassium
+permanganate gets decolourised faster at a higher temperature than
+that at a lower temperature.
+
+It has been found that for a chemical reaction with rise in
+temperature by 10°, the rate constant is nearly doubled.
+
+The temperature dependence of the rate of a chemical reaction can
+be accurately explained by Arrhenius equation (3.18). It was first
+proposed by Dutch chemist, J.H. van’t Hoff but Swedish chemist,
+Arrhenius provided its physical justification and interpretation.
+
+Reprint 2025-26
+
+k= Ae /RT (3.18)
+where A is the Arrhenius factor or the frequency factor. It is also called
+pre-exponential factor. It is a constant specific to a particular reaction.
+Ris gas constant and E, is activation energy measured in joules/mole
+
+(J mol ~).
+It can be understood clearly using the following simple reaction
+H, (g) +1, (g) > 2HI(g) H I He I H—I
+According to Arrhenius, this reaction can take place | * | — : : > *
+H I Ho I H—I
+
+only when a molecule of hydrogen and a molecule of iodine
+collide to form an unstable intermediate (Fig. 3.6). It exists
+for a very short time and then breaks up to form two Fig, 3.6: Formation of HI through
+molecules of hydrogen iodide. the intermediate
+
+The energy required to form this
+intermediate, called activated complex
+(C), is known as activation energy (E,).
+Fig. 3.7 is obtained by plotting potential Activated
+energy vs reaction coordinate. Reaction complex
+coordinate represents the profileofenergy 3s]  ‘arrrrcte C
+change when reactants change into
+products.
+
+Intermediate
+
+Activation
+energy
+
+complex decomposes to form products.
+So, the final enthalpy of the reaction
+
+depends upon the nature of reactants
+and products.
+
+Some energy is released when the
+
+Potential energy
+
+2HI
+
+Reaction coordinate
+—>
+
+All the molecules in the reacting
+species do not have the same kinetic Fig. 3.7: Diagram showing plot of potential
+energy. Since it is difficult to predict the energy vs reaction coordinate
+behaviour of any one molecule with
+precision, Ludwig Boltzmann and James
+Clark Maxwell used statistics to predict
+the behaviour of large number of
+molecules. According to them, the
+distribution of kinetic energy may be
+described by plotting the fraction of
+molecules (N,/N,) with a given kinetic
+energy (E) vs kinetic energy (Fig. 3.8).
+Here, N,, is the number of molecules with
+energy E and N, is total number
+of molecules.
+
+Most probable
+kinetic energy
+
+The peak of the curve corresponds to
+the most probable kinetic energy, i.c.,
+kinetic energy of maximum fraction of Kinetic energy >
+molecules. There are decreasing number
+of molecules with energies higher or
+lower than this value. When the
+
+Fraction of molecules ——->
+
+Fig. 3.8: Distribution curve showing energies
+among gaseous molecules
+
+790 Chemical Kinetics
+
+Reprint 2025-26
+
+
+This area
+
+Fraction of molecules —>
+
+Kinetic energy ———>
+
+Fig. 3.9: Distribution curve showing temperature
+
+dependenc
+
+<— Intercept =InA
+
+Ink
+
+1/T
+
+shows fraction
+of molecules
+
+reacting at t
+
+<<
+
+temperature is raised, the maximum
+of the curve moves to the higher
+energy value (Fig. 3.9) and the curve
+broadens out, i.e., spreads to the right
+such that there is a greater proportion
+of molecules with much higher
+energies. The area under the curve
+must be constant since total
+probability must be one at all times.
+We can mark the position of E, on
+Maxwell Boltzmann distribution curve
+(Fig. 3.9).
+
+Energy of
+activation
+
+This area shows
+fraction of additional
+molecules which
+
+react at (t+10)
+
+e of rate of a reaction
+
+Increasing the temperature of the substance increases the fraction
+of molecules, which collide with energies greater than E.,. It is clear
+from the diagram that in the curve at (t + 10), the area showing the
+fraction of molecules having energy equal to or greater than activation
+energy gets doubled leading to doubling the rate of a reaction.
+
+In the Arrhenius equation (3.18) the factor e **/*’ corresponds to
+the fraction of molecules that have kinetic energy greater than E..
+Taking natural logarithm of both sides of equation (3.18)
+
+a
+
+RT
+
+The plot of In kvs 1/T gives a straight line according to the equation
+(3.19) as shown in Fig. 3.10.
+
+Thus, it has been found from Arrhenius equation (3.18) that
+increasing the temperature or decreasing the activation energy will
+result in an increase in the rate of the reaction and an exponential
+increase in the rate constant.
+
+In k=- +InA (3.19)
+
+a
+
+In Fig. 3.10, R
+A. So we can calculate E, and A using these values.
+At temperature T,, equation (3.19) is
+
+slope = - and intercept = In
+
+Slope = - E,/R E,
+ope Fel Ink, =-pr +n A (3.20)
+1
+At temperature T,, equation (3.19) is
+E,
+In k, = -RT. +InA (3.21)
+2
+
+(since A is constant for a given reaction)
+
+k, and k, are the values of rate constants at
+temperatures T, and T, respectively.
+—
+
+Fig. 3.10: A plot between In k and 1/T
+
+Chemistry »8Q—
+
+Reprint 2025-26
+
+Subtracting equation (3.20) from (3.21), we obtain
+
+E, E,
+In k, -In k, = RT, — RT,
+1 1
+In 2 _ E,
+, RT T
+look2 -_Fa_ 1 1
+8%, 2.303R T, T, (3.22)
+
+k, E. Tt, T,
+
+a
+
+k, 2.303R TT
+
+log
+
+Example 3.9 The rate constants of a reaction at 500K and 700K are 0.02s' and
+0.07s' respectively. Calculate the values of E, and A.
+
+Solution loge _ _Fa_| aah
+k, ~ 2.303R| TT;
+lo 0.07 E, a - 00]
+8002 = (2.303x8.314JK mol }| 700x500
+
+0.544 = E, x 5.714 x 10*/19.15
+
+E, = 0.544 X 19.15/5.714 x 10* = 18230.8 J
+Since k = Ae ™/RT
+
+0.02 = Ade’ 18230.8/8.314 x 500
+
+A = 0.02/0.012 = 1.61
+
+Example 3./O_ The first order rate constant for the decomposition of ethyl iodide
+by the reaction
+
+C,H,I(g) > C,H, (g) + HI)
+
+at 600K is 1.60 x 10° s1. Its energy of activation is 209 kJ/mol.
+Calculate the rate constant of the reaction at 7OOK.
+
+Solution We know that
+
+E, |i 1
+log k, - log i= 9 303R|T, Ty
+
+—8le Chemical Kinetics
+
+Reprint 2025-26
+
+
+3.4.1 Effect of
+Catalyst
+
+Reaction
+path with
+catalyst
+
+z
+6
+5
+
+Potential energy
+v
+
+1 logk, + E. ! !
+fe) = a
+gy 8 * 5 303R T, Ty,
+= 10g(1.60«10°) + 209000 J mol L” 1 1
+ov " 2.303x8.314J molL ‘K!|600K 700K
+log k, = - 4.796 + 2.599 = - 2.197
+
+6.36 x 10° s?
+
+a
+I
+
+A catalyst is a substance which increases the rate of a reaction without
+itself undergoing any permanent chemical change. For example, MnO,
+catalyses the following reaction so as to increase its rate considerably.
+
+2KClO, _M™°s_, 2 KCl + 30,
+
+The word catalyst should not be used when the added substance
+reduces the rate of raction. The substance is then called inhibitor. The
+action of the catalyst can be explained by intermediate complex theory.
+According to this theory, a catalyst participates in a chemical reaction by
+forming temporary bonds with the reactants resulting in an intermediate
+complex. This has a transitory existence and decomposes to yield products
+and the catalyst.
+
+It is believed that the catalyst provides an
+
+we alternate pathway or reaction mechanism by
+
+Reaction path . . .
+without catalyst reducing the activation energy between
+
+Reaction coordinate
+
+Fig. 3.11:Effect of catalyst on activation
+
+energy
+
+3.5 Collision
+‘Theory of
+Chemical
+
+Reactions
+
+Chemistry pS2u
+
+Energy of Shel reactants and products and hence lowering
+activation wit the potential energy barrier as shown in
+___ Xeatalyst YY _. Fig. 3.11.
+It is clear from Arrhenius equation (3.18)
+Products that lower the value of activation energy faster
+will be the rate of a reaction.
+> A small amount of the catalyst can catalyse
+
+a large amount of reactants. A catalyst does
+not alter Gibbs energy, AG of a reaction. It
+catalyses the spontaneous reactions but does
+not catalyse non-spontaneous reactions. It is
+also found that a catalyst does not change the equilibrium constant of
+a reaction rather, it helps in attaining the equilibrium faster, that is, it
+catalyses the forward as well as the backward reactions to the same
+extent so that the equilibrium state remains same but is reached earlier.
+
+Though Arrhenius equation is applicable under a wide range of
+circumstances, collision theory, which was developed by Max Trautz
+and William Lewis in 1916 -18, provides a greater insight into the
+energetic and mechanistic aspects of reactions. It is based on kinetic
+theory of gases. According to this theory, the reactant molecules are
+
+Reprint 2025-26
+
+assumed to be hard spheres and reaction is postulated to occur when
+molecules collide with each other. The number of collisions per
+second per unit volume of the reaction mixture is known as
+collision frequency (Z). Another factor which affects the rate of
+chemical reactions is activation energy (as we have already studied).
+For a bimolecular elementary reaction
+
+A+B —-5_ Products
+
+rate of reaction can be expressed as
+Rate = Z,,e "/"? (3.23)
+
+where Z,, represents the collision frequency of reactants, A and B
+and e™’*" represents the fraction of molecules with energies equal to
+or greater than E,. Comparing (3.23) with Arrhenius equation, we can
+say that A is related to collision frequency.
+
+Equation (3.23) predicts the value of rate constants fairly
+accurately for the reactions that involve atomic species or simple
+molecules but for complex molecules significant deviations are
+observed. The reason could be that all collisions do not lead to the
+formation of products. The collisions in which molecules collide with
+sufficient kinetic energy (called threshold energy*) and proper
+orientation, so as to facilitate breaking of bonds between reacting
+species and formation of new bonds to form products are called as
+effective collisions.
+
+For example, formation of  CH,Br + OH —> CH,OH + Br
+methanol from bromoethane depends
+
+HW, 4
+. . 5 -
+upon the orientation of reactant a H-C_Be OH —> No
+molecules as shown in H5 5 7 oriental / products
+Fig. 3.12. The proper orientation of > al + OH — H
+reactant molecules lead to bond A Proper -3 \t8 -8 | -
+formation whereas improper cnentaton [HO™" CBr | —> HO CH + Br
+orientation makes them _ simply H H H
+bounce back and no products are Intermediate
+formed. . . . .
+Fig. 3.12: Diagram showing molecules having proper and
+To account for effective collisions, improper orientation
+
+another factor P, called the probability
+or steric factor is introduced. It takes into account the fact that in a
+collision, molecules must be properly oriented i.e.,
+
+Rate = PZ,,e "/*"
+
+Thus, in collision theory activation energy and proper orientation of
+the molecules together determine the criteria for an effective collision
+and hence the rate of a chemical reaction.
+
+Collision theory also has certain drawbacks as it considers atoms/
+molecules to be hard spheres and ignores their structural aspect. You
+
+will study details about this theory and more on other theories in your
+higher classes.
+
+* Threshold energy = Activation Energy + energy possessed by reacting species.
+
+83 Chemical Kinetics
+
+Reprint 2025-26
+
+
+What will be the effect of temperature on rate constant ?
+
+The rate of the chemical reaction doubles for an increase of 10K in absolute
+temperature from 298K. Calculate E,.
+
+The activation energy for the reaction
+2 HI(g) > H, + I, (g)
+
+is 209.5 kJ mol! at 581K.Calculate the fraction of molecules of reactants
+having energy equal to or greater than activation energy?
+
+Chemical kinetics is the study of chemical reactions with respect to reaction
+rates, effect of various variables, rearrangement of atoms and formation of
+intermediates. The rate of a reaction is concerned with decrease in concentration
+of reactants or increase in the concentration of products per unit time. It can
+be expressed as instantaneous rate at a particular instant of time and average
+rate over a large interval of time. A number of factors such as temperature,
+concentration of reactants, catalyst, affect the rate of a reaction. Mathematical
+representation of rate of a reaction is given by rate law. It has to be determined
+experimentally and cannot be predicted. Order of a reaction with respect to
+a reactant is the power of its concentration which appears in the rate law
+equation. The order of a reaction is the sum of all such powers of concentration
+of terms for different reactants. Rate constant is the proportionality factor in
+the rate law. Rate constant and order of a reaction can be determined from rate
+law or its integrated rate equation. Molecularity is defined only for an elementary
+reaction. Its values are limited from 1 to 3 whereas order can be O, 1, 2, 3 or
+even a fraction. Molecularity and order of an elementary reaction are same.
+
+Temperature dependence of rate constants is described by Arrhenius equation
+(k = Ae**/"7), E corresponds to the activation energy and is given by the
+energy difference between activated complex and the reactant molecules, and A
+(Arrhenius factor or pre-exponential factor) corresponds to the collision frequency.
+The equation clearly shows that increase of temperature or lowering of E, will
+lead to an increase in the rate of reaction and presence of a catalyst lowers the
+activation energy by providing an alternate path for the reaction. According to
+collision theory, another factor P called steric factor which refers to the orientation
+of molecules which collide, is important and contributes to effective collisions,
+thus, modifying the Arrhenius equation to k=PZ,,e%/*" .
+
+Chemistry Seu
+
+Reprint 2025-26
+
+
+&
+ol
+
+3.9
+
+Cxercises
+
+From the rate expression for the following reactions, determine their
+order of reaction and the dimensions of the rate constants.
+
+(i) 3NO(g) > N,O (g) Rate = k{NO]*
+(ii) H,O, (ag) + 3 (aq) + 2H” — 2H,O (I) + IZ” Rate = A{H,O,JIT]
+(iii) CH,CHO (g) > CH, (g) + CO(g) Rate = k[CH,CHO]*”
+(iv) C,H,Cl (g) > C,H, (g) + HCl (g) Rate = k[C,H,Cl]
+For the reaction:
+2A + B + A,B
+the rate = Kk{A][B]? with k = 2.0 x 10° mol? L? sl. Calculate the initial
+rate of the reaction when [A] = 0.1 mol L!, [B] = 0.2 mol L!. Calculate
+the rate of reaction after [A] is reduced to 0.06 mol L?.
+The decomposition of NH, on platinum surface is zero order reaction. What
+are the rates of production of N, and H, if k = 2.5 x 10* mol' Ls '?
+The decomposition of dimethyl ether leads to the formation of CH,, H,
+and CO and the reaction rate is given by
+Rate = k [CH,OCH,]*””
+The rate of reaction is followed by increase in pressure in a closed
+vessel, so the rate can also be expressed in terms of the partial pressure
+of dimethyl ether, i.e.,
+
+Rate = k (Pcu,oct, )
+
+If the pressure is measured in bar and time in minutes, then what are
+the units of rate and rate constants?
+
+3/2
+
+Mention the factors that affect the rate of a chemical reaction.
+
+A reaction is second order with respect to a reactant. How is the rate
+of reaction affected if the concentration of the reactant is
+
+(i) doubled (ii) reduced to half ?
+
+What is the effect of temperature on the rate constant of a reaction?
+How can this effect of temperature on rate constant be represented
+quantitatively?
+
+In a pseudo first order reaction in water, the following results were
+obtained:
+
+wT e | %] eo] 0
+
+Calculate the average rate of reaction between the time interval 30
+to 60 seconds.
+A reaction is first order in A and second order in B.
+(i) Write the differential rate equation.
+(ii) How is the rate affected on increasing the concentration of B three
+times?
+(iii) How is the rate affected when the concentrations of both A and B
+are doubled?
+
+85 Chemical Kinetics
+
+Reprint 2025-26
+
+
+3.10 In a reaction between A and B, the initial rate of reaction (r)) was measured
+for different initial concentrations of A and B as given below:
+
+r,/mol L's 5.07 x 10° | 5.07 x 10° | 1.43 x 10%
+
+What is the order of the reaction with respect to A and B?
+
+3.11 The following results have been obtained during the kinetic studies of the reaction:
+2A+B>C+D
+
+Initial rate of formation
+of D/mol L? min
+ee ee
+m 2.88 « 10"
+
+Determine the rate law and the rate constant for the reaction.
+
+3.12 The reaction between A and B is first order with respect to A and zero order
+with respect to B. Fill in the blanks in the following table:
+
+mol L! min!
+ee ee
+9 NY
+I
+
+3.13 Calculate the half-life of a first order reaction from their rate constants given
+below:
+() 200 s? (ii) 2 min” (iii) 4 years!
+
+3.14 The half-life for radioactive decay of '*C is 5730 years. An archaeological
+
+artifact containing wood had only 80% of the “C found in a living tree. Estimate
+the age of the sample.
+
+3.15 The experimental data for decomposition of N,O,
+[2N,0, — 4NO, + O,]
+in gas phase at 318K are given below:
+
+t/s__| © | 400 | 800 | 1200 | 1600 | 2000 | 2400 | 2800 | 3200
+
+10? x [N,O.]/ 1.63 | 1.36 | 1.14 | 0.93 | 0.78 | 0.64 | 0.53 | 0.43 | 0.35
+mol L?
+
+(i) Plot [N,O,] against t.
+
+(ii) Find the half-life period for the reaction.
+(iii) Draw a graph between log[N,O,] and t.
+(iv) What is the rate law ?
+
+Chemistry »8Gu
+
+Reprint 2025-26
+
+
+(v) Calculate the rate constant.
+(vi) Calculate the half-life period from k and compare it with (ii).
+
+3.16 The rate constant for a first order reaction is 60 s’. How much time will
+it take to reduce the initial concentration of the reactant to its 1/16
+value?
+
+3.17 During nuclear explosion, one of the products is °°Sr with half-life of
+28.1 years. If lug of °°Sr was absorbed in the bones of a newly born
+baby instead of calcium, how much of it will remain after 10 years and
+60 years if it is not lost metabolically.
+
+3.18 For a first order reaction, show that time required for 99% completion
+is twice the time required for the completion of 90% of reaction.
+
+3.19 A first order reaction takes 40 min for 30% decomposition. Calculate t,/).
+
+3.20 For the decomposition of azoisopropane to hexane and nitrogen at 543
+K, the following data are obtained.
+
+ce
+
+Calculate the rate constant.
+
+3.21 The following data were obtained during the first order thermal
+decomposition of SO,Cl, at a constant volume.
+
+SO, Cl, (g) > SO, (g) + Cl, (g)
+
+ee
+ee
+
+Calculate the rate of the reaction when total pressure is 0.65 atm.
+
+3.22 The rate constant for the decomposition of N,O, at various temperatures
+is given below:
+
+mc} 0 | 20 | 40 | 0 | 80
+
+Draw a graph between In k and 1/T and calculate the values of A and
+E,. Predict the rate constant at 30° and 50°C,
+
+3.23 The rate constant for the decomposition of hydrocarbons is 2.418 x 10%s"
+at 546 K. If the energy of activation is 179.9 kJ/mol, what will be the value
+of pre-exponential factor.
+
+3.24 Consider a certain reaction A —> Products with k = 2.0 x 10s". Calculate
+the concentration of A remaining after 100 s if the initial concentration
+of A is 1.0 mol L".
+
+3.25 Sucrose decomposes in acid solution into glucose and fructose according
+to the first order rate law, with t,,, = 3.00 hours. What fraction of sample
+of sucrose remains after 8 hours ?
+
+3.26 The decomposition of hydrocarbon follows the equation
+ke = (4.5 x 10!!s7}) @°28000K/T
+Calculate E,.
+
+87 Chemical Kinetics
+
+Reprint 2025-26
+
+
+3.27 The rate constant for the first order decomposition of H,O, is given by the
+following equation:
+
+log k = 14.34 - 1.25 x 10*K/T
+Calculate E, for this reaction and at what temperature will its half-period
+be 256 minutes?
+
+3.28 The decomposition of A into product has value of k as 4.5 x 10° s? at 10°C
+and energy of activation 60 kJ mol’. At what temperature would k be
+1.5 x 10*s!?
+
+3.29 The time required for 10% completion of a first order reaction at 298K is
+equal to that required for its 25% completion at 308K. If the value of A is
+4 x 10's", Calculate k at 318K and E..
+
+3.30 The rate of a reaction quadruples when the temperature changes from
+293 K to 313 K. Calculate the energy of activation of the reaction assuming
+that it does not change with temperature.
+
+Answers to Some Intext Questions
+3.1 r= 6.66 x 10° Ms"!
+3.2 Rate of reaction = rate of diappearance of A
+= 0.005 mol litre'min"!
+3.3 Order of the reaction is 2.5
+3.4 XY
+Rate = k[X]?
+The rate will increase 9 times
+3.5 t= 444s
+3.6 1.925 x 107s"
+3.8 Ea = 52.897 kJ mol!
+3.9 1.471 x 1079
+
+Chemistry »8Su
+
+Reprint 2025-26
+
+
