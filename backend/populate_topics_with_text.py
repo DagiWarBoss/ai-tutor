@@ -20,8 +20,29 @@ SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
-# --- Comprehensive Name Mapping ---
+# --- Comprehensive Name Mapping (expanded for mismatches) ---
 NAME_MAPPING = {
+    # Your full list, with added variations for skipped Physics chapters
+    'Kinetic Theory': 'Kinetic-Theory',
+    'Laws Of Motion': 'Laws-Of-Motion',
+    'Continuity And Differentiability': 'Continuity And Differentiability',
+    'System Of Particles And Rotational Motion': 'System-Of-Particles-And-Rotational-Motion',
+    'Thermal Properties Of Matter': 'Thermal-Properties-Of-Matter',
+    'Units And Measurements': 'Units-And-Measurements',
+    'Alternating Current': 'Alternating-Current',
+    'Current Electricity': 'Current-Electricity',
+    'Electric Charges And Fields': 'Electric-Charges-And-Fields',
+    'Electromagnetic Waves': 'Electromagnetic-Waves',
+    'Electrostatic Potential And Capacitance': 'Electrostatic-Potential-And-Capacitance',
+    'Magnetism And Matter': 'Magnetism-And-Matter',
+    'Moving Charges And Magnetism': 'Moving-Charges-And-Magnetism',
+    'Ray Optics': 'Ray-Optics',
+    'Semiconductor Electronics': 'SemiConductor-Electronics',
+    'Wave Optics': 'Wave Optics',
+    'Mechanical Properties Of Fluids': 'Mechanical-Properties-Of-Fluids',
+    'Mechanical Properties Of Solids': 'Mechanical-Properties-Of-Solids',
+    # ... add any other mismatched names from your skips
+    # (rest of your original mapping here)
     'Some Basic Concepts Of Chemistry': 'Some Basic Concepts Of Chemistry',
     'Structure Of Atom': 'Structure Of Atom',
     'Classification Of Elements And Periodicity': 'Classification Of Elements And Periodicity',
@@ -125,7 +146,7 @@ def get_text_from_pdf_with_caching(pdf_path: str, subject: str) -> str:
 
     log("    - No cache found. Converting PDF to images and running OCR...")
     try:
-        images = convert_from_path(pdf_path, dpi=400 if 'physics' in subject.lower() else 300, poppler_path=POPPLER_PATH)  # Higher DPI for Physics
+        images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
         full_text = ""
         config = '--psm 3'  # Default
         if 'physics' in subject.lower():
