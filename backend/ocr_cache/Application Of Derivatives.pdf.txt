@@ -1,0 +1,1959 @@
+12079CHO5
+
+APPLICATION OF
+
+DERIVATIVES
+
+¢ With the Calculus as a key, Mathematics can be successfully applied
+to the explanation of the course of Nature.” — WHITEHEAD
+
+6.1 Introduction
+
+In Chapter 5, we have learnt how to find derivative of composite functions, inverse
+trigonometric functions, implicit functions, exponential functions and logarithmic functions.
+In this chapter, we will study applications of the derivative in various disciplines, e.g., in
+engineering, science, social science, and many other fields. For instance, we will learn
+how the derivative can be used (i) to determine rate of change of quantities, (11) to find
+the equations of tangent and normal to a curve at a point, (i11) to find turning points on
+the graph of a function which in turn will help us to locate points at which largest or
+smallest value (locally) ofa function occurs. We will also use derivative to find intervals
+on which a function is increasing or decreasing. Finally, we use the derivative to find
+approximate value of certain quantities.
+
+6.2 Rate of Change of Quantities
+
+Recall that by the derivative we mean the rate of change of distance s with
+
+s
+dt >
+respect to the time ¢. In a similar fashion, whenever one quantity y varies with another
+
+; ip: dy
+quantity x, satisfying some rule y = f(x), then a (or f’(x)) represents the rate of
+
+dy
+change of y with respect tox and gy (or f’(x,)) represents the rate of change
+X=XQ)
+
+of y with respect to x at x =X).
+Further, if two variables x and y are varying with respect to another variable ¢, 1.e.,
+if x= f(t) and y = g(t), then by Chain Rule
+dy dy /dx dx
+
+_ F t0
+dk dtl dt’? a
+
+Reprint 2025-26
+
+148 MATHEMATICS
+
+Thus, the rate of change of y with respect to x can be calculated using the rate of
+change of y and that of x both with respect to t.
+
+Let us consider some examples.
+Example 1 Find the rate of change of the area of a circle per second with respect to
+its radius r when r= 5 cm.
+Solution The area A of a circle with radius r is given by A= m7”. Therefore, the rate
+d
+
+dA
+of change of the area A with respect to its radius 7 is given by Tr = ma r°)=2nr,
+r
+
+dA
+When 7 = 5 cm, Tr =107. Thus, the area of the circle is changing at the rate of
+
+10x cm/?/s.
+
+Example 2 The volume of a cube is increasing at a rate of 9 cubic centimetres per
+second. How fast is the surface area increasing when the length of an edge is 10
+centimetres ?
+
+Solution Let x be the length of a side, V be the volume and S be the surface area of
+the cube. Then, V = x? and S = 6x’, where x is a function of time f.
+
+Now a 9cm?/s (Given)
+Theref p= BiH) = F(x). By Chain Rul
+erefore a di x dt (By Chain Rule)
+= 3x° a
+dt
+dx 3 ,
+or dx . Cl)
+dS dd, dad. a
+Now i HM a) va x") 7 (By Chain Rule)
+3) 36
+— 12x: = :
+(=) x (Using (1))
+dS
+Hence, when x= 10cm, a? cm’/s
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 149
+
+Example 3 A stone is dropped into a quiet lake and waves move in circles at a speed
+of 4cm per second. At the instant, when the radius of the circular wave is 10 cm, how
+fast is the enclosed area increasing?
+
+Solution The area A of a circle with radius r is given by A= m7’. Therefore, the rate
+of change of area A with respect to time f¢ is
+
+GR 4 py a np?) nag p & By Chain Rul
+
+dt dt dr dt" dt (By Chain Rule)
+dr
+
+It is given that a 4cm/s
+
+dA
+Therefore, when r = 10 cm, a = 27 (10) (4) = 802
+Thus, the enclosed area is increasing at the rate of 802 cm’/s, when r = 10 cm.
+
+«a Note ak is positive if y increases as x increases and is negative if y decreases
+
+as x increases.
+
+Example 4 The length x of a rectangle is decreasing at the rate of 3 cm/minute and
+the width y is increasing at the rate of 2cm/minute. When x =10cm and y = 6cm, find
+the rates of change of (a) the perimeter and (b) the area of the rectangle.
+
+Solution Since the length x is decreasing and the width y is increasing with respect to
+time, we have
+
+a = 3cm/min and wy = 2 cm/min
+dt dt
+(a) The perimeter P of a rectangle is given by
+P=2(x+y)
+dP dx dy .
+=2 + =2( 34+2)= 2cm/min
+Therefore di it dt ( )
+(b) The area A of the rectangle is given by
+A=x.y
+dA dx dy
+Therefore = ytx-
+
+dsodt dt
+=—3(6)+10(2) (asx = 10cm and y= 6 cm)
+= 2 cm?/min
+
+Reprint 2025-26
+
+150 MATHEMATICS
+
+Example 5 The total cost C(x) in Rupees, associated with the production of x units of
+an item is given by
+C(x) = 0.005 x° — 0.02 x? + 30x + 5000
+Find the marginal cost when 3 units are produced, where by marginal cost we
+mean the instantaneous rate of change of total cost at any level of output.
+
+Solution Since marginal cost is the rate of change of total cost with respect to the
+output, we have
+
+dC
+Marginal cost (MC) = = 0.005(3x") 0.02(2x) +30
+
+When x= 3, MC = 0.015(3”) —0.04(3) + 30
+= 0.135 — 0.12 + 30 = 30.015
+Hence, the required marginal cost is ¥ 30.02 (nearly).
+
+Example 6 The total revenue in Rupees received from the sale of x units of a product
+is given by R(x) = 3x? + 36x + 5. Find the marginal revenue, when x = 5, where by
+marginal revenue we mean the rate of change of total revenue with respect to the
+number of items sold at an instant.
+
+Solution Since marginal revenue is the rate of change of total revenue with respect to
+the number of units sold, we have
+
+. dR
+Marginal Revenue (MR) = -z 6x +36
+
+When x = 5, MR = 6(5) + 36 = 66
+Hence, the required marginal revenue is & 66.
+
+EXERCISE 6.1
+
+1. Find the rate of change of the area of a circle with respect to its radius r when
+(a) r=3cm (b) r=4cm
+
+2. The volume of a cube is increasing at the rate of 8 cm*/s. How fast is the
+surface area increasing when the length of an edge is 12 cm?
+
+3. The radius of a circle is increasing uniformly at the rate of 3 cm/s. Find the rate
+at which the area of the circle is increasing when the radius is 10 cm.
+
+4. An edge of a variable cube is increasing at the rate of 3 cm/s. How fast is the
+volume of the cube increasing when the edge is 10 cm long?
+
+5. A stone is dropped into a quiet lake and waves move in circles at the speed of
+5 cm/s. At the instant when the radius of the circular wave is 8 cm, how fast is
+the enclosed area increasing?
+
+Reprint 2025-26
+
+10.
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+16.
+
+APPLICATION OF DERIVATIVES 151
+
+The radius of a circle is increasing at the rate of 0.7 cm/s. What is the rate of
+increase of its circumference?
+
+The length x of a rectangle is decreasing at the rate of 5 cm/minute and the
+width y is increasing at the rate of 4 cm/minute. When x = 8cm and y= 6cm, find
+the rates of change of (a) the perimeter, and (b) the area of the rectangle.
+
+A balloon, which always remains spherical on inflation, is being inflated by pumping
+in 900 cubic centimetres of gas per second. Find the rate at which the radius of
+the balloon increases when the radius is 15 cm.
+
+A balloon, which always remains spherical has a variable radius. Find the rate at
+which its volume is increasing with the radius when the later is 10 cm.
+
+A ladder 5 m long is leaning against a wall. The bottom of the ladder is pulled
+along the ground, away from the wall, at the rate of 2cm/s. How fast is its height
+on the wall decreasing when the foot of the ladder is 4 m away from the wall ?
+A particle moves along the curve 6y = x* +2. Find the points on the curve at
+which the y-coordinate is changing 8 times as fast as the x-coordinate.
+
+1
+The radius of an air bubble is increasing at the rate of 5 cm/s. At what rate is the
+
+volume of the bubble increasing when the radius is 1 cm?
+
+3
+A balloon, which always remains spherical, has a variable diameter 5 (2x+l1),
+
+Find the rate of change of its volume with respect to x.
+Sand is pouring from a pipe at the rate of 12 cm*/s. The falling sand forms a cone
+on the ground in such a way that the height of the cone is always one-sixth of the
+radius of the base. How fast is the height of the sand cone increasing when the
+height is 4 cm?
+The total cost C(x) in Rupees associated with the production of x units of an
+item is given by
+
+C (x) = 0.007x3 — 0.003x? + 15x + 4000.
+Find the marginal cost when 17 units are produced.
+The total revenue in Rupees received from the sale of x units of a product is
+given by
+
+R (x) = 13x? + 26x + 15.
+
+Find the marginal revenue when x = 7.
+
+Choose the correct answer for questions 17 and 18.
+
+17.
+
+The rate of change of the area of a circle with respect to its radius r at r = 6 cm is
+(A) 10x (B) 12x (C) 8x (D) lln
+
+Reprint 2025-26
+
+152 MATHEMATICS
+
+18. The total revenue in Rupees received from the sale of x units of a product is
+
+given by
+R(x) = 3x° + 36x + 5. The marginal revenue, when x = 15 is
+(A) 116 (B) 96 (C) 90 (D) 126
+
+6.3 Increasing and Decreasing Functions
+In this section, we will use differentiation to find out whether a function is increasing or
+
+decreasing or none.
+Consider the function f given by f(x) = x’, x € R. The graph of this function is a
+parabola as given in Fig 6.1.
+
+Values left to origin Values right to origin
+
+f @&)
+: height of
+: graph at x,
+
+as we move from left to right, the as we move from left to right, the
+height of the graph decreases Y height of the graph increases
+Fig 6.1
+
+First consider the graph (Fig 6.1) to the right of the origin. Observe that as we
+move from left to right along the graph, the height of the graph continuously increases.
+For this reason, the function is said to be increasing for the real numbers x > 0.
+
+Now consider the graph to the left of the origin and observe here that as we move
+from left to right along the graph, the height of the graph continuously decreases.
+Consequently, the function is said to be decreasing for the real numbers x <0.
+
+We shall now give the following analytical definitions for a function which is
+increasing or decreasing on an interval.
+Definition 1 Let I be an interval contained in the domain of a real valued function f-
+Then fis said to be
+(i) increasing on I if x, <x, in] > f(x,) < f(x,) for all x,, x, € L
+(ii) decreasing on I, ifx, <x, inI > f(x,) > f(x,) for all x,, x, € I.
+
+(iii) constant on I, if f(x) = c for all x € I, where c is a constant.
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 153
+
+(iv) strictly increasing on I if x, < x, inI > f(x,) < f(x,) for all x,, x, € I.
+(v) strictly decreasing on I if x, < x, in I > f(x,) > f(x,) for all x,, x, € I.
+For graphical representation of such functions see Fig 6.2.
+
+Y Y Y
+ee
+Xz X X'<p X Xp x
+y'
+Y' Y’
+Strictly Increasing function Strictly Decreasing function Neither Increasing nor
+(i) (ii) Decreasing function
+(iii)
+Fig 6.2
+
+We shall now define when a function is increasing or decreasing at a point.
+
+Definition 2 Let x, be a point in the domain of definition of a real valued function /-
+Then / is said to be increasing, decreasing at x, if there exists an open interval I
+containing x, such that fis increasing, decreasing, respectively, in I.
+
+Let us clarify this definition for the case of increasing function.
+
+Example 7 Show that the function given by f(x) = 7x — 3 is increasing on R.
+
+Solution Let x, and x, be any two numbers in R. Then
+X, <x, => Tx, < 7x, => 7x, -3 < Tx, -3 > f(x,) < f(x)
+Thus, by Definition 1, it follows that fis strictly increasing on R.
+
+We shall now give the first derivative test for increasing and decreasing functions.
+The proof of this test requires the Mean Value Theorem studied in Chapter 5.
+
+Theorem 1 Let f be continuous on [a, 6] and differentiable on the open interval
+(a,b). Then
+
+(a) / is increasing in [a,b] if f’(x) > 0 for each x € (a, b)
+(b) f is decreasing in [a,b] if f'(x) < 0 for each x € (a, 5)
+(c) f is a constant function in [a,b] if f(x) = 0 for each x € (a, 5)
+
+Reprint 2025-26
+
+154 MATHEMATICS
+
+Proof (a) Let x,, x, € [a, b] be such that x, < x,.
+
+Then, by Mean Value Theorem (Theorem 8 in Chapter 5), there exists a point c
+between x, and x, such that
+
+f(%) —f&,) = fC) (&, — *))
+i.e. I (x,) —f(x,) > 0 (as f'(c) > 0 (given))
+Le. F(x.) > f(x,)
+Thus, we have
+X, <x, => f(x,)< f(x), forall x,,x, €[a,b]
+Hence, f is an increasing function in [a,}].
+
+The proofs of part (b) and (c) are similar. It is left as an exercise to the reader.
+
+Remarks
+
+There is a more generalised theorem, which states that if f¢(x) > 0 for x in an interval
+excluding the end points and fis continuous in the interval, then fis increasing. Similarly,
+if f¢(x) < 0 for x in an interval excluding the end points and fis continuous in the
+interval, then fis decreasing.
+
+Example 8 Show that the function f given by
+f(x) = - 3x? + 4x,x ER
+is increasing on R.
+Solution Note that
+S'(x) = 3x? — 6x + 4
+
+=3(0°-2x+1)+1
+
+= 3(x—1)?+ 1 > 0, in every interval of R
+Therefore, the function fis increasing on R.
+
+Example 9 Prove that the function given by f(x) = cos x is
+(a) decreasing in (0, 7)
+(b) increasing in (z, 27), and
+
+(c) neither increasing nor decreasing in (0, 27).
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 155
+
+Solution Note that f’(x) = — sin x
+
+(a) Since for each x € (0, 7), sin x > 0, we have f'(x) < 0 and so fis decreasing in
+(0, 7).
+
+(b) Since for each x € (x, 27), sin x <0, we have f"(x) > 0 and so fis increasing in
+(1, 27).
+
+(c) Clearly by (a) and (b) above, f is neither increasing nor decreasing in (0, 27).
+
+Example 10 Find the intervals in which the function f given by f(x) = x? — 4x + 6 is
+
+(a) increasing (b) decreasing
+Solution We have <
+—oo 2 +00
+I(x) =x -4x+6
+or f(x) = 2x-4 Fig 6.3
+
+Therefore, f’(x) = 0 gives x = 2. Now the point x = 2 divides the real line into two
+disjoint intervals namely, (— ©, 2) and (2, 0) (Fig 6.3). In the interval (— ©, 2), f"(x) = 2x
+—-4<0.
+
+Therefore, fis decreasing in this interval. Also, in the interval (2,°), f (x)>0
+and so the function f is increasing in this interval.
+
+Example 11 Find the intervals in which the function fgiven by f(x) = 4x3 — 6x? — 72x
++ 30 is (a) increasing (b) decreasing.
+
+Solution We have
+
+f(x) = 40 - 6x? — 72x + 30
+or I(x) = 12x — 12x — 72
+= 12(x° —x- 6)
+= 127-3) (~+2)
+Therefore, f"(x) = 0 gives x =— 2,3. The gq } |} SEs
+points x =— 2 and x =3 divides the real line into ~ 2 3 +00
+three disjoint intervals, namely, (— ,—2), (— 2, 3) Fig 6.4
+
+and (3, 0).
+
+Reprint 2025-26
+
+156 MATHEMATICS
+
+In the intervals (— «, — 2) and (3, «), f"(x) is positive while in the interval (— 2, 3),
+f'(x) is negative. Consequently, the function fis increasing in the intervals
+(— 2%, — 2) and (3, «) while the function is decreasing in the interval (— 2, 3). However,
+fis neither increasing nor decreasing in R.
+
+Sign of f’(x) Nature of function f
+a ;
+
+x
+Example 12 Find intervals in which the function given by f(x) =sin3x, x 9, 5 is
+
+(a) increasing (b) decreasing.
+
+Solution We have
+f(x) = sin 3x
+or f'(&) = 3cos 3x
+
+um 30 #
+Therefore, /’(x) =0 gives cos 3x = 0 which in turn gives 3x = 7D (asx 0, >
+
+Lo. 3m # # ; eo, ; ia
+implies 3x € 0, = ). So x= ra and 3° The point x= ra divides the interval 0,5
+
+into two disjoint intervals c <) and 72 T T
+J 6 672° 0 6 2
+Fig 6.5
+
+Tl
+Now, f (x)>0 for all re| 02] as 0<x< Fa 0s3xr<5 and f (x) <0 for
+
+[z *) Tt tT 3n
+all X€| —,-] as —<x<—>-—<3x< .
+6 2 6 2 2 2
+
+. . . . 1 . . Tt Tt
+Therefore, fis increasing in c 4 and decreasing in (4.2),
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 157
+
+x
+Also, the given function is continuous at x =0 and * = 6: Therefore, by Theorem 1,
+
+NH
+
+# #
+fis increasing on OF and decreasing on 6°
+
+Example 13 Find the intervals in which the function f given by
+
+f(x) =sinx + cos x,0<x<2n
+is increasing or decreasing.
+
+Solution We have
+
+fix) = sin x + cos x,
+
+or f'(«) =cos x — sin x
+oo, > # S#
+Now f (x)=0 gives sin x = cos x which gives that ¥= 4-4 38 0" x" 2%
+The points ¥ = q and x= 7 divide the interval [0, 27] into three disjoint intervals,
+<—_t—— +>
+wT # S# 50 0 = St 20
+0,— —-., — 2
+namely | *), ray and (=, x], 4 4
+Fig 6.6
+' . T 5a
+Note that f'(x)>0 if ve| 02} u[ 20)
+. Tt 5m
+or f is increasing in the intervals OF and an
+# 54
+x)<Oif x —,—
+Also f (x) 4° 4
+# 54
+or f is decreasing in 4° 4.
+
+Reprint 2025-26
+
+158
+
+MATHEMATICS
+
+Sign of —— (x) Nature of function
+
+f is increasing
+
+f 1s decreasing
+
+f is increasing
+
+EXERCISE 6.2
+
+Show that the function given by f(x) = 3x + 17 is increasing on R.
+
+Show that the function given by f(x) = e” is increasing on R.
+Show that the function given by f(x) = sin x is
+
+™ ™
+(a) increasing in fo 4 (b) decreasing in (Ex)
+(c) neither increasing nor decreasing in (0, 71)
+Find the intervals in which the function fgiven by f(x) = 2x* — 3x is
+(a) increasing (b) decreasing
+Find the intervals in which the function f given by f(x) = 2x? — 3x° — 36x +7 is
+(a) increasing (b) decreasing
+
+Find the intervals in which the following functions are strictly increasing or
+decreasing:
+
+(a) x°+2x-5 (b) 10 — 6x — 2x°
+(c) —2x3 — 9x? — 12x + 1 (d) 6-9x-x
+(ec) («+ 1P (~-3/
+
+Show that y=log(1+ x)
+
+,x >-— 1, is an increasing function of x
+throughout its domain.
+Find the values of x for which y = [x(x — 2)]’ is an increasing function.
+
+4sin
+
+Prove that y =————__ is an increasing function of in 0,2 .
+(2+cos ) 2
+
+Reprint 2025-26
+
+10.
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+16.
+
+17.
+
+18.
+19.
+
+APPLICATION OF DERIVATIVES 159
+
+Prove that the logarithmic function is increasing on (0, 0).
+
+Prove that the function f given by f(x) = x? —x + 1 is neither strictly increasing
+nor decreasing on (— 1, 1).
+
+Which of the following functions are decreasing on 05 ?
+
+(A) cos x (B) cos 2x (C) cos 3x (D) tan x
+
+On which of the following intervals is the function fgiven by f(x) = x' + sin x—1
+decreasing ?
+
+# #
+(A) (0,1) (B) rae (C) 05 (D) None of these
+
+For what values of a the function fgiven by f(x) = x* + ax + 1 is increasing on
+[1, 2]?
+Let I be any interval disjoint from [—1, 1]. Prove that the function f given by
+
+f (x) =x + — is increasing on I.
+x
+Prove that the function fgiven by f(x) = log sin x is increasing on 0.5 and
+
+decreasing on —,¥ .
+
+Nw |
+
+Prove that the function fgiven by f(x) = log |cos x| is decreasing on [oz] and
+
+mcreasing on > 27 |.
+
+Prove that the function given by f(x) = x? — 3x? + 3x — 100 is increasing in R.
+The interval in which y = x’ e* is increasing is
+(A) ( ©, 2) (B) (2,0) (C) 2%)  (D) (0,2)
+
+6.4 Maxima and Minima
+
+In this section, we will use the concept of derivatives to calculate the maximum or
+minimum values of various functions. In fact, we will find the ‘turning points’ of the
+graph of a function and thus find points at which the graph reaches its highest (or
+
+Reprint 2025-26
+
+160 MATHEMATICS
+
+lowest) locally. The knowledge of such points is very useful in sketching the graph of
+a given function. Further, we will also find the absolute maximum and absolute minimum
+of a function that are necessary for the solution of many applied problems.
+
+Let us consider the following problems that arise in day to day life.
+
+(i) The profit from a grove of orange trees is given by P(x) = ax + bx’, where a,b
+are constants and x is the number of orange trees per acre. How many trees per
+acre will maximise the profit?
+
+(ii) A ball, thrown into the air from a building 60 metres high, travels along a path
+
+2
+given by h(x) =60+ x = , where x is the horizontal distance from the building
+
+and A(x) is the height of the ball . What is the maximum height the ball will
+reach?
+
+(iii) An Apache helicopter of enemy is flying along the path given by the curve
+f(x) =x’?+7. A soldier, placed at the point (1, 2), wants to shoot the helicopter
+when it is nearest to him. What is the nearest distance?
+
+In each of the above problem, there is something common, i.e., we wish to find out
+the maximum or minimum values of the given functions. In order to tackle such problems,
+we first formally define maximum or minimum values of a function, points of local
+maxima and minima and test for determining such points.
+
+Definition 3 Let fbe a function defined on an interval I. Then
+(a) fis said to have a maximum value in I, if there exists a point c in I such that
+
+f(o)> f(x), for all x € I.
+
+The number f(c) is called the maximum value of fin I and the point c is called a
+point of maximum value of f in I.
+
+(b) f is said to have a minimum value in I, if there exists a point c in I such that
+f(c) < f(x), for all x € I.
+The number f(c), in this case, is called the minimum value of fin I and the point
+c, in this case, is called a point of minimum value of f in I.
+
+(c) fis said to have an extreme value in I if there exists a point c in I such that
+Ff (c) is either a maximum value or a minimum value of f in I.
+
+The number f(c), in this case, is called an extreme value of f in I and the point c
+is called an extreme point.
+
+Remark In Fig 6.7(a), (b) and (c), we have exhibited that graphs of certain particular
+functions help us to find maximum value and minimum value at a point. Infact, through
+graphs, we can even find maximum/minimum value of a function at a point at which it
+is not even differentiable (Example 15).
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 161
+
+Y
+
+Y (b)
+Fig 6.7
+Example 14 Find the maximum and the minimum values, if Y
+any, of the function f given by
+f(x) =x*,x ER.
+
+Solution From the graph of the given function (Fig 6.8), we
+have f(x) =0 ifx=0. Also
+f(x) 2 0, for allx € R.
+Therefore, the minimum value of f is 0 and the point of
+minimum value of fis x = 0. Further, it may be observed x’
+from the graph of the function that f has no maximum value -3-2-10} 12 3
+and hence no point of maximum value of f in R. Y’
+
+Fig 6.8
+(= Note |If we restrict the domain of fto [-2, 1] only, 8
+
+then fwill have maximum value(— 2)? = 4 at x =— 2.
+
+Example 15 Find the maximum and minimum values
+of f, if any, of the function given by f(x) =|x|,x € R.
+
+Solution From the graph of the given function
+(Fig 6.9) , note that
+
+f(x) 2 0, for allx € Rand f(x) =0 if x=0.
+Therefore, the function f has a minimum value 0
+and the point of minimum value of fis x = 0. Also, the
+
+graph clearly shows that f has no maximum value inR
+and hence no point of maximum value in R.
+
+(i) Ifwe restrict the domain of fto [—2, 1] only, then fwill have maximum value
+|—2| = 2.
+
+Reprint 2025-26
+
+162 MATHEMATICS
+
+(ii) One may note that the function fin Example 27 is not differentiable at
+| x=0. |
+
+Example 16 Find the maximum and the minimum values, if any, of the function
+
+given by
+f(x) =x, x € (0, 1).
+
+Solution The given function is an increasing (strictly) function in the given interval
+(0, 1). From the graph (Fig 6.10) of the function /, it
+seems that, it should have the minimum value at a
+point closest to 0 on its right and the maximum value
+at a point closest to 1 on its left. Are such points
+available? Of course, not. It is not possible to locate
+such points. Infact, if a point x, is closest to 0, then
+
+Y
+
+Xx
+we find —-<4% forall x) (0,1). Also, ifx, is closest
+1
+y f@) =x in (0,1)
+Fig 6.10
+
+x, +1
+
+to 1, then >, forall x, (0,1).
+
+Therefore, the given function has neither the
+maximum value nor the minimum value in the interval (0,1).
+
+Remark The reader may observe that in Example 16, if we include the points 0 and 1
+in the domain of f, i.e., if we extend the domain of f to [0,1], then the function f has
+minimum value 0 at x =0 and maximum value | at x = 1. Infact, we have the following
+results (The proof of these results are beyond the scope of the present text)
+
+Every monotonic function assumes its maximum/minimum value at the end
+points of the domain of definition of the function.
+
+A more general result is
+
+Every continuous function on a closed interval has a maximum and a minimum
+value.
+
+By a monotonic function f in an interval I, we mean that f is either
+
+increasing in I or decreasing in I.
+
+Maximum and minimum values of a function defined on a closed interval will be
+discussed later in this section.
+
+Let us now examine the graph of a function as shown in Fig 6.11. Observe that at
+points A, B, C and D on the graph, the function changes its nature from decreasing to
+increasing or vice-versa. These points may be called turning points of the given
+function. Further, observe that at turning points, the graph has either a little hill or a little
+valley. Roughly speaking, the function has minimum value in some neighbourhood
+(interval) of each of the points A and C which are at the bottom of their respective
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 163
+
+Fig 6.11
+
+valleys. Similarly, the function has maximum value in some neighbourhood of points B
+
+and D which are at the top of their respective hills. For this reason, the points A and C
+
+may be regarded as points of local minimum value (or relative minimum value) and
+
+points B and D may be regarded as points of local maximum value (or relative maximum
+
+value) for the function. The /ocal maximum value and local minimum value of the
+
+function are referred to as /ocal maxima and local minima, respectively, of the function.
+We now formally give the following definition
+
+Definition 4 Let f be areal valued function and let c be an interior point in the domain
+of f. Then
+
+(a) cis called a point of local maxima if there is an h > 0 such that
+f(c) = f(x), for all x in (c-—h,c+h),x¥c
+The value f(c) is called the local maximum value of f-
+(b) cis called a point of local minima if there is an h > 0 such that
+f(c) <f(), for all x in (c-—h, ce +h)
+The value f(c) is called the Jocal minimum value of f .
+
+Geometrically, the above definition states that if x =c is a point of local maxima of f,
+then the graph of faround c will be as shown in Fig 6.12(a). Note that the function f is
+increasing (i.e., f"(x) > 0) in the interval (c — h, c) and decreasing (i.e., f’(x) < 0) in the
+interval (c, c + A).
+
+This suggests that f’(c) must be zero.
+
+Y f'(=0
+
+Reprint 2025-26
+
+164 MATHEMATICS
+
+Similarly, ifc is a point of local minima off, then the graph of faround c will be as
+shown in Fig 6.14(b). Here f is decreasing (i.e., f’(x) < 0) in the interval (c — h, c) and
+increasing (i.e., f’(x) > 0) in the interval (c, c + h). This again suggest that f’(c) must
+be zero.
+
+The above discussion lead us to the following theorem (without proof).
+Theorem 2 Let f be a function defined on an open interval I. Suppose c € I be any
+
+point. If f has a local maxima or a local minima at x = c, then either f'(c) = 0 or f is not
+differentiable at c.
+
+Y
+
+Remark The converse of above theorem need not
+be true, that is, a point at which the derivative vanishes
+need not be a point of local maxima or local minima.
+For example, if f(x) = x°, then f'(x) = 3x* and so
+f'(0) =0. But 0 is neither a point of local maxima nor
+a point of local minima (Fig 6.13).
+
+A point c in the domain of a function fat
+which either f’(c) = 0 or fis not differentiable is
+called a critical point of f: Note that iffis continuous
+
+at c and f’(c) = 0, then there exists an > 0 such
+that f is differentiable in the interval .
+(c _ h, ct h). Fig 6.13
+
+We shall now give a working rule for finding points of local maxima or points of
+local minima using only the first order derivatives.
+
+Theorem 3 (First Derivative Test) Let fbe a function defined on an open interval I.
+Let fbe continuous at a critical point c in I. Then
+
+(i) Iff'(x) changes sign from positive to negative as x increases through c, i.e., if
+f'(x) > 0 at every point sufficiently close to and to the left of c, and f’(x) < 0 at
+every point sufficiently close to and to the right of c, then c is a point of local
+maxima.
+
+(iu) Iff'() changes sign from negative to positive as x increases through c, 1.e., if
+f'(x) <0 at every point sufficiently close to and to the left of c, and f’(x) > 0 at
+every point sufficiently close to and to the right of c, then c is a point of local
+minima.
+
+(iti) Iff’(x) does not change sign as x increases through c, then c is neither a point of
+local maxima nor a point of local minima. Infact, such a point is called point of
+inflection (Fig 6.13).
+
+Reprint 2025-26
+
+x
+
+point of inflection
+
+APPLICATION OF DERIVATIVES 165
+
+Ifc is a point of local maxima of /, then f(c) is a local maximum value of
+
+f Similarly, if c is a point of local minima of f, then f(c) is a local minimum value of f.
+
+Figures 6.13 and 6.14, geometrically explain Theorem 3.
+
+point of
+local maxima
+Y point of non differentiability
+S'(¢,)=0 and point of local maxima
+iN) eS
+ei
+
+point of non differentiability
+and point of local minima
+
+x
+
+Fig 6.14
+
+Example 17 Find all points of local maxima and local minima of the function f
+given by
+f(x) =x = 3x + 3.
+
+Solution We have
+
+f(x) = - 3x +3
+or f'(x) =3X -3 =3(«-1) a+)
+or f'(x) =O atx=1 andx=-1
+Thus, x =+ | are the only critical points which could possibly be the points of local
+maxima and/or local minima of f. Let us first examine the point x= 1.
+
+Note that for values close to | and to the right of 1, f’(x) > 0 and for values close
+to 1 and to the left of 1, f’(x) < 0. Therefore, by first derivative test, x = 1 is a point
+of local minima and local minimum value is f(1) = 1. In the case of x = -1, note that
+f'(x) > 0, for values close to and to the left of —1 and f’(x) < 0, for values close to and
+to the right of — 1. Therefore, by first derivative test, x =— 1 is a point of local maxima
+and local maximum value is f(-1) =S.
+
+to the right (say 1.1 etc.)
+
+Close to 1 ( the left (say 0.9 etc.)
+
+to the right (say 0.9 etc.)
+to the left (say 1.1 etc.)
+
+Close to —1
+
+Reprint 2025-26
+
+166 MATHEMATICS
+
+Example 18 Find all the points of local maxima and local minima of the function f
+given by
+
+F(x) = 2x3 — 6x? + 6x +5.
+Solution We have
+
+F(x) = 2x3 — 6x? + 6x + 5
+
+or S'(x) = 6x? — 12x +6=6(x- 1)’
+or f'(x) =0 at x=1
+
+Thus, x= | is the only critical point of £. We shall now examine this point for local
+maxima and/or local minima off: Observe that f’(x) = 0, for all x € R and in particular
+f'(x) > 0, for values close to 1 and to the left and to the right of 1. Therefore, by first
+derivative test, the point x = | is neither a point of local maxima nor a point of local
+minima. Hence x= | is a point of inflexion.
+
+Remark One may note that since f’(x), in Example 30, never changes its sign on R,
+graph of fhas no turning points and hence no point of local maxima or local minima.
+
+We shall now give another test to examine local maxima and local minima of a
+given function. This test is often easier to apply than the first derivative test.
+
+Theorem 4 (Second Derivative Test) Let f be a function defined on an interval I
+and c € I. Let f be twice differentiable at c. Then
+
+(i) x=c isa point of local maxima if f’(c) = 0 and f"(c) < 0
+The value f(c) is local maximum value of /.
+(ii) x=c isa point of local minima if f (c)=0 and f"(c)>0
+In this case, f(c) is local minimum value of /.
+(it) The test fails if f’(c) = 0 and f"(c) = 0.
+In this case, we go back to the first derivative test and find whether c is a point of
+local maxima, local minima or a point of inflexion.
+
+As f is twice differentiable at c, we mean
+
+second order derivative of fexists at c.
+
+Example 19 Find local minimum value of the function f
+given by f(x) =3+|x|,x eR.
+
+Solution Note that the given function is not differentiable x
+at x =0. So, second derivative test fails. Let us try first
+derivative test. Note that 0 is a critical point of f. Now to
+the left of 0, f(x) = 3 — x and so f'(x) =— 1 <0. Also to
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 167
+
+the right of 0, f(x) =3 +x and so f’(x) = 1> 0. Therefore, by first derivative test, x =
+0 is a point of local minima of f and local minimum value of f is f(0) =3.
+Example 20 Find local maximum and local minimum values of the function f given by
+
+f (x) = 3x4 + 493 — 12x? + 12
+Solution We have
+
+Ff (x) = 3x4 + 4x3 — 12x? + 12
+
+or F'(x) = 12x73 + 12x? — 24x = 12x (x — 1) (x + 2)
+or f'(«) =0 at x=0,x=1 andx=-—2.
+Now f(x) = 36x° + 24x — 24 = 12 (3x° + 2x — 2)
+f (0) = 24<0
+or f () =36>0
+f (2) =72>0
+
+Therefore, by second derivative test, x = 0 is a point of local maxima and local
+maximum value of fat x = 0 is f(0) = 12 while x = 1 and x =— 2 are the points of local
+minima and local minimum values of fat x =— 1 and —2 are f(1) = 7 and f(—2) =-20,
+respectively.
+
+Example 21 Find all the points of local maxima and local minima of the function f
+given by
+
+F(x) = 2x3 — 6x? + 6x +5.
+
+Solution We have
+
+f(x) = 2x7 — 6x? + 6x +5
+
+oe = 6x? —12x+6=6(x—-1)
+or
+
+f"(x) =12(x-1)
+Now f'(x) = 0 gives x =1. Also f"(1) = 0. Therefore, the second derivative test
+fails in this case. So, we shall go back to the first derivative test.
+
+We have already seen (Example 18) that, using first derivative test, x =1 is neither
+a point of local maxima nor a point of local minima and so it is a point of inflexion.
+
+Example 22 Find two positive numbers whose sum is 15 and the sum of whose
+squares is minimum.
+
+Solution Let one of the numbers be x. Then the other number is (15 — x). Let S(x)
+denote the sum of the squares of these numbers. Then
+
+Reprint 2025-26
+
+168 MATHEMATICS
+
+S(x) = x? + (15 — x) = 2x? — 30x + 225
+S'(x) = 4x —30
+S"(x)=4
+
+15 15 oo.
+Now S'(x)=0 gives x = ry .Also 8’ (=) =4>0. Therefore, by second derivative
+
+test, x= ry is the point of local minima of S. Hence the sum of squares of numbers is
+
+minimum when the numbers are ~ and 15 == ~ .
+
+Remark Proceeding as in Example 34 one may prove that the two positive numbers,
+whose sum is & and the sum of whose squares is minimum, are = and . .
+
+Example 23 Find the shortest distance of the point (0, c) from the parabola y = x’,
+where : <cs5.
+
+Solution Let (h, &) be any point on the parabola y = x’. Let D be the required distance
+between (A, k) and (0, c). Then
+
+D=/(A-0) +(k=c)? =Jh? +(k-cy .. (1)
+
+Since (A, k) lies on the parabola y = x°, we have k = h’. So (1) gives
+
+D=D(k) = Jk +(k-cy
+
+Dib) 1+2(k -—c)
+or =
+2k +(k—cy
+2c 1
+Now D'(k) = 0 gives k = a
+2c 1 .
+
+Observe that when k < , then 2(k c)+1<0,ie., D'(k)<0. Also when
+
+2c 1 or ae 2c 1
+k> > then D'(k) > 0. So, by first derivative test, D (4) is minimum at k =
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 169
+
+Hence, the required shortest distance is given by
+
+o( 26x) = Pests (2 a _V4e=1
+
+2 2 2 2
+
+The reader may note that in Example 35, we have used first derivative
+test instead of the second derivative test as the former is easy and short.
+
+Example 24 Let AP and BQ be two vertical poles at Q
+points A and B, respectively. If AP = 16 m, BQ =22m
+
+and AB = 20 m, then find the distance of a point R on P
+
+AB from the point A such that RP? + RQ? is minimum. E
+=I nN
+
+Solution Let R be a point on AB such that AR =x m. =
+
+Then RB = (20 — x) m (as AB = 20 m). From Fig 6.16,
+
+we have A Sm R—Gp-m -
+
+RP? = AR? + AP? 20m
+and RQ’ = RB? + BQ? Fig 6.16
+Therefore RP? + RQ? = AR? + AP? + RB? + BQ?
+
+= x? + (16)? + (20 — x) + (22)
+= 2x*~ 40x + 1140
+Let S = S(x) = RP? + RQ? = 2x? — 40x + 1140.
+Therefore S'(x) = 4x — 40.
+Now S'(x) = 0 gives x = 10. Also S"(x) = 4 > 0, for all x and so S"(10) > 0.
+Therefore, by second derivative test, x = 10 is the point of local minima of S. Thus, the
+distance of R from A on AB is AR = x =10 m.
+
+Example 25 If length of three sides of a trapezium other than base are equal to 10cm,
+then find the area of the trapezium when it is maximum.
+
+Solution The required trapezium is as given in Fig 6.17. Draw perpendiculars DP and
+
+D 10 cm C
+y O
+‘ ©
+@
+A xem P 10 cm Q xcm B
+Fig 6.17
+
+Reprint 2025-26
+
+170 MATHEMATICS
+
+CQ on AB. Let AP = x cm. Note that AAPD ~ ABQC. Therefore, QB = x cm. Also, by
+Pythagoras theorem, DP = QC = ,/100 — x” . Let A be the area of the trapezium. Then
+
+1
+A=A(x) = 5 (sum of parallel sides) (height)
+= : (2x +10+ 10)(./100 —x° )
+
+= (x +10)(J100—x2)
+
+an (—2x) ( 2)
+A'(x) = (x +10) =~ +|100-
+. WEE 5 100 — x? °
+
+~2x* -10x +100
+
+100 — x?
+
+Now A'(x) = 0 gives 2x? + 10x— 100 = 0, i.e., x =5 and x=-10.
+Since x represents distance, it can not be negative.
+So, x = 5. Now
+
+—2x)
+100 — x? (—4x —10) — (-2x? ~10x +100) <2) _
+2100 — x?
+
+100 = x*
+2x° - 300x —1000 ae
+= 3 (on simplification)
+(100 — x7)?
+2(5)° 300(5) 1000 2250 30
+or A"(5) = ©) ©) = =
+
+= = <0
+3
+5 75V75  V75
+(100 (5)°)?
+Thus, area of trapezium is maximum at x = 5 and the area is given by
+A(5) = (5+10),/100 (5)? =1575 = 75¥/3 em?
+
+Example 26 Prove that the radius of the right circular cylinder of greatest curved
+surface area which can be inscribed in a given cone is half of that of the cone.
+
+Solution Let OC =r be the radius of the cone and OA = A be its height. Let a cylinder
+with radius OE = x inscribed in the given cone (Fig 6.18). The height QE of the cylinder
+is given by
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 171
+
+eae ww AQEC ~ AAOC r
+OA. OC (since AQEC ~ )
+QE r-x
+or — =
+h r
+h(r —x) w :
+Let S be the curved surface area of the given any
+cylinder. Then B -— | ——~] c
+2nxh(r- 2h DY —€
+S =S@)-— “ ) _ ™ (rx 3x")
+
+$'(x) = 2m 2)
+or r
+—Arth
+
+r
+
+S"(x)=
+
+r r
+Now S'(x) = 0 gives x =F" Since S”(x) < 0 for all x, s(=| <0.So x “5 isa
+
+point of maxima of S. Hence, the radius of the cylinder of greatest curved surface area
+which can be inscribed in a given cone is half of that of the cone.
+
+6.4.1 Maximum and Minimum Values of a Function in a Closed Interval
+Let us consider a function f given by
+
+f(x) =x+2,x € (0, 1)
+Observe that the function is continuous on (0, 1) and neither has a maximum value
+
+nor has a minimum value. Further, we may note that the function even has neither a
+local maximum value nor a local minimum value.
+
+However, if we extend the domain of f to the closed interval [0, 1], then fstill may
+not have a local maximum (minimum) values but it certainly does have maximum value
+3 = f(1) and minimum value 2 = f(0). The maximum value 3 of fat x = | is called
+absolute maximum value (global maximum or greatest value) of f on the interval
+[0, 1]. Similarly, the minimum value 2 of f at x =0 is called the absolute minimum
+value (global minimum or least value) of f on [0, 1].
+
+Consider the graph given in Fig 6.19 of a continuous function defined on a closed
+interval [a, d]. Observe that the function f has a local minima at x = b and local
+
+Reprint 2025-26
+
+172 MATHEMATICS
+
+Y
+
+Fig 6.19
+
+minimum value is (6). The function also has a local maxima at x = c and local maximum
+value is f(c).
+
+Also from the graph, it is evident that f has absolute maximum value f(a) and
+absolute minimum value f(d). Further note that the absolute maximum (minimum)
+value of f is different from local maximum (minimum) value of f-.
+
+We will now state two results (without proof) regarding absolute maximum and
+absolute minimum values of a function on a closed interval I.
+
+Theorem 5 Let f be a continuous function on an interval I = [a, b]. Then f has the
+absolute maximum value and / attains it at least once in I. Also, f has the absolute
+minimum value and attains it at least once in I.
+
+Theorem 6 Let f be a differentiable function on a closed interval I and let c be any
+interior point of I. Then
+
+(i) f'(c) = 01if fattains its absolute maximum value at c.
+(ii) f’(c) =0if fattains its absolute minimum value at c.
+
+In view of the above results, we have the following working rule for finding absolute
+maximum and/or absolute minimum values of a function in a given closed interval
+[a, 5].
+
+Working Rule
+
+Step 1: Find all critical points of f in the interval, i.e., find points x where either
+f (x)=0 orf is not differentiable.
+
+Step 2: Take the end points of the interval.
+
+Step 3: At all these points (listed in Step 1 and 2), calculate the values of /.
+
+Step 4: Identify the maximum and minimum values of f out of the values calculated in
+Step 3. This maximum value will be the absolute maximum (greatest) value of
+f and the minimum value will be the absolute minimum (least) value of /.
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 173
+
+Example 27 Find the absolute maximum and minimum values of a function fgiven by
+F(x) = 2x3 — 15x? + 36x +1 on the interval [1, 5].
+Solution We have
+F(x) = 2x3 — 15x? + 36x + 1
+or S'(x) = 6x" — 30x + 36 = 6(x — 3) &*- 2)
+Note that f’(x) =0 gives x =2 andx=3.
+We shall now evaluate the value of fat these points and at the end points of the
+interval [1, 5], i.c., atx = 1,x=2, x =3 and atx=5.So
+fC) = 2(13) — 1517) + 36 (1) + 1 = 24
+Ff (2) = 2(23) — 15 (27) + 36 (2) + 1 = 29
+FB) = 2(33) — 15 (37) + 36 (3) + 1 = 28
+F (5) = 2(5%) — 15 (5?) + 36 (5) + 1 = 56
+Thus, we conclude that absolute maximum value of fon [1, 5] is 56, occurring at
+x =5, and absolute minimum value of fon [1,5] is 24 which occurs at x = 1.
+
+Example 28 Find absolute maximum and minimum values of a function f given by
+4 I
+J (x) =12x3 - 6x3, xe[-], 1]
+Solution We have
+4 1
+f(x) = 12x3 —6x3
+
+1
+
+1 2 2(8x-1)
+or f'(x) = 16x° -— =——,
+x3 x3
+
+1
+Thus, f’(x) = 0 gives x= 3° Further note that f’(x) is not defined at x = 0. So the
+critical points are x = 0 and x= 3 Now evaluating the value of fat critical points
+
+1
+x=0, 9 and at end points of the interval x =—1 and x = 1, we have
+
+fl) = 12(-1)3 —6(-1)3 =18
+f(0) = 12(0) —6(0) =0
+
+Reprint 2025-26
+
+174 MATHEMATICS
+
+1 1
+iG = io]
+f(1) = 12()3 6(1)3 =6
+
+Hence, we conclude that absolute maximum value of f is 18 that occurs at x =—1
+and absolute minimum value of fis a that occurs at X= 3:
+
+Example 29 An Apache helicopter of enemy is flying along the curve given by
+y=x’+ 7. A soldier, placed at (3, 7), wants to shoot down the helicopter when it is
+nearest to him. Find the nearest distance.
+
+Solution For each value of x, the helicopter’s position is at point (x, x? + 7).
+Therefore, the distance between the helicopter and the soldier placed at (3,7) is
+
+V(x 3 +07? +7 7) ,ie. f(x 3)? +2*.
+Let f(x) =(*- 3) + x4
+or F(x) = 2 — 3) + 497 = 2 (x — 1) (2x? + 2x + 3)
+Thus, f'(x) = 0 gives x = 1 or 2x? + 2x + 3 =0 for which there are no real roots.
+Also, there are no end points of the interval to be added to the set for which /’ is zero,
+i.e., there is only one point, namely, x = 1. The value of fat this point is given by
+fd) =(-3/+ (1)* =5. Thus, the distance between the solider and the helicopter is
+
+Vf =V5.
+Note that J5 is either a maximum value or a minimum value. Since
+Jf) = J(0-3)? +(0)* =3>V5,
+
+it follows that ./5 is the minimum value of ./f(x). Hence, ./5 is the minimum
+
+distance between the soldier and the helicopter.
+
+EXERCISE 6.3
+
+1. Find the maximum and minimum values, if any, of the following functions
+
+given by
+(i) f(x) =(x- 1) +3 (ii) f(x) = 9x? + 12x +2
+Gil) f(x) =-(@- 1) + 10 (iv) g@) =x +1
+
+Reprint 2025-26
+
+10.
+
+APPLICATION OF DERIVATIVES 175
+
+Find the maximum and minimum values, if any, of the following functions
+given by
+(i) f(@)=|x+2|-1 (i) g@)=—|x+ 1] +3
+(iti) A(x) = sin(2x) + 5 (iv) f(x) = |sin 4x + 3
+(v) A@)=x+1,x € C1, 1)
+Find the local maxima and local minima, if any, of the following functions. Find
+also the local maximum and the local minimum values, as the case may be:
+
+(i) f(x) = x° (ii) g(x) = x — 3x
+(iti) h(x) =sinx + cos.x,0<x<7
+(iv) f(x) =sinx—cosx, 0<x<2#
+
+(v) f(x) =x -— 6x7 +9x+15 (Wi) g(x) =F 45, x>0
+
+(vil) gas (vill) f(x)=xVl-x, 0<x<1
+x +2
+
+Prove that the following functions do not have maxima or minima:
+(i) f(x) = & (ii) g(x) = log x
+(iii) AQ) =xr+x+x+4+1
+Find the absolute maximum value and the absolute minimum value of the following
+functions in the given intervals:
+(i) f(x) = 23, x € [- 2, 2] (ii) f(x) =sinx + cosx,x € [0, 2]
+
+(ii fio) =4r-50", xe[ 22) (iv) f(=@ 243% £30
+
+Find the maximum profit that a company can make, if the profit function is
+given by
+P(x) = 41 — 72x — 18x?
+Find both the maximum value and the minimum value of
+3x4 — 8x3. + 12x? — 48x + 25 on the interval [0, 3].
+
+At what points in the interval [0, 271], does the function sin 2x attain its maximum
+value?
+
+What is the maximum value of the function sin x + cos x?
+
+Find the maximum value of 2x? — 24x + 107 in the interval [1, 3]. Find the
+maximum value of the same function in [—3, —1].
+
+Reprint 2025-26
+
+176
+
+11.
+
+12.
+13.
+14.
+15.
+
+16.
+
+17.
+
+18.
+
+19.
+
+20.
+
+21.
+
+22.
+
+23.
+
+24.
+
+25.
+
+26.
+
+MATHEMATICS
+
+It is given that at x = 1, the function x*— 62x’ + ax + 9 attains its maximum value,
+on the interval [0, 2]. Find the value of a.
+
+Find the maximum and minimum values of x + sin 2x on [0, 27].
+Find two numbers whose sum is 24 and whose product is as large as possible.
+Find two positive numbers x and y such that x + y = 60 and xy* is maximum.
+
+Find two positive numbers x and y such that their sum is 35 and the product x?
+is amaximum.
+
+Find two positive numbers whose sum is 16 and the sum of whose cubes is
+A square piece of tin of side 18 cm is to be made into a box without top, by
+cutting a square from each corner and folding up the flaps to form the box. What
+should be the side of the square to be cut off so that the volume of the box is the
+maximum possible.
+
+A rectangular sheet of tin 45 cm by 24 cm is to be made into a box without top,
+by cutting off square from each corner and folding up the flaps. What should be
+the side of the square to be cut off so that the volume of the box is maximum ?
+
+Show that of all the rectangles inscribed in a given fixed circle, the square has
+the maximum area.
+
+Show that the right circular cylinder of given surface and maximum volume is
+such that its height is equal to the diameter of the base.
+
+Of all the closed cylindrical cans (right circular), of a given volume of 100 cubic
+centimetres, find the dimensions of the can which has the minimum surface
+area?
+
+A wire of length 28 m is to be cut into two pieces. One of the pieces is to be
+made into a square and the other into a circle. What should be the length of the
+two pieces so that the combined area of the square and the circle is minimum?
+
+Prove that the volume of the largest cone that can be inscribed in a sphere of
+8
+radius R is 7 of the volume of the sphere.
+
+Show that the right circular cone of least curved surface and given volume has
+
+an altitude equal to V2 time the radius of the base.
+Show that the semi-vertical angle of the cone of the maximum volume and of
+
+given slant height is tan 1.
+Show that semi-vertical angle of right circular cone of given surface area and
+
+. . . 1 l
+maximum volume is sin 3 .
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 177
+
+Choose the correct answer in Questions 27 and 29.
+27. The point on the curve x’ = 2y which is nearest to the point (0, 5) is
+
+(A) (2V2,4) — (B) (2V2,0) (©) @,0) ~~ () (2,2)
+
+_ 1 x+x?.
+28. For all real values of x, the minimum value of x Is
++X4+X
+1
+(A) 0 (B) 1 (©) 3 (D) 5
+
+1
+29. The maximum value of [x(x 1 +1), 0" x"1 is
+
+ole
+
+1
+(A) (B) 5 (C) 1 (D) 0
+
+wile
+
+Miscellaneous Examples
+
+Example 30 Acar starts from a point P at time t= 0 seconds and stops at point Q. The
+distance x, in metres, covered by it, in ¢ seconds is given by
+
+Find the time taken by it to reach Q and also find distance between P and Q.
+
+Solution Let v be the velocity of the car at ¢ seconds.
+
+Now x=0 (2-4)
+
+dx
+Therefore va 4t—-P =t(4-h
+
+Thus, v = 0 gives ¢t = 0 and/or t= 4.
+
+Now v = 0 at P as well as at Q and at P, t=0. So, at Q, t= 4. Thus, the car will
+reach the point Q after 4 seconds. Also the distance travelled in 4 seconds is given by
+
+»(, 4)_,,(2)_ 32
+
+Reprint 2025-26
+
+178 MATHEMATICS
+
+Example 31 A water tank has the shape of an inverted right circular cone with its axis
+vertical and vertex lowermost. Its semi-vertical angle is tan”'(0.5). Water is poured
+into it at a constant rate of 5 cubic metre per hour. Find the rate at which the level of
+the water is rising at the instant when the depth of water in the tank is 4 m.
+
+Solution Let r, A and o be as in Fig 6.20. Then tana = ;
+
+So o, = tan! (+) ,
+h
+
+But a=tan'(0.5) (given)
+r
+or h =0.5
+h
+or r= 2
+
+Let V be the volume of the cone. Then
+
+1, 1 (hy
+~ orh= h=
+V W "(2
+
+Theref M4 < by Chain Rul
+erefore i dh 12 | di (by Chain Rule)
+Fy dh
+4 dt
+
+Now rate of change of volume, 1.e., ” =5m/handh=4m.
+t
+
+tT.» dh
+
+— —(4) .—
+
+Therefore 5 4 (4) dt
+dt 4An 88 7
+
+Thus, the rate of change of water level is sh .
+
+Example 32 Aman of height 2 metres walks at a uniform speed of 5 km/h away from
+a lamp post which is 6 metres high. Find the rate at which the length of his shadow
+increases.
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 179
+
+Solution In Fig 6.21, Let AB be the lamp-post, the
+
+B
+lamp being at the position B and let MN be the man at
+a particular time ¢ and let AM =/ metres. Then, MS is
+the shadow of the man. Let MS = s metres.
+N
+Note that AMSN ~ AASB
+MS MN
+or AS. AB A ree
+or AS = 3s (as MN = Fig 6.21
+2 and AB = 6 (given))
+Thus AM = 3s — 5 = 2s. But AM = /
+So [= 2s
+Theref f28
+erefore i a
+
+5
+Since “- 5 km/h. Hence, the length of the shadow increases at the rate 3 km/h.
+
+Example 33 Find intervals in which the function given by
+
+3.4 4, 2, 36
+= x x” —3x°+—x+l1l
+ICO) = T9* 5 5
+
+is (a) increasing (b) decreasing.
+Solution We have
+
+3, 43 . 5 36
+= 3x° + +11
+F(x) 10” 5* Xx 5
+
+3 4 36
+Therefore f'(®) = 10 (4x°) 5 (3x7) —3(2x)+ 5
+6 . . .
+~ 5 (x —1)(x +2)(x—3) (on simplification)
+
+Reprint 2025-26
+
+180 MATHEMATICS
+
+Now f’(x) = 0 givesx=1,x=—2,orx=3.The .
+points x = 1, —2, and 3 divide the real line into four 2 1 3
+
+disjoint intervals namely, (— 0, — 2), (— 2, 1), (1, 3) Fig 6.22
+and (3, 0) (Fig 6.22).
+Consider the interval (— , — 2), i.e., when — 00 <x <-—2.
+In this case, we have x—1<0,x+2<0andx—-3 <0.
+(In particular, observe that for x = —3, f’(x~) = (x- 1) (®#+2) («#-3) = 4C 1)
+(— 6) <0)
+Therefore, f'(x) < 0 when — 0 <x <-—2.,
+Thus, the function fis decreasing in (— ©, — 2).
+Consider the interval (— 2, 1), i.e., when —2<x< 1.
+In this case, we have x—1<0,x+2>0Oandx-3<0
+(In particular, observe that for x = 0, f'(x) = (x— 1) (x + 2) (x—3) = (-1) (2) C3)
+=6>0)
+So f'(x) > 0 when —- 2 <x< 1.
+
+Thus, f is increasing in (— 2, 1).
+
+Now consider the interval (1, 3), i.c., when 1 < x < 3. In this case, we have
+x-1>0,x +2>0andx-3<0.
+
+So, f'(x) < 0 when 1 <x <3.
+Thus, fis decreasing in (1, 3).
+
+Finally, consider the interval (3, «), i.e., when x > 3. In this case, we have x— 1 >0,
+x+2>0Oand x—3>0. So f(x) > 0 when x > 3.
+
+Thus, f is increasing in the interval (3, 00).
+Example 34 Show that the function f given by
+
+f(x) = tan (sin x + cos x), x > 0
+is always an increasing function in 07 .
+
+Solution We have
+f() = tan (sin x + cos x), x > 0
+
+1
+
+1+(sinx +cos x)?
+
+Therefore S'(x) = (cos x —sin x)
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 181
+
+cos x —sinx (on simplification)
+=> on simplification
+2+sin2x P
+
+x
+Note that 2 + sin 2x > 0 for all x in 07 .
+
+Therefore f'(x) >0 ifcosx-sinx>0
+
+or f'(®) >0 ifcosx>sinx orcotx> 1
+
+Now cotx> Liftanx<1,ie., if 0<x< 7
+. #
+
+Thus f'x)>0 in 7
+
+Hence fis increasing function in [o, *)
+
+Example 35 A circular disc of radius 3 cm is being heated. Due to expansion, its
+radius increases at the rate of 0.05 cm/s. Find the rate at which its area is increasing
+when radius is 3.2 cm.
+
+Solution Let r be the radius of the given disc and A be its area. Then
+
+A=mtr
+Boot by Chain Rul
+or FAG, i (by Chain Rule)
+
+di
+Now approximate rate of increase of radius = dr = au = 0.05 cm/s.
+
+Therefore, the approximate rate of increase in area is given by
+
+dA dr
+~ “Vay = 2 Mt
+dA =~, (AD) nS )
+
+= 2 (3.2) (0.05) = 0.3202 cm/s (r = 3.2 cm)
+
+Example 36 An open topped box is to be constructed by removing equal squares from
+each corner of a 3 metre by 8 metre rectangular sheet of aluminium and folding up the
+sides. Find the volume of the largest such box.
+
+Reprint 2025-26
+
+182 MATHEMATICS
+
+Solution Let x metre be the length of a side of the removed squares. Then, the height
+of the box is x, length is 8 — 2x and breadth is 3 — 2x (Fig 6.23). If V(x) is the volume
+of the box, then
+
+Fig 6.23
+V(x) = x(3 — 2x) (8 — 2x)
+= 4x7 — 22x? + 24x
+
+V'(x) = 12x? — 44x + 24 = 4(x —3)(3x —2)
+
+Therefore
+V"(x) = 24x — 44
+
+2
+Now V'(x) = 0 gives x = 3, 3u But x # 3 (Why?)
+
+2
+Thus, we have *= 3° Now v'(5) = 24(2| —44=-28<0.
+
+Therefore, x= 3 is the point of maxima, i.e., if we remove a square of side 3
+
+metre from each corner of the sheet and make a box from the remaining sheet, then
+the volume of the box such obtained will be the largest and it is given by
+
+8) =} a0
+
+200,
+= —m
+27
+
+x
+Example 37 Manufacturer can sell x items at a price of rupees 5 100 each. The
+
+x
+cost price of x items is Rs 5 +500 . Find the number of items he should sell to earn
+
+maximum profit.
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 183
+
+Solution Let S(x) be the selling price of x items and let C(x) be the cost price of x
+
+items. Then, we have
+2
+S(x) = [ss =5x-—<
+
+100 ~ 100
+x
+and C(x) = 5 10
+Thus, the profit function P (x) is given by
+2
+x x
+P(x) = S(x) —C(x) = 5x -—-—- 500
+(= SEIT COD=9¥— TOs
+24 °
+i.e. P(x) = —x-=~- 500
+5 100
+poy 24
+or (x) = 5 50
+
+—l —l
+Now P’(x) = 0 gives x = 240. Also P"(x) = ye So P"(240) = 30 <0
+
+Thus, x = 240 is a point of maxima. Hence, the manufacturer can earn maximum
+profit, if he sells 240 items.
+
+Miscellaneous Exercise on Chapter 6
+
+I
+1. Show that the function given by f(x) = °S* has maximum at x= e.
+x
+
+2. The two equal sides of an isosceles triangle with fixed base are decreasing at
+the rate of 3 cm per second. How fast is the area decreasing when the two equal
+sides are equal to the base ?
+
+3. Find the intervals in which the function fgiven by
+
+4sinx 2x xcosx
+
+fx) =
+
+is (1) increasing (11) decreasing.
+
+2+cosx
+
+1
+4. Find the intervals in which the function fgiven by f(x) =x° + 3° x T0 is
+
+(1) increasing (ii) decreasing.
+
+Reprint 2025-26
+
+184
+
+10.
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+MATHEMATICS
+
+2 2
+
+Find the maximum area of an isosceles triangle inscribed in the ellipse > + 2 =1
+with its vertex at one end of the major axis.
+
+A tank with rectangular base and rectangular sides, open at the top is to be
+constructed so that its depth is 2 m and volume is 8 m’. If building of tank costs
+Rs 70 per sq metres for the base and Rs 45 per square metre for sides. What is
+the cost of least expensive tank?
+
+The sum of the perimeter of a circle and square is k, where & is some constant.
+Prove that the sum of their areas is least when the side of square is double the
+radius of the circle.
+
+A window is in the form of a rectangle surmounted by a semicircular opening.
+The total perimeter of the window is 10 m. Find the dimensions of the window to
+admit maximum light through the whole opening.
+
+A point on the hypotenuse of a triangle is at distance a and b from the sides of
+the triangle.
+
+2 23
+Show that the minimum length of the hypotenuse is ( aot b3)? .
+
+Find the points at which the function f given by f(x) = (x —2)* (x + 1)? has
+(i) local maxima (ii) local minima
+(iti) point of inflexion
+Find the absolute maximum and minimum values of the function fgiven by
+f(x) = cos? x + sin x, x € [0, 7]
+Show that the altitude of the right circular cone of maximum volume that can be
+
+4r
+inscribed in a sphere of radius 7 is 37
+
+Let f be a function defined on [a, b] such that f'(x) > 0, for all x € (a, b). Then
+prove that f is an increasing function on (a, 5).
+
+Show that the height of the cylinder of maximum volume that can be inscribed in
+a sphere of radius R is 2R . Also find the maximum volume.
+
+3
+
+Show that height of the cylinder of greatest volume which can be inscribed in a
+right circular cone of height / and semi vertical angle o is one-third that of the
+
+4
+cone and the greatest volume of cylinder is we tan”
+
+Reprint 2025-26
+
+APPLICATION OF DERIVATIVES 185
+
+A cylindrical tank of radius 10 m is being filled with wheat at the rate of 314
+cubic metre per hour. Then the depth of the wheat is increasing at the rate of
+
+(A) Im/h (B) 0.1 m/h
+(C) L.imh (D) 0.5m/h
+
+Ifa quantity y varies with another quantity x, satisfying some rule y = f(x),
+
+then < (or f (x)) represents the rate of change of y with respect to x and
+
+dy
+dhe (or f (%)) represents the rate of change of y with respect to x at
+X=XQ)
+X=Xo-
+If two variables x and y are varying with respect to another variable ¢, 1.e., if
+
+x= f(t) and y = g(t), then by Chain Rule
+
+dy dy [dx .. dx
+= Pit t
+dx dt/ dt dt
+
+0.
+
+A function f is said to be
+(a) increasing on an interval (a, b) if
+x, <x, in (a, b) > f(x,) <f(,) for all x,, x, € (a, D).
+Alternatively, if f(x) = 0 for each x in (a, 5)
+(b) decreasing on (a,b) if
+x, <x, in (a, b) > f(x,) > f(x,) for all x,, x, € (a, D).
+(c) constant in (a, 5), if f(x) = c for all x € (a, b), where c is a constant.
+
+A point c in the domain of a function fat which either f'(c) = 0 or fis not
+differentiable is called a critical point of f.
+
+First Derivative Test Let f be a function defined on an open interval I. Let
+
+f be continuous at a critical point c in I. Then
+(i) Iff'(x) changes sign from positive to negative as x increases through c,
+ie., if f(x) > 0 at every point sufficiently close to and to the left of c,
+
+and f'(x) < 0 at every point sufficiently close to and to the right of c,
+then c is a point of local maxima.
+
+Reprint 2025-26
+
+186
+
+MATHEMATICS
+
+(u) Iff'(x) changes sign from negative to positive as x increases through c,
+i.e., if f'(x) < 0 at every point sufficiently close to and to the left of c,
+and f'(x) > 0 at every point sufficiently close to and to the right of c,
+then c is a point of local minima.
+
+(ii) If f(x) does not change sign as x increases through c, then c is neither
+a point of local maxima nor a point of local minima. Infact, such a point
+is called point of inflexion.
+
+® Second Derivative Test Let f be a function defined on an interval I and
+
+c € I. Let f be twice differentiable at c. Then
+(i) x=c isa point of local maxima if f’(c) = 0 and f"(c) < 0
+The values f(c) is local maximum value of /.
+(ii) x=c isa point of local minima if f’(c) = 0 and f"(c) > 0
+In this case, f(c) is local minimum value of /.
+(iti) The test fails if f’(c) = 0 and f"(c) = 0.
+In this case, we go back to the first derivative test and find whether c is
+a point of maxima, minima or a point of inflexion.
+Working rule for finding absolute maxima and/or absolute minima
+
+Step 1: Find all critical points of fin the interval, i.e., find points x where
+either f(x) = 0 or fis not differentiable.
+
+Step 2:Take the end points of the interval.
+Step 3: Atall these points (listed in Step | and 2), calculate the values of /.
+
+Step 4: Identify the maximum and minimum values of f out of the values
+calculated in Step 3. This maximum value will be the absolute maximum
+value of f and the minimum value will be the absolute minimum value of /.
+
+— & —
+“
+
+Reprint 2025-26
+
