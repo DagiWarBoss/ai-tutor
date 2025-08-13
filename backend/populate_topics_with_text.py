@@ -104,10 +104,13 @@ def get_chapter_map_from_db(cursor):
     cursor.execute("SELECT name, id FROM chapters")
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
-def clean_ocr_text(text: str) -> str:
-    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
+def clean_ocr_text(text: str, subject: str) -> str:
+    text = re.sub(r'[^\S\r\n]+', ' ', text)  # Multiple spaces to single
     text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
-    text = re.sub(r'(\d+)\s*[\.=:\-]\s*(\d+)', r'\1.\2', text)  # Fix "2=1", "2 : 1" to "2.1"
+    if 'physics' in subject.lower():
+        text = re.sub(r'(\d+)\s*[\.=:\-]\s*(\d+)', r'\1.\2', text)  # Fix "2=1", "2 : 1" to "2.1"
+        text = re.sub(r'\[\s*(\d+)\s*\]', r'\1', text)  # Clean equation artifacts
+    # Handle commas: Convert in numbers (e.g., "4,1" -> "4.1") but keep in text
     text = re.sub(r'(\d+),(\d+)', r'\1.\2', text)  # Comma as separator artifact
     return text.strip()
 
@@ -122,7 +125,7 @@ def get_text_from_pdf_with_caching(pdf_path: str, subject: str) -> str:
 
     log("    - No cache found. Converting PDF to images and running OCR...")
     try:
-        images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
+        images = convert_from_path(pdf_path, dpi=400 if 'physics' in subject.lower() else 300, poppler_path=POPPLER_PATH)  # Higher DPI for Physics
         full_text = ""
         config = '--psm 3'  # Default
         if 'physics' in subject.lower():
