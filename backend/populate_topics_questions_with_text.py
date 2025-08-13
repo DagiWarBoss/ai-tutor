@@ -105,10 +105,11 @@ def get_chapter_map_from_db(cursor):
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
 def clean_ocr_text(text: str) -> str:
-    # Normalize spaces and newlines to handle OCR artifacts
+    # Normalize spaces, newlines, and common OCR errors in headings
     text = re.sub(r'[^\S\r\n]+', ' ', text)  # Replace multiple spaces/tabs with single space
-    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines and remove extra empty lines
-    text = re.sub(r'(\d+)\s*\.\s*(\d+)', r'\1.\2', text)  # Fix split numbers like "4 . 1" -> "4.1"
+    text = re.sub(r'\s*\n\s*', '\n', text)   # Normalize newlines
+    text = re.sub(r'(\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix "4 . 6" or "4 - 6" -> "4.6"
+    text = re.sub(r'(\d+\.\d+)\s*[\.\-]\s*(\d+)', r'\1.\2', text)  # Fix sublevels like "4.6 . 3" -> "4.6.3"
     return text.strip()
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
@@ -143,9 +144,12 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     
     # Robust topic regex: more forgiving for spaces, dots, dashes, etc.
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
-    heading_pattern = re.compile(r'^\s*(?:' + '|'.join(topic_numbers) + r')\s*(?:\.|\-)?\s*', re.MULTILINE | re.IGNORECASE)
+    heading_pattern = re.compile(
+        r'^\s*(' + '|'.join(topic_numbers) + r')\s*(?:[\.\- ]*)?\s*',
+        re.MULTILINE | re.IGNORECASE
+    )
     matches = list(heading_pattern.finditer(ocr_text))
-    topic_locations = {match.group(0).strip().split()[0]: match.start() for match in matches}  # Key by cleaned number
+    topic_locations = {match.group(1): match.start() for match in matches}  # Key by cleaned number
     
     # Log expected vs found for debugging missing topics
     expected_topics = set(topics_from_csv['heading_number'].astype(str))
@@ -153,7 +157,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     missing_topics = expected_topics - found_topics
     log(f"    - Found {len(topic_locations)} of {len(topics_from_csv)} topic headings in the PDF text.")
     if missing_topics:
-        log(f"    - Missing topics: {', '.join(missing_topics)} (check OCR for artifacts or adjust regex).")
+        log(f"    - Missing topics: {', '.join(sorted(missing_topics))} (check OCR for artifacts or adjust regex).")
 
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
