@@ -209,6 +209,8 @@ def update_database(cursor, chapter_id: int, topics: list):
                            (topic['content'], chapter_id, topic['topic_number']))
             updated_count += 1
             log(f"      - Updated empty topic {topic['topic_number']}: {topic['title']}")
+        else:
+            log(f"      - Skipping non-empty topic {topic['topic_number']}: {topic['title']}")
 
     log(f"    - Updated {updated_count} empty topics in the database.")
 
