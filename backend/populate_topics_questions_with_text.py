@@ -11,7 +11,6 @@ PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_C
 CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
 POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-# --- THIS IS THE NEW CACHE FOLDER ---
 OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
 # =======================================================
 
@@ -19,11 +18,9 @@ OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
 load_dotenv()
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
-
-# Create the cache directory if it doesn't exist
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
 
-# --- Comprehensive Name Mapping (DB Chapter Name -> Actual PDF Filename without .pdf) ---
+# --- Comprehensive Name Mapping ---
 NAME_MAPPING = {
     'Some Basic Concepts Of Chemistry': 'Some Basic Concepts Of Chemistry',
     'Structure Of Atom': 'Structure Of Atom',
@@ -108,20 +105,14 @@ def get_chapter_map_from_db(cursor):
     return {name: chapter_id for name, chapter_id in cursor.fetchall()}
 
 def get_text_from_pdf_with_caching(pdf_path: str) -> str:
-    """
-    Gets text from a PDF. First checks a cache folder. If not cached,
-    runs OCR and saves the result to the cache for future runs.
-    """
     pdf_filename = os.path.basename(pdf_path)
     cache_filepath = os.path.join(OCR_CACHE_FOLDER, pdf_filename + ".txt")
 
-    # Step 1: Check if the OCR text is already cached
     if os.path.exists(cache_filepath):
         log(f"    - Found cached OCR text for '{pdf_filename}'. Reading from cache.")
         with open(cache_filepath, 'r', encoding='utf-8') as f:
             return f.read()
 
-    # Step 2: If not cached, run the expensive OCR process
     log("    - No cache found. Converting PDF to images and running OCR...")
     try:
         images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
@@ -129,12 +120,9 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         for i, image in enumerate(images):
             full_text += pytesseract.image_to_string(image) + "\n"
         log("    - OCR complete.")
-
-        # Step 3: Save the newly generated text to the cache
         with open(cache_filepath, 'w', encoding='utf-8') as f:
             f.write(full_text)
         log(f"    - Saved new OCR text to cache: '{os.path.basename(cache_filepath)}'")
-
         return full_text
     except Exception as e:
         log(f"    [ERROR] OCR process failed for {pdf_filename}: {e}")
@@ -143,6 +131,7 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     extracted_topics = []
     
+    # Reverted to your preferred, more reliable topic logic
     topic_numbers = [re.escape(str(num)) for num in topics_from_csv['heading_number']]
     heading_pattern = re.compile(r'^(%s)\s+' % '|'.join(topic_numbers), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
@@ -153,7 +142,6 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
     for index, row in topics_from_csv.iterrows():
         topic_num = str(row['heading_number'])
         start_pos = topic_locations.get(topic_num)
-        
         if start_pos is not None:
             end_pos = len(ocr_text)
             for next_num, next_pos in topic_locations.items():
@@ -162,6 +150,7 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             content = ocr_text[start_pos:end_pos].strip()
             extracted_topics.append({'topic_number': topic_num, 'title': row['heading_text'], 'content': content})
 
+    # Fixed and improved question extraction logic
     questions = []
     exercise_markers = [r'EXERCISES', r'QUESTIONS', 'PROBLEMS']
     exercises_match = None
@@ -172,18 +161,14 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             
     if exercises_match:
         exercises_text = ocr_text[exercises_match.start():]
-        question_start_pattern = re.compile(r'^\s*(\d+(\.\d+)?)\s*[\.\)]\s*', re.MULTILINE)
-        question_matches = list(question_start_pattern.finditer(exercises_text))
-        log(f"    - Found {len(question_matches)} potential question starts.")
-        for i, match in enumerate(question_matches):
-            q_num = match.group(1)
-            start_pos = match.end()
-            end_pos = len(exercises_text)
-            if i + 1 < len(question_matches):
-                end_pos = question_matches[i+1].start()
-            q_text = exercises_text[start_pos:end_pos].strip()
-            if q_text:
-                questions.append({'question_number': q_num, 'question_text': q_text})
+        question_pattern = re.compile(r'^\s*(\d+(?:\.\d+)?)\s*[\.\)]?\s*(.+?)(?=\n\s*\d+\.\d+|\Z)', re.MULTILINE | re.DOTALL)
+        found_questions = question_pattern.findall(exercises_text)
+        
+        log(f"    - Found {len(found_questions)} potential questions.")
+        
+        for q_num, q_text in found_questions:
+            if q_text.strip():
+                questions.append({'question_number': q_num.strip(), 'question_text': q_text.strip()})
     else:
         log(f"    - No obvious 'EXERCISES' or 'QUESTIONS' section found.")
             
@@ -229,42 +214,35 @@ def main():
 
     for chapter_id, chapter_name_db, class_number, subject_name_db in db_chapters:
         log(f"\n--- Processing Chapter: {chapter_name_db} ({subject_name_db} Class {class_number}) ---")
-
-        folder_subject = subject_name_db
-        if subject_name_db == 'Mathematics':
-            folder_subject = 'Maths'
-        
+        folder_subject = 'Maths' if subject_name_db == 'Mathematics' else subject_name_db
         mapped_pdf_filename_base = NAME_MAPPING.get(chapter_name_db, chapter_name_db)
         pdf_filename = f"{mapped_pdf_filename_base}.pdf"
-        
         class_folder = f"Class {class_number}"
         folder_path = os.path.join(PDF_ROOT_FOLDER, folder_subject, class_folder)
         pdf_path = os.path.join(folder_path, pdf_filename)
         
         log(f"    [DEBUG] Looking for PDF at: {pdf_path}")
         if not os.path.exists(pdf_path):
-            log(f"    [WARNING] PDF not found for '{chapter_name_db}' at '{pdf_path}'. Skipping chapter.")
+            log(f"    [WARNING] PDF not found for '{chapter_name_db}'. Skipping chapter.")
             skipped_chapters_count += 1
             continue
 
-        chapter_topics_df = master_df[master_df['chapter_file'] == f"{mapped_pdf_filename_base}.pdf"].copy()
+        chapter_topics_df = master_df[master_df['chapter_file'] == pdf_filename].copy()
         if chapter_topics_df.empty:
-            log(f"    [WARNING] No topics found in CSV for chapter '{chapter_name_db}' (mapped to '{mapped_pdf_filename_base}.pdf'). Skipping.")
+            log(f"    [WARNING] No topics found in CSV for chapter '{pdf_filename}'. Skipping.")
             skipped_chapters_count += 1
             continue
 
-        # This now uses the caching function
         full_chapter_text = get_text_from_pdf_with_caching(pdf_path)
-        
         if not full_chapter_text:
-            log(f"    [ERROR] Failed to get text from '{pdf_filename}'. Skipping chapter.")
+            log(f"    [ERROR] Failed to get text from '{pdf_filename}'. Skipping.")
             skipped_chapters_count += 1
             continue
         
         topics_data, questions_data = extract_topics_and_questions(full_chapter_text, chapter_topics_df)
         
         if not topics_data and not questions_data:
-            log(f"    [WARNING] No topics or questions extracted from text for '{chapter_name_db}'. Skipping database update.")
+            log(f"    [WARNING] No topics or questions extracted from text. Skipping database update.")
         else:
             update_database(cursor, chapter_id, topics_data, questions_data)
             conn.commit()
