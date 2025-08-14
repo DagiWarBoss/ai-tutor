@@ -10,7 +10,7 @@ Objectives
 After studying this Unit, you will be
 able to
 
-understand Ké6éssel-Lewis
+understand Késsel-Lewis
 approach to chemical bonding;
 
 explain the octet rule and its
@@ -91,7 +91,7 @@ CHEMICAL BONDING
 In order to explain the formation of chemical
 bond in terms of electrons, a number of
 attempts were made, but it was only in
-1916 when Késsel and Lewis succeeded
+1916 when Ko6ssel and Lewis succeeded
 independently in giving a satisfactory
 explanation. They were the first to provide
 some logical explanation of valence which was
@@ -132,7 +132,9 @@ in an atom. These notations are called Lewis
 symbols. For example, the Lewis symbols for
 the elements of second period are as under:
 
-Li Be +Be +C+ «Ne $03 [FI {Ne
+Li Be «Be °Ce
+
+“Ne 102 Ff Ne?
 
 Significance of Lewis Symbols : The
 number of dots around the symbol represents
@@ -167,7 +169,7 @@ configurations. The noble gases (with the
 exception of helium which has a duplet
 of electrons) have a particularly stable
 outer shell configuration of eight (octet)
-electrons, ns*np®.
+electrons, ns’*np’°.
 
 e The negative and positive ions are stabilized
 by electrostatic attraction.
@@ -176,15 +178,15 @@ For example, the formation of NaCl from
 sodium and chlorine, according to the above
 scheme, can be explained as:
 
-Na > Nat + ©&
+Na > Nat + €&
 
-[Ne] 3s! [Ne]
+[Ne] 3s? [Ne]
 
-Cl+e > Cr
+Clt+e = Cl
 
 [Ne] 3s? 3p° [Ne] 3s? 3p° or [Ar]
 
-Na* + Cl 73> NaCl or Na*Cl
+Na* + Cl 73> NaCl or NatCl
 
 Similarly the formation of CaF, may be
 shown as:
@@ -193,11 +195,11 @@ Ca > Ca** + Qe
 
 [Ar]4s? [Ar]
 
-F +e > F
+Ft+e > F-
 
-[He] 2s? 2p° [He] 2s? 2p® or [Ne]
+[He] 2s? 2p° [He] 2s? 2p° or [Ne]
 
-Ca*+2F +> CaF, or Ca*(F),
+Ca**+2F + CaF, or Ca**(F’),
 
 The bond formed, as a result of the
 electrostatic attraction between the
@@ -217,7 +219,7 @@ on the ion. Thus, calcium is assigned a
 positive electrovalence of two, while chlorine
 a negative electrovalence of one.
 
-Késsel’s postulations provide the basis for
+K6ssel’s postulations provide the basis for
 the modern concepts regarding ion-formation
 by electron transfer and the formation of ionic
 crystalline compounds. His views have proved
@@ -229,7 +231,7 @@ these concepts.
 
 4.1.1 Octet Rule
 
-K6éssel and Lewis in 1916 developed an
+Koéssel and Lewis in 1916 developed an
 important theory of chemical combination
 between atoms known as electronic theory
 of chemical bonding. According to this,
@@ -248,7 +250,7 @@ octet, and by introducing the term covalent
 bond. The Lewis-Langmuir theory can be
 understood by considering the formation of
 the chlorine molecule, Cl,. The Cl atom with
-electronic configuration, [Ne]3s? 3p°, is one
+electronic configuration, [Ne]3s? 3p’, is one
 electron short of the argon configuration.
 The formation of the Cl, molecule can be
 understood in terms of the sharing of a pair
@@ -256,10 +258,10 @@ of electrons between the two chlorine atoms,
 each chlorine atom contributing one electron
 to the shared pair. In the process both
 
->Cle +3 Cle —> (a (
+-Cle + 3 Cle — Ca (
 8e 8e
 
-or Cl-Cl
+or Cl —- Cl
 Covalent bond between two Cl atoms
 
 CHEMISTRY
@@ -279,24 +281,20 @@ important conditions being that:
 e Each bond is formed as a result of sharing
 of an electron pair between the atoms.
 
-Each combining atom contributes at least
+e Each combining atom contributes at least
 one electron to the shared pair.
 
-The combining atoms attain the outer-
+e The combining atoms attain the outer-
 shell noble gas configurations as a result
 of the sharing of electrons.
 
-Thus in water and carbon tetrachloride
+e Thus in water and carbon tetrachloride
 molecules, formation of covalent bonds
 can be represented as:
 
-2e 8e"
+H atoms attain a duplet of
+electrons and O, the octet
 
-2e- 8e 8e
-
-H atoms attain a duplet of _
-
-electrons and O, the octet 8e
 Each of the four Cl atoms
 along with the C atom attains
 octet of electrons
@@ -315,13 +313,13 @@ bonds between the carbon and oxygen atoms.
 Similarly in ethene molecule the two carbon
 atoms are joined by a double bond.
 
-ee
+ees
 
-8e 8e 8e
+8e- 8e- 8e-
 
 Double bonds in CO, molecule
 
-or o=c=O
+or O=c=O
 
 Reprint 2025-26
 
@@ -332,15 +330,19 @@ Unit 4.indd 103
 CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
 C,H, molecule
+
 When combining atoms share three
 electron pairs as in the case of two nitrogen
 atoms in the N, molecule and the two
 carbon atoms in the ethyne molecule, a
 triple bond is formed.
 
-deneneDr
+8e
+N, molecule
 
-8e 8e"
+Ge cC) mw tcmcn
+
+8e- 8e-
 C,H, molecule
 
 4.1.3 Lewis Representation of. Simple
@@ -374,10 +376,10 @@ subtraction of one electron from the total
 103
 
 number of valence electrons. For example,
-for the COZ ion, the two negative charges
+for the CO? ion, the two negative charges
 indicate that there are two additional
 electrons than those provided by the
-neutral atoms. For NH}; ion, one positive
+neutral atoms. For NH{ ion, one positive
 charge indicates the loss of one electron
 from the group of neutral atoms.
 
@@ -392,7 +394,7 @@ atoms in proportion to the total bonds.
 e In general the least electronegative atom
 occupies the central position in the
 molecule/ion. For example in the NF, and
-COS, nitrogen and carbon are the central
+CO, nitrogen and carbon are the central
 atoms whereas fluorine and oxygen
 occupy the terminal positions.
 
@@ -404,13 +406,14 @@ pairs. The basic requirement being
 that each bonded atom gets an octet of
 electrons.
 
-Lewis representations of a few molecules/
+Lewis representations of a few molecules /
 ions are given in Table 4.1.
 
 Table 4.1 The Lewis Representation of
 Some Molecules
 
 Molecule/Ion Lewis Representation
+H
 
 * Fach H atom attains the configuration of helium
 (a duplet of electrons)
@@ -418,8 +421,6 @@ Molecule/Ion Lewis Representation
 Reprint 2025-26
 
 9/12/2022 9:36:10 AM
-
-Unit 4.indd 104
 
 104
 
@@ -433,8 +434,8 @@ Solution
 Step 1. Count the total number of valence
 electrons of carbon and oxygen atoms.
 The outer (valence) shell configurations
-of carbon and oxygen atoms are: 2s? 2p?
-and 2s? 2p’, respectively. The valence
+of carbon and oxygen atoms are: 2s? 2p”
+and 2s* 2p*, respectively. The valence
 electrons available are 4 + 6 =10.
 
 Step 2. The skeletal structure of CO is
@@ -445,7 +446,7 @@ electron pair) between C and O and
 complete the octet on O, the remaining
 two electrons are the lone pair on C.
 
-"CO: or !C—O:
+;C Yor or ;C—O:
 
 This does not complete the octet on
 carbon and hence we have to resort to
@@ -454,12 +455,12 @@ bond) between C and O atoms. This
 satisfies the octet rule condition for both
 
 atoms.
-a or 'C=0!
+aD or :C=0:!
 
 Problem 4.2
 
 Write the Lewis structure of the nitrite
-ion, NO;.
+ion, NO>.
 
 Solution
 
@@ -468,11 +469,11 @@ valence electrons of the nitrogen atom,
 the oxygen atoms and the additional one
 negative charge (equal to one electron).
 
-N(2s? 2p’), O (2s? 2p’)
+N(2s*? 2p°), O (2s? 2p’)
 5 + (2 x 6) +1 = 18 electrons
 
 Step 2. The skeletal structure of NO; is
-writtenas: O N O
+written as: O N O
 
 Step 3. Draw a single bond (one shared
 electron pair) between the nitrogen and
@@ -484,8 +485,6 @@ octets on oxygen atoms. This, however,
 does not complete the octet on nitrogen
 if the remaining two electrons constitute
 lone pair on it.
-
-"O :N: O!
 
 Hence we have to resort to multiple
 bonding between nitrogen and one of
@@ -514,7 +513,7 @@ on an atom in a Lewis =
 structure
 
 total number of valence total number of non
-electrons in the free —] bonding (lone pair)
+electrons in the free —| bonding (lone pair)
 atom electrons
 
 total number of
@@ -538,25 +537,28 @@ electrons of a lone pair.
 Let us consider the ozone molecule (O,).
 The Lewis structure of O, may be drawn as:
 
-1
-
 The atoms have been numbered as 1, 2
 and 3. The formal charge on:
 
 e The central O atom marked 1
-=6-2- I (6) = +1
+
+-6-2-+ 6-41
 2
+
 e The end O atom marked 2
-=6-4- I (4) =0
-2
+
+-6-4-1 (4)=0
+D
+
 e The end O atom marked 3
--6-6-1(=-1
-2
+
+-6-6-1 (2)=-1
+D
 
 Hence, we represent O, along with the
 formal charges as follows:
 
-/ Ni
+JS,
 
 We must understand that formal charges
 do not indicate real charge separation within
@@ -593,10 +595,9 @@ having less than four valence electrons.
 Examples are LiCl, BeH, and BCl,.
 
 Cl
-
-Li:Cl H:Be:H Cl:B:Cl
+Li:Cl H:Be:H  Cl:B:Cl
 Li, Be and B have 1, 2 and 3 valence electrons
-only. Some other such compounds are AICI,
+only. Some other such compounds are AICl,
 
 and BF,.
 
@@ -607,7 +608,6 @@ like nitric oxide, NO and nitrogen dioxide,
 NO,, the octet rule is not satisfied for all the
 atoms
 
-N=O
 The expanded octet
 
 Elements in and beyond the third period of
@@ -623,23 +623,14 @@ Some of the examples of such compounds
 are: PF., SF,, H,SO, and a number of
 coordination compounds.
 
-IF: as ee 10:
-‘FPO! I H— 0 —S— 0—H
-
-IF “Be 70:
-
-PF, SF, 1,SO,
-
-5
-
-10 electrons around
-the P atom
-
-12 electrons around
-the S atom
-
-12 electrons around
-the S atom
+°F? ‘BF: 20:
+| [
+Foro OK H— 0 —S— 0 —H
+:O:
+°F: “PF:
+PF, SF, H,SO,
+10 electrons around 12 electrons around 12 electrons around
+the P atom the S atom the S atom
 
 Reprint 2025-26
 
@@ -647,14 +638,12 @@ Reprint 2025-26
 
 Unit 4.indd 106
 
-106
-
 Interestingly, sulphur also forms many
 compounds in which the octet rule is obeyed.
 In sulphur dichloride, the S atom has an octet
 of electrons around it.
 
-c1—S — Cl: or 3;Cl1: S:Cl:
+:Cl—S — Cl: or Cl! s! Cl!
 
 Other drawbacks “of the octet theory
 
@@ -663,7 +652,7 @@ the chemical inertness of noble gases.
 However, some noble gases (for example
 xenon and krypton) also combine with
 oxygen and fluorine to form a number of
-compounds like XeF,,, KrF ,, XeOF, etc.
+compounds like XeF,,, KrF, XeOF, etc.
 
 e This theory does not account for the shape
 of molecules.
@@ -674,7 +663,7 @@ the energy of a molecule.
 
 4.2 IONIC OR ELECTROVALENT BOND
 
-From the Késsel and Lewis treatment of the
+From the Kossel and Lewis treatment of the
 formation of an ionic bond, it follows that the
 formation of ionic compounds would primarily
 depend upon:
@@ -693,15 +682,15 @@ the neutral atom and that of the negative
 ion involves the addition of electron(s) to the
 neutral atom.
 
-M(g) > Mig)te;
+M(g) > Mig) +
 Ionization enthalpy
-X(g)t+e > X(g);
+X(g)te > X(g);
 
 Electron gain enthalpy
 
-M‘(g) +X (g) > MX{(s)
+M*(g) +X (g) > MX{s)
 
-The electron gain enthalpy, A,,H, is the
+The electron gain enthalpy, A__H, is the
 enthalpy change (Unit 3), when a gas phase
 atom in its ground state gains an electron.
 The electron gain process may be exothermic
@@ -722,7 +711,7 @@ negative value of electron gain enthalpy.
 Most ionic compounds have cations
 derived from metallic elements and anions
 from non-metallic elements. The ammonium
-ion, NH} (made up of two non-metallic
+ion, NH; (made up of two non-metallic
 elements) is an exception. It forms the cation
 of a number of ionic compounds.
 
@@ -740,7 +729,7 @@ shown below.
 Cl-
 Na'—>
 
-©
+ev
 
 In ionic solids, the sum of the electron gain
 enthalpy and the ionization enthalpy may be
@@ -748,12 +737,12 @@ positive but still the crystal structure gets
 stabilized due to the energy released in the
 formation of the crystal lattice. For example:
 the ionization enthalpy for Na*(g) formation
-from Na(g) is 495.8 kJ mol"; while the electron
+from Na(g) is 495.8 kJ mol’; while the electron
 gain enthalpy for the change Cl(g) + e->
-CI (g) is, - 348.7 kJ mol only. The sum of the
+CI (g) is, - 348.7 kJ mol" only. The sum of the
 two, 147.1 kJ mol’ is more than compensated
 for by the enthalpy of lattice formation of
-NaCl(s) (-788 kJ mol’). Therefore, the energy
+NaCl(s) (-788 kJ mot’). Therefore, the energy
 released in the processes is more than the
 
 Rock salt structure
@@ -784,9 +773,9 @@ is defined as the energy required to
 completely separate one mole of a solid
 ionic compound into gaseous constituent
 ions. For example, the lattice enthalpy of
-NaCl is 788 kJ mol’. This means that 788
+NaCl is 788 kJ mol'. This means that 788
 kJ of energy is required to separate one mole
-of solid NaCl into one mole of Na* (g) and one
+of solid NaCl into one mole of Na’* (g) and one
 mole of Cl (g) to an infinite distance.
 
 This process involves both the attractive
@@ -810,7 +799,7 @@ measured by spectroscopic, X-ray diffraction
 and electron-diffraction techniques about
 which you will learn in higher classes. Each
 atom of the bonded pair contributes to the
-bond length (Fig. 4.1). In the case of a covalent
+bond length (Fig. 4.1). In the case ofa covalent
 bond, the contribution from each atom is
 called the covalent radius of that atom.
 
@@ -827,7 +816,7 @@ A B
 
 Fig. 4.1 The bond length in a covalent
 molecule AB.
-R=r, +1, (Ris the bond length and r, and r, are
+R=r, +1, (Rts the bond length and r, and r, are
 the covalent radii of atoms A and B
 respectively)
 
@@ -842,19 +831,16 @@ chlorine are depicted in Fig. 4.2.
 
 r,= 99 pm
 
-Covalent and van der Waals radii in
+Fig. 4.2 Covalent and van der Waals radi in
 a chlorine molecule. The inner circles
 correspond to the size of the chlorine
-atom (r,,,,and r,are van der Waals and
-covalent radii respectively).
+atom (r,,,,andr, are van der Waals and
 
-Fig. 4.2
+covalent radii respectively).
 
 Reprint 2025-26
 
 9/12/2022 9:36:11 AM
-
-108
 
 Some typical average bond lengths for
 single, double and triple bonds are shown in
@@ -875,11 +861,11 @@ methods. It gives some idea regarding the
 distribution of orbitals around the central
 atom in a molecule/complex ion and hence it
 helps us in determining its shape. For
-example H-O-H bond angle in water can be
+example H—O-H bond angle in water can be
 represented as under :
 
 :O:
-J
+oN
 H H
 
 4.3.3 Bond Enthalpy
@@ -887,33 +873,33 @@ H H
 It is defined as the amount of energy required
 to break one mole of bonds of a particular
 type between two atoms in a gaseous state.
-The unit of bond enthalpy is kJ mol™. For
+The unit of bond enthalpy is kJ mol’. For
 example, the H—H bond enthalpy in hydrogen
-molecule is 435.8 kJ mol".
+molecule is 435.8 kJ mol'!.
 
-H,(g) > H(g) + H(g); A,H® = 435.8 kJ mol!
+H,(g) > H(g) + H(g); A.H° = 435.8 kJ mol’
 
 Similarly the bond enthalpy for molecules
-containing multiple bonds, for example O,, and
+containing multiple bonds, for example O, and
 N, will be as under :
 
-O, (O = O) (g) > Ofg) + O(g);
-A, H° = 498 kJ mol"
+O, (O = O) (g) > O(g) + Ofg);
+A He = 498 kJ mol"
 
-N, (N = N) (g) > N(g) + N(g);
-A, H° = 946.0 kJ mol”
+N, (N =N) (g) > N(g) + N(g);
+AH? = 946.0 kJ mol
 
 It is important that larger the bond
 dissociation enthalpy, stronger will be the
 bond in the molecule. For a heteronuclear
 diatomic molecules like HCl, we have
-HCl (g) > H(g) + Cl (g); A,H° = 431.0 kJ mol"
+HCl (g) > H(g) + Cl (g); A,H° = 431.0 kJ mol’
 
 In case of polyatomic molecules, the
 measurement of bond strength is more
 complicated. For example in case of H,O
 molecule, the enthalpy needed to break the
-two O -H bonds is not the same.
+two O —-H bonds is not the same.
 
 CHEMISTRY
 
@@ -944,24 +930,26 @@ Unit 4.indd 109
 
 CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
-H,O(g) > H(g) + OH(g); A,He = 502 kJ mol™
-OH(g) > H(g) + O(g); A.A? = 427 kJ mol*
+H,O(g) > H(g) + OH(g); A.W? = 502 kJ mol"
+OH(g) — H(g) + O(g); AHS = 427 kJ mol’
+
 The difference in the A,H° value shows
 that the second O - H bond undergoes
 some change because of changed chemical
 environment. This is the reason for some
-difference in energy of the same O —- H bond
-in different molecules like C,H.OH (ethanol)
+difference in energy of the same O — H bond
+in different molecules like C,H,OH (ethanol)
 and water. Therefore in polyatomic molecules
 the term mean or average bond enthalpy
 is used. It is obtained by dividing total bond
 dissociation enthalpy by the number of bonds
 broken as explained below in case of water
 molecule,
+
 502 + 427
 
 2
-= 464.5 kJ mol!
+464.5 kJ mot!
 
 Average bond enthalpy =
 
@@ -977,12 +965,12 @@ H, (with a single shared electron pair), in O,
 respectively. Similarly in CO (three shared
 electron pairs between C and O) the bond
 order is 3. For N,, bond order is 3 and its
-A, H® is 946 kJ mol"; being one of the highest
+A,H® is 946 kJ mot’; being one of the highest
 for a diatomic molecule.
 
 Isoelectronic molecules and ions have
 identical bond orders; for example, F, and
-O? have bond order 1. N,, CO and NO* have
+O have bond order 1. N,, CO and NO* have
 bond order 3.
 
 A general correlation useful for
@@ -993,19 +981,37 @@ decreases.
 
 4.3.5 Resonance Structures
 
-Itis often observed that a single Lewis structure
+It is often observed that a single Lewis structure
 is inadequate for the representation of a
 molecule in conformity with its experimentally
 determined parameters. For example, the
 ozone, O, molecule can be equally represented
 by the structures I and II shown below:
 
-Il
+109
 
-Fig. 4.3. Resonance in the O, molecule
+& O
+
+ae , cy ° “%s
+
+Ne A NI > Vv VA Ne,
+
+:O: -O: O -O;
+ee Il bd
+
+I
+
+ee,
+
+O
+Resonance in the O; molecule
+
+I
+
+Fig. 4.3
 
 (structures I and II represent the two canonical
-forms while the structure III is the resonance hybrid)
+forms while the structure IIT is the resonance hybrid)
 
 In both structures we have a O-O single
 bond and a O=O double bond. The normal
@@ -1047,13 +1053,12 @@ Unit 4.indd 110
 110
 
 Some of the other examples of resonance
-
 structures are provided by the carbonate ion
 and the carbon dioxide molecule.
 
 Problem 4.3
 
-Explain the structure of CO} ion in
+Explain the structure of CO? ion in
 terms of resonance.
 
 Solution
@@ -1065,24 +1070,23 @@ and oxygen atoms is inadequate to
 represent the molecule accurately as it
 represents unequal bonds. According
 to the experimental findings, all carbon
-to oxygen bonds in CO? are equivalent.
+to oxygen bonds in CO% are equivalent.
 Therefore the carbonate ion is best
 described as a resonance hybrid of the
-canonical forms I, II, and III shown below.
+canonical forms I, II, and II] shown below.
 
-ee oo—
+sO: sO: sO:
+ll «+» | «ew |
 
-£O8 HO} He}
-|eexreil ee > |
-Ze oe AN .
-20: 302 20: 30: 70 40°
-I II II
-Fig. 4.4 Resonance in CO}, I, I and III
+_ C N ZS.
+I II Ill
 
+Fig. 4.4 Resonance in CO;, I, II and III
 represent the three canonical
 forms.
 
 Problem 4.4
+
 Explain the structure of CO, molecule.
 
 Solution
@@ -1104,35 +1108,23 @@ CO, is best described as a hybrid of
 the canonical or resonance forms I, II
 and III.
 
-202:C22 O2: <>:0
-
 CHEMISTRY
 
-C: C:0:
-
-ee ee
-
+ee 00 eo. eet + ce eo
+203;C3. OF <> 30:3 C2202 <> 20::C:20:%
 I II Ill
-
-ee ee
-
-ee |
-eee
-eee
-
 Fig. 4.5 Resonance in CO, molecule, I, II
-
 and III represent the three canonical
 forms.
 
 In general, it may be stated that
 
-Resonance stabilizes the molecule as the
+e Resonance stabilizes the molecule as the
 energy of the resonance hybrid is less
 than the energy of any single cannonical
 structure; and,
 
-Resonance averages the bond
+e Resonance averages the bond
 characteristics as a whole.
 
 Thus the energy of the O, resonance
@@ -1143,20 +1135,20 @@ Many misconceptions are associated
 with resonance and the same need to be
 dispelled. You should remember that :
 
-The cannonical forms have no real
+e The cannonical forms have no real
 existence.
 
-The molecule does not exist for a certain
+e The molecule does not exist for a certain
 fraction of time in one cannonical form
 and for other fractions of time in other
 cannonical forms.
 
-There is no such equilibrium between
+e There is no such equilibrium between
 the cannonical forms as we have
 between tautomeric forms (keto and
 enol) in tautomerism.
 
-The molecule as such has a single
+e The molecule as such has a single
 structure which is the resonance
 hybrid of the cannonical forms and
 which cannot as such be depicted by
@@ -1172,7 +1164,6 @@ covalent bond between two hydrogen atoms,
 there is some ionic character.
 
 When covalent bond is formed between
-
 two similar atoms, for example in H,, O,,
 Cl,, N, or F,, the shared pair of electrons is
 equally attracted by the two atoms. As a result
@@ -1202,10 +1193,10 @@ below) which can be defined as the product of
 the magnitude of the charge and the distance
 between the centres of positive and negative
 charge. It is usually designated by a Greek
-letter ‘u’. Mathematically, it is expressed as
+letter ‘uw’. Mathematically, it is expressed as
 follows :
 
-Dipole moment (u) = charge (Q) x distance of
+Dipole moment (yu) = charge (Q) x distance of
 
 separation (r)
 Dipole moment is usually expressed in
@@ -1219,13 +1210,13 @@ and by convention it is depicted by a small
 arrow with tail on the negative centre and
 head pointing towards the positive centre.
 But in chemistry presence of dipole moment
-is represented by the crossed arrow (+>)
+is represented by the crossed arrow (+—>)
 put on Lewis structure of the molecule. The
 cross is on positive end and arrow head is on
 negative end. For example the dipole moment
 of HF may be represented as :
 
-+—..
++—->..
 
 This arrow symbolises the direction of the
 shift of electron density in the molecule. Note
@@ -1254,17 +1245,17 @@ bonds. For example in H,O molecule, which
 has a bent structure, the two O-H bonds are
 oriented at an angle of 104.5°. Net dipole
 moment of 6.17 x 10°°C m (1D = 3.33564
-x 10°°° C m) is the resultant of the dipole
+x 10°° C m) is the resultant of the dipole
 moments of two O-H bonds.
 
-\ _ \ oo
+NX Ng >
+Oo
 
-(a) (b)
 Bond dipole Resultant
 dipole moment
 
-Net Dipole moment, p = 1.85 D
-= 1.85 x 3.33564 x 10°°C m = 6.17 x10°° Cm
+Net Dipole moment, uw = 1.85 D
+= 1.85 x 3.33564 x 10°°C m= 6.17 x10°° Cm
 
 The dipole moment in case of BeF, is zero.
 This is because the two equal bond dipoles
@@ -1272,10 +1263,10 @@ point in opposite directions and cancel the
 effect of each other.
 
 F— Be—F (<—+ + +>)
-+ +
+<—+ +>
 
 Bond dipoles in Total dipole moment
-BeF, in BeF5
+BeF5 in BeF,
 
 In tetra-atomic molecule, for example in
 BF,, the dipole moment is zero although the
@@ -1284,14 +1275,16 @@ to one another, the three bond moments give
 a net sum of zero as the resultant of any two
 is equal and opposite to the third.
 
-N
+F
+Vu
+F <—+B+— (<—+ + +—>)= 0
 
-(a) F (b)
+\ (b)
+
+(a) F
 
 BF, molecule; representation of
 (a) bond dipoles and (b) total dipole moment
-
-(<—+++—>)=0
 
 Let us study an interesting case of NH,
 and NF, molecule. Both the molecules have
@@ -1316,16 +1309,18 @@ bonds, whereas in NF, the orbital dipole is in
 the direction opposite to the resultant dipole
 moment of the three N-F bonds. The orbital
 dipole because of lone pair decreases the effect
-of the resultant N —- F bond moments, which
+of the resultant N — F bond moments, which
 results in the low dipole moment of NF, as
 
-represented below :
+~~ below :
+ca.
+GS ds
 
 Resultant dipole moment
-in NH, = 4.90 x 10 "Cm
+in NH, = 4.90 x 10 Cm
 
 Resultant dipole moment
-in NF, = 0.80 x 10°C m
+in NF; =0.80x 10. Cm
 
 Dipole moments of some molecules are
 shown in Table 4.5.
@@ -1349,9 +1344,9 @@ bond.
 
 e For cations of the same size and charge,
 the one, with electronic configuration
-(n-1)d*ns°, typical of transition metals, is
+(n-1)d°ns°, typical of transition metals, is
 more polarising than the one with a noble
-gas configuration, ns? np, typical of alkali
+gas configuration, ns? np®, typical of alkali
 and alkaline earth metal cations.
 
 The cation polarises the anion, pulling
@@ -1374,7 +1369,7 @@ to explain the shapes of molecules. This
 theory provides a simple procedure to predict
 the shapes of covalent molecules. Sidgwick
 
-Table'4.5 Dipole Moments of Selected Molecules
+Table 4.5 Dipole Moments of Selected Molecules
 
 Type of Molecule
 
@@ -1382,7 +1377,7 @@ Example
 
 Dipole
 
-Moment, 1(D) EY,
+Moment, u(D) Geometry
 
 Reprint 2025-26
 
@@ -1420,7 +1415,7 @@ with the electron pairs localising on the
 spherical surface at maximum distance
 from one another.
 
-e Amultiple bond is treated as ifit is a single
+e A multiple bond is treated as ifit is a single
 electron pair and the two or three electron
 pairs of a multiple bond are treated as a
 single super pair.
@@ -1462,7 +1457,7 @@ the central atom has no lone pair and
 (ii) molecules in which the central atom
 has one or more lone pairs.
 
-Table 4.6 (page1l1l4) shows the
+Table 4.6 (pagel1l14) shows the
 arrangement of electron pairs about a
 central atom A (without any lone pairs) and
 geometries of some molecules/ions of the type
@@ -1480,14 +1475,13 @@ linear, trigonal planar, tetrahedral,
 trigonal-bipyramidal and octahedral,
 respectively. Such arrangement can be seen
 in the molecules like BF, (AB,), CH, (AB,) and
-PCl, (AB,) as depicted below by their ball and
+PCl. (AB.) as depicted below by their ball and
 
 stick models.
-180° 90°
-20°
-i~\, 109.5°
-120°
-BF, CH PCls
+180° 5 90°
+L~N 109.5°
+© © © 120°
+BF, CH, PCl,
 
 BeCly
 
@@ -1525,7 +1519,14 @@ electron pairs
 Arrangement of
 electron pairs
 
+180°
+aes :
+
+Linear
+
 Trigonal planar
+
+Tetrahedral
 
 Octahedral
 
@@ -1546,15 +1547,14 @@ B B
 Trigonal planar
 
 B
-VAS
-B
 
+VANS
+[
+
+B
 Tetrahedral
 
 B
-B
-
-Trigonal bipyramidal
 
 Octahedral
 
@@ -1562,21 +1562,29 @@ Reprint 2025-26
 
 9/12/2022 9:36:13 AM
 
-CHEMICAL BONDING AND MOLECULAR STRUCTURE 115
+Unit 4.indd 115
+
+CHEMICAL BONDING AND MOLECULAR STRUCTURE
+
+115
 
 Table 4.7 Shape (geometry) of Some Simple Molecules/Ions with Central Ions having
+
 One or More Lone Pairs of Electrons(E).
 
-Molecule bean No. of Arrangement of Shape Examples
-onding lone pairs electron pairs
-type pairs
+No. of
+Molecule bonding No. of Arrangement of
+type - lone pairs electron pairs
+pairs
 
 A
-ZA N
+AN
 B B
 Trigonal planer
 
 Trigonal pyramidal
+
+Tetrahedral
 
 T-shape
 
@@ -1589,20 +1597,25 @@ B
 B~ | “B
 
 Octahedral
-a Square planer
+os Square planer
 BL | VB
-“ A 7
+NX A Za
 B~ | “B
 Octahedral
 
 Reprint 2025-26
 
-AB,E, 2 2 “ H,O
+AB.E, 2 2 7
+A
+AB,E 4 1 B see Saw
+| 7B
+-__A
 B
-ABE, 3 2 CIF,
-2
+B
+Trigonal
+bi-pyramidal
 
-Unit 4.indd 115 9/12/2022 9:36:13 AM
+9/12/2022 9:36:13 AM
 
 Unit 4.indd 116
 
@@ -1611,20 +1624,26 @@ Unit 4.indd 116
 Molecule
 type
 
-CHEMISTRY
-
-Table 4.8 Shapes of Molecules containing Bond Pair and Lone Pair
+Table 4.8
 
 No. of
 bonding
 pairs
 
-No. of
-lone
-pairs
+CHEMISTRY
+
+Shapes of Molecules containing Bond Pair and Lone Pair
 
 Arrangement
+
+H
+
 of electrons
+
+z
+CH
+
+1o\
 
 Reprint 2025-26
 
@@ -1651,7 +1670,7 @@ of lp the shape would have
 been tetrahedral but one
 lone pair is present and due
 to the repulsion between
-lp-bp (which is more than
+Ip-bp (which is more than
 bp-bp repulsion) the angle
 between bond pairs is
 reduced to 107° from 109.5°.
@@ -1661,7 +1680,7 @@ tetrahedral if there were all bp
 but two lp are present so the
 shape is distorted tetrahedral
 or angular. The reason is
-lp-lp repulsion is more than
+Ip-lp repulsion is more than
 lp-bp repulsion which is more
 than bp-bp repulsion. Thus,
 the angle is reduced to 104.5°
@@ -1669,10 +1688,10 @@ from 109.5°.
 
 In (a) the lp is present at axial
 position so there are three
-lp—bp repulsions at 90°.
+Ip—bp repulsions at 90°.
 In(b) the lp is in an equatorial
 position, and there are two
-lp—bp repulsions. Hence,
+Ip—bp repulsions. Hence,
 arrangement (b) is more
 stable. The shape shown in
 (b) is described as a distorted
@@ -1700,7 +1719,7 @@ fails to explain the formation of chemical
 bond. It also does not give any reason for the
 difference in bond dissociation enthalpies and
 bond lengths in molecules like H, (435.8 kJ
-mol’, 74 pm) and F, (155 kJ mol’, 144 pm),
+mol’, 74 pm) and F, (155 kJ mol", 144 pm),
 although in both the cases a single covalent
 bond is formed by the sharing of an electron
 pair between the respective atoms. It also
@@ -1733,7 +1752,7 @@ equatorial position
 so there are less lp-
 bp repulsions as
 compared to others
-in which the lp are
+in which the Ip are
 at axial positions. So
 structure (a) is most
 stable. (T-shaped).
@@ -1763,8 +1782,8 @@ atoms approach each other, new attractive
 and repulsive forces begin to operate.
 
 Attractive forces arise between:
-(i) nucleus of one atom and its own electron
-that is N,-& and N,- €p:
+(i) | nucleus of one atom and its own electron
+that is N, —e, and N,- e,.
 
 Reprint 2025-26
 
@@ -1775,24 +1794,40 @@ Unit 4.indd 118
 118
 
 (ii) nucleus of one atom and electron of
-other atom i.e., N,— e,, N,- €,.
+other atom i.e., N,— e,, N,- e,.
 
 Similarly repulsive forces arise between
+
 (i) | electrons of two atoms like e, — e,,
-(ii) nuclei of two atoms N, — N,.
+
+(ii) nuclei of two atoms N, —N,,.
 
 Attractive forces tend to bring the two
 atoms close to each other whereas repulsive
 forces tend to push them apart (Fig. 4.7).
 
-Ln
+LAN
 
----- old forces
+7
+7
+7
+
+L’
+71
+7
+4
+Hg,
+H, y,
+74
+4
+
+fe
+4
+
+/ —--- old forces
 
 e new forces
 B
-
-Attractive Forces
 
 Repulsive Forces
 
@@ -1824,23 +1859,25 @@ depicted in Fig. 4.8. Conversely, 435.8 kJ of
 energy is required to dissociate one mole of
 H, molecule.
 
-H,(g) + 435.8 kJ mol'!-—> H(g) + H(g)
+H,(g) + 435.8 kJ mol! — H(g) + H(g)
 
-GS we wo
+aw &
 
-3
+ve
 
-El
+So
 
-~
+E
 
-25 >
+5
 
-8 Distance of separation
+= 0
 
-x
+5 Distance of separation
 
-Q
+f
+
+ea)
 435.8
 
 Bond Length 74 pm Internuclear distance ——>
@@ -1914,7 +1951,7 @@ orbitals are depicted in Fig. 4.9.
 
 The criterion of overlap, as the main factor
 for the formation of covalent bonds applies
-uniformly to the homonuclear/heteronuclear
+uniformly to the homonuclear /heteronuclear
 diatomic molecules and polyatomic molecules.
 We know that the shapes of CH,, NH,, and
 H,O molecules are tetrahedral, pyramidal
@@ -1925,9 +1962,9 @@ of the orbital overlaps.
 
 Let us first consider the CH, (methane)
 molecule. The electronic configuration of
-carbon in its ground state is [He]2s? 2p? which
-in the excited state becomes [He] 2s' 2p,' 2p.*
-2p,’. The energy required for this excitation is
+carbon in its ground state is [He]2s* 2p? which
+in the excited state becomes [He] 2s' 2p. 2 P,
+2p,'. The energy required for this excitation is
 compensated by the release of energy due to
 overlap between the orbitals of carbon and the
 
@@ -1936,34 +1973,32 @@ overlap between the orbitals of carbon and the
 Positive or in phase Negative or out of phase
 
 overlap overlap
-CIPO CdD»
+CIPD: COaDO-
 (a) (e)
 
-°
-Pp, ie p
+Ot) df)
+Dp, Ss Pp, Ss
+(f)
 
-WY) WY) .
-OE
+Wy WY .
+9
 
-i) “@
+:
+Y. g .
 
-°
-Pp, ig )
-
-N
-
-Py” Py Py Py
-(d) (h)
 Zero overlap (out of phase due to different orientation
 
 direction of approach)
-ey
+Ue.
+0 6
 
-Px P, Py
+Pp, P, py,
 
 (i) (i)
 Positive, negative and zero overlaps of
 s and p atomic orbitals
+
+N
 
 Fig.4.9
 
@@ -1973,15 +2008,15 @@ with the 1s orbitals of the four H atoms which
 are also singly occupied. This will result in the
 formation of four C-H bonds. It will, however,
 be observed that while the three p orbitals of
-carbon are at 90° to one another, the HCH
-angle for these will also be 90°. That is three
-C-H bonds will be oriented at 90° to one
+carbon are at 90 to one another, the HCH
+angle for these will also be 90’. That is three
+C-H bonds will be oriented at 90 to one
 another. The 2s orbital of carbon and the 1s
 orbital of H are spherically symmetrical and
 they can overlap in any direction. Therefore
 the direction of the fourth C-H bond cannot
 be ascertained. This description does not fit
-in with the tetrahedral HCH angles of 109.5’.
+in with the tetrahedral HCH angles of 109.5.
 Clearly, it follows that simple atomic orbital
 overlap does not account for the directional
 characteristics of bonds in CH,. Using similar
@@ -1996,9 +2031,9 @@ Unit 4.indd 120
 
 120
 
-and HOH angles should be 90°. This is in
+and HOH angles should be 90. This is in
 disagreement with the actual bond angles of
-107° and 104.5’ in the NH, and H,O molecules
+107 and 104.5’ in the NH, and H,O molecules
 respectively.
 
 4.5.4 Types of Overlapping and Nature of
@@ -2020,31 +2055,28 @@ on overlap or axial overlap. This can be
 formed by any one of the following types
 of combinations of atomic orbitals.
 
-e s-s overlapping : In this case, there is
+e =6©s-s overlapping : In this case, there is
 overlap of two half filled s-orbitals along
 the internuclear axis as shown below :
 
-G©:-G- &
+©: G- &
 
 s-orbital s-orbital s-s overlapping
-
-e s-p overlapping: This type of overlap
+e 6©s-p overlapping: This type of overlap
 occurs between half filled s-orbitals of one
+
 atom and half filled p-orbitals of another
 
 atom.
-
-G6 + SG - CDH
-
 s-orbital p-orbital s-p overlapping
 
 e p-p overlapping : This type of overlap
 takes place between half filled p-orbitals
 of the two approaching atoms.
 
-BDH‘ DQ > DUDY
+DH‘ DQ? DDG
 p-orbital p-orbital p-p overlapping
-(ii) pi(z) bond : In the formation of x bond
+(ii)  pi(z) bond : In the formation of m bond
 the atomic orbitals overlap in such a
 way that their axes remain parallel to
 each other and perpendicular to the
@@ -2058,8 +2090,7 @@ CHEMISTRY
 above and below the plane of the
 participating atoms.
 
-+ — ,&£™
-’ nd
+SES
 
 p-orbital p-orbital p-p overlapping
 
@@ -2093,7 +2124,7 @@ their energies, resulting in the formation of
 new set of orbitals of equivalent energies and
 shape. For example when one 2s and three
 2p-orbitals of carbon hybridise, there is the
-formation of four new sp® hybrid orbitals.
+formation of four new sp° hybrid orbitals.
 
 Salient features of hybridisation: The main
 
@@ -2109,8 +2140,6 @@ equivalent in energy and shape.
 Reprint 2025-26
 
 9/12/2022 9:36:14 AM
-
-Unit 4.indd 121
 
 CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
@@ -2133,7 +2162,7 @@ of the atom are hybridised.
 (ii) The orbitals undergoing hybridisation
 should have almost equal energy.
 
-(iii) Promotion of electron is not essential
+Promotion of electron is not essential
 condition prior to hybridisation.
 
 (iv) It is not necessary that only half filled
@@ -2151,7 +2180,7 @@ types of hybridisation are as under:
 involves the mixing of one s and one p orbital
 resulting in the formation of two equivalent
 sp hybrid orbitals. The suitable orbitals for
-sp hybridisation are s and p,, if the hybrid
+sp hybridisation are s and p, if the hybrid
 orbitals are to lie along the z-axis. Each sp
 hybrid orbitals has 50% s-character and
 50% p-character. Such a molecule in which
@@ -2173,7 +2202,7 @@ hybridisation
 having sp
 
 BeCl,: The ground state electronic
-configuration of Be is 1s?2s?. In the exited
+configuration of Be is 1s’2s’. In the exited
 state one of the 2s-electrons is promoted to
 
 121
@@ -2187,41 +2216,35 @@ the sp hybridised orbital overlaps with the
 2p-orbital of chlorine axially and form two Be-
 Cl sigma bonds. This is shown in Fig. 4.10.
 
-x
-180°
-y
+xX
 
-. .
-
-Z
-
+y 180°
 Linear
 Be
 sp hybrids
-
 (a)
-
-Of 3s Po—.
-
-Cl,
+o Oo
+Od: <  EPQ—:
+Cl, Be Cl,
 
 (b) BeCl, molecule
 Fig.4.10 (a) Formation of sp hybrids from s and
-p orbitals; (b) Formation of the linear
 
+p orbitals; (b) Formation of the linear
 BeCl, molecule
 
 (II) sp? hybridisation : In this hybridisation
 there is involvement of one s and two
 p-orbitals in order to form three equivalent
-sp? hybridised orbitals. For example, in
-BCl, molecule, the ground state electronic
+sp’? hybridised orbitals. For example, in
+BCI, molecule, the ground state electronic
 configuration of central boron atom is
-1s°2s°2p'. In the excited state, one of the 2s
+1s°2s’2p'. In the excited state, one of the 2s
 electrons is promoted to vacant 2p orbital as
 
+2 .
 sp hybrids
-Fig.4.11 Formation of sp’ hybrids and the BC1,
+Fig.4.11 Formation of sp* hybrids and the BCI,
 molecule
 
 Reprint 2025-26
@@ -2234,13 +2257,13 @@ Unit 4.indd 122
 
 a result boron has three unpaired electrons.
 These three orbitals (one 2s and two 2p)
-hybridise to form three sp? hybrid orbitals.
+hybridise to form three sp” hybrid orbitals.
 The three hybrid orbitals so formed are
 oriented in a trigonal planar arrangement
 and overlap with 2p orbitals of chlorine to
-form three B-Cl bonds. Therefore, in BCl,
+form three B-Cl bonds. Therefore, in BCI,
 (Fig. 4.11), the geometry is trigonal planar
-with CIBC1 bond angle of 120°.
+with CIBCI1 bond angle of 120°.
 
 (III) sp* hybridisation: This type of
 hybridisation can be explained by taking the
@@ -2249,34 +2272,41 @@ mixing of one s-orbital and three p-orbitals
 of the valence shell to form four sp* hybrid
 orbital of equivalent energies and shape. There
 is 25% s-character and 75% p-character in
-each sp* hybrid orbital. The four sp® hybrid
+each sp°* hybrid orbital. The four sp’ hybrid
 orbitals so formed are directed towards the
 four corners of the tetrahedron. The angle
 between sp® hybrid orbital is 109.5° as shown
 in Fig. 4.12.
 
-StP,+PytP,
-
+" 109.5°
++
+\
+= +.
++
+|
+S+P,+P,+P, sp hybrids
+H
+CH,
 Fig.4.12 Formation of sp*hybrids by the
+
 combination of s, p,, p, and p, atomic
 orbitals of carbon and the formation of
-
 CH, molecule
 
 The structure of NH, and H,O molecules
-can also be explained with the help of sp*
+can also be explained with the help of sp
 hybridisation. In NH,, the valence shell (outer)
 electronic configuration of nitrogen in the
 
 CHEMISTRY
 
-ground state is 2S°2p.2p,2p, having three
-unpaired electrons in the sp* hybrid orbitals
+ground state is 2S°2p.2p,2P, having three
+unpaired electrons in the sp*® hybrid orbitals
 and a lone pair of electrons is present in the
 fourth one. These three hybrid orbitals overlap
 with 1s orbitals of hydrogen atoms to form
 three N-H sigma bonds. We know that the
-force of repulsion between a lone pair and a
+force of repulsion between a lone pair anda
 bond pair is more than the force of repulsion
 between two bond pairs of electrons. The
 molecule thus gets distorted and the bond
@@ -2284,17 +2314,16 @@ angle is reduced to 107° from 109.5°. The
 geometry of such a molecule will be pyramidal
 as shown in Fig. 4.13.
 
-H
 Ammonia, NH,
 
 Fig.4.13 Formation of NH, molecule
 
 In case of H,O molecule, the four oxygen
-orbitals (one 2s and three 2p) undergo sp°
+orbitals (one 2s and three 2p) undergo sp*°
 hybridisation forming four sp* hybrid orbitals
 out of which two contain one electron each and
 the other two contain a pair of electrons. These
-four sp* hybrid orbitals acquire a tetrahedral
+four sp® hybrid orbitals acquire a tetrahedral
 geometry, with two corners occupied by
 hydrogen atoms while the other two by the
 lone pairs. The bond angle in this case is
@@ -2312,31 +2341,31 @@ Unit 4.indd 123
 
 CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
-4.6.2 Other Examples of sp*, sp* and sp
+4.6.2 Other Examples of sp*, sp”? and sp
 Hybridisation
 
 sp* Hybridisation in C,H, molecule: In
 ethane molecule both the carbon atoms
-assume sp® hybrid state. One of the four
-sp® hybrid orbitals of carbon atom overlaps
+assume sp’ hybrid state. One of the four
+sp°® hybrid orbitals of carbon atom overlaps
 axially with similar orbitals of other atom to
-form sp*-sp? sigma bond while the other three
+form sp*-sp’ sigma bond while the other three
 hybrid orbitals of each carbon atom are used
-in forming sp*-s sigma bonds with hydrogen
+in forming sp*—-s sigma bonds with hydrogen
 atoms as discussed in section 4.6.1 (iii).
 Therefore in ethane C-—C bond length is 154
 pm and each C-H bond length is 109 pm.
 
-sp? Hybridisation in C,H,: In the formation
-of ethene molecule, one of the sp* hybrid
+sp’ Hybridisation in C,H: In the formation
+of ethene molecule, one of the sp’? hybrid
 orbitals of carbon atom overlaps axially with
 sp’ hybridised orbital of another carbon atom
-to form C-C sigma bond. While the other two
+to form C-—C sigma bond. While the other two
 sp’ hybrid orbitals of each carbon atom are
 
 123
 
-used for making sp’—s sigma bond with two
+used for making sp7—s sigma bond with two
 hydrogen atoms. The unhybridised orbital (2p,
 or 2p,) of one carbon atom overlaps sidewise
 with the similar orbital of the other carbon
@@ -2346,28 +2375,30 @@ and below the plane of carbon and hydrogen
 atoms.
 
 Thus, in ethene molecule, the carbon-
-carbon bond consists of one sp*-sp’ sigma
-bond and one pi (1) bond between p orbitals
+carbon bond consists of one sp*—sp* sigma
+bond and one pi (x) bond between p orbitals
 which are not used in the hybridisation and
 are perpendicular to the plane of molecule; the
-bond length 134 pm. The C-H bond is sp?—s
-sigma with bond length 108 pm. The H-C-H
-bond angle is 117.6° while the H-C-C angle
+bond length 134 pm. The C-H bond is sp*-s
+sigma with bond length 108 pm. The H—C-H
+bond angle is 117.6° while the H—-C-C angle
 is 121°. The formation of sigma and pi bonds
 in ethene is shown in Fig. 4.15.
 
-H 2p, n
-\ -
-mA nm
+H 2B rn
+~ a
+a
+H A ( Tl
 (b)
-2P, 2p,
-TT
-TT
-C —  ———> ae
+2D, 2p,
+TU
+TU
+HWY oo dH H CoH
+we Su 8 er ee Oo
 
 (d)
 
-(e)
+(2)
 
 Fig. 4.15 Formation of sigma and pi bonds in ethene
 
@@ -2382,17 +2413,17 @@ Unit 4.indd 124
 sp Hybridisation in C,H, : In the formation
 of ethyne molecule, both the carbon atoms
 undergo sp-hybridisation having two
-unhybridised orbital Le., 2p, and 2p,.
+unhybridised orbital t.e., 2 Py and 2p..
 
 One sp hybrid orbital of one carbon atom
 overlaps axially with sp hybrid orbital of the
-other carbon atom to form C-C sigma bond,
+other carbon atom to form C-—C sigma bond,
 while the other hybridised orbital of each
 carbon atom overlaps axially with the half
-filled s orbital of hydrogen atoms forming
+filed s orbital of hydrogen atoms forming
 o bonds. Each of the two unhybridised p
 orbitals of both the carbon atoms overlaps
-sidewise to form two m bonds between the
+sidewise to form two zm bonds between the
 carbon atoms. So the triple bond between the
 two carbon atoms is made up of one sigma
 and two pi bonds as shown in Fig. 4.16.
@@ -2415,7 +2446,7 @@ orbitals. The energy of the 3d orbitals are
 comparable to the energy of the 3s and 3p
 orbitals. The energy of 3d orbitals are also
 comparable to those of 4s and 4p orbitals.
-As a consequence the hybridisation involving
+As aconsequence the hybridisation involving
 either 3s, 3p and 3d or 3d, 4s and 4p is
 possible. However, since the difference in
 energies of 3p and 4s orbitals is significant, no
@@ -2432,26 +2463,17 @@ orbitals
 Hybridisation
 type
 
-Examples
-
-(i) Formation of PC1, (sp*d hybridisation):
+(i) Formation of PCl, (sp°d hybridisation):
 The ground state and the excited state outer
 electronic configurations of phosphorus
 (Z=15) are represented below.
 
-P (ground state) LLL]
-3s
+P (ground state) [TT {TI
+3s 3p 3d
+P (excited state) [| at fff
 
-3p 3d
-
-P (excited state) [t] it] | fd
-
-—— eee eee ee
-
-Pol, ig Mw TT
-Cl Cl
-
-Cl Cl Cl
+PCl, a vi TTT
+Cl Cl Cl Cl Cl
 
 sp°d hybrid orbitals filled by electron pairs
 donated by five Cl atoms.
@@ -2464,9 +2486,9 @@ Unit 4.indd 125
 
 CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
-Now the five orbitals (ie., one s, three
+Now the five orbitals (te., one s, three
 p and one d orbitals) are available for
-hybridisation to yield a set of five sp°d hybrid
+hybridisation to yield a set of five sp*d hybrid
 orbitals which are directed towards the five
 corners of a trigonal bipyramidal as depicted
 in the Fig. 4.17.
@@ -2479,18 +2501,18 @@ Cl RPS Cl
 
 Cl
 
-Fig. 4.17 Trigonal bipyramidal geometry of PCl,
+Fig. 4.17 Trigonal bipyramidal geometry of PCI.
 molecule
 
 It should be noted that all the bond angles
 in trigonal bipyramidal geometry are not
-equivalent. In PCl, the five sp*d orbitals of
+equivalent. In PCl, the five sp’d orbitals of
 phosphorus overlap with the singly occupied
 p orbitals of chlorine atoms to form five P—Cl
 sigma bonds. Three P-Cl bond lie in one
 plane and make an angle of 120° with each
 other; these bonds are termed as equatorial
-bonds. The remaining two P-Cl bonds-one
+bonds. The remaining two P-Cl bonds-—one
 lying above and the other lying below the
 equatorial plane, make an angle of 90° with
 the plane. These bonds are called axial bonds.
@@ -2504,39 +2526,38 @@ molecule more reactive.
 (ii) Formation of SF, (sp°d? hybridisation):
 In SF, the central sulphur atom has the
 ground state outer electronic configuration
-3s°?3p*. In the exited state the available six
-orbitals ie., one s, three p and two d are
+3s73p*. In the exited state the available six
+orbitals t.e., one s, three p and two d are
 singly occupied by electrons. These orbitals
-hybridise to form six new sp*d? hybrid
+hybridise to form six new sp%d? hybrid
 orbitals, which are projected towards the six
 corners of a regular octahedron in SF,. These
 
 125
 
-six sp°d’? hybrid orbitals overlap with singly
+six sp°d* hybrid orbitals overlap with singly
 occupied orbitals of fluorine atoms to form
 six S-F sigma bonds. Thus SF, molecule has
 a regular octahedral geometry as shown in
 Fig. 4.18.
 
-S (ground state) Myf LTT TL
-S (excited state) a =a
+S (ground state) Myf Seenn
+S (excited state) a ous
 
-sr a AO
 F F F F F F
-sp?d? hybridisation
+sp°d’ hybridisation
 
 EF
 
 F
 
-Fig. 4.18 Octahedral geometry of SF, molecule
+Fig. 4.18 Octahedral geometry of SF molecule
 
 4.7 MOLECULAR ORBITAL THEORY
 
 Molecular orbital (MO) theory was developed
 by F. Hund and R.S. Mulliken in 1932. The
-salient features of this theory are:
+salient features of this theory are :
 
 (i) |The electrons in a molecule are present
 in the various molecular orbitals as the
@@ -2558,8 +2579,6 @@ Reprint 2025-26
 9/12/2022 9:36:17 AM
 
 Unit 4.indd 126
-
-126
 
 an atomic orbital is monocentric while
 a molecular orbital is polycentric.
@@ -2595,7 +2614,7 @@ Orbitals (LCAO)
 
 According to wave mechanics, the atomic
 orbitals can be expressed by wave functions
-(yw ’s) which represent the amplitude of the
+(y ’s) which represent the amplitude of the
 electron waves. These are obtained from
 the solution of Schrédinger wave equation.
 However, since it cannot be solved for any
@@ -2625,18 +2644,21 @@ take place by addition and by subtraction of
 wave functions of individual atomic orbitals
 as shown below :
 
-Wo = Yt We
+Wuio ~ Va + We
 Therefore, the two molecular orbitals
-o and o* are formed as :
+o and o*% are formed as:
 
-T= Wt VW,
-OF = Wa- Wp
+CO = Wt YW,
+w= Ya We
+
 The molecular orbital o formed by the
 addition of atomic orbitals is called the bonding
 molecular orbital while the molecular orbital
 o* formed by the subtraction of atomic orbital
 is called antibonding molecular orbital as
 depicted in Fig. 4.19.
+
+Oo
 
 Antibonding orbital
 higher energy than
@@ -2651,17 +2673,13 @@ orbital
 Atomic
 orbital
 
-|—>
-
-Ya
-
 Increasing energy
 
 Bonding orbital
 lower energy than
 that of atomic orbitals
 
-Fig.4.19 Formation of bonding (o) and antibonding
+Fig.4.19 Formationofbonding (o) and antibonding
 (o*) molecular orbitals by the linear
 combination of atomic orbitals y, and
 y, centered on two atoms A and B
@@ -2746,7 +2764,7 @@ the same energy will not combine if they do
 not have the same symmetry. For example,
 2p, orbital of one atom can combine with 2p,
 orbital of the other atom but not with the
-2p, or 2p, orbitals because of their different
+2p, or 2 P, orbitals because of their different
 symmetries.
 
 3.The combining atomic orbitals must
@@ -2768,12 +2786,12 @@ combination of 1s orbitals centered on two
 nuclei produces two molecular orbitals which
 are symmetrical around the bond-axis. Such
 molecular orbitals are of the o type and are
-designated as ols and o* 1s [Fig. 4.20(a), page
+designated as ols and o* 1s |Fig. 4.20(a), page
 124]. If internuclear axis is taken to be in
 the z-direction, it can be seen that a linear
-combination of 2p .- orbitals of two atoms
+combination of 2p - orbitals of two atoms
 also produces two sigma molecular orbitals
-designated as o2p, and o*2p.. [Fig. 4.20(b)]
+designated as o2p, and o*2p.. [Fig. 4.20(b)|
 
 Molecular orbitals obtained from 2p, and
 2p, orbitals are not symmetrical around the
@@ -2781,9 +2799,9 @@ bond axis because of the presence of positive
 lobes above and negative lobes below the
 molecular plane. Such molecular orbitals,
 are labelled as z and =z* [Fig. 4.20(c)]. A
-a bonding MO has larger electron density
+z bonding MO has larger electron density
 above and below the inter-nuclear axis. The
-a antibonding MO has a node between the
+m* antibonding MO has a node between the
 nuclei.
 
 4.7.4 Energy Level Diagram for Molecular
@@ -2791,7 +2809,7 @@ Orbitals
 
 We have seen that 1s atomic orbitals on two
 atoms form two molecular orbitals designated
-as olsand o*1s. In the same manner, the 2s
+as olsand o*l1s. In the same manner, the 2s
 and 2p atomic orbitals (eight atomic orbitals
 
 Reprint 2025-26
@@ -2800,55 +2818,86 @@ Reprint 2025-26
 
 Unit 4.indd 128
 
+Molecular
+orbital
+
+Molecular
+orbital
+
+:
+>) 2
+ea)
+
+o2P
+
+Molecular
+orbital
+
+(c)
+
+20-09 -Gse0
+* ep: 00:
+
 CHEMISTRY
 
-128
-Molecular Antibonding sigma
-orbital molecular orbital
-0-O- @
-(a) us 1s ols
-a
+Antibonding sigma
+molecular orbital
+
+ae
+
+*
+ols
 
 Bonding sigma
 molecular orbital
 
-0:O-0oO
+0:O-0O
 ls ls ols
 
 Antibonding sigma
+molecular orbital
 
-Molecular molecular orbital
-orbita: orbital ‘
-B 2P, 2P, 62P
-b o Bonding sigma
-(b) 5 2D, molecular orbital
-@d:-e6-
 o2P
-2p, 2p, 2R
+Bonding sigma
+molecular orbital
+
+2D,
+
+o2p
+
+Z
+
 Antibonding pi
-Molecular molecular orbital
+molecular orbital
 
-orbital
-— —
+2D, 2D,
 
-2p, 2p, n'2p.
+m 2p.
 Bonding pi
 molecular orbital
 
-2p. x2P
+2p.
+
+mz2P
+
+2P,
 
 Fig. 4.20 Contours and energies of bonding and antibonding molecular orbitals formed through
 combinations of (a) 1s atomic orbitals; (b) 2p, atomic orbitals and (c) 2p, atomic orbitals.
 
-2P.
+on two atoms) give rise to the following eight
+molecular orbitals:
+Antibonding MOs o*2s o*2p n*2p, m2),
 
-on two atoms) give rise to the following eight The energy levels of these molecular
-molecular orbitals: orbitals have been determined experimentally
+Bonding MOs o2s o2p, 12p, 712p
+
+y
+
+The energy levels of these molecular
+orbitals have been determined experimentally
 from spectroscopic data for homonuclear
-. diatomic molecules of second row elements
-Bonding MOs 02s o2p, 72p, 72p, of the periodic table. The increasing order of
-
-Antibonding MOs o*2s o*2p, m*2p, m2p,
+diatomic molecules of second row elements
+of the periodic table. The increasing order of
 
 Reprint 2025-26
 
@@ -2861,8 +2910,8 @@ CHEMICAL BONDING AND MOLECULAR STRUCTURE
 energies of various molecular orbitals for O,
 and F, is given below:
 
-oIs<o*Ils<o 2s <o*2s <o2p,< (x 2p,=n 2p,)
-< (n*2p = 1* 2p,) <o*2p,
+ols<o*Is<o 2s <o*2s <o2p,< (1 2p,=1 2p)
+< (x*2p = 1 2p,) <o*2p,
 
 However, this sequence of energy levels
 of molecular orbitals is not correct for the
@@ -2872,14 +2921,14 @@ that for molecules such as B,, C,, N,, etc.
 the increasing order of energies of various
 molecular orbitals is
 
-ols <o*ls<o2s <o*2s <(n2p,=12p,)
-< o2p, < (n*2p,=1*2p,) < 0* 2p,
+ols <o*Is<o2s<o*2s < (x2 p.= m2 p.)
+<o2p, < (n*2p.. =m*2p,) < o*2p,
 
 The important characteristic feature
 of this order is that the energy of o2p,
 
 molecular orbital is higher than that
-of n2p, and m2p, molecular orbitals.
+of x2p,.and x2p, molecular orbitals.
 
 4.7.5 Electronic Configuration and
 Molecular Behaviour
@@ -2915,16 +2964,18 @@ difference between the number of electrons
 present in the bonding and the antibonding
 orbitals i.e.,
 
-Bond order (b.0.) = % (N,-N.)
+Bond order (b.0.) = % (N,—-N_)
 
 129
 
 The rules discussed above regarding the
 stability of the molecule can be restated in
 terms of bond order as follows: A positive bond
-order (i.e., N, > N,) means a stable molecule
+order (i.e., N, > N.) means a stable molecule
 while a negative (i.e., N,<N,) or zero (i.e.,
-N, = N,) bond order means an unstable
+N,= N,) bond order means an unstable
+
+b
 molecule.
 
 Nature of the bond
@@ -2936,7 +2987,7 @@ concept.
 
 Bond-length
 
-The bond order between two atoms ina
+The bond order between two atoms in a
 molecule may be taken as an approximate
 measure of the bond length. The bond length
 decreases as bond order increases.
@@ -2956,29 +3007,29 @@ DIATOMIC MOLECULES
 In this section we shall discuss bonding in
 some homonuclear diatomic molecules.
 
-1. Hydrogen molecule (H,): It is formed by
+1. Hydrogen molecule (H, ): It is formed by
 the combination of two hydrogen atoms. Each
 hydrogen atom has one electron in 1s orbital.
 Therefore, in all there are two electrons in
-hydrogen molecule which are present in ols
+hydrogen molecule which are present in o/s
 molecular orbital. So electronic configuration
 of hydrogen molecule is
 
-H, : (o/s)?
+H, : (o 1s)?
 
 The bond order of H, molecule can be
 calculated as given below:
-N,-N, _ 2-0
+N,-N, 2-0 _ 1
 
 2 2
 
 This means that the two hydrogen atoms
 are bonded together by a single covalent bond.
 The bond dissociation energy of hydrogen
-molecule has been found to be 438 kJ mot
+molecule has been found to be 438 kJ mol!
 and bond length equal to 74 pm. Since no
 
-Bond order = =1
+Bond order =
 
 Reprint 2025-26
 
@@ -3000,45 +3051,49 @@ olsand o*ls molecular orbitals leading to
 electronic configuration:
 
 He, : (o 1s)? (o* 1s)?
-Bond order of He, is ’(2 — 2) = 0
+
+2
+
+Bond order of He, is (2 — 2) = 0
 
 He, molecule is therefore unstable and
 does not exist.
 
 Similarly, it can be shown that Be, molecule
-(o1s)? (o* 18s)? (62s)? (o*2s)? also does not exist.
+(01s)? (o* 1s)? (02s)? (o*2 8s)? also does not exist.
 
 3. Lithium molecule (Li, ): The electronic
 configuration of lithium is 1s’, 2s'. There
 are six electrons in Li,. The electronic
 configuration of Li, molecule, therefore, is
 
-Li, : (61s)? (o*1s)? (62s)?
+Li, : (61s)? (o*1s)? (o2s)”
 The above configuration is also written
 
 as KK(o2s)? where KK represents the closed
 K shell structure (o1s)? (o*1s)?.
 
 From the electronic configuration of Li,
-
 molecule it is clear that there are four electrons
 present in bonding molecular orbitals and two
 electrons present in antibonding molecular
-orbitals. Its bond order, therefore, is % (4 -
+orbitals. Its bond order, therefore, is '/2 (4 —
 2) = 1. It means that Li, molecule is stable
 and since it has no unpaired electrons it
 should be diamagnetic. Indeed diamagnetic
 Li, molecules are known to exist in the
 vapour phase.
+
 4. Carbon molecule (C, ): The electronic
 configuration of carbon is 1s? 2s? 2p’. There
 are twelve electrons in C,. The electronic
+
 configuration of C, molecule, therefore, is
 
-C,: (o1s)? (o*1s)? (o * 2s)? (x2p%, = 12p7)
-or KK (02s)? (o*2s)? (12p2 = m2p*)
+C,: (61s)? (*1s) (6 * 2s)? (2p = 2p’)
+or KK (02s)? (o* 2s)? (12p%, = 22p*)
 
-The bond order of C, is % (8 - 4) = 2
+The bond order of C, is % (8 — 4) = 2
 and C, should be diamagnetic. Diamagnetic
 C, molecules have indeed been detected in
 
@@ -3051,18 +3106,25 @@ two pi molecular orbitals. In most of the other
 molecules a double bond is made up of a
 sigma bond and a pi bond. In a similar fashion
 the bonding in N, molecule can be discussed.
-5. Oxygen molecule (O,): The electronic
-configuration of oxygen atom is 1s? 2s? 2p’.
+
+5S. Oxygen molecule (O,): The electronic
+configuration of oxygen atom is 1s* 2s? 2p%*.
 Each oxygen atom has 8 electrons, hence,
 in O, molecule there are 16 electrons. The
 electronic configuration of O, molecule,
 therefore, is
 
-O,: (o1s)* (o*1s)? (o 2s)? (o * 2s)? (o2p,)?
-(x2p? = 12p,”) (x*2p',, = m*2p,’)
+O,: (ols)? (o*1s)? (6 2s)? (o * Qs)* (o2p,)?
 
-KK (62s)? (62ps)? (62p,)
-(72p?,= n2p?), (x*2p1,= 1 #21)
+2
+
+mp? = 1712p’) (r*2p'. =1*2p!
+x y x Y
+
+KK (o2s)* (62ps)* (o2p,)”
+| (22p2,= 22p?), (7*2p1.= m *2')
+
+2
 
 From the electronic configuration of O,
 molecule it is clear that ten electrons are
@@ -3071,12 +3133,12 @@ electrons are present in antibonding molecular
 orbitals. Its bond order, therefore, is
 
 1 1
-Bond order = Dy [N, - N,] = 2 [10-6] =2
+Bond order = oy [N, - N,] = > [10-6] =2
 
 So in oxygen molecule, atoms are held
 by a double bond. Moreover, it may be noted
 that it contains two unpaired electrons in
-m*2p and x*2p molecular orbitals, therefore,
+m*2p and m* 2p, molecular orbitals, therefore,
 O, molecule should be paramagnetic,
 a prediction that corresponds to
 experimental observation. In this way, the
@@ -3106,50 +3168,19 @@ CHEMICAL BONDING AND MOLECULAR STRUCTURE
 
 With 2s-2p mixing Without 2s-2p mixing
 
-O»
-Ty,
->,
-bs
-oO
-i=}
-ea Ty,
-05
-é om
-nal
+Energy
+
+1
+
 900
-BB
-o
-q 600
-oO
-5
-8 300
-jaa)
-oO
 
-Oo»
+600
 
-Ts,
+300
 
-Top
+O Bond energy /kJmol
 
->,
-
-0 >,
-
-Oo,
-g
-a,
-
-150 >
-SG
-a
-
-100 AS)
-ae)
-
-50 §
-faa)
-o
+Bond order
 
 Magnetic
 properties
@@ -3158,9 +3189,40 @@ Valence
 electron
 configuration
 
-(m02,)”
+(10,,)" (Or)
 
-Fig. 4.21
+O>,
+
+T >,
+
+Tl,
+
+Oo,
+
+O>,
+=
+Q,
+
+150 =
+Y
+oe
+
+100 o
+oO
+
+50 §&
+aa)
+o
+
+1 2 3 2, 1 O
+Faramagncts| Biamagnetc| DinnagnetcParmmasnciq]Damaenste|
+
+(G5,)° (O'a5)7 (Gas)? (Fas) }(G2s)? (Fa5)7|(G25)” (G28) | (2s) CS 24)?| (GasO"o5)?
+
+(9,,) ° (1,,,) . (O,,) ° (1,,,) .
+(10's) (TC)
+
+Fig.4.21 MO occupancy and molecular properties for B, through Ne,.
 
 4.9 HYDROGEN BONDING
 
@@ -3178,26 +3240,14 @@ molecule, the hydrogen bond exists between
 hydrogen atom of one molecule and fluorine
 atom of another molecule as depicted below :
 
-H*'-F*- H*® — F* H*® — F>
+_—_ H*—F° _ _ —H>* _ FO _ H5* _ FO
 Here, hydrogen bond acts as a bridge between
 
 two atoms which holds one atom by covalent
 bond and the other by hydrogen bond.
 
-(Z02,)" (G2,)”
-
-(2,)” (O25) (Gas) (Fas) (G25)? (25) 7|(G28)” (G28) | (F2,) CO 2.)?| (G22)?
-
-* 1(G,)"op)" | (6,,)° (Tsp)
-(1’,,)” (x, (oO, >)
-
-4
-2
-
-MO occupancy and molecular properties for B, through Ne,.
-
 Hydrogen bond is represented by a dotted
-line (— — -) while a solid line represents the
+line (- — -) while a solid line represents the
 covalent bond. Thus, hydrogen bond can be
 defined as the attractive force which binds
 hydrogen atom of one molecule with the
@@ -3215,7 +3265,7 @@ hydrogen atom becomes highly electropositive
 with respect to the other atom ‘X’. Since
 there is displacement of electrons towards
 X, the hydrogen acquires fractional positive
-charge (6 *) while ‘X’ attain fractional negative
+charge (6*) while *X’ attain fractional negative
 
 Reprint 2025-26
 
@@ -3225,11 +3275,11 @@ Unit 4.indd 132
 
 132
 
-charge (6). This results in the formation of a
+charge (5). This results in the formation of a
 polar molecule having electrostatic force of
 attraction which can be represented as:
 
-Hé+ — X*> H*®* — X® H*— X*>
+He+ — Xe — Xe tt x
 
 The magnitude of H-bonding depends
 on the physical state of the compound. It is
@@ -3242,7 +3292,7 @@ properties of the compounds.
 
 There are two types of H-bonds
 
-(ij) Intermolecular hydrogen bond
+(i) Intermolecular hydrogen bond
 (ii) Intramolecular hydrogen bond
 
 (1) Intermolecular hydrogen bond : It is
@@ -3262,11 +3312,13 @@ example, in o-nitrophenol the hydrogen is in
 between the two oxygen atoms.
 
 O
-N
-SN
-°
+|
+
+NY
+O
 
 H
+
 on
 
 Fig. 4.22 Intramolecular hydrogen bonding in
@@ -3274,7 +3326,7 @@ o-nitrophenol molecule
 
 SUMMARY
 
-K6éssel’s first insight into the mechanism of formation of electropositive and electronegative
+K6ssel’s first insight into the mechanism of formation of electropositive and electronegative
 ions related the process to the attainment of noble gas configurations by the respective ions.
 Electrostatic attraction between ions is the cause for their stability. This gives the concept
 
@@ -3321,7 +3373,7 @@ The VSEPR model used for predicting the geometrical shapes of molecules is based
 the assumption that electron pairs repel each other and, therefore, tend to remain as far
 apart as possible. According to this model, molecular geometry is determined by repulsions
 between lone pairs and lone pairs; lone pairs and bonding pairs and bonding pairs and bonding
-pairs. The order of these repulsions being : lp-lp > lp-bp > bp-bp
+pairs. The order of these repulsions being: lp-lp > lp-bp > bp-bp
 
 The valence bond (VB) approach to covalent bonding is basically concerned with the
 energetics of covalent bond formation about which the Lewis and VSEPR models are silent.
@@ -3337,7 +3389,7 @@ bond length values are not obtained by overlap alone and other variables have to
 into account.
 
 For explaining the characteristic shapes of polyatomic molecules Pauling introduced the
-concept of hybridisation of atomic orbitals. sp, sp’, sp* hybridizations of atomic orbitals
+concept of hybridisation of atomic orbitals. sp, sp’, sp’ hybridizations of atomic orbitals
 of Be, B, C, N and O are used to explain the formation and geometrical shapes of molecules
 like BeCl,, BCl,, CH,, NH, and H,O. They also explain the formation of multiple bonds in
 molecules like C,H, and C,H,.
@@ -3365,14 +3417,13 @@ of many compounds.
 EXERCISES
 
 4.1 Explain the formation of a chemical bond.
-
 4.2 Write Lewis dot symbols for atoms of the following elements : Mg, Na, B, O, N, Br.
 
 4.3 Write Lewis symbols for the following atoms and ions:
-S and S*; Al and Al**; H and H-
+S and S*; Al and Al**; H and H™
 
 4.4 Draw the Lewis structures for the following molecules and ions :
-H,S, SiCl,, BeF,, COZ, HCOOH
+H,S, SiCl,, BeF,, CO;, HCOOH
 
 4.5 Define octet rule. Write its significance and limitations.
 
@@ -3428,19 +3479,19 @@ in water is less than that of ammonia. Discuss.
 How do you express the bond strength in terms of bond order ?
 Define the bond length.
 
-Explain the important aspects of resonance with reference to the COZ” ion.
+Explain the important aspects of resonance with reference to the COZ ion.
 
 H,PO, can be represented by structures 1 and 2 shown below. Can these two
 structures be taken as the canonical forms of the resonance hybrid representing
 H,PO, ? If not, give reasons for the same.
 
 H
-H!O!P!0:H H!0!P!0:H
-‘0: ‘0:
+HiO:P:O:H H!0:P:O:H
+‘O: ‘0:
 
 H
 (1) (2)
-Write the resonance structures for SO,, NO, and NO;.
+Write the resonance structures for SO,, NO, and NO.
 
 Use Lewis symbols to show electron transfer between the following atoms to form
 cations and anions: (a) K and S (b) Ca and O (c) Al and N.
@@ -3458,7 +3509,7 @@ N,, SO, and CIF,.
 The skeletal structure of CH,COOH as shown below is correct, but some of the bonds
 are shown incorrectly. Write the correct Lewis structure for acetic acid.
 
-H :O:
+H <:O.;
 
 Apart from tetrahedral geometry, another possible geometry for CH, is square planar
 with the four H atoms at the corners of the square and the C atom at its centre.
@@ -3470,10 +3521,10 @@ polar.
 Which out of NH, and NF, has higher dipole moment and why ?
 
 What is meant by hybridisation of atomic orbitals? Describe the shapes of sp, sp’,
-sp® hybrid orbitals.
+sp hybrid orbitals.
 
 Describe the change in hybridisation (if any) of the Al atom in the following reaction.
-AlCl, +Cl — AICI,
+AlCl, + Cl > AICI,
 
 Reprint 2025-26
 
@@ -3511,7 +3562,7 @@ CHEMICAL BONDING AND MOLECULAR STRUCTURE
 Is there any change in the hybridisation of B and N atoms as a result of the following
 reaction?
 
-BF, +NH, — F,B.NH,
+BF, + NH, > F,B.NH,
 
 Draw diagrams showing the formation of a double bond and a triple bond between
 carbon atoms in C,H, and C,H, molecules.
@@ -3522,11 +3573,11 @@ What is the total number of sigma and pi bonds in the following molecules?
 
 Considering x-axis as the internuclear axis which out of the following will
 
-not form a sigma bond and why? (a) 1s and 1s (b) 1s and 2p); (c) 2p, and 2p,
-(d) 1s and 2s.
+not form a sigma bond and why? (a) 1s and 1s (b) 1s and 2p; (c) 2p, and 2p,
+(d) ls and 2s.
 
 Which hybrid orbitals are used by carbon atoms in the following molecules?
-CH,-CH,; (b) CH,-CH=CH,,; (c) CH,-CH,-OH; (d) CH,-CHO (e) CH,COOH
+CH,-CH,; (b) CH,-CH=CH,,; (c) CH,-CH,-OH; (d) CH,-CHO (e) CH, COOH
 
 What do you understand by bond pairs and lone pairs of electrons? Illustrate by
 giving one exmaple of each type.
@@ -3542,7 +3593,7 @@ Use molecular orbital theory to explain why the Be, molecule does not exist.
 Compare the relative stability of the following species and indicate their magnetic
 properties;
 
-O,,03,02 (superoxide), 02 (peroxide)
+O,,03,0, (superoxide), OF (peroxide)
 
 Write the significance of a plus and a minus sign shown in representing the orbitals.
 
@@ -3551,7 +3602,7 @@ to equatorial bonds?
 
 Define hydrogen bond. Is it weaker or stronger than the van der Waals forces?
 
-What is meant by the term bond order? Calculate the bond order of : N,, O,, O;
+What is meant by the term bond order? Calculate the bond order of : N,, O,, O}
 and O,.
 
 Reprint 2025-26
