@@ -2,21 +2,22 @@ import os
 import re
 import psycopg2
 from dotenv import load_dotenv
-import pandas as pd
 from pdf2image import convert_from_path
 import pytesseract
+import pandas as pd
+from dataclasses import dataclass, field
+from typing import List
 
-# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
-POPPLER_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
+# ======= 1. ALL PATHS HAVE BEEN CORRECTED TO MATCH YOUR SYSTEM =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
+POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
-# =======================================================
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
+# ==============================================================================
 
 # --- Configuration ---
 load_dotenv()
-# This is the correct variable name we are using now
 SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
@@ -40,7 +41,7 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         log(f"  - Reading from cache: '{pdf_filename}'")
         with open(cache_filepath, 'r', encoding='utf-8') as f:
             return f.read()
-    log(f"  - No cache found. Running OCR...")
+    log(f"  - No cache found for '{pdf_filename}'. Running OCR...")
     try:
         images = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
         full_text = "".join(pytesseract.image_to_string(img) + "\n" for img in images)
@@ -53,10 +54,13 @@ def get_text_from_pdf_with_caching(pdf_path: str) -> str:
         return ""
 
 def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
+    """Extracts topics and questions using a reliable split-based method."""
     extracted_topics = []
-    topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.')])
+    
+    topic_numbers = sorted(topics_from_csv['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.') if i.isdigit()])
     heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
     matches = list(heading_pattern.finditer(ocr_text))
+    
     topic_locations = {match.group(1).strip(): match.start() for match in matches}
 
     for index, row in topics_from_csv.iterrows():
@@ -67,9 +71,15 @@ def extract_topics_and_questions(ocr_text: str, topics_from_csv: pd.DataFrame):
             for next_num, next_pos in topic_locations.items():
                 if next_pos > start_pos and next_pos < end_pos:
                     end_pos = next_pos
+            
             content = ocr_text[start_pos:end_pos].strip()
             title = content.split('\n')[0].strip()
-            extracted_topics.append({'topic_number': topic_num, 'title': title, 'content': content})
+            
+            extracted_topics.append({
+                'topic_number': topic_num,
+                'title': title,
+                'content': content
+            })
 
     questions = []
     exercises_match = re.search(r'EXERCISES', ocr_text, re.IGNORECASE)
@@ -86,19 +96,20 @@ def update_database(cursor, chapter_id: int, topics: list, questions: list):
     """Updates the database with the extracted topics and questions."""
     log(f"  - Preparing to update {len(topics)} topics and {len(questions)} questions.")
     for topic in topics:
-        cursor.execute("UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
-                       (topic['content'], topic['title'], chapter_id, topic['topic_number']))
-    cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
-    for q in questions:
-        cursor.execute("INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
-                       (chapter_id, q['question_number'], q['question_text']))
+        cursor.execute(
+            "UPDATE topics SET full_text = %s, name = %s WHERE chapter_id = %s AND topic_number = %s",
+            (topic['content'], topic['title'], chapter_id, topic['topic_number'])
+        )
+    if questions:
+        cursor.execute("DELETE FROM question_bank WHERE chapter_id = %s", (chapter_id,))
+        for q in questions:
+            cursor.execute(
+                "INSERT INTO question_bank (chapter_id, question_number, question_text) VALUES (%s, %s, %s)",
+                (chapter_id, q['question_number'], q['question_text'])
+            )
     log(f"  - Database update commands sent.")
 
 def main():
-    if not SUPABASE_URI:
-        log("[ERROR] SUPABASE_CONNECTION_STRING not found in .env file.")
-        return
-        
     try:
         conn = psycopg2.connect(SUPABASE_URI)
         cursor = conn.cursor()
