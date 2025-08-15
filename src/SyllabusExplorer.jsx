@@ -4,7 +4,7 @@ import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import ReactMarkdown from 'react-markdown';
 
-// --- Here are the complete, unabridged helper components ---
+// --- Helper Components ---
 const Spinner = ({ text = "Loading..." }) => (
     <div className="flex flex-col justify-center items-center p-8 text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
@@ -45,6 +45,9 @@ const MarkdownRenderer = ({ markdown }) => {
 };
 
 const QuizView = ({ quizData, onNext }) => {
+    // --- ADD THIS LINE FOR DEBUGGING ---
+    console.log("QUIZ DATA RECEIVED:", quizData); 
+
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isRevealed, setIsRevealed] = useState(false);
 
