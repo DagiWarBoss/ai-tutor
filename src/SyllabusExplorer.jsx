@@ -45,8 +45,6 @@ const MarkdownRenderer = ({ markdown }) => {
 };
 
 const QuizView = ({ quizData, onNext }) => {
-    console.log("QUIZ DATA RECEIVED:", quizData); 
-
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isRevealed, setIsRevealed] = useState(false);
 
@@ -61,28 +59,18 @@ const QuizView = ({ quizData, onNext }) => {
         }
     };
     
-    // --- UPDATED FUNCTION WITH DEEP LOGGING ---
     const getButtonClass = (optionKey) => {
-        const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
-        
-        let classToApply = '';
-
         if (!isRevealed) {
-            classToApply = selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
-        } else {
-            if (optionKey === correctAnswerKey) {
-                classToApply = 'bg-green-700';
-            } else if (optionKey === selectedAnswer && optionKey !== correctAnswerKey) {
-                classToApply = 'bg-red-700';
-            } else {
-                classToApply = 'bg-gray-700';
-            }
+            return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
         }
-        
-        // This new log will tell us everything for each button render
-        console.log(`Button ${optionKey}: isRevealed=${isRevealed}, selected=${selectedAnswer}, correct=${correctAnswerKey}, Class=${classToApply}`);
-
-        return classToApply;
+        const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
+        if (optionKey === correctAnswerKey) {
+            return 'bg-green-700';
+        }
+        if (optionKey === selectedAnswer && optionKey !== correctAnswerKey) {
+            return 'bg-red-700';
+        }
+        return 'bg-gray-700';
     };
 
     return (
