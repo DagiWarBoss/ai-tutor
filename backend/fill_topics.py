@@ -5,35 +5,41 @@ from dotenv import load_dotenv
 from pdf2image import convert_from_path
 import pytesseract
 
+
 # Uncomment and set this if your Tesseract executable is in a custom location (Windows)
 # pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+
 
 load_dotenv()
 DB_CONN = os.getenv("SUPABASE_CONNECTION_STRING")
 
+
 if not DB_CONN:
     raise ValueError("Missing SUPABASE_CONNECTION_STRING in environment variables.")
 
+
 CHAPTER_CONFIG = {
     155: {
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 11\Thermodynamics.pdf",
-        "ocr_cache": r"ocr_cache\Thermodynamics_11.txt"
+        "pdf": r"C:\\Users\\daksh\\OneDrive\\Dokumen\\ai-tutor\\backend\\NCERT_PCM_ChapterWise\\Chemistry\\Class 11\\Thermodynamics.pdf",
+        "ocr_cache": r"ocr_cache\\Thermodynamics_11.txt"
     },
     158: {
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 12\Aldehydes, Ketones And Carboxylic Acid.pdf",
-        "ocr_cache": r"ocr_cache\Aldehydes_Ketones_Carboxylic_12.txt"
+        "pdf": r"C:\\Users\\daksh\\OneDrive\\Dokumen\\ai-tutor\\backend\\NCERT_PCM_ChapterWise\\Chemistry\\Class 12\\Aldehydes, Ketones And Carboxylic Acid.pdf",
+        "ocr_cache": r"ocr_cache\\Aldehydes_Ketones_Carboxylic_12.txt"
     },
     174: {
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Probability.pdf",
-        "ocr_cache": r"ocr_cache\Probability_12.txt"
+        "pdf": r"C:\\Users\\daksh\\OneDrive\\Dokumen\\ai-tutor\\backend\\NCERT_PCM_ChapterWise\\Maths\\Class 12\\Probability.pdf",
+        "ocr_cache": r"ocr_cache\\Probability_12.txt"
     },
     181: {
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Contunuity And Differentiability.pdf",
-        "ocr_cache": r"ocr_cache\Continuity_Differentiability_12.txt"
+        "pdf": r"C:\\Users\\daksh\\OneDrive\\Dokumen\\ai-tutor\\backend\\NCERT_PCM_ChapterWise\\Maths\\Class 12\\Contunuity And Differentiability.pdf",
+        "ocr_cache": r"ocr_cache\\Continuity_Differentiability_12.txt"
     }
 }
 
+
 os.makedirs("ocr_cache", exist_ok=True)
+
 
 def pdf_to_text(pdf_path, cache_path):
     if os.path.exists(cache_path):
@@ -47,22 +53,28 @@ def pdf_to_text(pdf_path, cache_path):
     print(f"[CACHE SAVED] {cache_path}")
     return text
 
+
 TOPICS_TO_EXTRACT = [
     ('155', '5.1'), ('155', '5.2'),
     ('158', '8.1'), ('158', '8.2'),
-    ('174', '14.1'), ('174', '14.2'),
-    ('181', '6.1'), ('181', '6.2'),
+    ('174', '13.1'), ('174', '13.2'),
+    ('181', '5.1'), ('181', '5.2'),
 ]
+
 
 def extract_topic_text(content, topic_number):
     # Adjust regex to allow flexible spaces and optional dots for topic numbers
+    # Pattern will include the topic number line then everything until next "major" topic number, possibly like 1, 2, 3, or subtopics like 5.2, 5.3 etc.
     flexible_num = re.escape(topic_number).replace(r"\.", r"\s*\.?\s*")
+    # We capture from the line starting with topic_number until before next line starting with digit(s). possibly with dot notation or end of file
     pattern = re.compile(
-        rf'^\s*{flexible_num}\s.*?(?=^\s*\d+(\.\d+)*\s*|\Z)', re.DOTALL | re.MULTILINE)
+        rf'^\s*{flexible_num}[\s\S]*?(?=^\s*\d+(\.\d+)*\s|^\s*$)', re.MULTILINE)
     match = pattern.search(content)
     if match:
+        # To avoid partial capture beyond a wider section, trim trailing spaces
         return match.group().strip()
     return ""
+
 
 def main():
     chap_texts = {}
@@ -74,12 +86,15 @@ def main():
             continue
         chap_texts[chap_id] = pdf_to_text(pdf_path, cache_path)
 
+
     print(f"Processing {len(TOPICS_TO_EXTRACT)} topics...")
     for t in TOPICS_TO_EXTRACT:
         print(t)
 
+
     conn = psycopg2.connect(DB_CONN)
     cur = conn.cursor()
+
 
     for chap_id_str, topic_num in TOPICS_TO_EXTRACT:
         chap_id = int(chap_id_str)
@@ -107,10 +122,12 @@ def main():
             found_debug = pattern_debug.findall(content)
             print(f"No text found for Chapter {chap_id} Topic {topic_num}. Context samples: {found_debug if found_debug else 'None found'}")
 
+
     conn.commit()
     cur.close()
     conn.close()
     print("Done.")
+
 
 if __name__ == "__main__":
     main()
