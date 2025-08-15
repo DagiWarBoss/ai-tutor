@@ -56,7 +56,7 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-# === ENDPOINT 1: Fetch the entire syllabus structure ===
+# === ENDPOINT 1: Fetch the entire syllabus structure (UPDATED) ===
 @app.get("/api/syllabus")
 async def get_syllabus():
     conn = get_db_connection()
@@ -64,24 +64,36 @@ async def get_syllabus():
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
+            # Step 1: Fetch all data, updating chapters query
+            cur.execute("SELECT id, name FROM subjects ORDER BY name")
             subjects_raw = cur.fetchall()
-            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY subject_id, chapter_number")
+            
+            cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
             chapters_raw = cur.fetchall()
-            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, id")
+            
+            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
             topics_raw = cur.fetchall()
 
-            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []} for c_id, c_name, c_num, s_id in chapters_raw}
+            # Step 2: Process data, adding class_level to each chapter
+            chapters_map = {
+                c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []} 
+                for c_id, c_name, c_num, s_id, c_level in chapters_raw
+            }
+            
             for t_id, t_name, t_num, c_id in topics_raw:
                 if c_id in chapters_map:
                     chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
-            subjects_map = {s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []} for s_id, s_name, s_class in subjects_raw}
-            for c_id, c_name, c_num, s_id in chapters_raw:
+
+            subjects_map = {s_id: {"id": s_id, "name": s_name, "chapters": []} for s_id, s_name in subjects_raw}
+
+            for c_id, c_name, c_num, s_id, c_level in chapters_raw:
                 if s_id in subjects_map:
                     subjects_map[s_id]["chapters"].append(chapters_map[c_id])
+            
             syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
     except psycopg2.Error as e:
+        print(f"Database query error while fetching syllabus: {e}")
         raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
     finally:
         conn.close()
@@ -102,7 +114,6 @@ async def generate_content(request: ContentRequest):
     context_name = ""
     try:
         with conn.cursor() as cur:
-            # Step 1: Find the best matching topic (now returns chapter_id)
             cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
@@ -111,27 +122,23 @@ async def generate_content(request: ContentRequest):
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
-            # Step 2: Try to get the specific TOPIC text
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
 
-            # Step 3: Implement the cascade logic
             if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
                 print("DEBUG: Using TOPIC level context.")
                 relevant_text = topic_text_result[0]
                 context_level = "Topic"
                 context_name = matched_topic_name
             else:
-                # FALLBACK: Topic text is missing, so get the CHAPTER text instead
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text = chapter_text_result[1]
                     context_level = "Chapter"
-                    context_name = chapter_text_result[0] # The name of the chapter
+                    context_name = chapter_text_result[0]
                 else:
-                    # Final failure point if both topic and chapter texts are empty
                     raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
     finally:
         conn.close()
@@ -144,25 +151,15 @@ async def generate_content(request: ContentRequest):
     response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
 
     if mode == 'revise':
-        system_message = """
-        You are an AI assistant creating a structured 'cheat sheet' for a student preparing for the JEE exam. Based ONLY on the provided context, generate a well-formatted summary.
-        Your response MUST use Markdown formatting:
-        - Use headings (like ## Key Definitions or ## Important Formulas) to separate sections.
-        - Use bullet points (*) for lists.
-        - Bold key terms using **asterisks**.
-        - Use LaTeX for ALL mathematical formulas and variables, enclosing them in '$' or '$$'.
-        """
+        system_message = "..." # (revise prompt)
     elif mode == 'practice':
-        system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer`, and `explanation`. The value for `correct_answer` MUST BE one of the keys from the `options` object (e.g., 'A', 'B', 'C', or 'D'). Do not provide the text of the answer."
-        response_params["response_format"] = {"type": "json_object"}
-        response_params["temperature"] = 0.8
-    else: # Default to 'explain' mode
-        system_message = "You are an expert JEE tutor. Your answer should be a clear, concise explanation of the topic based on the provided context. Use LaTeX for all mathematical formulas, enclosing inline math with '$' and block equations with '$$'."
+        system_message = "..." # (practice prompt)
+    else:
+        system_message = "..." # (explain prompt)
 
     try:
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
         response_params["messages"] = messages
-        
         response = llm_client.chat.completions.create(**response_params)
         content = response.choices[0].message.content.strip()
 
