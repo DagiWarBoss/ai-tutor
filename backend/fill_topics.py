@@ -17,21 +17,21 @@ if not DB_CONN:
 
 # Map chapters to actual PDF paths and cache files
 CHAPTER_CONFIG = {
-    157: {  # Chemistry 11 - Chapter "Chemical Bonding and Molecular Structure"
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\NCERT_PCM\ChapterWise\Chemistry\Class 11\Chemical Bonding and Molecular Structure.pdf",
-        "ocr_cache": r"ocr_cache\Chemical_Bonding_and_Molecular_Structure_11.txt"
+    155: {  # Chemistry Class 11 - Thermodynamics
+        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 11\Thermodynamics.pdf",
+        "ocr_cache": r"ocr_cache\Thermodynamics_11.txt"
     },
-    155: {  # Chemistry 12 - replace with actual filename
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\NCERT_PCM\ChapterWise\Chemistry\Class 12\Thermodynamics.pdf",
-        "ocr_cache": r"ocr_cache\Thermodynamics_12.txt"
+    158: {  # Chemistry Class 12 - Aldehydes, Ketones And Carboxylic Acid
+        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 12\Aldehydes, Ketones And Carboxylic Acid.pdf",
+        "ocr_cache": r"ocr_cache\Aldehydes_Ketones_Carboxylic_12.txt"
     },
-    174: {  # Maths 12 - example filename, adjust as per actual
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\NCERT_PCM\ChapterWise\Mathematics\Class 12\Probability.pdf",
+    174: {  # Maths Class 12 - Probability
+        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Probability.pdf",
         "ocr_cache": r"ocr_cache\Probability_12.txt"
     },
-    183: {  # Maths 12 - example filename, adjust as per actual
-        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\NCERT_PCM\ChapterWise\Mathematics\Class 12\Calculus.pdf",
-        "ocr_cache": r"ocr_cache\Calculus_12.txt"
+    181: {  # Maths Class 12 - Continuity And Differentiability
+        "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Contunuity And Differentiability.pdf",
+        "ocr_cache": r"ocr_cache\Continuity_Differentiability_12.txt"
     }
 }
 
@@ -49,14 +49,13 @@ def pdf_to_text(pdf_path, cache_path):
     print(f"[CACHE SAVED] {cache_path}")
     return text
 
-# List of (chapter_id, topic_number) pairs to extract & update
+# List of (chapter_id, topic_number) pairs to extract & update (adjust per your topics)
 TOPICS_TO_EXTRACT = [
-    # Add your topics here as ("chapter_id", "topic_number")
-    ('157', '7.5'), ('157', '7.5.1'), ('157', '7.5.2'),  # etc.
-    ('155', '2.1'), ('155', '2.2'),  # add actual topics
-    ('174', '14.1'), ('174', '14.2'), 
-    ('183', '5.1'), ('183', '5.2'),
-    # Extend as needed...
+    # Example entries, replace or extend with your actual topic numbers
+    ('155', '5.1'), ('155', '5.2'), # Thermodynamics topics
+    ('158', '8.1'), ('158', '8.2'), # Aldehydes, Ketones topics
+    ('174', '14.1'), ('174', '14.2'), # Probability topics
+    ('181', '6.1'), ('181', '6.2'), # Continuity topics
 ]
 
 def extract_topic_text(content, topic_number):
@@ -96,7 +95,7 @@ def main():
             """, (text, chap_id, topic_num))
             print(f"Updated Chapter {chap_id} Topic {topic_num}")
         except Exception as e:
-            print(f"Error updating Chapter {chap_id} Topic {topic_num}: {e}")
+            print(f"Failed to update Chapter {chap_id} Topic {topic_num}: {e}")
 
     conn.commit()
     cur.close()
