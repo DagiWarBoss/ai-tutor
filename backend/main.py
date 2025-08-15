@@ -86,7 +86,7 @@ async def get_syllabus():
     finally:
         conn.close()
 
-# === ENDPOINT 2: The Multi-Purpose Content Generator ===
+# === ENDPOINT 2: The Multi-Purpose Content Generator with Cascade Fallback ===
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
     topic_prompt = request.topic
@@ -97,28 +97,50 @@ async def generate_content(request: ContentRequest):
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
-    relevant_topic_text = ""
+    relevant_text = ""
+    context_level = ""
+    context_name = ""
     try:
         with conn.cursor() as cur:
+            # Step 1: Find the best matching topic (now returns chapter_id)
             cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
                 raise HTTPException(status_code=404, detail=f"Could not find a relevant topic for '{topic_prompt}'.")
-            matched_topic_id, matched_topic_name, similarity = match_result
-            print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f}) for mode '{mode}'.")
+            
+            matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
+            print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
+
+            # Step 2: Try to get the specific TOPIC text
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
-            text_result = cur.fetchone()
-            if text_result:
-                relevant_topic_text = text_result[0]
+            topic_text_result = cur.fetchone()
+
+            # Step 3: Implement the cascade logic
+            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
+                print("DEBUG: Using TOPIC level context.")
+                relevant_text = topic_text_result[0]
+                context_level = "Topic"
+                context_name = matched_topic_name
+            else:
+                # FALLBACK: Topic text is missing, so get the CHAPTER text instead
+                print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
+                cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+                chapter_text_result = cur.fetchone()
+                if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
+                    relevant_text = chapter_text_result[1]
+                    context_level = "Chapter"
+                    context_name = chapter_text_result[0] # The name of the chapter
+                else:
+                    # Final failure point if both topic and chapter texts are empty
+                    raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
     finally:
         conn.close()
 
     max_chars = 15000
-    if len(relevant_topic_text) > max_chars:
-        relevant_topic_text = relevant_topic_text[:max_chars]
+    if len(relevant_text) > max_chars:
+        relevant_text = relevant_text[:max_chars]
 
-    system_message = ""
-    user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ---\n{relevant_topic_text}\n--- END OF CONTEXT ---"
+    user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
     response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
 
     if mode == 'revise':
@@ -145,8 +167,11 @@ async def generate_content(request: ContentRequest):
         content = response.choices[0].message.content.strip()
 
         if mode == 'practice':
-            return JSONResponse(content=json.loads(content))
+            final_response = json.loads(content)
+            final_response['source_name'] = context_name
+            final_response['source_level'] = context_level
+            return JSONResponse(content=final_response)
         else:
-            return JSONResponse(content={"content": content})
+            return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate content. Backend error: {e}")
