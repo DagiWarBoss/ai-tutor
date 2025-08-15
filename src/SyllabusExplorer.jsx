@@ -12,15 +12,12 @@ const Spinner = ({ text = "Loading..." }) => (
     </div>
 );
 
-// --- THIS IS THE UPDATED, MORE ROBUST COMPONENT ---
 const MarkdownRenderer = ({ markdown }) => {
     return (
         <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white">
             <ReactMarkdown
                 components={{
-                    // This override finds and renders LaTeX within paragraphs
                     p: ({ node, ...props }) => {
-                        // Check if the paragraph contains simple text
                         if (node.children[0]?.type === 'text') {
                             const text = node.children[0].value;
                             const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
@@ -37,7 +34,6 @@ const MarkdownRenderer = ({ markdown }) => {
                                 </p>
                             );
                         }
-                        // If the paragraph is more complex (e.g., contains bolding), fall back to default rendering
                         return <p {...props} className="leading-relaxed" />;
                     }
                 }}
@@ -47,7 +43,6 @@ const MarkdownRenderer = ({ markdown }) => {
         </div>
     );
 };
-
 
 const QuizView = ({ quizData, onNext }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -65,16 +60,19 @@ const QuizView = ({ quizData, onNext }) => {
     };
 
     const getButtonClass = (optionKey) => {
+        // Clean the AI's response to handle inconsistencies (e.g., " b ", "b", "B.")
+        const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
+
         if (!isRevealed) {
             return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
         }
-        if (optionKey === quizData.correct_answer) {
-            return 'bg-green-700';
+        if (optionKey === correctAnswerKey) {
+            return 'bg-green-700'; // Correct answer
         }
-        if (selectedAnswer === optionKey && optionKey !== quizData.correct_answer) {
-            return 'bg-red-700';
+        if (selectedAnswer === optionKey && optionKey !== correctAnswerKey) {
+            return 'bg-red-700'; // Incorrectly selected answer
         }
-        return 'bg-gray-700';
+        return 'bg-gray-700'; // Other options
     };
 
     return (
