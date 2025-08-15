@@ -35,19 +35,20 @@ def pdf_to_text(pdf_path):
     Converts a PDF to text by OCR. Uses cached result if available.
     """
     cache_path = get_cache_path(pdf_path)
+    print(f"Looking for OCR cache at: {os.path.abspath(cache_path)}")
     if os.path.exists(cache_path):
+        print("Cache found! Using cached OCR text.")
         with open(cache_path, "r", encoding="utf-8") as f:
-            print(f"[CACHE HIT] Loaded OCR text from cache for '{pdf_path}'")
             return f.read()
 
-    print(f"[OCR] Performing OCR on '{pdf_path}'")
+    print(f"Cache not found. Performing OCR on '{pdf_path}'")
     pages = convert_from_path(pdf_path, dpi=500)
     text_pages = [pytesseract.image_to_string(pg) for pg in pages]
     full_text = "\n".join(text_pages)
 
     with open(cache_path, "w", encoding="utf-8") as f:
         f.write(full_text)
-        print(f"[CACHE SAVE] Saved OCR text cache at '{cache_path}'")
+        print(f"Saved OCR text cache at '{cache_path}'")
 
     return full_text
 
@@ -114,7 +115,6 @@ def extract_topics_and_questions(full_text, csv_topics_df):
                 "topic_text": "",  # Will fill below
             }
             # Capture topic text - possibly the line(s) starting from this current line
-            # Go forward to next topic or question
             topic_text_lines = []
             for j in range(i+1, len(lines)):
                 nxt = lines[j].strip()
@@ -134,7 +134,6 @@ def extract_topics_and_questions(full_text, csv_topics_df):
 
         # If line looks like a question (ends with '?'), try to capture question text
         if line_strip.endswith("?") or "?" in line_strip:
-            # Identify context question
             question_text = line_strip
             questions_output.append({
                 "question": question_text,
@@ -158,30 +157,33 @@ def update_database(cur, chapter_id, topics_list, questions_list):
     """
     # Insert topics
     for topic in topics_list:
-        # Upsert topic by title + chapter_id (assumed unique per chapter)
-        cur.execute("""
-            INSERT INTO topics (chapter_id, title, serial_no, page, topic_text)
-            VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (chapter_id, title) DO UPDATE SET
-                serial_no = EXCLUDED.serial_no,
-                page = EXCLUDED.page,
-                topic_text = EXCLUDED.topic_text
-            RETURNING id
-        """, (chapter_id,
-              topic.get("title"),
-              int(topic.get("serial_no") or 0),
-              int(topic.get("page") or 0),
-              topic.get("topic_text")))
-        topic_id = cur.fetchone()[0]
+        try:
+            cur.execute("""
+                INSERT INTO topics (chapter_id, title, serial_no, page, topic_text)
+                VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (chapter_id, title) DO UPDATE SET
+                    serial_no = EXCLUDED.serial_no,
+                    page = EXCLUDED.page,
+                    topic_text = EXCLUDED.topic_text
+                RETURNING id
+            """, (chapter_id,
+                  topic.get("title"),
+                  int(topic.get("serial_no") or 0),
+                  int(topic.get("page") or 0),
+                  topic.get("topic_text")))
+            topic_id = cur.fetchone()[0]
 
-        # Insert related questions for this topic
-        for question in questions_list:
-            if question.get("topic_title") == topic.get("title") and question.get("serial_no") == topic.get("serial_no"):
-                cur.execute("""
-                    INSERT INTO questions (topic_id, question_text)
-                    VALUES (%s, %s)
-                    ON CONFLICT DO NOTHING
-                """, (topic_id, question.get("question")))
+            # Insert related questions for this topic
+            for question in questions_list:
+                if question.get("topic_title") == topic.get("title") and question.get("serial_no") == topic.get("serial_no"):
+                    cur.execute("""
+                        INSERT INTO questions (topic_id, question_text)
+                        VALUES (%s, %s)
+                        ON CONFLICT DO NOTHING
+                    """, (topic_id, question.get("question")))
+        except Exception as e:
+            print(f"Error inserting topic '{topic.get('title')}': {e}")
+            raise
 
 
 # ==== Main processing function ====
@@ -192,7 +194,6 @@ def main():
     # Load CSV for topics data
     if os.path.exists(CSV_PATH):
         df_topics = pd.read_csv(CSV_PATH, dtype=str)
-        # Normalize chapter_file column to lowercase and strip
         df_topics["chapter_file"] = df_topics["chapter_file"].str.strip()
     else:
         df_topics = None
@@ -238,9 +239,13 @@ def main():
 
             print(f"[EXTRACTED] {len(topics)} topics and {len(questions)} questions from '{chapter_name}'")
 
-            # Update database for each chapter
-            update_database(cur, chapter_id, topics, questions)
-            conn.commit()
+            # Update database for each chapter - commit after each chapter to avoid long transactions
+            try:
+                update_database(cur, chapter_id, topics, questions)
+                conn.commit()
+            except Exception as e:
+                print(f"[ERROR] Database update failed for '{chapter_name}': {e}")
+                conn.rollback()
 
     cur.close()
     conn.close()
