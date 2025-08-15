@@ -1,128 +1,130 @@
-import os
-import pandas as pd
-import fitz  # PyMuPDF
+import re
 import logging
+import pandas as pd
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger("pdf_extract")
+log = logging.getLogger(__name__)
 
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\origins"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
-
-# Chapter configurations: subject, class, pdf filename, chapter number
-CHAPTER_CONFIG = {
-    12: {
-        "subject": "Chemistry",
-        "class": "Class 11",
-        "pdf_filename": "Aldehydes Ketones And Carboxylic Acid.pdf",
-        "chapter_num": 8,
-    },
-    # add other chapters as needed here...
-}
-
-def pdf_to_text(pdf_path, cache_folder):
-    """Extract text from PDF file, using cache if available, else extract and save."""
-    fname = os.path.basename(pdf_path)
-    cache_file = os.path.join(cache_folder, fname.replace('.pdf', '.txt').replace(' ', '_'))
-    if os.path.exists(cache_file):
-        log.info(f"Using cached OCR text: {cache_file}")
-        with open(cache_file, 'r', encoding='utf-8') as f:
-            text = f.read()
-        return text
-
-    log.info(f"Extracting text from PDF: {pdf_path}")
-    doc = fitz.open(pdf_path)
-    full_text = ""
-    for page in doc:
-        full_text += page.get_text()
-    doc.close()
-
-    with open(cache_file, 'w', encoding='utf-8') as f:
-        f.write(full_text)
-    log.info(f"Saved OCR text to cache: {cache_file}")
-    return full_text
+def normalize(text):
+    """
+    Normalize text by removing non-alphanumeric characters and lowercasing.
+    This helps in better matching of extracted text and headings.
+    """
+    return re.sub(r'\W+', '', text).lower()
 
 def extract_all_topics_with_split(full_text, topic_df):
     """
-    Extract text segments from full_text based on the headings in topic_df.
-    Return a list of dicts with heading info and extracted content.
+    Extract topics from full_text based on heading positions derived from topic_df.
+    The function normalizes and searches headings in the full_text to find positions.
+    It then slices the full_text to get content between consecutive headings.
+    
+    Parameters:
+    - full_text: str, entire text extracted from a PDF.
+    - topic_df: pandas DataFrame with columns including 'heading_number' and 'heading_text'.
+
+    Returns:
+    - List of dictionaries with keys 'heading_number', 'heading_text', and 'content'.
     """
     topics = []
-    headings = topic_df.sort_values('heading_number')['heading_text'].tolist()
+    norm_full_text = normalize(full_text)
+    topic_df = topic_df.sort_values('heading_number')
+    headings = topic_df['heading_text'].tolist()
+    heading_numbers = topic_df['heading_number'].tolist()
 
-    # Find indices (positions) of each heading in the text
     positions = []
-    for heading in headings:
-        pos = full_text.find(heading)
+    for idx, heading in enumerate(headings):
+        norm_heading = normalize(heading)
+        pos = norm_full_text.find(norm_heading)
+
         if pos == -1:
-            log.warning(f"Heading not found in PDF text: {heading[:30]}...")
+            # Attempt searching using combined heading number + heading text
+            combined = normalize(f"{heading_numbers[idx]} {heading}")
+            pos = norm_full_text.find(combined)
+
+            if pos == -1:
+                log.warning(f"Heading not found in PDF text: '{heading[:30]}...'")
+
         positions.append(pos)
 
-    # Pair each heading with its start index
-    headings_positions = list(zip(headings, positions))
+    # Filter out headings not found (pos == -1) for slicing
+    found_positions = [(pos, heading, heading_numbers[i]) for i, pos in enumerate(positions) if pos != -1]
 
-    # Filter out headings not found in text (pos == -1)
-    headings_positions = [hp for hp in headings_positions if hp[1] >= 0]
+    if not found_positions:
+        log.info("No headings matched in text.")
+        return []
 
-    # Sort based on position
-    headings_positions.sort(key=lambda x: x[1])
+    # Sort found headings by position
+    found_positions.sort(key=lambda x: x[0])
 
-    # Extract topic texts between headings
-    for i, (heading, pos) in enumerate(headings_positions):
-        start = pos
-        if i + 1 < len(headings_positions):
-            end = headings_positions[i + 1][1]
+    # Extract text between consecutive headings to form topics
+    for i in range(len(found_positions)):
+        start_pos = found_positions[i][0]
+        heading = found_positions[i][1]
+        heading_no = found_positions[i][2]
+
+        if i + 1 < len(found_positions):
+            end_pos = found_positions[i+1][0]
         else:
-            end = len(full_text)
-        content = full_text[start:end].strip()
-        topics.append({"heading": heading, "content": content})
-        log.info(f"Extracted topic '{heading}' text length: {len(content)}")
+            end_pos = len(norm_full_text)
+
+        # Locate corresponding positions in original full_text (case insensitive)
+        start_index = full_text.lower().find(heading.lower())
+        if i + 1 < len(found_positions):
+            next_heading = found_positions[i+1][1]
+            end_index = full_text.lower().find(next_heading.lower())
+        else:
+            end_index = len(full_text)
+
+        if start_index == -1:
+            # Fallback to approximate slicing from normalized positions
+            start_index = start_pos
+        if end_index == -1 or end_index <= start_index:
+            end_index = len(full_text)
+
+        topic_text = full_text[start_index:end_index].strip()
+        topics.append({
+            'heading_number': heading_no,
+            'heading_text': heading,
+            'content': topic_text
+        })
+
     return topics
 
-def main():
-    # Load master CSV file containing headings and related chapter info
-    master_csv_path = "final_verified_topics.csv"
-    df_topics = pd.read_csv(master_csv_path)
-
-    for chap_id, config in CHAPTER_CONFIG.items():
-        subj = config["subject"]
-        cls = config["class"]
-        pdf_filename = config["pdf_filename"]
-
-        pdf_path = os.path.join(PDF_ROOT_FOLDER, subj, cls, pdf_filename)
-        log.info(f"\nProcessing PDF: {pdf_path}")
-
-        # Special case: Use OCR cache text file directly for Aldehydes Ketones And Carboxylic Acid.pdf
-        if pdf_filename == "Aldehydes Ketones And Carboxylic Acid.pdf":
-            cache_path = os.path.join(OCR_CACHE_FOLDER, "Aldehydes_Ketones_Carboxylic_12.txt")
-            if not os.path.exists(cache_path):
-                log.error(f"Cache file not found: {cache_path}. Cannot proceed.")
-                continue
-            with open(cache_path, 'r', encoding='utf-8') as f:
-                full_text = f.read()
-            log.info(f"Loaded cached OCR text from {cache_path}")
-        else:
-            if not os.path.exists(pdf_path):
-                log.error(f"PDF file not found at {pdf_path}. Skipping.")
-                continue
-            full_text = pdf_to_text(pdf_path, OCR_CACHE_FOLDER)
-
-        # Filter master CSV for entries related to current PDF
-        chapter_topics_df = df_topics[df_topics["chapter_file"] == pdf_filename]
-        if chapter_topics_df.empty:
-            log.warning(f"No topics found for PDF: {pdf_filename}")
-            continue
-
-        # Extract topics with their text content
-        extracted_topics = extract_all_topics_with_split(full_text, chapter_topics_df)
-
-        # Example action: print summary of extracted topics lengths
-        log.info(f"Extracted {len(extracted_topics)} topics from {pdf_filename}")
-        for topic in extracted_topics:
-            log.info(f"Topic: {topic['heading']}, Content length: {len(topic['content'])}")
-
-        # Here you can do additional processing like saving to DB or files if needed
-
+# Example usage:
 if __name__ == "__main__":
-    main()
+    import sys
+
+    # Configure logging to print warnings and above
+    logging.basicConfig(level=logging.WARNING)
+
+    # Load topics dataframe from CSV file
+    csv_file = "final_verified_topics.csv"
+    try:
+        topic_df = pd.read_csv(csv_file)
+    except Exception as e:
+        log.error(f"Failed to load topics CSV file '{csv_file}': {e}")
+        sys.exit(1)
+
+    # Load full text from a PDF extraction process (placeholder)
+    # This should be replaced with actual text extraction from the PDF file.
+    pdf_file = "Chemical Bonding And Molecular Structure.pdf"
+    try:
+        # For demonstration, read the whole PDF text from a txt file or extract here
+        with open(pdf_file.replace('.pdf', '.txt'), 'r', encoding='utf-8') as f:
+            full_text = f.read()
+    except Exception as e:
+        log.error(f"Failed to load full text from '{pdf_file}': {e}")
+        sys.exit(1)
+
+    # Filter topics for the selected PDF file / chapter (optional)
+    chapter_topics = topic_df[topic_df['chapter_file'] == pdf_file]
+
+    # Extract topics from full text
+    extracted_topics = extract_all_topics_with_split(full_text, chapter_topics)
+
+    # Print or save extracted topics
+    for topic in extracted_topics:
+        print(f"Heading {topic['heading_number']}: {topic['heading_text']}")
+        print(f"Content snippet: {topic['content'][:500]}...\n{'-'*80}\n")
+
+    # Optionally save extracted topics to a file
+    # pd.DataFrame(extracted_topics).to_csv("extracted_topics.csv", index=False)
