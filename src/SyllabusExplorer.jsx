@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-import ReactMarkdown from 'react-markdown'; // Import the new library
+import ReactMarkdown from 'react-markdown';
 
 // --- Helper Components ---
 const Spinner = ({ text = "Loading..." }) => (
@@ -12,40 +12,51 @@ const Spinner = ({ text = "Loading..." }) => (
     </div>
 );
 
-// New component to handle Markdown and LaTeX rendering together
+// --- THIS IS THE UPDATED, MORE ROBUST COMPONENT ---
 const MarkdownRenderer = ({ markdown }) => {
     return (
-        <ReactMarkdown
-            className="prose prose-invert prose-p:text-gray-300 prose-headings:text-cyan-400"
-            components={{
-                // This custom component finds and renders LaTeX within the Markdown
-                p: ({ node, ...props }) => {
-                    const text = node.children[0].value;
-                    const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
-                    return (
-                        <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">
-                            {parts.map((part, index) => {
-                                if (part.startsWith('$$') && part.endsWith('$$')) {
-                                    return <BlockMath key={index} math={part.slice(2, -2)} />;
-                                } else if (part.startsWith('$') && part.endsWith('$')) {
-                                    return <InlineMath key={index} math={part.slice(1, -1)} />;
-                                }
-                                return <span key={index}>{part}</span>;
-                            })}
-                        </p>
-                    );
-                }
-            }}
-        >
-            {markdown}
-        </ReactMarkdown>
+        <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white">
+            <ReactMarkdown
+                components={{
+                    // This override finds and renders LaTeX within paragraphs
+                    p: ({ node, ...props }) => {
+                        // Check if the paragraph contains simple text
+                        if (node.children[0]?.type === 'text') {
+                            const text = node.children[0].value;
+                            const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
+                            return (
+                                <p className="leading-relaxed">
+                                    {parts.map((part, index) => {
+                                        if (part.startsWith('$$') && part.endsWith('$$')) {
+                                            return <BlockMath key={index} math={part.slice(2, -2)} />;
+                                        } else if (part.startsWith('$') && part.endsWith('$')) {
+                                            return <InlineMath key={index} math={part.slice(1, -1)} />;
+                                        }
+                                        return <span key={index}>{part}</span>;
+                                    })}
+                                </p>
+                            );
+                        }
+                        // If the paragraph is more complex (e.g., contains bolding), fall back to default rendering
+                        return <p {...props} className="leading-relaxed" />;
+                    }
+                }}
+            >
+                {markdown}
+            </ReactMarkdown>
+        </div>
     );
 };
 
+
 const QuizView = ({ quizData, onNext }) => {
-    // ... (QuizView component remains exactly the same as before)
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isRevealed, setIsRevealed] = useState(false);
+
+    useEffect(() => {
+        setSelectedAnswer(null);
+        setIsRevealed(false);
+    }, [quizData]);
 
     const handleAnswerClick = (optionKey) => {
         if (!isRevealed) {
@@ -58,20 +69,13 @@ const QuizView = ({ quizData, onNext }) => {
             return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
         }
         if (optionKey === quizData.correct_answer) {
-            return 'bg-green-700'; // Correct answer
+            return 'bg-green-700';
         }
         if (selectedAnswer === optionKey && optionKey !== quizData.correct_answer) {
-            return 'bg-red-700'; // Incorrectly selected answer
+            return 'bg-red-700';
         }
-        return 'bg-gray-700'; // Other options
+        return 'bg-gray-700';
     };
-    
-    // Quick fix to re-render component when quizData changes
-    useEffect(() => {
-        setSelectedAnswer(null);
-        setIsRevealed(false);
-    }, [quizData]);
-
 
     return (
         <div className="space-y-4">
@@ -115,7 +119,6 @@ const QuizView = ({ quizData, onNext }) => {
 
 // --- Main Component ---
 export default function SyllabusExplorer() {
-    // ... (State declarations remain the same as before)
     const [syllabus, setSyllabus] = useState([]);
     const [isLoadingSyllabus, setIsLoadingSyllabus] = useState(true);
     const [error, setError] = useState(null);
@@ -126,7 +129,6 @@ export default function SyllabusExplorer() {
     const [contentType, setContentType] = useState(null);
     const [isLoadingContent, setIsLoadingContent] = useState(false);
     const [activeMode, setActiveMode] = useState(null);
-
 
     useEffect(() => {
         const fetchSyllabus = async () => {
@@ -168,16 +170,13 @@ export default function SyllabusExplorer() {
         setActiveMode(null);
     };
     
-    // --- THIS IS THE UPDATED FUNCTION ---
-    // It no longer fetches content automatically. It just selects the topic.
     const handleTopicClick = (topic) => {
         setSelectedTopic(topic);
         resetContent();
-        setActiveMode(null); // Deselect any active mode button
+        setActiveMode(null);
     };
 
     const fetchContent = async (topic, mode) => {
-        // ... (fetchContent function remains exactly the same as before)
         if (!topic) return;
         setIsLoadingContent(true);
         resetContent();
@@ -207,7 +206,6 @@ export default function SyllabusExplorer() {
         }
     };
 
-    // ... (Loading and error return statements remain the same)
     if (isLoadingSyllabus) {
         return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><Spinner text="Loading Syllabus..." /></div>;
     }
@@ -215,7 +213,6 @@ export default function SyllabusExplorer() {
     if (error && !content) {
         return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><p className="text-red-500">Error: {error}</p></div>;
     }
-
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 font-sans">
@@ -225,7 +222,6 @@ export default function SyllabusExplorer() {
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-                {/* Left Side: 3-Pane Explorer (No changes here) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:col-span-1">
                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Subjects</h2>
@@ -241,7 +237,6 @@ export default function SyllabusExplorer() {
                     </div>
                 </div>
 
-                {/* Right Side: Content Panel */}
                 <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg:col-span-1">
                     {selectedTopic ? (
                         <>
@@ -259,7 +254,6 @@ export default function SyllabusExplorer() {
                                 <>
                                     {contentType === 'practice' 
                                         ? <QuizView quizData={content} onNext={() => fetchContent(selectedTopic, 'practice')} /> 
-                                        // --- THIS IS THE UPDATED RENDERER ---
                                         : <MarkdownRenderer markdown={content} />
                                     }
                                 </>
