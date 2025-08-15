@@ -1,0 +1,1701 @@
+Chapter 13
+
+12080CH13
+
+PROBABILITY
+
+ee The theory of probabilities is simply the Science of logic
+quantitatively treated. — C.S. PEIRCE %
+
+13.1 Introduction
+
+In earlier Classes, we have studied the probability as a {iyi ehh belittle
+measure of uncertainty of events in a random experiment.
+We discussed the axiomatic approach formulated by
+Russian Mathematician, A.N. Kolmogorov (1903-1987)
+and treated probability as a function of outcomes of the
+experiment. We have also established equivalence between
+the axiomatic theory and the classical theory of probability
+in case of equally likely outcomes. On the basis of this
+relationship, we obtained probabilities of events associated
+with discrete sample spaces. We have also studied the
+addition rule of probability. In this chapter, we shall discuss
+the important concept of conditional probability of an event
+given that another event has occurred, which will be helpful
+in understanding the Bayes' theorem, multiplication rule of Pierre de Fermat
+probability and independence of events. We shall also learn (1601-1665)
+
+an important concept of random variable and its probability
+
+distribution and also the mean and variance of a probability distribution. In the last
+section of the chapter, we shall study an important discrete probability distribution
+called Binomial distribution. Throughout this chapter, we shall take up the experiments
+having equally likely outcomes, unless stated otherwise.
+
+13.2 Conditional Probability
+
+Uptill now in probability, we have discussed the methods of finding the probability of
+events. If we have two events from the same sample space, does the information
+about the occurrence of one of the events affect the probability of the other event? Let
+us try to answer this question by taking up a random experiment in which the outcomes
+are equally likely to occur.
+
+Consider the experiment of tossing three fair coins. The sample space of the
+experiment is
+S = {HHH, HHT, HTH, THH, HTT, THT, TTH, TTT}
+
+Reprint 2025-26
+
+PROBABILITY 407
+
+1
+Since the coins are fair, we can assign the probability 8 to each sample point. Let
+
+E be the event ‘at least two heads appear’ and F be the event ‘first coin shows tail’.
+Then
+E = {HHH, HHT, HTH, THH}
+
+and F = {THH, THT, TTH, TIT}
+Therefore P(E) = P ({HHH}) + P ({HHT}) + P ({HTH}) + P ({THH})
+ot ay?
+= 3's sg 2 Why)
+and P(F) = P ({THH}) + P ({THT}) + P ({TTH}) + P ({TTT})
+lili.
+= —+—+-+-=
+8 8 8 8 2
+Also EO F= {THH}
+
+1
+with P(E 9 F) = P({THH}) = 3
+
+Now, suppose we are given that the first coin shows tail, i.e. F occurs, then what is
+the probability of occurrence of E? With the information of occurrence of F, we are
+sure that the cases in which first coin does not result into a tail should not be considered
+while finding the probability of E. This information reduces our sample space from the
+set S to its subset F for the event E. In other words, the additional information really
+amounts to telling us that the situation may be considered as being that of a new
+random experiment for which the sample space consists of all those outcomes only
+which are favourable to the occurrence of the event F.
+
+Now, the sample point of F which is favourable to event E is THH.
+
+1
+Thus, Probability of E considering F as the sample space = 1’
+
+or Probability of E given that the event F has occurred = mi
+
+This probability of the event E is called the conditional probability of E given
+that F has already occurred, and is denoted by P (EIF).
+
+1
+Thus P(EIF) = 4
+
+Note that the elements of F which favour the event E are the common elements of
+E and F, 1.e. the sample points of EQ F.
+
+Reprint 2025-26
+
+408 MATHEMATICS
+
+Thus, we can also write the conditional probability of E given that F has occurred as
+
+Number of elementary events favourable to ENF
+P(EIF) = Number of elementary events which are favourable to F
+n(ENF)
+~ nF)
+Dividing the numerator and the denominator by total number of elementary events
+of the sample space, we see that P(EIF) can also be written as
+
+n(E OF)
+I= AF) PE) ~@)
+n(S)
+
+Note that (1) is valid only when P(F) # 0 1.e., F4 0 (Why?)
+Thus, we can define the conditional probability as follows :
+
+Definition 1 If E and F are two events associated with the same sample space of a
+random experiment, the conditional probability of the event E given that F has occurred,
+1.e. P (EIF) is given by
+
+P(EQF)
+
+P(EIF) = Pe provided P(F) # 0
+
+13.2.1 Properties of conditional-probability
+Let E and F be events of a sample space S of an experiment, then we have
+Property 1 P(SIF) = P(FIF) = 1
+
+We know that
+P(SIF) = PSAP) Pe) =1
+P(F) P(F)
+Also P(FIF) = PEAR) _PO)
+P(F) P(®)
+Thus P(SIF) = P(FIF) = 1
+
+Property 2 If A and B are any two events of a sample space S and F is an event
+of S such that P(F) # 0, then
+
+P((A U B)IF) = P(AIF) + P(BIF) — P(A 2 B)IF)
+
+Reprint 2025-26
+
+PROBABILITY 409
+
+In particular, if A and B are disjoint events, then
+P((AUB)IF) = P(AIF) + P(BIF)
+
+We have
+
+P[(A UB) OF]
+
+P((AUB)IF) = PB
+
+P[((AQF) VU (BOF)
+- PF)
+(by distributive law of union of sets over intersection)
+P(AQF)+P(BOF)—-P(ANB OF)
+" P(F)
+
+P(AF) A P(BOF) PLI(AMB) OF]
+
+P(F) P(F) P(F)
+
+= P(AIF) + P(BIF) —- P(ANB)IF)
+When A and B are disjoint events, then
+P((A 2 B)IF) = 0
+
+=> P((A U B)IF) = P(AIF) + P(BIF)
+Property 3 P(E'IF) = 1 — P(EIF)
+From Property 1, we know that P(SIF) = 1
+
+=> P(E VU E'F) = 1 since S=EUE’
+=> P(EIF) + P (EF) = 1 since E and E’ are disjoint events
+Thus, P(E'lF) = 1 — P(EIF)
+
+Let us now take up some examples.
+7 9 4
+Example 1 If P(A) = 13° P(B) = B and P(A ™ B) = 3° evaluate P(AIB).
+4
+P(AMB) 13 4
+
+P(B) 9 9
+13
+
+Solution We have P(AIB)=
+
+Example 2 A family has two children. What is the probability that both the children are
+boys given that at least one of them is a boy ?
+
+Reprint 2025-26
+
+410 MATHEMATICS
+
+Solution Let b stand for boy and g for girl. The sample space of the experiment is
+S= {(D, b), (g, 5), 8), (& 8)}
+
+Let E and F denote the following events :
+
+E: ‘both the children are boys’
+
+F : ‘at least one of the child is a boy’
+
+Then E = {(0,b)} and F = {(0,D), (g,b), (b.g)}
+Now En F= {(b,b)}
+1
+Thus P(F) = - and P (E OF )= 4
+1
+Theref P(EIF) = PEF) _4 1
+erefore (EIF) = P(F) “3.3
+4
+
+Example 3 Tencards numbered | to 10 are placed in a box, mixed up thoroughly and
+then one card is drawn randomly. If it is known that the number on the drawn card is
+more than 3, what is the probability that it is an even number?
+
+Solution Let A be the event ‘the number on the card drawn is even’ and B be the
+event ‘the number on the card drawn is greater than 3’. We have to find P(AIB).
+
+Now, the sample space of the experiment is S = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+Then A= {2,4, 6, 8, 10}, B= {4, 5, 6, 7, 8, 9, 10}
+and AQB= {4,6,8, 10}
+5 7 4
+= —,P(B) =— and P(ANB) =—
+Also P(A) 10 (B) 10 ( ) 10
+A
+P(AMB) 10 _ 4
+Then P(AIB) = P(B) 77
+10
+
+Example 4 Ina school, there are 1000 students, out of which 430 are girls. It is known
+that out of 430, 10% of the girls study in class XII. What is the probability that a student
+chosen randomly studies in Class XII given that the chosen student is a girl?
+
+Solution Let E denote the event that a student chosen randomly studies in Class XII
+and F be the event that the randomly chosen student is a girl. We have to find P (EIF).
+
+Reprint 2025-26
+
+PROBABILITY 411
+
+430 43
+
+N P(F) = —-=0.43 and P(EA Fy=—2-=0.043 (Why?
+ow = F600 and CE = TO00 (Why")
+rh op) . PEED) 0.043 _
+<n EE) R04
+
+Example 5 A die is thrown three times. Events A and B are defined as below:
+A :4 on the third throw
+B : 6 on the first and 5 on the second throw
+
+Find the probability of A given that B has already occurred.
+Solution The sample space has 216 outcomes.
+(1,1,4) (12,4) ...(1,6,4) (2,1,4) (2,2,4) ... (2,6,4)
+
+Now A= 4(3,1,4) (3,2,4) ...(3,6,4) (4,14) (4,2,4) ...4,6,4)
+(5,1,4) (5,2,4) ... (5,6,4) (6,1,4) (6,2,4) ...(6,6,4)
+
+B = {(6,5,1), (6,5,2), (6,5,3), (6,5,4), (6,5,5), (6,5,6) }
+
+and AO B= {(6,5,4)}.
+P(B) = —-— and P(AAB)= =
+Now (B) = 76 MA EANB = 76
+
+i
+P(AMB) 216 _ 1
+P(B) 6 6
+216
+
+Then P(AIB) =
+
+Example 6 A die is thrown twice and the sum of the numbers appearing is observed
+to be 6. What is the conditional probability that the number 4 has appeared at least
+once?
+
+Solution Let E be the event that ‘number 4 appears at least once’ and F be the event
+that ‘the sum of the numbers appearing is 6’.
+
+Then, E = {(4,]), (4,2), (4,3), (4,4), (4.5), (4,6), (1,4), (2,4), (3,4), (5,4), (6,4)}
+and F= {(1,5), (2,4), (3,3), (4,2), (5,1)}
+
+11 5
+We have P(E) = 36 and P(F) = 36
+Also EnF = {(2,4), (4,2)}
+
+Reprint 2025-26
+
+412 MATHEMATICS
+
+2
+Therefore P(EMF) = 36
+
+Hence, the required probability
+
+2
+P(ENF) 36.2
+P(EIF) = os Bat
+
+36
+
+For the conditional probability discussed above, we have considered the elemen-
+tary events of the experiment to be equally likely and the corresponding definition of
+the probability of an event was used. However, the same definition can also be used in
+the general case where the elementary events of the sample space are not equally
+likely, the probabilities P(E F) and P (F) being calculated accordingly. Let us take up
+the following example.
+
+Example 7 Consider the experiment of tossing a coin. If the coin shows head, toss it
+
+again but if it shows tail, then throw a die. Find the (H,H)
+conditional probability of the event that ‘the die shows Head (H) <
+a number greater than 4’ given that ‘there is at least (H,T)
+one tail’.
+(T,1)
+Solution The outcomes of the experiment can be (T,2)
+represented in following diagrammatic manner called Tail (T) (T,3)
+the ‘tree diagram’. rs)
+The sample space of the experiment may be ; (T,6)
+Fig 13.1
+
+described as
+S = {(H,H), (HT), (1,1), (2), (1,3), (£4), (15), (1.6) }
+where (H, H) denotes that both the tosses result into iV
+
+(H,H)
+head and (T, 7) denote the first toss result into a tail and Head (H) <
+the number i appeared on the die for i = 1,2,3,4,5,6. VY, ~ (H,T)
+
+Thus, the probabilities assigned to the 8 elementary
+events
+
+(H, H), (H, T), (T; 1), CE 2), (T, 3) (T, 4), CE, 5), CE 6)
+
+1111 %1é%i1éidi1édi
+“4? 4712°1212712712"12
+clear from the Fig 13.2.
+
+respectively which is
+
+Reprint 2025-26
+
+PROBABILITY 413
+
+Let F be the event that ‘there is at least one tail’ and E be the event ‘the die shows
+a number greater than 4’. Then
+F= {(H,1T), (7,1), (7,2), (1,3), (7,4), (1,5), (16) }
+E = {(T,5), (T,6)} and E 7 F = {(T,5), (T,6)}
+Now P(F) = P({(AT)}) + P {CB D)}) + P (12) }) + P C73) ))
++ P({(T.4)}) + PUCES)}) + PU(T.6)})
+1 1 1 1 1 1 1 3
+— —+—+4+—+—+4+—4—4— ==
+4 12 12 12 12 12 12 4
+1
+
+1 1
+and = PEE F) = P({(T.5)}) + P({(L.9)}) = 75 +45 =
+
+P(E
+Hence P(EIF) = ——._ =
+
+EXERCISE 13.1
+
+1. Given that E and F are events such that P(E) = 0.6, P(F) = 0.3 and
+P(E - F) = 0.2, find P(EIF) and P (FIE)
+2. Compute P(AIB), if P(B) = 0.5 and P (A ™ B) = 0.32
+3. If P(A) =0.8, P(B) = 0.5 and P(BIA) = 0.4, find
+(i) P(AMB) (ii) P(AIB) (ii) P(A UB)
+
+5 2
+4. Evaluate P(A U B), if 2P(A) = P(B) = B and P(AIB) = 5
+
+6 5
+5. If P(A) = 7, P(B) = 7 and P(A UB) -—. find
+
+(i) P(ATB) (ii) P(AIB) (ui) P(BIA)
+Determine P(EIF) in Exercises 6 to 9.
+
+6. A coin is tossed three times, where
+
+(i) E: head on third toss , —-F: heads on first two tosses
+(ii) E: at least two heads ,_ __-F: at most two heads
+(ii) E: at mosttwotails , F: at least one tail
+
+Reprint 2025-26
+
+414
+
+7.
+(i)
+(ii)
+
+10.
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+MATHEMATICS
+
+Two coins are tossed once, where
+E: tail appears on one coin, F : one coin shows head
+E: no tail appears, F : no head appears
+A die is thrown three times,
+E : 4 appears on the third toss, F: 6 and 5 appears respectively
+on first two tosses
+Mother, father and son line up at random for a family picture
+E : son on one end, F: father in middle
+A black and a red dice are rolled.
+(a) Find the conditional probability of obtaining a sum greater than 9, given
+that the black die resulted in a 5.
+(b) Find the conditional probability of obtaining the sum 8, given that the red die
+resulted in a number less than 4.
+
+A fair die is rolled. Consider events E= {1,3,5}, F= {2,3} and G= {2,3,4,5}
+Find
+
+(i) P(EIF) and P(FIE) (ii) P(EIG) and P(GIE)
+
+(iii) P(E U P)IG) and P(E 9 P)IG)
+
+Assume that each born child is equally likely to be a boy or a girl. If a family has
+two children, what is the conditional probability that both are girls given that
+(i) the youngest is a girl, (i1) at least one is a girl?
+An instructor has a question bank consisting of 300 easy True / False questions,
+200 difficult True / False questions, 500 easy multiple choice questions and 400
+difficult multiple choice questions. If a question is selected at random from the
+question bank, what 1s the probability that it will be an easy question given that it
+is amultiple choice question?
+Given that the two numbers appearing on throwing two dice are different. Find
+the probability of the event ‘the sum of numbers on the dice is 4’.
+Consider the experiment of throwing a die, if a multiple of 3 comes up, throw the
+
+die again and if any other number comes, toss a coin. Find the conditional probability
+of the event ‘the coin shows a tail’, given that ‘at least one die shows a 3’.
+
+In each of the Exercises 16 and 17 choose the correct answer:
+
+16.
+
+1
+If P(A) = 5, P(B) = 0, then P(AIB) is
+
+1
+(A) 0 (B) 5
+(C) not defined (D) 1
+
+Reprint 2025-26
+
+PROBABILITY 415
+
+17. If A and B are events such that P(AIB) = P(BIA), then
+(A) ACB butA#B (B) A=B
+(C) ANB=o (D) P(A) = P(B)
+
+13.3 Multiplication Theorem on Probability
+
+Let E and F be two events associated with a sample space S. Clearly, the set EM F
+denotes the event that both E and F have occurred. In other words, E ~ F denotes the
+simultaneous occurrence of the events E and F. The event E- F is also written as EF.
+
+Very often we need to find the probability of the event EF. For example, in the
+experiment of drawing two cards one after the other, we may be interested in finding
+the probability of the event ‘a king and a queen’. The probability of event EF is obtained
+by using the conditional probability as obtained below :
+
+We know that the conditional probability of event E given that F has occurred is
+denoted by P(EIF) and is given by
+
+P(EIF) = wo e#0
+
+From this result, we can write
+P(E F) =P@(P). P(EIF) . (1)
+
+Also, we know that
+
+P(FIE) = oa Pe) #0
+
+P(EQF) _.
+
+or P(FIE) = PE) (since EA F=FO E£E)
+Thus, P(E 2 F) = P(E). P(FIE) weve (2)
+
+Combining (1) and (2), we find that
+P(E F) =P) P(FIE)
+= P(P) P(EIF) provided P(E) # 0 and P(P) # 0.
+The above result is known as the multiplication rule of probability.
+Let us now take up an example.
+Example 8 An urn contains 10 black and 5 white balls. Two balls are drawn from the
+
+urn one after the other without replacement. What is the probability that both drawn
+balls are black?
+
+Solution Let E and F denote respectively the events that first and second ball drawn
+are black. We have to find P(E ™ F) or P (EF).
+
+Reprint 2025-26
+
+416 MATHEMATICS
+
+10
+Now P(E) = P (black ball in first draw) = +=
+
+Also given that the first ball drawn is black, i.e., event E has occurred, now there
+are 9 black balls and five white balls left in the urn. Therefore, the probability that the
+second ball drawn is black, given that the ball in the first draw is black, is nothing but
+the conditional probability of F given that E has occurred.
+
+9
+i.e. P(FIE) = 7
+
+By multiplication rule of probability, we have
+P(E F) = P(E) P(FIE)
+10 9 3
+“15 °14.7
+Multiplication rule of probability for more than two events If E, F and G are
+three events of sample space, we have
+P(E A FOG) = P(E) P(FIE) P(GI(E 2 P)) = P(E) P(FIE) P(GIEF)
+Similarly, the multiplication rule of probability can be extended for four or
+more events.
+The following example illustrates the extension of multiplication rule of probability
+for three events.
+
+Example 9 Three cards are drawn successively, without replacement from a pack of
+52 well shuffled cards. What is the probability that first two cards are kings and the
+third card drawn is an ace?
+
+Solution Let K denote the event that the card drawn is king and A be the event that
+the card drawn is an ace. Clearly, we have to find P (KKA)
+
+4
+Now P(K) = 5
+
+Also, P (KIK) is the probability of second king with the condition that one king has
+already been drawn. Now there are three kings in (52 — 1) = 51 cards.
+
+3
+Therefore P(KIK) = 5]
+
+Lastly, P(AIKK) is the probability of third drawn card to be an ace, with the condition
+that two kings have already been drawn. Now there are four aces in left 50 cards.
+
+Reprint 2025-26
+
+PROBABILITY 417
+
+4
+Therefore P(AIKK) = 50
+
+By multiplication law of probability, we have
+P(KKA) =P(K) P(KIK) P(AIKK)
+4 3 4 2
+x — x ——
+
+~ 52°51 50 5525
+13.4 Independent Events
+
+Consider the experiment of drawing a card from a deck of 52 playing cards, in which
+the elementary events are assumed to be equally likely. If E and F denote the events
+‘the card drawn is a spade’ and ‘the card drawn is an ace' respectively, then
+13 1 4 |
+= — =~— and P(P) =— = —
+PE) 52 4 ©) 52. 13
+Also E and F is the event ' the card drawn is the ace of spades' so that
+
+1
+P(E NF) = =
+1
+P(EMF) 52 _ 1
+Hence P(EIF) = PP) = 1 ~]
+13
+Since P(E) = —= P (EIP), we can say that the occurrence of event F has not
+
+4
+affected the probability of occurrence of the event E.
+
+We also have
+
+1
+PENF) 52 _1_
+P(FIE) = Fo = 1 ==5=P®)
+4
+
+1
+Again, P(F) = B P(FIE) shows that occurrence of event E has not affected
+
+the probability of occurrence of the event F.
+
+Thus, E and F are two events such that the probability of occurrence of one of
+them is not affected by occurrence of the other.
+
+Such events are called independent events.
+
+Reprint 2025-26
+
+418
+
+MATHEMATICS
+
+Definition 2 Two events E and F are said to be independent, if
+
+and
+
+P(FIE) = P (F) provided P (E) #0
+P(EIF) = P (E) provided P (F) #0
+
+Thus, in this definition we need to have P (E) #0 and P(F) #0
+Now, by the multiplication rule of probability, we have
+
+P(E F) = P(&) . P (FIE) . (L)
+
+If E and F are independent, then (1) becomes
+
+P(EQF)=P(B). P() . (2)
+
+Thus, using (2), the independence of two events is also defined as follows:
+
+Definition 3 Let E and F be two events associated with the same random experiment,
+then E and F are said to be independent if
+
+P(EQF) =P().P(@®)
+
+Remarks
+
+(i)
+
+(ii)
+
+(ii)
+
+(iv)
+
+Two events E and F are said to be dependent if they are not independent, i.e. if
+P(EQF)#P(E).P (FP)
+Sometimes there is a confusion between independent events and mutually
+exclusive events. Term ‘independent’ is defined in terms of “probability of events’
+whereas mutually exclusive is defined in term of events (subset of sample space).
+Moreover, mutually exclusive events never have an outcome common, but
+independent events, may have common outcome. Clearly, ‘independent’ and
+‘mutually exclusive’ do not have the same meaning.
+In other words, two independent events having nonzero probabilities of occurrence
+can not be mutually exclusive, and conversely, 1.e. two mutually exclusive events
+having nonzero probabilities of occurrence can not be independent.
+Two experiments are said to be independent if for every pair of events E and F,
+where E is associated with the first experiment and F with the second experiment,
+the probability of the simultaneous occurrence of the events E and F when the
+two experiments are performed is the product of P(E) and P(F) calculated
+separately on the basis of two experiments, 1.e., P (E 7 F) = P (E) . P(F)
+Three events A, B and C are said to be mutually independent, if
+P(A OB) = P(A) P(B)
+
+P(A 1 C) = P(A) P(C)
+
+P(B AC) = P(B) P(C)
+and P(A AN BOC) =P(A) P(B) P(C)
+
+Reprint 2025-26
+
+PROBABILITY 419
+If at least one of the above is not true for three given events, we say that the
+events are not independent.
+
+Example 10 A die is thrown. If E is the event ‘the number appearing is a multiple of
+3’ and F be the event ‘the number appearing is even’ then find whether E and F are
+independent ?
+
+Solution We know that the sample space is S = {1, 2, 3, 4, 5, 6}
+
+Now E={ 3,6}, F={ 2,4,6} and EX F= {6}
+2 1 3 1 1
+—- —=—, P(F)=—=— and P(EN F)=—
+Then P(E) 63 (M=E=5 ( Je
+Clearly P(E F) = P(E). P (F)
+Hence E and F are independent events.
+
+Example 11 An unbiased die is thrown twice. Let the event A be ‘odd number on the
+first throw’ and B the event ‘odd number on the second throw’. Check the independence
+of the events A and B.
+
+Solution If all the 36 elementary events of the experiment are considered to be equally
+likely, we have
+
+18 1 18 1
+= —=— P(B)=—=—
+P(A) 36 5 and (B) 369
+Also P(A © B) = P (odd number on both throws)
+2 _1
+— (36 4
+N P(A) P(B tyt at
+Clearly P(A OB) =P(A) x P(B)
+Thus, A and B are independent events
+
+Example 12 Three coins are tossed simultaneously. Consider the event E ‘three heads
+or three tails’, F ‘at least two heads’ and G ‘at most two heads’. Of the pairs (E,F),
+(E,G) and (KG), which are independent? which are dependent?
+Solution The sample space of the experiment is given by
+
+S = {HHH, HHT, HTH, THH, HTT, THT, TTH, TTT}
+Clearly E = {HHH, TTT}, F= {HHH, HHT, HTH, THH}
+
+Reprint 2025-26
+
+420 MATHEMATICS
+
+and G = {HHT, HTH, THH, HTT, THT, TTH, TTT}
+Also EOF = {HHH}, ENG = {TTT}, F AG = {HHT, HTH, THH}
+2 1 4 | 7
+—- —=—, P(F) =—=-—, RG) =-—
+Therefore P(E) 8 4 (F) 3°73 (G) 8
+1 1 3
+and P(EOF) = 3° P(ENG) = 3 PHEAG) =3
+1 1 1 1 7 7
+—- —x—=-—,P(E)-P(G)=—x-—=—
+Also P(E) . P(F) 4°37 8 (E): P(G) 4°38 30
+d P(F p(G) = ~XxL=e
+Thus P(EOF)=P¢€). P(F)
+P(E NG) # P(E). P(G)
+and P(E G) #P (PB). P(G)
+
+Hence, the events (E and F) are independent, and the events (E and G) and
+(F and G) are dependent.
+
+Example 13 Prove that if E and F are independent events, then so are the events
+
+E and F’.
+Solution Since E and F are independent, we have
+P(E F)=P¢E). P(F) (1)
+From the venn diagram in Fig 13.3, it is clear
+
+that EF and En F’ are mutually exclusive events (E'AF’)
+and also E=(EM F)U(EO F’). uF
+Therefore P(E) = PEN F)+ P(E F’)
+or P(E F’) = P(E) — PEN F)
+
+= P(E) — P(E) . P(F)
+
+(by (1)) Fig 13.3
+= P(E) (1-P(F))
+= P(E). P(F’)
+
+Hence, E and F’ are independent
+
+Reprint 2025-26
+
+PROBABILITY 421
+
+In a similar manner, it can be shown that if the events E and F are
+independent, then
+
+(a) E’ and F are independent,
+(b) E’ and F’ are independent
+
+Example 14 If A and B are two independent events, then the probability of occurrence
+of at least one of A and B is given by 1— P(A’) P(B’)
+Solution We have
+P(at least one of A and B) = P(A U B)
+= P(A) + P(B) — P(A OB)
+= P(A) + P(B) — P(A) P(B)
+= P(A) + P(B) [1-P(A)]
+= P(A) + P(B). P(A’)
+= 1— P(A’) + P(B) P(A’)
+= 1— P(A’) [1- P(B)]
+= 1— P(A’) P (B’)
+
+EXERCISE13.2
+
+3 1
+1. If P(A) ~5 and P (B) ~5 , find P(A © B)if A and B are independent events.
+
+2. Two cards are drawn at random and without replacement from a pack of 52
+playing cards. Find the probability that both the cards are black.
+
+3. A box of oranges is inspected by examining three randomly selected oranges
+drawn without replacement. If all the three oranges are good, the box is approved
+for sale, otherwise, it is rejected. Find the probability that a box containing 15
+oranges out of which 12 are good and 3 are bad ones will be approved for sale.
+
+4. A fair coin and an unbiased die are tossed. Let A be the event ‘head appears on
+the coin’ and B be the event ‘3 on the die’. Check whether A and B are
+independent events or not.
+
+5. A die marked 1, 2, 3 in red and 4, 5, 6 in green is tossed. Let A be the event,
+‘the number is even,’ and B be the event, ‘the number is red’. Are A and B
+independent?
+
+and P (E 7 F) = z. Are
+
+|
+
+3 3
+6. Let E and F be events with P(E) ~ 5° P(F) “To
+
+E and F independent?
+
+Reprint 2025-26
+
+422
+
+10.
+
+11.
+
+12.
+13.
+
+14.
+
+15.
+
+MATHEMATICS
+
+1
+Given that the events A and B are such that P(A) = 3°
+P(B) = p. Find p if they are (i) mutually exclusive (11) independent.
+Let A and B be independent events with P(A) = 0.3 and P(B) = 0.4. Find
+(i) P(A MB) (ii) P(A U B)
+(ui) P(AIB) (iv) P(BIA)
+
+3
+P(A U B) = 5 and
+
+1
+and P(AMB) = 3"
+
+W]e
+
+1
+If A and B are two events such that P(A) = re P(B)=
+find P (not A and not B).
+
+1 7 1
+Events A and B are such that P (A) = 7° P(B) = 12 and P(not A or not B) = re
+
+State whether A and B are independent ?
+Given two independent events A and B such that P(A) = 0.3, P(B) = 0.6.
+Find
+(i) P(A and B) (ii) P(A and not B)
+(ii) P(A or B) (iv) P(neither A nor B)
+A die is tossed thrice. Find the probability of getting an odd number at least once.
+
+Two balls are drawn at random with replacement from a box containing 10 black
+and 8 red balls. Find the probability that
+
+(i) both balls are red.
+(ii) first ball is black and second is red.
+(ii) one of them is black and other is red.
+1
+
+1
+Probability of solving specific problem independently by A and B are 5 and 3
+
+respectively. If both try to solve the problem independently, find the probability
+that
+
+(i) the problem is solved (ii) exactly one of them solves the problem.
+
+One card is drawn at random from a well shuffled deck of 52 cards. In which of
+the following cases are the events E and F independent ?
+
+(i) E: ‘the card drawn is a spade’
+F : ‘the card drawn is an ace’
+(ti) E: ‘the card drawn is black’
+F: ‘the card drawn is a king’
+(ii) E: ‘the card drawn is a king or queen’
+F : ‘the card drawn is a queen or jack’.
+
+Reprint 2025-26
+
+PROBABILITY 423
+
+16. Ina hostel, 60% of the students read Hindi newspaper, 40% read English
+newspaper and 20% read both Hindi and English newspapers. A student is
+selected at random.
+
+(a) Find the probability that she reads neither Hindi nor English newspapers.
+
+(b) If she reads Hindi newspaper, find the probability that she reads English
+newspaper.
+
+(c) If she reads English newspaper, find the probability that she reads Hindi
+newspaper.
+
+Choose the correct answer in Exercises 17 and 18.
+
+17. The probability of obtaining an even prime number on each die, when a pair of
+dice is rolled is
+
+1 1 1
+(A) 0 (B) 3 (©) 5 (D) 3%
+
+18. Two events A and B will be independent, if
+(A) A and B are mutually exclusive
+(B) P(A’B’) = [1 — P(A)] [1 — P(B)]
+
+(C) P(A) = P(B)
+(D) P(A) + P(B) = 1
+
+13.5 Bayes' Theorem
+
+Consider that there are two bags I and II. Bag I contains 2 white and 3 red balls and
+Bag II contains 4 white and 5 red balls. One ball is drawn at random from one of the
+
+1
+bags. We can find the probability of selecting any of the bags (i.e. 5 ) or probability of
+
+drawing a ball of a particular colour (say white) from a particular bag (say Bag I). In
+other words, we can find the probability that the ball drawn is of a particular colour, if
+we are given the bag from which the ball is drawn. But, can we find the probability that
+the ball drawn is from a particular bag (say Bag ID), if the colour of the ball drawn is
+given? Here, we have to find the reverse probability of Bag II to be selected when an
+event occurred after it is known. Famous mathematician, John Bayes' solved the problem
+of finding reverse probability by using conditional probability. The formula developed
+by him is known as ‘Bayes theorem’ which was published posthumously in 1763.
+Before stating and proving the Bayes' theorem, let us first take up a definition and
+some preliminary results.
+
+13.5.1 Partition of a sample space
+A set of events E,, E,, ..., E, is said to represent a partition of the sample space S if
+(a) ENE =0,14j,i,j=1,2,3,..,0
+
+Reprint 2025-26
+
+424 MATHEMATICS
+
+(b) E UE,U..UE=S and
+(c) P(E)>0 for alli = 1, 2, ...,
+
+In other words, the events E,, E,, ..., E, represent a partition of the sample space
+S if they are pairwise disjoint, exhaustive and have nonzero probabilities.
+
+As an example, we see that any nonempty event E and its complement E’ form a
+partition of the sample space S since they satisfy EX E’ = and EUE’=S.
+
+From the Venn diagram in Fig 13.3, one can easily observe that if E and F are any
+two events associated with a sample space S, then the sett {EQ F’,EQKE QNEE’nF}
+is a partition of the sample space S. It may be mentioned that the partition of a sample
+space is not unique. There can be several partitions of the same sample space.
+
+We shall now prove a theorem known as Theorem of total probability.
+
+13.5.2 Theorem of total probability
+
+Let {E,, E,,...,E,} bea partition of the sample space S, and suppose that each of the
+events E,, E,,..., E, has nonzero probability of occurrence. Let A be any event associated
+with S, then
+
+P(A) = P(E,) P(AIE,) + P(E,) P(AIE,) +... + P(E.) P(AIE)
+- y PE, )P(AIE,)
+j=l
+
+Proof Given that E,, E,,..., E, is a partition of the sample space S (Fig 13.4). Therefore,
+S=E,UEB,VU..UE, S . (1)
+
+and ENE =9,14j,ij=1,2,..,0 Waa
+Now, we know that for any event A, LL IN
+A=ANS N v
+
+=AN(E, VE,U.. UE)
+
+=(ANE) U(ANE,)U..U(ANE) Fig 13.4
+AlsoA ME, and A E, are respectively the subsets of E, and E.. We know that
+
+E, and E, are disjoint, for 1# Jj, therefore, A OE, andA m E. are also disjoint for all
+i#j, i,j=1,2,...,n.
+Thus, P(A) =P[ANE)U(ANB)u....U (ANE )]
+
+=P(ANE)+P(ANE,)+..+P(ANE)
+Now, by multiplication rule of probability, we have
+
+P(A 1 E,) = P(E.) P(AIE,) as P(E.) 4 OVi = 1,2,..., n
+
+Reprint 2025-26
+
+PROBABILITY 425
+
+Therefore, P (A) =P (E,) P (AIE,) + P (E,) P (AIE,) + ... + P (E)P(AIE,)
+or P(A) = ¥ PE) P(AIE,)
+j=l
+
+Example 15 A person has undertaken a construction job. The probabilities are 0.65
+that there will be strike, 0.80 that the construction job will be completed on time if there
+is no strike, and 0.32 that the construction job will be completed on time if there is a
+strike. Determine the probability that the construction job will be completed on time.
+
+Solution Let A be the event that the construction job will be completed on time, and B
+be the event that there will be a strike. We have to find P(A).
+We have
+
+P(B) = 0.65, P(no strike) = P(B’) = 1 — P(B) = 1 — 0.65 = 0.35
+P(AIB) = 0.32, P(AIB’) = 0.80
+
+Since events B and B’ form a partition of the sample space S, therefore, by theorem
+on total probability, we have
+
+P(A) = P(B) P(AIB) + P(B’) P(AIB’)
+= 0.65 x 0.32 + 0.35 x 0.8
+= 2.208 + 0.28 = 0.488
+Thus, the probability that the construction job will be completed in time is 0.488.
+We shall now state and prove the Bayes' theorem.
+
+Bayes’ Theorem If E,, E, ,..., E, are n non empty events which constitute a partition
+of sample space S, i.e. E,, E,,..., E, are pairwise disjoint and EKUE,U... UE =S and
+A is any event of nonzero probability, then
+
+P(E,) P(AIE,) |
+P(EIA) = = for any 7= 1, 2, 3,...,
+
+> PE ;) P(AIE)
+j=l
+
+Proof By formula of conditional probability, we know that
+P(ANE,)
+
+P(EIA) PIA)
+
+_ P(E;)P(AIE;)
+- P(A)
+
+(by multiplication rule of probability)
+
+_ _PE;,)P(AIE;)
+
+=— (by the result of theorem of total probability)
+> PE) P(AIE,)
+j=l
+
+Reprint 2025-26
+
+426 MATHEMATICS
+
+Remark The following terminology is generally used when Bayes' theorem is applied.
+The events E,, E,, ..., E, are called hypotheses.
+The probability P(E,) is called the priori probability of the hypothesis E,
+
+The conditional probability P(E,|A) is called a posteriori probability of the
+hypothesis E.
+
+Bayes' theorem is also called the formula for the probability of "causes". Since the
+E's are a partition of the sample space S, one and only one of the events E, occurs (i.e.
+one of the events E. must occur and only one can occur). Hence, the above formula
+gives us the probability of a particular E, (i.e. a "Cause"), given that the event A has
+occurred.
+
+The Bayes' theorem has its applications in variety of situations, few of which are
+illustrated in following examples.
+
+Example 16 Bag I contains 3 red and 4 black balls while another Bag I contains 5 red
+and 6 black balls. One ball is drawn at random from one of the bags and it is found to
+be red. Find the probability that it was drawn from Bag II.
+
+Solution Let E, be the event of choosing the bag I, E, the event of choosing the bag II
+and A be the event of drawing a red ball.
+
+Then P(E,) = P(E,) = .
+
+, 3
+Also P(AIE,) = P(drawing a red ball from Bag I) = 5
+
+, 5
+and P(AIE,) = P(drawing a red ball from Bag IH) = rr
+
+Now, the probability of drawing a ball from Bag II, being given that it is red,
+is P(E,IA)
+By using Bayes' theorem, we have
+
+1 5
+—x —
+P(E.IA) = P(E,) P(AIE, ) — 2in _35
+2" P(E, ) P(AIE, )+P(E,) P(AIE,) 13,15 68
+27211
+
+Example 17 Given three identical boxes I, II and III, each containing two coins. In
+box I, both coins are gold coins, in box II, both are silver coins and in the box III, there
+is one gold and one silver coin. A person chooses a box at random and takes out a coin.
+If the coin is of gold, what is the probability that the other coin in the box is also of gold?
+
+Reprint 2025-26
+
+PROBABILITY 427
+
+Solution Let E,, E, and E, be the events that boxes I, II and III are chosen, respectively.
+
+Then P(E,) = P(E,) = P(E,) =
+
+Also, let A be the event that “the coin drawn is of gold’
+
+2
+Then P(AIE,) = P(a gold coin from bag I) = 5 = 1
+P(AIE,) = P(a gold coin from bag IT) = 0
+
+1
+P(AIE,) = P(a gold coin from bag HI) = Oy
+Now, the probability that the other coin in the box is of gold
+= the probability that gold coin is drawn from the box I.
+= P(E IA)
+By Bayes' theorem, we know that
+P(E, ) P(AIE
+P(EIA) = —__ AE RIE) NEN __
+P(E, ) P(AIE, )+ P(E, ) P(AIE, ) + P(E, ) P(AIE, )
+
+yy
+3 _
+
+Maal osi!
+3 3 3.2
+
+Come)
+
+Example 18 Suppose that the reliability of a HIV test is specified as follows:
+
+Of people having HIV, 90% of the test detect the disease but 10% go undetected. Of
+people free of HIV, 99% of the test are judged HIV-—ive but 1% are diagnosed as
+showing HIV+ive. From a large population of which only 0.1% have HIV, one person
+is selected at random, given the HIV test, and the pathologist reports him/her as
+HIV+ive. What is the probability that the person actually has HIV?
+
+Solution Let E denote the event that the person selected is actually having HIV and A
+the event that the person's HIV test is diagnosed as t+ive. We need to find P(EIA).
+Also E’ denotes the event that the person selected is actually not having HIV.
+
+Clearly, {E, E’} is a partition of the sample space of all people in the population.
+We are given that
+
+0.1
+- =——=0.001
+P(E) = 0.1% ==
+
+Reprint 2025-26
+
+428 MATHEMATICS
+
+P(E’) = 1 — P(E) = 0.999
+P(AIE) = P(Person tested as HIV+ive given that he/she
+is actually having HIV)
+
+90
+= 90% =——=0.9
+
+and P(AIE’) = P(Person tested as HIV +ive given that he/she
+is actually not having HIV)
+
+1
+=1%= 100 = 0.01
+Now, by Bayes' theorem
+P(E) P(AIE)
+
+P(EIA) P(E) P(AIE)+P(E’) P(AIB’)
+
+0.001x0.9 _ 90
+~ 0.001x0.9+0.999x0.01 1089
+0.083 approx.
+
+Thus, the probability that a person selected at random is actually having HIV
+given that he/she is tested HIV +ive is 0.083.
+
+Example 19 Ina factory which manufactures bolts, machines A, B and C manufacture
+respectively 25%, 35% and 40% of the bolts. Of their outputs, 5, 4 and 2 percent are
+respectively defective bolts. A bolt is drawn at random from the product and is found
+to be defective. What is the probability that it is manufactured by the machine B?
+
+Solution Let events B,, B.,, B, be the following :
+B, : the bolt is manufactured by machine A
+B, : the bolt is manufactured by machine B
+B, : the bolt is manufactured by machine C
+
+Clearly, B,, B,, B, are mutually exclusive and exhaustive events and hence, they
+represent a partition of the sample space.
+
+Let the event E be ‘the bolt is defective’.
+The event E occurs with B, or with B, or with B,. Given that,
+P(B,) = 25% = 0.25, P (B,) = 0.35 and P(B,) = 0.40
+Again P(EIB,) = Probability that the bolt drawn is defective given that it is manu-
+factured by machine A = 5% = 0.05
+Similarly, P(EIB,) = 0.04, P(EIB,) = 0.02.
+
+Reprint 2025-26
+
+PROBABILITY 429
+
+Hence, by Bayes' Theorem, we have
+P(B,) P(EIB, )
+P(B,)P(EIB,)+P(B,) P(EIB, )+P(B ,) P(EIB,)
+0.35 x 0.04
+~ 0.25x0.05 + 0.35 x0.04+ 0.40 x 0.02
+
+0.0140 _ 28
+~ 0.0345 69
+
+Example 20 A doctor is to visit a patient. From the past experience, it is known that
+the probabilities that he will come by train, bus, scooter or by other means of transport
+
+3 1 1 2 1 1 1
+
+are respectively 10°5°10 and 5 The probabilities that he will be late are 43° and 12’
+
+if he comes by train, bus and scooter respectively, but if he comes by other means of
+transport, then he will not be late. When he arrives, he is late. What is the probability
+that he comes by train?
+
+P(B,IE) =
+
+Solution Let E be the event that the doctor visits the patient late and let T,, T,, T,, T,
+be the events that the doctor comes by train, bus, scooter, and other means of transport
+respectively.
+
+3 1 1 2
+Then P(T,) = 10” P(T,) = 57 Ps) = 7 P(T,) = 5 (given)
+1
+P(EIT,) = Probability that the doctor arriving late comes by train = q
+
+1 1
+Similarly, P(EIT,) = 3° P(EIT,) = 1D and P(EIT,) = 0, since he is not late if he
+
+comes by other means of transport.
+Therefore, by Bayes' Theorem, we have
+P(T IE) = Probability that the doctor arriving late comes by train
+
+: P(T,)P (EIT, )
+
+~ P(T,)PCEIT,)+P(T,) P(EIT, )+ P(T;) P(EIT;)+ P(T, )P(EIT, )
+3 «I
+
+- 104 3120 1
+
+~ 3 | 1 I l l 2 ~ 40 18 2
+
+X—+—xX—+ —x —+ —x0
+100 4 5 3 10 12 +5
+
+Hence, the required probability is 5
+
+Reprint 2025-26
+
+430 MATHEMATICS
+
+Example 21 A man is known to speak truth 3 out of 4 times. He throws a die and
+reports that it is a six. Find the probability that it is actually a six.
+
+Solution Let E be the event that the man reports that six occurs in the throwing of the
+die and let S, be the event that six occurs and S, be the event that six does not occur.
+
+1
+
+Then P(S,) = Probability that six occurs = 6
+: 5
+P(S,) = Probability that six does not occur = 6
+
+P(EIS,) = Probability that the man reports that six occurs when six has
+actually occurred on the die
+
+B |W
+
+= Probability that the man speaks the truth =
+
+P(EIS,) = Probability that the man reports that six occurs when six has
+not actually occurred on the die
+
+3 I
+= Probability that the man does not speak the truth =1 — ri = ri
+Thus, by Bayes' theorem, we get
+P(S IE) = Probability that the report of the man that six has occurred is
+actually a six
+- P(S,) PEIS,)
+~ P(S,) P(EIS,)+P(S, )P (EIS, )
+
+3
+=—-xX —=—
+8 8 8
+
+3
+
+4 1 24
+5
+
+6
+
+3
+Hence, the required probability is 3
+
+Remark A random variable is a real valued function whose domain is the sample
+space of a random experiment.
+
+For example, let us consider the experiment of tossing a coin two times 1n succession.
+
+The sample space of the experiment is S = {HH, HT, TH, TT}.
+
+Reprint 2025-26
+
+PROBABILITY 431
+
+If X denotes the number of heads obtained, then X is a random variable and for
+each outcome, its value is as given below :
+
+X (HH) = 2, X (HT) = 1, X (TH) = 1, X (TT) = 0.
+More than one random variables can be defined on the same sample space. For
+
+example, let Y denote the number of heads minus the number of tails for each outcome
+of the above sample space S.
+
+Then Y (HH) = 2, Y (HT) = 0, Y (TH) = 0, Y (TT) =— 2.
+Thus, X and Y are two different random variables defined on the same sample
+space S.
+
+EXERCISE 13.3
+
+1. Anurn contains 5 red and 5 black balls. A ball is drawn at random, its colour is
+noted and is returned to the urn. Moreover, 2 additional balls of the colour drawn
+are put in the urn and then a ball is drawn at random. What is the probability that
+the second ball is red?
+
+2. A bag contains 4 red and 4 black balls, another bag contains 2 red and 6 black
+balls. One of the two bags is selected at random and a ball is drawn from the bag
+which is found to be red. Find the probability that the ball is drawn from the
+first bag.
+
+3. Of the students in a college, it is known that 60% reside in hostel and 40% are
+day scholars (not residing in hostel). Previous year results report that 30% of all
+students who reside in hostel attain A grade and 20% of day scholars attain A
+grade in their annual examination. At the end of the year, one student is chosen
+at random from the college and he has an A grade, what is the probability that the
+student is a hostlier?
+
+4. In answering a question on a multiple choice test, a student either knows the
+
+3
+answer or guesses. Let 4 be the probability that he knows the answer and 4
+
+be the probability that he guesses. Assuming that a student who guesses at the
+1
+
+answer will be correct with probability 4 What is the probability that the stu-
+
+dent knows the answer given that he answered it correctly?
+
+5. A laboratory blood test is 99% effective in detecting a certain disease when it is
+in fact, present. However, the test also yields a false positive result for 0.5% of
+the healthy person tested (i.e. if a healthy person is tested, then, with probability
+0.005, the test will imply he has the disease). If 0.1 percent of the population
+
+Reprint 2025-26
+
+432
+
+10.
+
+11.
+
+12.
+
+13.
+
+MATHEMATICS
+
+actually has the disease, what is the probability that a person has the disease
+given that his test result is positive ?
+
+There are three coins. One is a two headed coin (having head on both faces),
+another is a biased coin that comes up heads 75% of the time and third is an
+unbiased coin. One of the three coins is chosen at random and tossed, it shows
+heads, what is the probability that it was the two headed coin ?
+
+An insurance company insured 2000 scooter drivers, 4000 car drivers and 6000
+truck drivers. The probability of an accidents are 0.01, 0.03 and 0.15 respectively.
+One of the insured persons meets with an accident. What is the probability that
+he is a scooter driver?
+
+A factory has two machines A and B. Past record shows that machine A produced
+60% of the items of output and machine B produced 40% of the items. Further,
+2% of the items produced by machine A and 1% produced by machine B were
+defective. All the items are put into one stockpile and then one item is chosen at
+random from this and is found to be defective. What is the probability that it was
+produced by machine B?
+
+Two groups are competing for the position on the Board of directors of a
+corporation. The probabilities that the first and the second groups will win are
+0.6 and 0.4 respectively. Further, if the first group wins, the probability of
+introducing a new product is 0.7 and the corresponding probability is 0.3 if the
+second group wins. Find the probability that the new product introduced was by
+the second group.
+
+Suppose a girl throws a die. If she gets a 5 or 6, she tosses a coin three times and
+notes the number of heads. If she gets 1, 2, 3 or 4, she tosses a coin once and
+notes whether a head or tail is obtained. If she obtained exactly one head, what
+is the probability that she threw 1, 2, 3 or 4 with the die?
+
+A manufacturer has three machine operators A, B and C. The first operator A
+produces 1% defective items, where as the other two operators B and C pro-
+duce 5% and 7% defective items respectively. A is on the job for 50% of the
+time, B is on the job for 30% of the time and C is on the job for 20% of the time.
+A defective item is produced, what is the probability that it was produced by A?
+A card from a pack of 52 cards is lost. From the remaining cards of the pack,
+two cards are drawn and are found to be both diamonds. Find the probability of
+the lost card being a diamond.
+
+4
+Probability that A speaks truth is 5° A coin is tossed. A reports that a head
+
+appears. The probability that actually there was head is
+
+Reprint 2025-26
+
+PROBABILITY 433
+
+4 1 1 2
+(A) = (B) 5 (C) 3 (D) =
+14. If A and B are two events such that A c B and P(B) # 0, then which of the
+following is correct?
+
+P(B)
+= —— A A
+(A) P(AIB) P(A) (B) P(AJB) < P(A)
+(C) P(AIB) = P(A) (D) None of these
+
+Miscellaneous Examples
+
+Example 22 Coloured balls are distributed in four boxes as shown in the following table:
+
+Colour
+
+[wi
+
+A box is selected at random and then a ball is randomly drawn from the selected
+box. The colour of the ball is black, what is the probability that ball drawn is from the
+box III?
+
+Solution Let A, E,, E,, E, and E, be the events as defined below :
+A : ablack ball is selected E, : box I is selected
+E, : box II is selected E, : box IIT is selected
+E,: box IV is selected
+
+Since the boxes are chosen at random,
+1
+Therefore P(E,) = P(E,) = P(E,) = P(E,) = ri
+3 2 1 4
+Also P(AIE,) = 75. P(AIE,) = ¢. P(AIE,) = = 7 and P(AIE,) = B
+
+P(box III is selected, eiven that the drawn ball is black) = P(E,IA). By Bayes'
+theorem,
+
+Reprint 2025-26
+
+434 MATHEMATICS
+
+P(E;)-P(AIES)
+
+P(E.IA) =
+(E,IA) P(E, )P(AIE, )+ P(E, ) P(AIE,) + P(E, ) P(AIE,) + P(E, ) P(AIE, )
+11
+47
+=T 3°) 1 dd 1 916°
+x +—xX—+-xX—+-—-xX
+4°18 4°4 4°7 4°43
+
+Example 23 A and B throw a die alternatively till one of them gets a ‘6’ and wins the
+game. Find their respective probabilities of winning, if A starts first.
+
+Solution Let S denote the success (getting a ‘6’) and F denote the failure (not getting
+a ‘6’).
+5
+
+1
+Thus, P(S) = 6 PIR)=—
+
+1
+P(A wins in the first throw) = P(S) = 6
+
+A gets the third throw, when the first throw by A and second throw by B result into
+failures.
+
+5 5 1
+Therefore, P(A wins in the 3rd throw) = P(FFS) = P(F) P(F) P(S)= 6. 6. 7
+
+Ok
+=/—-|x—
+6 6
+
+4
+5 1
+P(A wins in the 5th throw) = P (FFFFS) -(2) (=| and so on.
+
+6) \6
+. 1 (5V(1 5\"(1
+Hence, P(A wins) = ¢ 6 6 + 6 6 +...
+1
+_ 6 6
+— , 25 11
+36
+
+P(B wi 1-P(Awi 2-2
+(B wins) = 1 — P (A wins) = rer
+
+Remark If a+ar+ar +...+ar™! +..., where |r| < 1, then sum of this infinite G.P.
+
+a
+is given by lp (Refer A.1.3 of Class XI Text book).
+
+Reprint 2025-26
+
+PROBABILITY 435
+
+Example 24 If a machine 1s correctly set up, it produces 90% acceptable items. If it is
+incorrectly set up, it produces only 40% acceptable items. Past experience shows that
+80% of the set ups are correctly done. If after a certain set up, the machine produces
+2 acceptable items, find the probability that the machine is correctly setup.
+
+Solution Let A be the event that the machine produces 2 acceptable items.
+
+Also let B, represent the event of correct set up and B, represent the event of
+incorrect setup.
+
+Now P(B,) = 0.8, P(B,) = 0.2
+P(AIB,) = 0.9 x 0.9 and P(AIB,) = 0.4 x 0.4
+Theref P(B IA) = ———__ Bd PAB)
+erenore (BIA) = 5B) P(AB,) + P(B,) P(AIB,)
+- 0.8x0.9x 0.9 _ 648 _ 6 95
+~ 0.8x0.9x0.9+0.2x0.4x0.4 680 —
+Miscellaneous Exercise on Chapter 13
+1. A and B are two events such that P (A) 4 0. Find P(BIA), if
+
+(i) A is a subset of B (ii) ANB=6
+A couple has two children,
+
+(i) Find the probability that both children are males, if it is known that at least
+one of the children is male.
+
+(1) Find the probability that both children are females, if it is known that the
+elder child is a female.
+
+Suppose that 5% of men and 0.25% of women have grey hair. A grey haired
+person is selected at random. What is the probability of this person being male?
+Assume that there are equal number of males and females.
+
+Suppose that 90% of people are right-handed. What is the probability that
+at most 6 of a random sample of 10 people are right-handed?
+
+If a leap year is selected at random, what is the chance that it will contain 53
+tuesdays?
+
+Suppose we have four boxes A,B,C and D containing coloured marbles as given
+below:
+
+Reprint 2025-26
+
+436
+
+MATHEMATICS
+
+Marble colour
+
+nie
+
+One of the boxes has been selected at random and a single marble is drawn from
+
+it. If the marble is red, what is the probability that it was drawn from box A?, box B?,
+box C?
+
+7.
+
+10.
+
+Assume that the chances of a patient having a heart attack is 40%. It is also
+assumed that a meditation and yoga course reduce the risk of heart attack by
+30% and prescription of certain drug reduces its chances by 25%. At a time a
+patient can choose any one of the two options with equal probabilities. It is given
+that after going through one of the two options the patient selected at random
+suffers a heart attack. Find the probability that the patient followed a course of
+meditation and yoga?
+
+If each element of a second order determinant is either zero or one, what is the
+probability that the value of the determinant is positive? (Assume that the indi-
+vidual entries of the determinant are chosen independently, each value being
+
+1
+assumed with probability an ).
+
+An electronic assembly consists of two subsystems, say, A and B. From previ-
+ous testing procedures, the following probabilities are assumed to be known:
+P(A fails) = 0.2
+
+P(B fails alone) = 0.15
+
+P(A and B fail) = 0.15
+Evaluate the following probabilities
+
+(i) P(A failsIB has failed) (ii) P(A fails alone)
+
+Bag I contains 3 red and 4 black balls and Bag II contains 4 red and 5 black balls.
+One ball is transferred from Bag I to Bag II and then a ball is drawn from Bag II.
+The ball so drawn is found to be red in colour. Find the probability that the
+transferred ball is black.
+
+Choose the correct answer in each of the following:
+
+11.
+
+If A and B are two events such that P(A) # 0 and P(B | A) = 1, then
+(A) ACB (B) BCA (C) B=0 (D) A=0
+
+Reprint 2025-26
+
+12.
+
+13.
+
+PROBABILITY 437
+
+If P(AIB) > P(A), then which of the following is correct :
+
+(A) P(BIA) < P(B) (B) P(A MB) < P(A). P(B)
+(C) P(BIA) > P(B) (D) P(BIA) = P(B)
+If A and B are any two events such that P(A) + P(B) — P(A and B) = P(A), then
+(A) P(BIA) = 1 (B) P(AIB) = 1
+(C) P(BIA) = 0 (D) P(AIB) = 0
+Summary
+
+The salient features of the chapter are —
+
+@ Theconditional probability of an event E, given the occurrence of the event F
+
+is given by P(E|F) =PEOP) | P(F) 40
+
+0 <P (EIF) <1, P (EF) = | — P (EIF)
+
+P (E U P)IG) = P (EIG) + P (FIG) — P (EN PIG)
+P (EOF) =P (£) P (FE), P (E) #0
+
+P (EOF) =P (F) P (EIB), P (F) #0
+
+If E and F are independent, then
+
+P (EO F) =P (E) P (FP)
+
+P (EIF) = P (B), P (F) #0
+
+P (FIE) = P (FB), P(E) # 0
+
+Theorem of total probability
+
+Let {E,, E,, ...,E,) be a partition of a sample space and suppose that each of
+E,, E,, .... E, has nonzero probability. Let A be any event associated with S,
+then
+
+P(A) = P(E,) P (AIE,) + P (E,) P (AIE,) + ... + P (E_) P(AIE )
+
+Bayes' theorem If E,, E,, .... E, are events which constitute a partition of
+sample space S, i.e. E,, E,, ..., E, are pairwise disjoint and E,UE,U...UE, =S
+and A be any event with nonzero probability, then
+
+y’ P(E, )P(AIE,)
+j=l
+
+Reprint 2025-26
+
+438 MATHEMATICS
+
+Historical Note
+
+The earliest indication on measurement of chances in game of dice appeared
+in 1477 in a commentary on Dante's Divine Comedy. A treatise on gambling
+named liber de Ludo Alcae, by Geronimo Carden (1501-1576) was published
+posthumously in 1663. In this treatise, he gives the number of favourable cases
+for each event when two dice are thrown.
+
+Galileo (1564-1642) gave casual remarks concerning the correct evaluation
+of chance in a game of three dice. Galileo analysed that when three dice are
+thrown, the sum of the number that appear is more likely to be 10 than the sum 9,
+because the number of cases favourable to 10 are more than the number of
+cases for the appearance of number 9.
+
+Apart from these early contributions, it is generally acknowledged that the
+true origin of the science of probability lies in the correspondence between two
+great men of the seventeenth century, Pascal (1623-1662) and Pierre de Fermat
+(1601-1665). A French gambler, Chevalier de Metre asked Pascal to explain
+some seeming contradiction between his theoretical reasoning and the
+observation gathered from gambling. In a series of letters written around 1654,
+Pascal and Fermat laid the first foundation of science of probability. Pascal solved
+the problem in algebraic manner while Fermat used the method of combinations.
+
+Great Dutch Scientist, Huygens (1629-1695), became acquainted with the
+content of the correspondence between Pascal and Fermat and published a first
+book on probability, "De Ratiociniis in Ludo Aleae" containing solution of many
+interesting rather than difficult problems on probability in games of chances.
+
+The next great work on probability theory is by Jacob Bernoulli (1654-1705),
+in the form of a great book, "Ars Conjectendi" published posthumously in 1713
+by his nephew, Nicholes Bernoulli. To him is due the discovery of one of the most
+important probability distribution known as Binomial distribution. The next
+remarkable work on probability lies in 1993. A. N. Kolmogorov (1903-1987) is
+credited with the axiomatic theory of probability. His book, ‘Foundations of
+probability’ published in 1933, introduces probability as a set function and is
+considered a ‘classic!’.
+
+— & —
+“~
+
+Reprint 2025-26
