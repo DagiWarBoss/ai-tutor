@@ -92,7 +92,6 @@ async def generate_content(request: ContentRequest):
     topic_prompt = request.topic
     mode = request.mode
 
-    # Step 1: Find the most relevant topic text from the database (RAG)
     topic_embedding = embedding_model.encode(topic_prompt).tolist()
     conn = get_db_connection()
     if conn is None:
@@ -118,13 +117,21 @@ async def generate_content(request: ContentRequest):
     if len(relevant_topic_text) > max_chars:
         relevant_topic_text = relevant_topic_text[:max_chars]
 
-    # Step 2: Choose the system prompt and params based on the requested mode
     system_message = ""
     user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ---\n{relevant_topic_text}\n--- END OF CONTEXT ---"
     response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
 
     if mode == 'revise':
-        system_message = "You are an AI assistant creating a 'cheat sheet'. Based ONLY on the provided context, extract and list the key formulas, definitions, and concepts. Use bullet points and LaTeX for all formulas. Be concise."
+        # --- THIS IS THE UPDATED PROMPT ---
+        system_message = """
+        You are an AI assistant creating a structured 'cheat sheet' for a student preparing for the JEE exam. Based ONLY on the provided context, generate a well-formatted summary.
+
+        Your response MUST use Markdown formatting:
+        - Use headings (like ## Key Definitions or ## Important Formulas) to separate sections.
+        - Use bullet points (*) for lists.
+        - Bold key terms using **asterisks**.
+        - Use LaTeX for ALL mathematical formulas and variables, enclosing them in '$' or '$$'.
+        """
     elif mode == 'practice':
         system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer` ('A', 'B', 'C', or 'D'), and `explanation`."
         response_params["response_format"] = {"type": "json_object"}
@@ -132,7 +139,6 @@ async def generate_content(request: ContentRequest):
     else: # Default to 'explain' mode
         system_message = "You are an expert JEE tutor. Your answer should be a clear, concise explanation of the topic based on the provided context. Use LaTeX for all mathematical formulas, enclosing inline math with '$' and block equations with '$$'."
 
-    # Step 3: Call the AI and return the response
     try:
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
         response_params["messages"] = messages
