@@ -115,23 +115,25 @@ async def generate_grounded_problem(request: Request):
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
     relevant_chapter_text, found_chapter_name = "", ""
+    # --- AFTER ---
+    relevant_topic_text, found_topic_name = "", "" # Renamed variables for clarity
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (topic_embedding,))
+            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (question_embedding,)) # Use the new match_topics function
             match_result = cur.fetchone()
             if not match_result:
-                raise HTTPException(status_code=404, detail=f"Could not find a relevant chapter for the topic '{topic_prompt}'.")
+                raise HTTPException(status_code=404, detail="Could not find a relevant topic for your question.")
 
-            matched_chapter_id, matched_chapter_name, similarity = match_result
-            print(f"DEBUG: Found chapter '{matched_chapter_name}' (Similarity: {similarity:.4f}) to generate problem.")
+            matched_topic_id, matched_topic_name, similarity = match_result # These are now topic variables
+            print(f"DEBUG: Found most similar topic: '{matched_topic_name}' (Similarity: {similarity:.4f})")
             
-            cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+            cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,)) # Query the topics table
             text_result = cur.fetchone()
             if text_result:
-                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
+                relevant_topic_text, found_topic_name = text_result[0], matched_topic_name
     finally:
         conn.close()
-
+        
     max_chars = 15000
     if len(relevant_chapter_text) > max_chars:
         relevant_chapter_text = relevant_chapter_text[:max_chars]
