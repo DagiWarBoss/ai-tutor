@@ -4,10 +4,45 @@ import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import ReactMarkdown from 'react-markdown';
 
-// --- (Helper components: Spinner, MarkdownRenderer are the same) ---
-const Spinner = ({ text = "Loading..." }) => ( /* ... */ );
-const MarkdownRenderer = ({ markdown }) => ( /* ... */ );
+// --- Here are the complete, unabridged helper components ---
+const Spinner = ({ text = "Loading..." }) => (
+    <div className="flex flex-col justify-center items-center p-8 text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
+        <p className="mt-4 text-gray-400">{text}</p>
+    </div>
+);
 
+const MarkdownRenderer = ({ markdown }) => {
+    return (
+        <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white prose-ul:list-disc prose-li:text-gray-300">
+            <ReactMarkdown
+                components={{
+                    p: ({ node, ...props }) => {
+                        if (node.children[0]?.type === 'text') {
+                            const text = node.children[0].value;
+                            const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
+                            return (
+                                <p className="leading-relaxed my-2">
+                                    {parts.map((part, index) => {
+                                        if (part.startsWith('$$') && part.endsWith('$$')) {
+                                            return <BlockMath key={index} math={part.slice(2, -2)} />;
+                                        } else if (part.startsWith('$') && part.endsWith('$')) {
+                                            return <InlineMath key={index} math={part.slice(1, -1)} />;
+                                        }
+                                        return <span key={index}>{part}</span>;
+                                    })}
+                                </p>
+                            );
+                        }
+                        return <p {...props} className="leading-relaxed my-2" />;
+                    }
+                }}
+            >
+                {markdown}
+            </ReactMarkdown>
+        </div>
+    );
+};
 
 const QuizView = ({ quizData, onNext }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -23,27 +58,18 @@ const QuizView = ({ quizData, onNext }) => {
             setSelectedAnswer(optionKey);
         }
     };
-
-    // --- FINAL, SIMPLIFIED, AND CORRECTED FIX FOR QUIZ COLORS ---
+    
     const getButtonClass = (optionKey) => {
         if (!isRevealed) {
             return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
         }
-
-        // Clean the AI's response to get only the letter 'A', 'B', 'C', or 'D'.
         const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
-        
-        // Is the current button the correct answer?
         if (optionKey === correctAnswerKey) {
             return 'bg-green-700';
         }
-
-        // Is the current button the one the user selected, AND was it wrong?
         if (optionKey === selectedAnswer && optionKey !== correctAnswerKey) {
             return 'bg-red-700';
         }
-
-        // Otherwise, it's a regular, unselected, incorrect option.
         return 'bg-gray-700';
     };
 
@@ -78,7 +104,6 @@ const QuizView = ({ quizData, onNext }) => {
 
 // --- Main Component ---
 export default function SyllabusExplorer() {
-    // ... (State declarations and fetchSyllabus are the same) ...
     const [syllabus, setSyllabus] = useState([]);
     const [isLoadingSyllabus, setIsLoadingSyllabus] = useState(true);
     const [error, setError] = useState(null);
@@ -91,14 +116,28 @@ export default function SyllabusExplorer() {
     const [activeMode, setActiveMode] = useState(null);
     const [sourceName, setSourceName] = useState('');
     const [sourceLevel, setSourceLevel] = useState('');
-
-    // --- Auto-scrolling Refs ---
     const chaptersRef = useRef(null);
     const topicsRef = useRef(null);
-    
-    useEffect(() => { /* fetchSyllabus logic */ }, []);
-    
-    // --- Auto-scrolling Effects ---
+
+    useEffect(() => {
+        const fetchSyllabus = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/syllabus');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                setSyllabus(data);
+                if (data && data.length > 0) {
+                    setSelectedSubject(data[0]);
+                }
+            } catch (e) {
+                setError(e.message);
+            } finally {
+                setIsLoadingSyllabus(false);
+            }
+        };
+        fetchSyllabus();
+    }, []);
+
     useEffect(() => {
         if (selectedSubject && chaptersRef.current) {
             chaptersRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -121,13 +160,54 @@ export default function SyllabusExplorer() {
         }, {});
     }, [selectedSubject]);
 
-    // ... (resetContent, handle clicks, and fetchContent are the same) ...
-    const resetContent = () => { /* ... */ };
-    const handleSubjectClick = (subject) => { /* ... */ };
-    const handleChapterClick = (chapter) => { /* ... */ };
-    const handleTopicClick = (topic) => { /* ... */ };
-    const fetchContent = async (topic, mode) => { /* ... */ };
+    const resetContent = () => {
+        setContent(null); setContentType(null); setError(null);
+        setSourceName(''); setSourceLevel('');
+    };
+    
+    const handleSubjectClick = (subject) => {
+        setSelectedSubject(subject); setSelectedChapter(null); setSelectedTopic(null);
+        resetContent(); setActiveMode(null);
+    };
 
+    const handleChapterClick = (chapter) => {
+        setSelectedChapter(chapter); setSelectedTopic(null);
+        resetContent(); setActiveMode(null);
+    };
+    
+    const handleTopicClick = (topic) => {
+        setSelectedTopic(topic); resetContent(); setActiveMode(null);
+    };
+
+    const fetchContent = async (topic, mode) => {
+        if (!topic) return;
+        setIsLoadingContent(true); resetContent(); setActiveMode(mode);
+        try {
+            const response = await fetch('http://localhost:8000/api/generate-content', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic: topic.name, mode: mode }),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setSourceName(data.source_name || '');
+            setSourceLevel(data.source_level || '');
+            if (mode === 'practice') {
+                setContent(data);
+                setContentType('practice');
+            } else {
+                setContent(data.content);
+                setContentType(mode);
+            }
+        } catch (e) {
+            setError(e.message);
+        } finally {
+            setIsLoadingContent(false);
+        }
+    };
 
     if (isLoadingSyllabus) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><Spinner text="Loading Syllabus..." /></div>;
     if (error && !content) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><p className="text-red-500">Error: {error}</p></div>;
@@ -141,7 +221,6 @@ export default function SyllabusExplorer() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:col-span-1">
-                    {/* Subjects Pane */}
                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Subjects</h2>
                         <ul>
@@ -152,7 +231,6 @@ export default function SyllabusExplorer() {
                             ))}
                         </ul>
                     </div>
-                    {/* Chapters Pane with Ref */}
                     <div ref={chaptersRef} className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Chapters</h2>
                         {selectedSubject ? (
@@ -170,13 +248,11 @@ export default function SyllabusExplorer() {
                             ))
                         ) : ( <p className="text-gray-500 text-sm">Select a subject.</p> )}
                     </div>
-                    {/* Topics Pane with Ref */}
                     <div ref={topicsRef} className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Topics</h2>
                         {selectedChapter ? (<ul>{selectedChapter.topics.map((topic) => (<li key={topic.id} onClick={() => handleTopicClick(topic)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedTopic?.id === topic.id ? 'bg-cyan-600 font-bold' : 'hover:bg-gray-700'}`}>{topic.number} {topic.name}</li>))}</ul>) : <p className="text-gray-500 text-sm">Select a chapter.</p>}
                     </div>
                 </div>
-                {/* Right Side Content Panel */}
                 <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg:col-span-1">
                      {selectedTopic ? (
                         <>
