@@ -21,14 +21,18 @@ DB_CONN = os.environ.get("SUPABASE_CONNECTION_STRING")
 # ---------- OCR + Utils ----------
 def pdf_to_text(pdf_path):
     """Convert PDF to text using Tesseract OCR with 500 DPI."""
-    pages = convert_from_path(pdf_path, dpi=500)  # <--- 500 DPI for high fidelity!
+    pages = convert_from_path(pdf_path, dpi=500)  # 500 DPI for high fidelity
     text_pages = [pytesseract.image_to_string(pg) for pg in pages]
     return "\n".join(text_pages)
 
 def normalize_for_match(s):
-    if not s: return ""
+    if not s:
+        return ""
+    # Remove accents
     s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    # Keep only alphanumeric and space characters
     s = re.sub(r'[^0-9a-zA-Z ]', ' ', s)
+    # Replace multiple spaces with single space
     s = re.sub(r'\s+', ' ', s)
     return s.strip().lower()
 
@@ -42,12 +46,13 @@ def extract_topics_and_questions(full_text, csv_topics):
     questions_output = []
 
     headings = csv_topics.to_dict("records")
+
     # --- Fuzzy multi-line merge match for headings ---
     def fuzzy_find_heading(lines, heading, heading_number, max_merge=4, threshold=0.70):
         best_idx, best_score, best_line = -1, 0, ""
         for i in range(len(lines)):
-            for merge in range(1, max_merge+1):
-                chunk = " ".join([lines[j].strip() for j in range(i, min(i+merge, len(lines)))])
+            for merge in range(1, max_merge + 1):
+                chunk = " ".join([lines[j].strip() for j in range(i, min(i + merge, len(lines)))])
                 score = similar(chunk, heading)
                 if heading_number in normalize_for_match(chunk) or score > best_score:
                     if heading_number in normalize_for_match(chunk) or score >= threshold:
@@ -70,23 +75,23 @@ def extract_topics_and_questions(full_text, csv_topics):
     indices = [i for i in indices if i[0] != -1]
     indices = sorted(indices, key=lambda x: x)
 
+    # Extract topics text based on found indices
     for i, (start_idx, heading_number, heading_text) in enumerate(indices):
-        end_idx = indices[i+1] if i+1 < len(indices) else len(lines)
-        topic_text = "\n".join(lines[start_idx+1:end_idx]).strip()
+        end_idx = indices[i + 1] if i + 1 < len(indices) else len(lines)
+        topic_text = "\n".join(lines[start_idx + 1:end_idx]).strip()
         topics_output.append({
             "topic_number": heading_number,
             "heading_text": heading_text,
             "full_text": topic_text
         })
 
-    # --- Full exercise question extraction ---
+    # Extract exercise questions (after exercise section)
     in_exercise = False
     exercise_headers = ['exercise', 'exercises', 'practice', 'questions']
     question_ptrn = re.compile(r'^(\(?\d{1,3}[\.|\)]|\(?[a-zA-Z][\)\.]|Q\s?\d{1,3}[\. :]?)')
     buffer = []
     for line in lines:
         normline = normalize_for_match(line)
-        # locate Exercises start
         if not in_exercise and any(eh in normline for eh in exercise_headers):
             in_exercise = True
             continue
