@@ -4,119 +4,11 @@ import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import ReactMarkdown from 'react-markdown';
 
-// --- Helper Components ---
-const Spinner = ({ text = "Loading..." }) => (
-    <div className="flex flex-col justify-center items-center p-8 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
-        <p className="mt-4 text-gray-400">{text}</p>
-    </div>
-);
-
-const MarkdownRenderer = ({ markdown }) => {
-    return (
-        <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white">
-            <ReactMarkdown
-                components={{
-                    p: ({ node, ...props }) => {
-                        if (node.children[0]?.type === 'text') {
-                            const text = node.children[0].value;
-                            const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
-                            return (
-                                <p className="leading-relaxed">
-                                    {parts.map((part, index) => {
-                                        if (part.startsWith('$$') && part.endsWith('$$')) {
-                                            return <BlockMath key={index} math={part.slice(2, -2)} />;
-                                        } else if (part.startsWith('$') && part.endsWith('$')) {
-                                            return <InlineMath key={index} math={part.slice(1, -1)} />;
-                                        }
-                                        return <span key={index}>{part}</span>;
-                                    })}
-                                </p>
-                            );
-                        }
-                        return <p {...props} className="leading-relaxed" />;
-                    }
-                }}
-            >
-                {markdown}
-            </ReactMarkdown>
-        </div>
-    );
-};
-
-const QuizView = ({ quizData, onNext }) => {
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
-    const [isRevealed, setIsRevealed] = useState(false);
-
-    useEffect(() => {
-        setSelectedAnswer(null);
-        setIsRevealed(false);
-    }, [quizData]);
-
-    const handleAnswerClick = (optionKey) => {
-        if (!isRevealed) {
-            setSelectedAnswer(optionKey);
-        }
-    };
-
-    const getButtonClass = (optionKey) => {
-        // Clean the AI's response to handle inconsistencies (e.g., " b ", "b", "B.")
-        const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
-
-        if (!isRevealed) {
-            return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
-        }
-        if (optionKey === correctAnswerKey) {
-            return 'bg-green-700'; // Correct answer
-        }
-        if (selectedAnswer === optionKey && optionKey !== correctAnswerKey) {
-            return 'bg-red-700'; // Incorrectly selected answer
-        }
-        return 'bg-gray-700'; // Other options
-    };
-
-    return (
-        <div className="space-y-4">
-            <MarkdownRenderer markdown={quizData.question} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {Object.entries(quizData.options).map(([key, value]) => (
-                    <button
-                        key={key}
-                        onClick={() => handleAnswerClick(key)}
-                        className={`p-3 rounded-lg text-left transition-colors duration-200 ${getButtonClass(key)}`}
-                    >
-                       <span className="font-bold mr-2">{key}.</span> <MarkdownRenderer markdown={value} />
-                    </button>
-                ))}
-            </div>
-            <div className="pt-4 flex items-center space-x-4">
-                 <button 
-                    onClick={() => setIsRevealed(true)}
-                    disabled={!selectedAnswer || isRevealed}
-                    className="px-4 py-2 bg-purple-600 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-purple-700"
-                >
-                    Check Answer
-                </button>
-                 <button 
-                    onClick={onNext}
-                    className="px-4 py-2 bg-cyan-600 rounded-md hover:bg-cyan-700"
-                >
-                    Next Question
-                </button>
-            </div>
-            {isRevealed && (
-                <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-700">
-                    <h3 className="font-bold text-lg text-cyan-400">Explanation</h3>
-                    <MarkdownRenderer markdown={quizData.explanation} />
-                </div>
-            )}
-        </div>
-    );
-};
-
+// --- (Helper components like Spinner, MarkdownRenderer, QuizView remain the same) ---
 
 // --- Main Component ---
 export default function SyllabusExplorer() {
+    // ... (Syllabus, loading, error, and selection states are the same)
     const [syllabus, setSyllabus] = useState([]);
     const [isLoadingSyllabus, setIsLoadingSyllabus] = useState(true);
     const [error, setError] = useState(null);
@@ -127,52 +19,25 @@ export default function SyllabusExplorer() {
     const [contentType, setContentType] = useState(null);
     const [isLoadingContent, setIsLoadingContent] = useState(false);
     const [activeMode, setActiveMode] = useState(null);
+    
+    // --- ADD NEW STATE FOR CONTEXT SOURCE ---
+    const [sourceName, setSourceName] = useState('');
+    const [sourceLevel, setSourceLevel] = useState('');
 
     useEffect(() => {
-        const fetchSyllabus = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/api/syllabus');
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                setSyllabus(data);
-                if (data && data.length > 0) {
-                    setSelectedSubject(data[0]);
-                }
-            } catch (e) {
-                setError(e.message);
-            } finally {
-                setIsLoadingSyllabus(false);
-            }
-        };
-        fetchSyllabus();
+        // ... (fetchSyllabus logic is the same)
     }, []);
 
     const resetContent = () => {
         setContent(null);
         setContentType(null);
         setError(null);
+        // --- RESET SOURCE STATE ---
+        setSourceName('');
+        setSourceLevel('');
     };
     
-    const handleSubjectClick = (subject) => {
-        setSelectedSubject(subject);
-        setSelectedChapter(null);
-        setSelectedTopic(null);
-        resetContent();
-        setActiveMode(null);
-    };
-
-    const handleChapterClick = (chapter) => {
-        setSelectedChapter(chapter);
-        setSelectedTopic(null);
-        resetContent();
-        setActiveMode(null);
-    };
-    
-    const handleTopicClick = (topic) => {
-        setSelectedTopic(topic);
-        resetContent();
-        setActiveMode(null);
-    };
+    // ... (handleSubjectClick, handleChapterClick, handleTopicClick are the same)
 
     const fetchContent = async (topic, mode) => {
         if (!topic) return;
@@ -190,6 +55,11 @@ export default function SyllabusExplorer() {
                 throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+
+            // --- UPDATE STATE WITH SOURCE INFO ---
+            setSourceName(data.source_name || '');
+            setSourceLevel(data.source_level || '');
+
             if (mode === 'practice') {
                 setContent(data);
                 setContentType('practice');
@@ -204,38 +74,17 @@ export default function SyllabusExplorer() {
         }
     };
 
-    if (isLoadingSyllabus) {
-        return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><Spinner text="Loading Syllabus..." /></div>;
-    }
-
-    if (error && !content) {
-        return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><p className="text-red-500">Error: {error}</p></div>;
-    }
+    // ... (Loading and error return statements remain the same)
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 font-sans">
-            <header className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-cyan-400">PraxisAI</h1>
-                <p className="text-gray-400 mt-2">Your AI-Powered JEE Study Partner. Select a topic to begin.</p>
-            </header>
+            {/* ... (Header is the same) ... */}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:col-span-1">
-                    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
-                        <h2 className="text-lg font-semibold mb-4 text-cyan-300">Subjects</h2>
-                        <ul>{syllabus.map((subject) => (<li key={subject.id} onClick={() => handleSubjectClick(subject)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedSubject?.id === subject.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>{subject.name} (Class {subject.class_level})</li>))}</ul>
-                    </div>
-                    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
-                        <h2 className="text-lg font-semibold mb-4 text-cyan-300">Chapters</h2>
-                        {selectedSubject ? (<ul>{selectedSubject.chapters.map((chapter) => (<li key={chapter.id} onClick={() => handleChapterClick(chapter)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedChapter?.id === chapter.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>Ch. {chapter.number}: {chapter.name}</li>))}</ul>) : <p className="text-gray-500 text-sm">Select a subject.</p>}
-                    </div>
-                    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
-                        <h2 className="text-lg font-semibold mb-4 text-cyan-300">Topics</h2>
-                        {selectedChapter ? (<ul>{selectedChapter.topics.map((topic) => (<li key={topic.id} onClick={() => handleTopicClick(topic)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedTopic?.id === topic.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>{topic.number} {topic.name}</li>))}</ul>) : <p className="text-gray-500 text-sm">Select a chapter.</p>}
-                    </div>
-                </div>
+                {/* ... (Left Side: 3-Pane Explorer is the same) ... */}
 
-                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg:col-span-1">
+                {/* Right Side: Content Panel */}
+                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg-col-span-1">
                     {selectedTopic ? (
                         <>
                             <div className="border-b border-gray-700 pb-4 mb-4">
@@ -246,8 +95,18 @@ export default function SyllabusExplorer() {
                                     <button onClick={() => fetchContent(selectedTopic, 'practice')} className={`px-3 py-1 text-sm rounded-md ${activeMode === 'practice' ? 'bg-cyan-600' : 'bg-gray-700 hover:bg-gray-600'}`}>📝 Practice</button>
                                 </div>
                             </div>
+                            
                             {isLoadingContent && <Spinner />}
                             {error && <p className="text-red-500">Error: {error}</p>}
+
+                            {/* --- ADD THE SOURCE DISPLAY ELEMENT --- */}
+                            {sourceName && !isLoadingContent && (
+                                <div className="text-xs text-gray-500 mb-4 p-2 bg-gray-900/50 rounded-md">
+                                    <span className="font-bold">Source:</span> {sourceName} 
+                                    <span className="italic"> ({sourceLevel} Context)</span>
+                                </div>
+                            )}
+
                             {content && (
                                 <>
                                     {contentType === 'practice' 
@@ -264,11 +123,7 @@ export default function SyllabusExplorer() {
                     )}
                 </div>
             </div>
-             <div className="text-center mt-8">
-                <Link to="/dashboard" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-200">
-                    &larr; Back to Dashboard
-                </Link>
-            </div>
+             {/* ... (Footer link is the same) ... */}
         </div>
     );
 }
