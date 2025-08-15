@@ -51,7 +51,7 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-# === ENDPOINT 1: The "Smart" RAG Pipeline for Questions ===
+# === ENDPOINT 1: The "Smart" RAG Pipeline for Questions (CORRECTED) ===
 @app.post("/ask-question")
 async def ask_question(request: Request):
     data = await request.json()
@@ -66,36 +66,43 @@ async def ask_question(request: Request):
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
-    relevant_chapter_text, found_chapter_name = "", ""
+    relevant_topic_text, found_topic_name = "", ""
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (question_embedding,))
+            # Use the new match_topics function
+            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (question_embedding,))
             match_result = cur.fetchone()
             if not match_result:
-                raise HTTPException(status_code=404, detail="Could not find a relevant chapter for your question.")
+                raise HTTPException(status_code=404, detail="Could not find a relevant topic for your question.")
 
-            matched_chapter_id, matched_chapter_name, similarity = match_result
-            print(f"DEBUG: Found most similar chapter: '{matched_chapter_name}' (Similarity: {similarity:.4f})")
+            # These are now topic variables
+            matched_topic_id, matched_topic_name, similarity = match_result
+            print(f"DEBUG: Found most similar topic: '{matched_topic_name}' (Similarity: {similarity:.4f})")
             
-            cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+            # Query the topics table
+            cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             text_result = cur.fetchone()
             if text_result:
-                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
+                relevant_topic_text, found_topic_name = text_result[0], matched_topic_name
     finally:
         conn.close()
 
     max_chars = 15000
-    if len(relevant_chapter_text) > max_chars:
-        relevant_chapter_text = relevant_chapter_text[:max_chars]
+    if len(relevant_topic_text) > max_chars:
+        relevant_topic_text = relevant_topic_text[:max_chars]
 
     try:
-        system_message = "You are an expert JEE tutor..." # Abridged for brevity
-        user_message_content = f"User's Question: '{user_question}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
+        system_message = "You are an expert JEE tutor. Your answer should be clear, concise, and directly address the user's question. Use LaTeX for all mathematical formulas and equations, enclosing inline math with single dollar signs ($) and block equations with double dollar signs ($$)."
+        
+        # Use the new topic variables and update the prompt text
+        user_message_content = f"User's Question: '{user_question}'\n\n--- RELEVANT TOPIC: {found_topic_name} ---\n{relevant_topic_text}\n--- END OF TOPIC ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
 
         response = llm_client.chat.completions.create(model="mistralai/Mixtral-8x7B-Instruct-v0.1", messages=messages, max_tokens=1024, temperature=0.3)
         generated_answer = response.choices[0].message.content.strip()
-        return JSONResponse(content={"answer": generated_answer, "source_chapter": found_chapter_name})
+        
+        # Update the key to 'source_topic' for the frontend
+        return JSONResponse(content={"answer": generated_answer, "source_topic": found_topic_name})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate answer. Backend error: {e}")
 
@@ -114,26 +121,25 @@ async def generate_grounded_problem(request: Request):
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
+    # This endpoint still uses chapters, which is fine for broader context
     relevant_chapter_text, found_chapter_name = "", ""
-    # --- AFTER ---
-    relevant_topic_text, found_topic_name = "", "" # Renamed variables for clarity
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (question_embedding,)) # Use the new match_topics function
+            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
-                raise HTTPException(status_code=404, detail="Could not find a relevant topic for your question.")
+                raise HTTPException(status_code=404, detail=f"Could not find a relevant chapter for the topic '{topic_prompt}'.")
 
-            matched_topic_id, matched_topic_name, similarity = match_result # These are now topic variables
-            print(f"DEBUG: Found most similar topic: '{matched_topic_name}' (Similarity: {similarity:.4f})")
+            matched_chapter_id, matched_chapter_name, similarity = match_result
+            print(f"DEBUG: Found chapter '{matched_chapter_name}' (Similarity: {similarity:.4f}) to generate problem.")
             
-            cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,)) # Query the topics table
+            cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
             text_result = cur.fetchone()
             if text_result:
-                relevant_topic_text, found_topic_name = text_result[0], matched_topic_name
+                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
     finally:
         conn.close()
-        
+
     max_chars = 15000
     if len(relevant_chapter_text) > max_chars:
         relevant_chapter_text = relevant_chapter_text[:max_chars]
@@ -204,7 +210,7 @@ async def get_syllabus():
             syllabus = list(subjects_map.values())
 
         return JSONResponse(content=syllabus)
-        
+    
     except psycopg2.Error as e:
         print(f"Database query error while fetching syllabus: {e}")
         raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
