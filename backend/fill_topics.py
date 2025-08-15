@@ -8,28 +8,26 @@ import pytesseract
 # Uncomment and set this if your Tesseract executable is in a custom location (Windows)
 # pytesseract.pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
-# Load environment variables
 load_dotenv()
 DB_CONN = os.getenv("SUPABASE_CONNECTION_STRING")
 
 if not DB_CONN:
     raise ValueError("Missing SUPABASE_CONNECTION_STRING in environment variables.")
 
-# Map chapters to actual PDF paths and cache files
 CHAPTER_CONFIG = {
-    155: {  # Chemistry Class 11 - Thermodynamics
+    155: {
         "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 11\Thermodynamics.pdf",
         "ocr_cache": r"ocr_cache\Thermodynamics_11.txt"
     },
-    158: {  # Chemistry Class 12 - Aldehydes, Ketones And Carboxylic Acid
+    158: {
         "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Chemistry\Class 12\Aldehydes, Ketones And Carboxylic Acid.pdf",
         "ocr_cache": r"ocr_cache\Aldehydes_Ketones_Carboxylic_12.txt"
     },
-    174: {  # Maths Class 12 - Probability
+    174: {
         "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Probability.pdf",
         "ocr_cache": r"ocr_cache\Probability_12.txt"
     },
-    181: {  # Maths Class 12 - Continuity And Differentiability
+    181: {
         "pdf": r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Maths\Class 12\Contunuity And Differentiability.pdf",
         "ocr_cache": r"ocr_cache\Continuity_Differentiability_12.txt"
     }
@@ -49,20 +47,22 @@ def pdf_to_text(pdf_path, cache_path):
     print(f"[CACHE SAVED] {cache_path}")
     return text
 
-# List of (chapter_id, topic_number) pairs to extract & update (adjust per your topics)
 TOPICS_TO_EXTRACT = [
-    # Example entries, replace or extend with your actual topic numbers
-    ('155', '5.1'), ('155', '5.2'), # Thermodynamics topics
-    ('158', '8.1'), ('158', '8.2'), # Aldehydes, Ketones topics
-    ('174', '14.1'), ('174', '14.2'), # Probability topics
-    ('181', '6.1'), ('181', '6.2'), # Continuity topics
+    ('155', '5.1'), ('155', '5.2'),
+    ('158', '8.1'), ('158', '8.2'),
+    ('174', '14.1'), ('174', '14.2'),
+    ('181', '6.1'), ('181', '6.2'),
 ]
 
 def extract_topic_text(content, topic_number):
+    # Adjust regex to allow flexible spaces and optional dots for topic numbers
+    flexible_num = re.escape(topic_number).replace(r"\.", r"\s*\.?\s*")
     pattern = re.compile(
-        rf'^\s*{re.escape(topic_number)}\s*.*?(?=^\s*\d+(\.\d+)*\s*|\Z)', re.DOTALL | re.MULTILINE)
+        rf'^\s*{flexible_num}\s.*?(?=^\s*\d+(\.\d+)*\s*|\Z)', re.DOTALL | re.MULTILINE)
     match = pattern.search(content)
-    return match.group().strip() if match else ""
+    if match:
+        return match.group().strip()
+    return ""
 
 def main():
     chap_texts = {}
@@ -89,19 +89,23 @@ def main():
         content = chap_texts[chap_id]
         text = extract_topic_text(content, topic_num)
         if text:
-            print(f"Extracted text for Chapter {chap_id} Topic {topic_num} — length {len(text)} chars")
+            snippet = text[:300].replace('\n', ' ').replace('\r', '')
+            print(f"Extracted text for Chapter {chap_id} Topic {topic_num} — length {len(text)} chars. Snippet: {snippet}...")
+            try:
+                cur.execute("""
+                    UPDATE public.topics
+                    SET full_text = %s
+                    WHERE chapter_id = %s AND topic_number = %s
+                """, (text, chap_id, topic_num))
+                print(f"Updated Chapter {chap_id} Topic {topic_num}")
+            except Exception as e:
+                print(f"Failed to update Chapter {chap_id} Topic {topic_num}: {e}")
         else:
-            print(f"No text found for Chapter {chap_id} Topic {topic_num}")
-            continue
-        try:
-            cur.execute("""
-                UPDATE public.topics
-                SET full_text = %s
-                WHERE chapter_id = %s AND topic_number = %s
-            """, (text, chap_id, topic_num))
-            print(f"Updated Chapter {chap_id} Topic {topic_num}")
-        except Exception as e:
-            print(f"Failed to update Chapter {chap_id} Topic {topic_num}: {e}")
+            # Show context around expected topic header for debugging
+            pattern_debug = re.compile(
+                rf'.{{0,50}}{re.escape(topic_num)}.{{0,50}}', re.MULTILINE | re.DOTALL | re.IGNORECASE)
+            found_debug = pattern_debug.findall(content)
+            print(f"No text found for Chapter {chap_id} Topic {topic_num}. Context samples: {found_debug if found_debug else 'None found'}")
 
     conn.commit()
     cur.close()
