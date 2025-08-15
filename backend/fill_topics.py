@@ -1,146 +1,128 @@
 import os
-import re
-import psycopg2
-from dotenv import load_dotenv
 import pandas as pd
-from pdf2image import convert_from_path
-import pytesseract
+import fitz  # PyMuPDF
+import logging
 
-# ======= 1. ALL PATHS HAVE BEEN CORRECTED TO USE 'Dokumen' =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
-POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
-TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("pdf_extract")
+
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\origins"
 OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
-# =====================================================================
 
-# --- Configuration ---
-load_dotenv()
-SUPABASE_URI = os.getenv("SUPABASE_CONNECTION_STRING")
-pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
-os.makedirs(OCR_CACHE_FOLDER, exist_ok=True)
-
-# --- This is the list of the 4 chapters the script will process ---
+# Chapter configurations: subject, class, pdf filename, chapter number
 CHAPTER_CONFIG = {
-    155: {
-        "pdf_filename": "Thermodynamics.pdf",
+    12: {
         "subject": "Chemistry",
         "class": "Class 11",
+        "pdf_filename": "Aldehydes Ketones And Carboxylic Acid.pdf",
+        "chapter_num": 8,
     },
-    158: {
-        "pdf_filename": "Aldehydes, Ketones And Carboxylic Acid.pdf",
-        "subject": "Chemistry",
-        "class": "Class 12",
-    },
-    174: {
-        "pdf_filename": "Probability.pdf",
-        "subject": "Maths",
-        "class": "Class 12",
-    },
-    181: {
-        "pdf_filename": "Contunuity And Differentiability.pdf",
-        "subject": "Maths",
-        "class": "Class 12",
-    }
+    # add other chapters as needed here...
 }
 
-def log(msg: str):
-    print(msg, flush=True)
-
 def pdf_to_text(pdf_path, cache_folder):
-    """Performs OCR on a PDF and caches the result."""
-    cache_path = os.path.join(cache_folder, os.path.basename(pdf_path) + ".txt")
-    if os.path.exists(cache_path):
-        with open(cache_path, "r", encoding="utf-8") as f:
-            return f.read()
-    log(f"  [OCR] Processing {os.path.basename(pdf_path)} ...")
-    pages = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
-    text = "\n".join(pytesseract.image_to_string(img) for img in pages)
-    with open(cache_path, "w", encoding="utf-8") as f:
-        f.write(text)
-    log(f"  [CACHE SAVED] {os.path.basename(cache_path)}")
-    return text
+    """Extract text from PDF file, using cache if available, else extract and save."""
+    fname = os.path.basename(pdf_path)
+    cache_file = os.path.join(cache_folder, fname.replace('.pdf', '.txt').replace(' ', '_'))
+    if os.path.exists(cache_file):
+        log.info(f"Using cached OCR text: {cache_file}")
+        with open(cache_file, 'r', encoding='utf-8') as f:
+            text = f.read()
+        return text
 
-def extract_all_topics_with_split(chapter_text, topics_for_chapter_df):
-    """Finds all topic numbers from the CSV and uses them to segment the text."""
-    topic_numbers = sorted(topics_for_chapter_df['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.') if i.isdigit()])
-    
-    heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
-    matches = list(heading_pattern.finditer(chapter_text))
-    
-    topic_locations = {match.group(1).strip(): match.start() for match in matches}
-    log(f"  - Found {len(topic_locations)} of {len(topics_for_chapter_df)} topic headings in the OCR text.")
-    
-    extracted_topics = []
-    for topic_num in topic_numbers:
-        start_pos = topic_locations.get(topic_num)
-        if start_pos is not None:
-            end_pos = len(chapter_text)
-            for next_num, next_pos in topic_locations.items():
-                if next_pos > start_pos and next_pos < end_pos:
-                    end_pos = next_pos
-            content = chapter_text[start_pos:end_pos].strip()
-            extracted_topics.append({'topic_number': topic_num, 'content': content})
-            
-    return extracted_topics
+    log.info(f"Extracting text from PDF: {pdf_path}")
+    doc = fitz.open(pdf_path)
+    full_text = ""
+    for page in doc:
+        full_text += page.get_text()
+    doc.close()
+
+    with open(cache_file, 'w', encoding='utf-8') as f:
+        f.write(full_text)
+    log.info(f"Saved OCR text to cache: {cache_file}")
+    return full_text
+
+def extract_all_topics_with_split(full_text, topic_df):
+    """
+    Extract text segments from full_text based on the headings in topic_df.
+    Return a list of dicts with heading info and extracted content.
+    """
+    topics = []
+    headings = topic_df.sort_values('heading_number')['heading_text'].tolist()
+
+    # Find indices (positions) of each heading in the text
+    positions = []
+    for heading in headings:
+        pos = full_text.find(heading)
+        if pos == -1:
+            log.warning(f"Heading not found in PDF text: {heading[:30]}...")
+        positions.append(pos)
+
+    # Pair each heading with its start index
+    headings_positions = list(zip(headings, positions))
+
+    # Filter out headings not found in text (pos == -1)
+    headings_positions = [hp for hp in headings_positions if hp[1] >= 0]
+
+    # Sort based on position
+    headings_positions.sort(key=lambda x: x[1])
+
+    # Extract topic texts between headings
+    for i, (heading, pos) in enumerate(headings_positions):
+        start = pos
+        if i + 1 < len(headings_positions):
+            end = headings_positions[i + 1][1]
+        else:
+            end = len(full_text)
+        content = full_text[start:end].strip()
+        topics.append({"heading": heading, "content": content})
+        log.info(f"Extracted topic '{heading}' text length: {len(content)}")
+    return topics
 
 def main():
-    try:
-        master_df = pd.read_csv(CSV_PATH, dtype=str).apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-        log(f"[INFO] Loaded master topic list from {CSV_PATH}.")
-    except FileNotFoundError:
-        log(f"[ERROR] CSV file not found at: {CSV_PATH}")
-        return
+    # Load master CSV file containing headings and related chapter info
+    master_csv_path = "final_verified_topics.csv"
+    df_topics = pd.read_csv(master_csv_path)
 
-    conn = None
-    try:
-        conn = psycopg2.connect(SUPABASE_URI)
-        cur = conn.cursor()
+    for chap_id, config in CHAPTER_CONFIG.items():
+        subj = config["subject"]
+        cls = config["class"]
+        pdf_filename = config["pdf_filename"]
 
-        for chap_id, config in CHAPTER_CONFIG.items():
-            pdf_filename = config["pdf_filename"]
-            pdf_path = os.path.join(PDF_ROOT_FOLDER, config["subject"], config["class"], pdf_filename)
-            
-            log(f"\n--- Processing: {pdf_filename} ---")
-            
+        pdf_path = os.path.join(PDF_ROOT_FOLDER, subj, cls, pdf_filename)
+        log.info(f"\nProcessing PDF: {pdf_path}")
+
+        # Special case: Use OCR cache text file directly for Aldehydes Ketones And Carboxylic Acid.pdf
+        if pdf_filename == "Aldehydes Ketones And Carboxylic Acid.pdf":
+            cache_path = os.path.join(OCR_CACHE_FOLDER, "Aldehydes_Ketones_Carboxylic_12.txt")
+            if not os.path.exists(cache_path):
+                log.error(f"Cache file not found: {cache_path}. Cannot proceed.")
+                continue
+            with open(cache_path, 'r', encoding='utf-8') as f:
+                full_text = f.read()
+            log.info(f"Loaded cached OCR text from {cache_path}")
+        else:
             if not os.path.exists(pdf_path):
-                log(f"  [ERROR] PDF not found at {pdf_path}. Skipping.")
+                log.error(f"PDF file not found at {pdf_path}. Skipping.")
                 continue
-
-            # Filter the master CSV to get all topics for this specific chapter
-            topics_for_this_chapter_df = master_df[master_df['chapter_file'] == pdf_filename]
-            if topics_for_this_chapter_df.empty:
-                log(f"  [WARNING] No topics found in the CSV for {pdf_filename}. Skipping.")
-                continue
-            
-            # Run OCR to get the full text
             full_text = pdf_to_text(pdf_path, OCR_CACHE_FOLDER)
-            
-            # Extract all topics using the filtered list
-            extracted_topics = extract_all_topics_with_split(full_text, topics_for_this_chapter_df)
-            
-            log(f"  - Extracted content for {len(extracted_topics)} topics.")
-            
-            # Update the database
-            for topic in extracted_topics:
-                try:
-                    cur.execute(
-                        "UPDATE public.topics SET full_text = %s WHERE chapter_id = %s AND topic_number = %s",
-                        (topic['content'], chap_id, topic['topic_number'])
-                    )
-                except Exception as e:
-                    log(f"  -> Failed to update Chapter {chap_id} Topic {topic['topic_number']}: {e}")
-            
-            conn.commit()
-            log(f"  -> Successfully sent {len(extracted_topics)} updates to the database.")
 
-    except Exception as e:
-        log(f"A critical error occurred: {e}")
-    finally:
-        if conn:
-            cur.close()
-            conn.close()
-        log("\nDone.")
+        # Filter master CSV for entries related to current PDF
+        chapter_topics_df = df_topics[df_topics["chapter_file"] == pdf_filename]
+        if chapter_topics_df.empty:
+            log.warning(f"No topics found for PDF: {pdf_filename}")
+            continue
+
+        # Extract topics with their text content
+        extracted_topics = extract_all_topics_with_split(full_text, chapter_topics_df)
+
+        # Example action: print summary of extracted topics lengths
+        log.info(f"Extracted {len(extracted_topics)} topics from {pdf_filename}")
+        for topic in extracted_topics:
+            log.info(f"Topic: {topic['heading']}, Content length: {len(topic['content'])}")
+
+        # Here you can do additional processing like saving to DB or files if needed
 
 if __name__ == "__main__":
     main()
