@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
@@ -12,9 +12,10 @@ const Spinner = ({ text = "Loading..." }) => (
     </div>
 );
 
+// This component now uses the "prose" class which will be styled by the typography plugin
 const MarkdownRenderer = ({ markdown }) => {
     return (
-        <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white">
+        <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-cyan-400 prose-strong:text-white prose-ul:list-disc prose-li:text-gray-300">
             <ReactMarkdown
                 components={{
                     p: ({ node, ...props }) => {
@@ -22,7 +23,7 @@ const MarkdownRenderer = ({ markdown }) => {
                             const text = node.children[0].value;
                             const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
                             return (
-                                <p className="leading-relaxed">
+                                <p className="leading-relaxed my-2">
                                     {parts.map((part, index) => {
                                         if (part.startsWith('$$') && part.endsWith('$$')) {
                                             return <BlockMath key={index} math={part.slice(2, -2)} />;
@@ -34,7 +35,7 @@ const MarkdownRenderer = ({ markdown }) => {
                                 </p>
                             );
                         }
-                        return <p {...props} className="leading-relaxed" />;
+                        return <p {...props} className="leading-relaxed my-2" />;
                     }
                 }}
             >
@@ -59,18 +60,24 @@ const QuizView = ({ quizData, onNext }) => {
         }
     };
 
+    // --- FINAL, ROBUST FIX FOR QUIZ COLORS ---
     const getButtonClass = (optionKey) => {
-        const correctAnswerKey = quizData.correct_answer?.trim().toUpperCase().replace(/[^A-D]/g, '') || '';
+        const correctAnswer = quizData.correct_answer?.trim() || '';
+        const optionText = quizData.options[optionKey]?.trim() || '';
+        
+        // Check if the AI returned the key (e.g., "B") OR the full text value
+        const isCorrect = correctAnswer.toUpperCase() === optionKey || correctAnswer === optionText;
+
         if (!isRevealed) {
             return selectedAnswer === optionKey ? 'bg-cyan-700' : 'bg-gray-700 hover:bg-cyan-800/50';
         }
-        if (optionKey === correctAnswerKey) {
-            return 'bg-green-700';
+        if (isCorrect) {
+            return 'bg-green-700'; // This option is the correct one
         }
-        if (selectedAnswer === optionKey && optionKey !== correctAnswerKey) {
-            return 'bg-red-700';
+        if (selectedAnswer === optionKey && !isCorrect) {
+            return 'bg-red-700'; // This is the user's incorrect choice
         }
-        return 'bg-gray-700';
+        return 'bg-gray-700'; // Any other option
     };
 
     return (
@@ -88,19 +95,8 @@ const QuizView = ({ quizData, onNext }) => {
                 ))}
             </div>
             <div className="pt-4 flex items-center space-x-4">
-                 <button 
-                    onClick={() => setIsRevealed(true)}
-                    disabled={!selectedAnswer || isRevealed}
-                    className="px-4 py-2 bg-purple-600 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-purple-700"
-                >
-                    Check Answer
-                </button>
-                 <button 
-                    onClick={onNext}
-                    className="px-4 py-2 bg-cyan-600 rounded-md hover:bg-cyan-700"
-                >
-                    Next Question
-                </button>
+                 <button onClick={() => setIsRevealed(true)} disabled={!selectedAnswer || isRevealed} className="px-4 py-2 bg-purple-600 rounded-md disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-purple-700">Check Answer</button>
+                 <button onClick={onNext} className="px-4 py-2 bg-cyan-600 rounded-md hover:bg-cyan-700">Next Question</button>
             </div>
             {isRevealed && (
                 <div className="mt-4 p-4 bg-gray-900 rounded-lg border border-gray-700">
@@ -111,6 +107,7 @@ const QuizView = ({ quizData, onNext }) => {
         </div>
     );
 };
+
 
 // --- Main Component ---
 export default function SyllabusExplorer() {
@@ -145,41 +142,42 @@ export default function SyllabusExplorer() {
         };
         fetchSyllabus();
     }, []);
+    
+    // --- NEW: GROUP SUBJECTS BY CLASS LEVEL ---
+    const groupedSyllabus = useMemo(() => {
+        return syllabus.reduce((acc, subject) => {
+            const level = subject.class_level;
+            if (!acc[level]) {
+                acc[level] = [];
+            }
+            acc[level].push(subject);
+            return acc;
+        }, {});
+    }, [syllabus]);
+
 
     const resetContent = () => {
-        setContent(null);
-        setContentType(null);
-        setError(null);
-        setSourceName('');
-        setSourceLevel('');
+        setContent(null); setContentType(null); setError(null);
+        setSourceName(''); setSourceLevel('');
     };
     
     const handleSubjectClick = (subject) => {
-        setSelectedSubject(subject);
-        setSelectedChapter(null);
-        setSelectedTopic(null);
-        resetContent();
-        setActiveMode(null);
+        setSelectedSubject(subject); setSelectedChapter(null); setSelectedTopic(null);
+        resetContent(); setActiveMode(null);
     };
 
     const handleChapterClick = (chapter) => {
-        setSelectedChapter(chapter);
-        setSelectedTopic(null);
-        resetContent();
-        setActiveMode(null);
+        setSelectedChapter(chapter); setSelectedTopic(null);
+        resetContent(); setActiveMode(null);
     };
     
     const handleTopicClick = (topic) => {
-        setSelectedTopic(topic);
-        resetContent();
-        setActiveMode(null);
+        setSelectedTopic(topic); resetContent(); setActiveMode(null);
     };
 
     const fetchContent = async (topic, mode) => {
         if (!topic) return;
-        setIsLoadingContent(true);
-        resetContent();
-        setActiveMode(mode);
+        setIsLoadingContent(true); resetContent(); setActiveMode(mode);
         try {
             const response = await fetch('http://localhost:8000/api/generate-content', {
                 method: 'POST',
@@ -191,10 +189,8 @@ export default function SyllabusExplorer() {
                 throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-
             setSourceName(data.source_name || '');
             setSourceLevel(data.source_level || '');
-
             if (mode === 'practice') {
                 setContent(data);
                 setContentType('practice');
@@ -209,26 +205,34 @@ export default function SyllabusExplorer() {
         }
     };
 
-    if (isLoadingSyllabus) {
-        return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><Spinner text="Loading Syllabus..." /></div>;
-    }
-
-    if (error && !content) {
-        return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><p className="text-red-500">Error: {error}</p></div>;
-    }
+    if (isLoadingSyllabus) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><Spinner text="Loading Syllabus..." /></div>;
+    if (error && !content) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center"><p className="text-red-500">Error: {error}</p></div>;
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 font-sans">
             <header className="text-center mb-8">
                 <h1 className="text-4xl font-bold text-cyan-400">PraxisAI</h1>
-                <p className="text-gray-400 mt-2">Your AI-Powered JEE Study Partner. Select a topic to begin.</p>
+                {/* --- NEW HEADER TEXT --- */}
+                <p className="text-gray-400 mt-2">AI-Powered PCM Study Partner. Select a topic to begin.</p>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg-col-span-1">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:col-span-1">
+                    {/* --- UPDATED SUBJECTS PANE --- */}
                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Subjects</h2>
-                        <ul>{syllabus.map((subject) => (<li key={subject.id} onClick={() => handleSubjectClick(subject)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedSubject?.id === subject.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>{subject.name} (Class {subject.class_level})</li>))}</ul>
+                        {Object.keys(groupedSyllabus).sort().map(level => (
+                            <div key={level}>
+                                <h3 className="text-md font-bold text-gray-400 mt-4 mb-2 sticky top-0 bg-gray-800 py-1">Class {level}</h3>
+                                <ul>
+                                    {groupedSyllabus[level].map((subject) => (
+                                        <li key={subject.id} onClick={() => handleSubjectClick(subject)} className={`p-2 rounded-md cursor-pointer text-sm ${selectedSubject?.id === subject.id ? 'bg-cyan-800/50' : 'hover:bg-gray-700'}`}>
+                                            {subject.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
                     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 h-[70vh] overflow-y-auto">
                         <h2 className="text-lg font-semibold mb-4 text-cyan-300">Chapters</h2>
@@ -240,7 +244,7 @@ export default function SyllabusExplorer() {
                     </div>
                 </div>
 
-                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg-col-span-1">
+                <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 h-[70vh] overflow-y-auto lg:col-span-1">
                     {selectedTopic ? (
                         <>
                             <div className="border-b border-gray-700 pb-4 mb-4">
@@ -251,17 +255,9 @@ export default function SyllabusExplorer() {
                                     <button onClick={() => fetchContent(selectedTopic, 'practice')} className={`px-3 py-1 text-sm rounded-md ${activeMode === 'practice' ? 'bg-cyan-600' : 'bg-gray-700 hover:bg-gray-600'}`}>📝 Practice</button>
                                 </div>
                             </div>
-                            
                             {isLoadingContent && <Spinner />}
                             {error && <p className="text-red-500">Error: {error}</p>}
-
-                            {sourceName && !isLoadingContent && (
-                                <div className="text-xs text-gray-500 mb-4 p-2 bg-gray-900/50 rounded-md">
-                                    <span className="font-bold">Source:</span> {sourceName} 
-                                    <span className="italic"> ({sourceLevel} Context)</span>
-                                </div>
-                            )}
-
+                            {sourceName && !isLoadingContent && ( <div className="text-xs text-gray-500 mb-4 p-2 bg-gray-900/50 rounded-md"><span className="font-bold">Source:</span> {sourceName} <span className="italic"> ({sourceLevel} Context)</span></div>)}
                             {content && (
                                 <>
                                     {contentType === 'practice' 
@@ -271,18 +267,10 @@ export default function SyllabusExplorer() {
                                 </>
                             )}
                         </>
-                    ) : (
-                        <div className="flex justify-center items-center h-full">
-                            <p className="text-gray-500">Select a topic to get started.</p>
-                        </div>
-                    )}
+                    ) : ( <div className="flex justify-center items-center h-full"><p className="text-gray-500">Select a topic to get started.</p></div> )}
                 </div>
             </div>
-             <div className="text-center mt-8">
-                <Link to="/dashboard" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-200">
-                    &larr; Back to Dashboard
-                </Link>
-            </div>
+            <div className="text-center mt-8"><Link to="/dashboard" className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-200">&larr; Back to Dashboard</Link></div>
         </div>
     );
 }
