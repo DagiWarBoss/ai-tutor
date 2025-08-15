@@ -60,7 +60,7 @@ TOPICS_TO_EXTRACT = [
 
 def extract_topic_text(content, topic_number):
     pattern = re.compile(
-        rf'^({re.escape(topic_number)})\b.*?(?=^\d+(\.\d+)*\b|\Z)', re.MULTILINE | re.DOTALL)
+        rf'^\s*{re.escape(topic_number)}\s*.*?(?=^\s*\d+(\.\d+)*\s*|\Z)', re.DOTALL | re.MULTILINE)
     match = pattern.search(content)
     return match.group().strip() if match else ""
 
@@ -74,6 +74,10 @@ def main():
             continue
         chap_texts[chap_id] = pdf_to_text(pdf_path, cache_path)
 
+    print(f"Processing {len(TOPICS_TO_EXTRACT)} topics...")
+    for t in TOPICS_TO_EXTRACT:
+        print(t)
+
     conn = psycopg2.connect(DB_CONN)
     cur = conn.cursor()
 
@@ -84,8 +88,10 @@ def main():
             continue
         content = chap_texts[chap_id]
         text = extract_topic_text(content, topic_num)
-        if not text:
-            print(f"Topic text not found: Chapter {chap_id}, Topic {topic_num}")
+        if text:
+            print(f"Extracted text for Chapter {chap_id} Topic {topic_num} — length {len(text)} chars")
+        else:
+            print(f"No text found for Chapter {chap_id} Topic {topic_num}")
             continue
         try:
             cur.execute("""
@@ -100,7 +106,7 @@ def main():
     conn.commit()
     cur.close()
     conn.close()
-    print("Done updating topics.")
+    print("Done.")
 
 if __name__ == "__main__":
     main()
