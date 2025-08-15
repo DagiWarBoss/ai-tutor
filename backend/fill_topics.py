@@ -47,13 +47,23 @@ CHAPTER_CONFIG = {
 def log(msg: str):
     print(msg, flush=True)
 
-def pdf_to_text(pdf_path, cache_folder):
-    """Performs OCR on a PDF and caches the result."""
-    cache_path = os.path.join(cache_folder, os.path.basename(pdf_path) + ".txt")
+def pdf_to_text(pdf_path: str, cache_folder: str, chapter_name: str, class_number: str):
+    """
+    --- THIS FUNCTION IS NOW FIXED ---
+    Performs OCR on a PDF only if a cached text file does not already exist,
+    using the correct naming convention.
+    """
+    # Create a cache-friendly name, e.g., "Thermodynamics_11.txt"
+    class_num_simple = "".join(filter(str.isdigit, class_number))
+    cache_base_name = f"{chapter_name.replace(', ', '_').replace(' ', '_')}_{class_num_simple}.txt"
+    cache_path = os.path.join(cache_folder, cache_base_name)
+    
     if os.path.exists(cache_path):
+        log(f"  - Reading from cache: '{os.path.basename(cache_path)}'")
         with open(cache_path, "r", encoding="utf-8") as f:
             return f.read()
-    log(f"  [OCR] Processing {os.path.basename(pdf_path)} ...")
+            
+    log(f"  [OCR] No cache found at '{os.path.basename(cache_path)}'. Processing {os.path.basename(pdf_path)} ...")
     pages = convert_from_path(pdf_path, dpi=300, poppler_path=POPPLER_PATH)
     text = "\n".join(pytesseract.image_to_string(img) for img in pages)
     with open(cache_path, "w", encoding="utf-8") as f:
@@ -107,21 +117,20 @@ def main():
                 log(f"  [ERROR] PDF not found at {pdf_path}. Skipping.")
                 continue
 
-            # Filter the master CSV to get all topics for this specific chapter
             topics_for_this_chapter_df = master_df[master_df['chapter_file'] == pdf_filename]
             if topics_for_this_chapter_df.empty:
                 log(f"  [WARNING] No topics found in the CSV for {pdf_filename}. Skipping.")
                 continue
             
-            # Run OCR to get the full text
-            full_text = pdf_to_text(pdf_path, OCR_CACHE_FOLDER)
+            # --- THIS IS THE FIX: Pass the necessary info to the caching function ---
+            chapter_name = os.path.splitext(pdf_filename)[0]
+            class_number = config["class"]
+            full_text = pdf_to_text(pdf_path, OCR_CACHE_FOLDER, chapter_name, class_number)
             
-            # Extract all topics using the filtered list
             extracted_topics = extract_all_topics_with_split(full_text, topics_for_this_chapter_df)
             
             log(f"  - Extracted content for {len(extracted_topics)} topics.")
             
-            # Update the database
             for topic in extracted_topics:
                 try:
                     cur.execute(
