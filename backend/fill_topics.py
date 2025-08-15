@@ -6,13 +6,13 @@ import pandas as pd
 from pdf2image import convert_from_path
 import pytesseract
 
-# ======= 1. VERIFY THESE PATHS FOR YOUR SYSTEM =======
-PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\NCERT_PCM_ChapterWise"
-CSV_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\final_verified_topics.csv"
-POPPLER_PATH = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
+# ======= 1. ALL PATHS HAVE BEEN CORRECTED TO USE 'Dokumen' =======
+PDF_ROOT_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise"
+CSV_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\final_verified_topics.csv"
+POPPLER_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\.venv\poppler-24.08.0\Library\bin"
 TESSERACT_PATH = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Documents\ai-tutor\backend\ocr_cache"
-# =======================================================
+OCR_CACHE_FOLDER = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\ocr_cache"
+# =====================================================================
 
 # --- Configuration ---
 load_dotenv()
@@ -44,7 +44,6 @@ CHAPTER_CONFIG = {
     }
 }
 
-
 def log(msg: str):
     print(msg, flush=True)
 
@@ -64,7 +63,6 @@ def pdf_to_text(pdf_path, cache_folder):
 
 def extract_all_topics_with_split(chapter_text, topics_for_chapter_df):
     """Finds all topic numbers from the CSV and uses them to segment the text."""
-    # Get a sorted list of topic numbers for this specific chapter
     topic_numbers = sorted(topics_for_chapter_df['heading_number'].tolist(), key=lambda x: [int(i) for i in x.split('.') if i.isdigit()])
     
     heading_pattern = re.compile(r'^\s*(%s)\s+' % '|'.join([re.escape(tn) for tn in topic_numbers]), re.MULTILINE)
