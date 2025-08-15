@@ -3,12 +3,12 @@
 import os
 import psycopg2
 import json
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from pydantic import BaseModel
 from together import Together
-from together.error import AuthenticationError
 from sentence_transformers import SentenceTransformer
 
 # --- Explicitly load the .env file ---
@@ -27,6 +27,11 @@ DB_PORT = os.getenv("DB_PORT")
 # --- Initialize Models ---
 llm_client = Together(api_key=TOGETHER_API_KEY)
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# --- Pydantic Model for Request Body Validation ---
+class ContentRequest(BaseModel):
+    topic: str
+    mode: str
 
 app = FastAPI()
 
@@ -51,39 +56,61 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-# === ENDPOINT 1: The "Smart" RAG Pipeline for Questions (CORRECTED) ===
-@app.post("/ask-question")
-async def ask_question(request: Request):
-    data = await request.json()
-    user_question = data.get("question")
+# === ENDPOINT 1: Fetch the entire syllabus structure ===
+@app.get("/api/syllabus")
+async def get_syllabus():
+    conn = get_db_connection()
+    if conn is None:
+        raise HTTPException(status_code=503, detail="Database connection unavailable.")
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
+            subjects_raw = cur.fetchall()
+            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY subject_id, chapter_number")
+            chapters_raw = cur.fetchall()
+            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, id")
+            topics_raw = cur.fetchall()
 
-    if not user_question:
-        raise HTTPException(status_code=400, detail="A question is required.")
+            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []} for c_id, c_name, c_num, s_id in chapters_raw}
+            for t_id, t_name, t_num, c_id in topics_raw:
+                if c_id in chapters_map:
+                    chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
+            subjects_map = {s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []} for s_id, s_name, s_class in subjects_raw}
+            for c_id, c_name, c_num, s_id in chapters_raw:
+                if s_id in subjects_map:
+                    subjects_map[s_id]["chapters"].append(chapters_map[c_id])
+            syllabus = list(subjects_map.values())
+        return JSONResponse(content=syllabus)
+    except psycopg2.Error as e:
+        raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
+    finally:
+        conn.close()
 
-    question_embedding = embedding_model.encode(user_question).tolist()
+# === ENDPOINT 2: The Multi-Purpose Content Generator ===
+@app.post("/api/generate-content")
+async def generate_content(request: ContentRequest):
+    topic_prompt = request.topic
+    mode = request.mode
 
+    # Step 1: Find the most relevant topic text from the database (RAG)
+    topic_embedding = embedding_model.encode(topic_prompt).tolist()
     conn = get_db_connection()
     if conn is None:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     
-    relevant_topic_text, found_topic_name = "", ""
+    relevant_topic_text = ""
     try:
         with conn.cursor() as cur:
-            # Use the new match_topics function
-            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (question_embedding,))
+            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
-                raise HTTPException(status_code=404, detail="Could not find a relevant topic for your question.")
-
-            # These are now topic variables
+                raise HTTPException(status_code=404, detail=f"Could not find a relevant topic for '{topic_prompt}'.")
             matched_topic_id, matched_topic_name, similarity = match_result
-            print(f"DEBUG: Found most similar topic: '{matched_topic_name}' (Similarity: {similarity:.4f})")
-            
-            # Query the topics table
+            print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f}) for mode '{mode}'.")
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             text_result = cur.fetchone()
             if text_result:
-                relevant_topic_text, found_topic_name = text_result[0], matched_topic_name
+                relevant_topic_text = text_result[0]
     finally:
         conn.close()
 
@@ -91,128 +118,31 @@ async def ask_question(request: Request):
     if len(relevant_topic_text) > max_chars:
         relevant_topic_text = relevant_topic_text[:max_chars]
 
+    # Step 2: Choose the system prompt and params based on the requested mode
+    system_message = ""
+    user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ---\n{relevant_topic_text}\n--- END OF CONTEXT ---"
+    response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
+
+    if mode == 'revise':
+        system_message = "You are an AI assistant creating a 'cheat sheet'. Based ONLY on the provided context, extract and list the key formulas, definitions, and concepts. Use bullet points and LaTeX for all formulas. Be concise."
+    elif mode == 'practice':
+        system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer` ('A', 'B', 'C', or 'D'), and `explanation`."
+        response_params["response_format"] = {"type": "json_object"}
+        response_params["temperature"] = 0.8
+    else: # Default to 'explain' mode
+        system_message = "You are an expert JEE tutor. Your answer should be a clear, concise explanation of the topic based on the provided context. Use LaTeX for all mathematical formulas, enclosing inline math with '$' and block equations with '$$'."
+
+    # Step 3: Call the AI and return the response
     try:
-        system_message = "You are an expert JEE tutor. Your answer should be clear, concise, and directly address the user's question. Use LaTeX for all mathematical formulas and equations, enclosing inline math with single dollar signs ($) and block equations with double dollar signs ($$)."
-        
-        # Use the new topic variables and update the prompt text
-        user_message_content = f"User's Question: '{user_question}'\n\n--- RELEVANT TOPIC: {found_topic_name} ---\n{relevant_topic_text}\n--- END OF TOPIC ---"
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
-
-        response = llm_client.chat.completions.create(model="mistralai/Mixtral-8x7B-Instruct-v0.1", messages=messages, max_tokens=1024, temperature=0.3)
-        generated_answer = response.choices[0].message.content.strip()
+        response_params["messages"] = messages
         
-        # Update the key to 'source_topic' for the frontend
-        return JSONResponse(content={"answer": generated_answer, "source_topic": found_topic_name})
+        response = llm_client.chat.completions.create(**response_params)
+        content = response.choices[0].message.content.strip()
+
+        if mode == 'practice':
+            return JSONResponse(content=json.loads(content))
+        else:
+            return JSONResponse(content={"content": content})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate answer. Backend error: {e}")
-
-# === ENDPOINT 2: The "Smart" Problem Generator ===
-@app.post("/generate-grounded-problem")
-async def generate_grounded_problem(request: Request):
-    data = await request.json()
-    topic_prompt = data.get("topic")
-
-    if not topic_prompt:
-        raise HTTPException(status_code=400, detail="A topic is required.")
-
-    topic_embedding = embedding_model.encode(topic_prompt).tolist()
-    
-    conn = get_db_connection()
-    if conn is None:
-        raise HTTPException(status_code=503, detail="Database connection unavailable.")
-    
-    # This endpoint still uses chapters, which is fine for broader context
-    relevant_chapter_text, found_chapter_name = "", ""
-    try:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM match_chapters(%s::vector, 0.3, 1)", (topic_embedding,))
-            match_result = cur.fetchone()
-            if not match_result:
-                raise HTTPException(status_code=404, detail=f"Could not find a relevant chapter for the topic '{topic_prompt}'.")
-
-            matched_chapter_id, matched_chapter_name, similarity = match_result
-            print(f"DEBUG: Found chapter '{matched_chapter_name}' (Similarity: {similarity:.4f}) to generate problem.")
-            
-            cur.execute("SELECT full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
-            text_result = cur.fetchone()
-            if text_result:
-                relevant_chapter_text, found_chapter_name = text_result[0], matched_chapter_name
-    finally:
-        conn.close()
-
-    max_chars = 15000
-    if len(relevant_chapter_text) > max_chars:
-        relevant_chapter_text = relevant_chapter_text[:max_chars]
-
-    try:
-        system_message = (
-            "You are an expert-level AI physics and mathematics tutor... Format your entire response as a single, valid JSON object with exactly two keys: 'problem' and 'solution'."
-        )
-        
-        user_message_content = f"User's Topic: '{topic_prompt}'\n\n--- TEXTBOOK CHAPTER: {found_chapter_name} ---\n{relevant_chapter_text}\n--- END OF CHAPTER ---"
-        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
-
-        response = llm_client.chat.completions.create(
-            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
-            messages=messages,
-            max_tokens=2048,
-            temperature=0.8,
-            response_format={"type": "json_object"},
-        )
-        
-        response_content = response.choices[0].message.content.strip()
-        parsed_json = json.loads(response_content)
-        problem = parsed_json.get("problem", "Error: Could not generate problem.")
-        solution = parsed_json.get("solution", "Error: Could not generate solution.")
-
-        return JSONResponse(content={"problem": problem, "solution": solution, "source_chapter": found_chapter_name})
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="The AI model returned an invalid format. Please try again.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate problem. Backend error: {e}")
-
-# === ENDPOINT 3: Fetch the entire syllabus structure (OPTIMIZED) ===
-@app.get("/api/syllabus")
-async def get_syllabus():
-    """
-    Fetches the entire structured syllabus from the database using an efficient,
-    low-query method to prevent slow load times.
-    """
-    conn = get_db_connection()
-    if conn is None:
-        raise HTTPException(status_code=503, detail="Database connection unavailable.")
-    
-    try:
-        with conn.cursor() as cur:
-            # Step 1: Fetch all data in as few queries as possible
-            cur.execute("SELECT id, name, class_level FROM subjects ORDER BY class_level, name")
-            subjects_raw = cur.fetchall()
-            
-            cur.execute("SELECT id, name, chapter_number, subject_id FROM chapters ORDER BY subject_id, chapter_number")
-            chapters_raw = cur.fetchall()
-            
-            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, id")
-            topics_raw = cur.fetchall()
-
-            # Step 2: Process the data in Python using maps for efficiency
-            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "topics": []} for c_id, c_name, c_num, s_id in chapters_raw}
-            
-            for t_id, t_name, t_num, c_id in topics_raw:
-                if c_id in chapters_map:
-                    chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
-
-            subjects_map = {s_id: {"id": s_id, "name": s_name, "class_level": s_class, "chapters": []} for s_id, s_name, s_class in subjects_raw}
-
-            for c_id, c_name, c_num, s_id in chapters_raw:
-                if s_id in subjects_map:
-                    subjects_map[s_id]["chapters"].append(chapters_map[c_id])
-            
-            syllabus = list(subjects_map.values())
-
-        return JSONResponse(content=syllabus)
-    
-    except psycopg2.Error as e:
-        print(f"Database query error while fetching syllabus: {e}")
-        raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
-    finally:
-        conn.close()
+        raise HTTPException(status_code=500, detail=f"Failed to generate content. Backend error: {e}")
