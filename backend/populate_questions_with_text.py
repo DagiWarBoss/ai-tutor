@@ -81,21 +81,16 @@ def extract_questions(file_path, subject="science"):
 # ==== MAIN WORKFLOW ====
 def main():
     # ----------- USER INPUTS (modify as needed) -----------
-    # Path to source PDF
-    PDF_PATH = r"books\Chemical Bonding And Molecular Structure.pdf"
-    # Path to cache text file
-    OCR_TXT_PATH = r"ocr_cache\Chemical Bonding And Molecular Structure.txt"
-    # Choose 'science' for Chemistry/Physics or 'math' for Maths
-    SUBJECT = "science"
+    PDF_PATH = r"C:\Users\daksh\OneDrive\Dokumen\ai-tutor\backend\NCERT_PCM_ChapterWise\Physics\Class 11\Gravitation.pdf"
+    OCR_TXT_PATH = r"ocr_cache\Gravitation.txt"   # Cache file for OCR output text
+    SUBJECT = "science"  # Change to 'math' for Mathematics books
     # ------------------------------------------------------
 
-    # If OCR cache not present, run OCR
     if not os.path.exists(OCR_TXT_PATH):
         pdf_to_text(PDF_PATH, OCR_TXT_PATH)
     else:
         print(f"OCR cache found: {OCR_TXT_PATH}")
 
-    # Extract questions
     questions = extract_questions(OCR_TXT_PATH, subject=SUBJECT)
     print(f"\nExtracted {len(questions)} questions:\n")
     for i, q in enumerate(questions, 1):
