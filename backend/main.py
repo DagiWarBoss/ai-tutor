@@ -56,7 +56,7 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-# === ENDPOINT 1: Fetch the entire syllabus structure (UPDATED) ===
+# === ENDPOINT 1: Fetch the entire syllabus structure ===
 @app.get("/api/syllabus")
 async def get_syllabus():
     conn = get_db_connection()
@@ -64,7 +64,6 @@ async def get_syllabus():
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
     try:
         with conn.cursor() as cur:
-            # Step 1: Fetch all data, updating chapters query
             cur.execute("SELECT id, name FROM subjects ORDER BY name")
             subjects_raw = cur.fetchall()
             
@@ -74,7 +73,6 @@ async def get_syllabus():
             cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
             topics_raw = cur.fetchall()
 
-            # Step 2: Process data, adding class_level to each chapter
             chapters_map = {
                 c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []} 
                 for c_id, c_name, c_num, s_id, c_level in chapters_raw
@@ -151,11 +149,21 @@ async def generate_content(request: ContentRequest):
     response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
 
     if mode == 'revise':
-        system_message = "..." # (revise prompt)
+        system_message = """
+        You are an AI assistant creating a structured 'cheat sheet' for a student preparing for the JEE exam. Based ONLY on the provided context, generate a well-formatted summary.
+        Your response MUST use Markdown formatting:
+        - Use headings (like ## Key Definitions or ## Important Formulas) to separate sections.
+        - Use bullet points (*) for lists.
+        - Bold key terms using **asterisks**.
+        - Use LaTeX for ALL mathematical formulas and variables, enclosing them in '$' or '$$'.
+        """
     elif mode == 'practice':
-        system_message = "..." # (practice prompt)
-    else:
-        system_message = "..." # (explain prompt)
+        system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer`, and `explanation`. The value for `correct_answer` MUST BE one of the keys from the `options` object (e.g., 'A', 'B', 'C', or 'D'). Do not provide the text of the answer."
+        response_params["response_format"] = {"type": "json_object"}
+        response_params["temperature"] = 0.8
+    else: # Default to 'explain' mode
+        # --- THIS IS THE UPDATED, MORE EXPLICIT PROMPT ---
+        system_message = "You are an expert JEE tutor. Your answer should be a clear, concise explanation of the topic based on the provided context. **Crucially, you MUST enclose ALL mathematical formulas, variables, and expressions in LaTeX delimiters.** Use single dollar signs (`$...$`) for inline math (like `$E=mc^2$`) and double dollar signs (`$$...$$`) for block equations. For example, write `$Φ_g = E⋅A$` instead of just Φg = E⋅A."
 
     try:
         messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
