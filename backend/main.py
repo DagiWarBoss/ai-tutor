@@ -122,10 +122,8 @@ async def generate_content(request: ContentRequest):
     response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
 
     if mode == 'revise':
-        # --- THIS IS THE UPDATED PROMPT ---
         system_message = """
         You are an AI assistant creating a structured 'cheat sheet' for a student preparing for the JEE exam. Based ONLY on the provided context, generate a well-formatted summary.
-
         Your response MUST use Markdown formatting:
         - Use headings (like ## Key Definitions or ## Important Formulas) to separate sections.
         - Use bullet points (*) for lists.
@@ -133,7 +131,7 @@ async def generate_content(request: ContentRequest):
         - Use LaTeX for ALL mathematical formulas and variables, enclosing them in '$' or '$$'.
         """
     elif mode == 'practice':
-        system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer` ('A', 'B', 'C', or 'D'), and `explanation`."
+        system_message = "You are an AI quiz generator. Based ONLY on the provided context, create one challenging, JEE-level multiple-choice question (MCQ). Your entire response must be a single, valid JSON object with keys: `question`, `options` (an object with A, B, C, D), `correct_answer`, and `explanation`. The value for `correct_answer` MUST BE one of the keys from the `options` object (e.g., 'A', 'B', 'C', or 'D'). Do not provide the text of the answer."
         response_params["response_format"] = {"type": "json_object"}
         response_params["temperature"] = 0.8
     else: # Default to 'explain' mode
