@@ -10,12 +10,12 @@ from pydantic import BaseModel
 from together import Together
 from sentence_transformers import SentenceTransformer
 
-# -- Load .env as before --
+# Load .env
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-# Securely load API Keys & DB Credentials
+# API & DB config
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
@@ -30,10 +30,9 @@ class ContentRequest(BaseModel):
     topic: str
     mode: str
 
-# --- Start FastAPI ---
 app = FastAPI()
 
-# --- CORS Middleware (place this BEFORE route definitions!) ---
+# --- Place CORS middleware HERE, immediately after app creation ---
 origins = [
     "http://localhost",
     "http://localhost:8080",
