@@ -10,12 +10,12 @@ from pydantic import BaseModel
 from together import Together
 from sentence_transformers import SentenceTransformer
 
-# --- .env loading ---
+# -- Load .env as before --
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-# --- Secure env ---
+# Securely load API Keys & DB Credentials
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
@@ -23,7 +23,6 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
-# --- Models ---
 llm_client = Together(api_key=TOGETHER_API_KEY)
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -31,8 +30,19 @@ class ContentRequest(BaseModel):
     topic: str
     mode: str
 
+# --- Start FastAPI ---
 app = FastAPI()
-origins = ["http://localhost", "http://localhost:5173", "http://localhost:3000", "http://localhost:8080"]
+
+# --- CORS Middleware (place this BEFORE route definitions!) ---
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -175,7 +185,6 @@ async def generate_content(request: ContentRequest):
                 else:
                     raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
 
-        # Extra guard for theoretical chapters:
         if mode == "practice" and context_level == "Chapter":
             if context_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
