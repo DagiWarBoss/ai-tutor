@@ -153,7 +153,7 @@ async def generate_content(request: ContentRequest):
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
                     "question": None,
-                    "error": "This is a theoretical concept for students. Practice questions are not applicable.",
+                    "error": "This is a Theoretical Concept",
                     "source_name": matched_topic_name,
                     "source_level": "Topic"
                 })
@@ -171,16 +171,16 @@ async def generate_content(request: ContentRequest):
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text = chapter_text_result[1]
                     context_level = "Chapter"
-                    context_name = chapter_text_result[0]
+                    context_name = chapter_text_result
                 else:
                     raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
 
-        # Extra guard if you want to block known theoretical chapters as well:
+        # Extra guard for theoretical chapters:
         if mode == "practice" and context_level == "Chapter":
             if context_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
                     "question": None,
-                    "error": "This is a theoretical concept for students. Practice questions are not applicable.",
+                    "error": "This is a Theoretical Concept",
                     "source_name": context_name,
                     "source_level": context_level
                 })
