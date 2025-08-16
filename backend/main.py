@@ -10,10 +10,12 @@ from pydantic import BaseModel
 from together import Together
 from sentence_transformers import SentenceTransformer
 
+# Load .env
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
+# API & DB config
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
@@ -142,7 +144,7 @@ async def generate_content(request: ContentRequest):
         conn = get_db_connection()
         if conn is None:
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
-
+        
         relevant_text = ""
         context_level = ""
         context_name = ""
@@ -152,59 +154,65 @@ async def generate_content(request: ContentRequest):
             if not match_result:
                 return JSONResponse(content={
                     "question": None,
-                    "error": "This is a theoretical concept with no practice questions.",
+                    "error": "This is a Theoretical Concept",
                     "source_name": topic_prompt,
                     "source_level": "User Query"
                 })
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
+            # Explicitly handle theoretical topics
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
                     "question": None,
-                    "error": "This is a theoretical concept with no practice questions.",
+                    "error": "This is a Theoretical Concept",
                     "source_name": matched_topic_name,
                     "source_level": "Topic"
                 })
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
-                relevant_text = topic_text_result
+            
+            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
+                relevant_text = topic_text_result[0]
                 context_level = "Topic"
                 context_name = matched_topic_name
             else:
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
+                
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text = chapter_text_result[1]
                     context_level = "Chapter"
-                    context_name = chapter_text_result
+                    context_name = chapter_text_result[0]
                 else:
                     return JSONResponse(content={
                         "question": None,
-                        "error": "This is a theoretical concept with no practice questions.",
+                        "error": "This is a Theoretical Concept",
                         "source_name": matched_topic_name,
                         "source_level": "Topic"
                     })
 
-        MIN_CONTEXT_LEN = 32
-        if not relevant_text or len(relevant_text.strip()) < MIN_CONTEXT_LEN:
-            return JSONResponse(content={
-                "question": None,
-                "error": "This is a theoretical concept with no practice questions.",
-                "source_name": context_name,
-                "source_level": context_level
-            })
+        if mode == "practice" and context_level == "Chapter":
+            if context_name.strip().lower() in THEORETICAL_TOPICS:
+                return JSONResponse(content={
+                    "question": None,
+                    "error": "This is a Theoretical Concept",
+                    "source_name": context_name,
+                    "source_level": context_level
+                })
 
-        # If we have substantial context, safe to call the LLM as before!
+        max_chars = 15000
+        if len(relevant_text) > max_chars:
+            relevant_text = relevant_text[:max_chars]
+
         user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
         response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
         system_message = ""
 
         if mode == 'revise':
-            system_message = "..."
+            system_message = "..."  # your revise prompt
         elif mode == 'practice':
             system_message = """
             You are an expert AI quiz generator. Your task is to create one multiple-choice question (MCQ) based ONLY on the provided context.
@@ -236,11 +244,13 @@ async def generate_content(request: ContentRequest):
 
             if mode == 'practice':
                 parsed_quiz = parse_quiz_json_from_string(content)
+
                 if parsed_quiz is None:
                     raise HTTPException(
                         status_code=502,
                         detail="The AI returned an invalid format for the quiz question. Please try again."
                     )
+
                 parsed_quiz['source_name'] = context_name
                 parsed_quiz['source_level'] = context_level
                 return JSONResponse(content=parsed_quiz)
