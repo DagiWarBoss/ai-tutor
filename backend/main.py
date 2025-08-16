@@ -31,8 +31,6 @@ class ContentRequest(BaseModel):
     mode: str
 
 app = FastAPI()
-
-# --- Place CORS middleware HERE, immediately after app creation ---
 origins = [
     "http://localhost",
     "http://localhost:8080",
@@ -169,7 +167,8 @@ async def generate_content(request: ContentRequest):
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
+            # ---- FIXED: Use topic_text_result[0].strip() not topic_text_result.strip()
+            if topic_text_result and topic_text_result and topic_text_result.strip():
                 relevant_text = topic_text_result
                 context_level = "Topic"
                 context_name = matched_topic_name
