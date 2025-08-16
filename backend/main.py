@@ -1,200 +1,113 @@
-# backend/main.py
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Sparkles, FileText, Loader2, AlertTriangle, Info } from 'lucide-react';
+import { Subject, Chapter, Topic } from '@/data/syllabus';
+import { MarkdownRenderer } from './MarkdownRenderer';
+import { QuizComponent } from './QuizComponent';
 
-import os
-import psycopg2
-import json
-import re
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from pydantic import BaseModel
-from together import Together
-from sentence_transformers import SentenceTransformer
+interface ContentViewerProps {
+  topic: Topic | null;
+  chapter: Chapter | null;
+  subject: Subject | null;
+}
 
-# --- Explicitly load the .env file ---
-script_dir = os.path.dirname(__file__)
-dotenv_path = os.path.join(script_dir, '.env')
-load_dotenv(dotenv_path=dotenv_path)
+type Mode = 'learn' | 'revise' | 'practice';
 
-# --- Securely load API Keys & DB Credentials ---
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-DB_HOST = os.getenv("DB_HOST")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_NAME = os.getenv("DB_NAME")
-DB_PORT = os.getenv("DB_PORT")
+export function ContentViewer({ topic, chapter, subject }: ContentViewerProps) {
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [content, setContent] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sourceInfo, setSourceInfo] = useState({ name: '', level: '' });
 
-# --- Initialize Models ---
-llm_client = Together(api_key=TOGETHER_API_KEY)
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+  useEffect(() => {
+    setMode(null);
+    setContent(null);
+    setError(null);
+    setIsLoading(false);
+  }, [topic]);
 
-# --- Pydantic Model for Request Body Validation ---
-class ContentRequest(BaseModel):
-    topic: str
-    mode: str
+  const fetchContent = async (selectedMode: Mode) => {
+    if (!topic) return;
+    setMode(selectedMode);
+    setIsLoading(true);
+    setError(null);
+    setContent(null);
 
-app = FastAPI()
+    try {
+      const response = await fetch('http://localhost:8000/api/generate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: topic.name, mode: selectedMode }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setContent(data);
+      setSourceInfo({ name: data.source_name, level: data.source_level });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-# --- CORS Configuration ---
-origins = ["http://localhost", "http://localhost:5173", "http://localhost:3000", "http://localhost:8080"]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+  if (!topic || !chapter || !subject) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-4 text-muted-foreground">Select a topic to get started</h2>
+          <p className="text-muted-foreground">Choose a subject, chapter, and topic from the left panel to begin studying</p>
+        </div>
+      </div>
+    );
+  }
 
-# --- Database Connection Function ---
-def get_db_connection():
-    try:
-        conn = psycopg2.connect(
-            dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
-        )
-        return conn
-    except psycopg2.OperationalError as e:
-        print(f"CRITICAL: Could not connect to the database. Error: {e}")
-        return None
+  if (!mode) {
+    // ... (This section for the 3 cards is unchanged and correct)
+  }
 
-# --- Helper function to parse flawed JSON from the AI ---
-def parse_quiz_json_from_string(text: str) -> dict | None:
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        print("DEBUG: AI did not return valid JSON. Attempting regex parsing...")
-        try:
-            question_match = re.search(r'"question":\s*"(.*?)"', text, re.DOTALL)
-            options_match = re.search(r'"options":\s*\{(.*?)\}', text, re.DOTALL)
-            answer_match = re.search(r'"correct_answer":\s*"(.*?)"', text, re.DOTALL)
-            explanation_match = re.search(r'"explanation":\s*"(.*?)"', text, re.DOTALL)
-
-            if not all([question_match, options_match, answer_match, explanation_match]):
-                return None
-
-            question = question_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
-            options_str = options_match.group(1)
-            correct_answer = answer_match.group(1).strip()
-            explanation = explanation_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
-
-            options = {}
-            option_matches = re.findall(r'"([A-D])":\s*"(.*?)"', options_str)
-            for key, value in option_matches:
-                options[key] = value.strip().replace('\\n', '\n').replace('\\"', '"')
-            
-            if len(options) != 4: return None
-
-            return {"question": question, "options": options, "correct_answer": correct_answer, "explanation": explanation}
-        except Exception:
-            return None
-
-# === ENDPOINT 1: Fetch the entire syllabus structure ===
-@app.get("/api/syllabus")
-async def get_syllabus():
-    # ... (This function is unchanged)
-    conn = None
-    try:
-        conn = get_db_connection()
-        if conn is None: raise HTTPException(status_code=503, detail="Database connection unavailable.")
-        with conn.cursor() as cur:
-            cur.execute("SELECT id, name FROM subjects ORDER BY name")
-            subjects_raw = cur.fetchall()
-            cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
-            chapters_raw = cur.fetchall()
-            cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
-            topics_raw = cur.fetchall()
-            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []} for c_id, c_name, c_num, s_id, c_level in chapters_raw}
-            for t_id, t_name, t_num, c_id in topics_raw:
-                if c_id in chapters_map: chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
-            subjects_map = {s_id: {"id": s_id, "name": s_name, "chapters": []} for s_id, s_name in subjects_raw}
-            for c_id, c_name, c_num, s_id, c_level in chapters_raw:
-                if s_id in subjects_map: subjects_map[s_id]["chapters"].append(chapters_map[c_id])
-            syllabus = list(subjects_map.values())
-        return JSONResponse(content=syllabus)
-    except psycopg2.Error as e:
-        raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
-    finally:
-        if conn: conn.close()
-
-# === ENDPOINT 2: The Multi-Purpose Content Generator ===
-@app.post("/api/generate-content")
-async def generate_content(request: ContentRequest):
-    topic_prompt = request.topic
-    mode = request.mode
-    conn = None
-    try:
-        topic_embedding = embedding_model.encode(topic_prompt).tolist()
-        conn = get_db_connection()
-        if conn is None: raise HTTPException(status_code=503, detail="Database connection unavailable.")
-        relevant_text, context_level, context_name = "", "", ""
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
-            match_result = cur.fetchone()
-            if not match_result: raise HTTPException(status_code=404, detail=f"Could not find a relevant topic for '{topic_prompt}'.")
-            matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
-            cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
-            topic_text_result = cur.fetchone()
-            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
-                relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
-            else:
-                cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
-                chapter_text_result = cur.fetchone()
-                if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
-                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result[0]
-                else:
-                    raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="An error occurred while retrieving data.")
-    finally:
-        if conn: conn.close()
-
-    max_chars = 15000
-    if len(relevant_text) > max_chars: relevant_text = relevant_text[:max_chars]
-
-    user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
-    response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
-    system_message = ""
-
-    if mode == 'revise':
-        system_message = """You are an AI assistant creating a structured 'cheat sheet' for a student preparing for the JEE exam..."""
-    elif mode == 'practice':
-        system_message = """
-        You are an expert AI quiz generator for the JEE exam. Your task is to create one multiple-choice question (MCQ) based ONLY on the provided context.
-        **CRITICAL INSTRUCTIONS:**
-        1.  The question MUST be strictly relevant to the provided context.
-        2.  If the context is purely theoretical, definitional, or insufficient to create a meaningful question, you MUST refuse by following the "EXAMPLE OF HOW TO REFUSE" format below.
-        3.  Your entire response MUST be a single, valid JSON object.
-        4.  The JSON object must have EXACTLY these keys: "question", "options", "correct_answer", "explanation".
-        **EXAMPLE OF A GOOD RESPONSE:**
-        { "question": "What is the formula for methane?", "options": { "A": "CH4", "B": "H2O", "C": "CO2", "D": "NaCl" }, "correct_answer": "A", "explanation": "Methane is a simple alkane with one carbon and four hydrogen atoms." }
-        **EXAMPLE OF HOW TO REFUSE (IF CONTEXT IS THEORETICAL/INSUFFICIENT):**
-        { "question": "Error: Theoretical Concept", "options": { "A": "", "B": "", "C": "", "D": "" }, "correct_answer": "A", "explanation": "The provided text is a theoretical concept and does not contain enough specific information to generate a practice question." }
-        """
-        response_params["response_format"] = {"type": "json_object"}
-        response_params["temperature"] = 0.8
-    else: # Default to 'explain' mode
-        system_message = """You are an expert JEE tutor... **Crucially, you MUST enclose ALL mathematical formulas...**"""
-
-    try:
-        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
-        response_params["messages"] = messages
-        response = llm_client.chat.completions.create(**response_params)
-        content = response.choices[0].message.content.strip()
-
-        if not content or content.lower().startswith("i'm sorry") or content.lower().startswith("i cannot"):
-             raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
-
-        if mode == 'practice':
-            parsed_quiz = parse_quiz_json_from_string(content)
-            if parsed_quiz is None:
-                raise HTTPException(status_code=502, detail="The AI returned an invalid format for the quiz question. Please try again.")
-            parsed_quiz['source_name'], parsed_quiz['source_level'] = context_name, context_level
-            return JSONResponse(content=parsed_quiz)
-        else:
-            return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="An unexpected error occurred while generating content.")
+  return (
+    <div className="h-full flex flex-col">
+      <div className="p-4 border-b border-border bg-card flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{topic.name}</h1>
+          <p className="text-sm text-muted-foreground">{subject.name} → {chapter.name}</p>
+        </div>
+        <Button variant="outline" onClick={() => setMode(null)}>Back to Topic</Button>
+      </div>
+      <div className="flex-1 overflow-auto p-8">
+        {isLoading && (<div className="flex items-center justify-center h-full"><Loader2 className="w-8 h-8 animate-spin text-primary" /><p className="ml-4 text-muted-foreground">Generating content...</p></div>)}
+        {error && !isLoading && (<div className="flex flex-col items-center justify-center h-full text-center"><AlertTriangle className="w-12 h-12 text-destructive mb-4" /><h3 className="text-xl font-semibold text-destructive">Failed to generate content</h3><p className="text-muted-foreground mt-2">{error}</p></div>)}
+        
+        {content && !isLoading && (
+          <>
+            {mode === 'learn' && <MarkdownRenderer content={content.content} />}
+            {mode === 'revise' && <MarkdownRenderer content={content.content} />}
+            {mode === 'practice' && (
+                // --- THIS IS THE UPDATED LOGIC ---
+                // First, check if the backend sent a specific error message
+                content.error === "This is a Theoretical Concept" ? 
+                (
+                    <div className="flex flex-col items-center justify-center h-full text-center">
+                        <Info className="w-12 h-12 text-primary mb-4" />
+                        <h3 className="text-xl font-semibold">Theoretical Concept</h3>
+                        <p className="text-muted-foreground mt-2">No practice questions are possible for this topic.</p>
+                    </div>
+                ) : 
+                // Otherwise, if there is a question, show the quiz
+                content.question ? 
+                <QuizComponent quizData={content} onNext={() => fetchContent('practice')} /> :
+                // Fallback message if something else goes wrong
+                <div className="text-center text-muted-foreground">No practice questions available for this topic, yet.</div>
+            )}
+            <div className="mt-8 pt-4 border-t border-border"><p className="text-sm text-muted-foreground italic text-center">Source: {sourceInfo.name} ({sourceInfo.level} Context)</p></div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
