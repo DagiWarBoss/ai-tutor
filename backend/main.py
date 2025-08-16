@@ -152,7 +152,12 @@ async def generate_content(request: ContentRequest):
             cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
-                raise HTTPException(status_code=404, detail=f"Could not find a relevant topic for '{topic_prompt}'.")
+                return JSONResponse(content={
+                    "question": None,
+                    "error": "This is a Theoretical Concept",
+                    "source_name": topic_prompt,
+                    "source_level": "User Query"
+                })
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
@@ -168,7 +173,6 @@ async def generate_content(request: ContentRequest):
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
             
-            # ---- FIXED: Call .strip() on the string, NOT the tuple
             if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
                 relevant_text = topic_text_result[0]
                 context_level = "Topic"
@@ -177,13 +181,18 @@ async def generate_content(request: ContentRequest):
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
-                # ---- FIXED: Call .strip() on chapter_text_result[1], NOT chapter_text_result
+                
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text = chapter_text_result[1]
                     context_level = "Chapter"
                     context_name = chapter_text_result[0]
                 else:
-                    raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
+                    return JSONResponse(content={
+                        "question": None,
+                        "error": "This is a Theoretical Concept",
+                        "source_name": matched_topic_name,
+                        "source_level": "Topic"
+                    })
 
         if mode == "practice" and context_level == "Chapter":
             if context_name.strip().lower() in THEORETICAL_TOPICS:
