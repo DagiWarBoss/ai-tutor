@@ -1,7 +1,7 @@
 import os
 import psycopg2
 import json
-import re  # Import the regular expression library
+import re
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,14 +10,12 @@ from pydantic import BaseModel
 from together import Together
 from sentence_transformers import SentenceTransformer
 
-
-# --- Explicitly load the .env file ---
+# --- .env loading ---
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-
-# --- Securely load API Keys & DB Credentials ---
+# --- Secure env ---
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
@@ -25,22 +23,15 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
-
-# --- Initialize Models ---
+# --- Models ---
 llm_client = Together(api_key=TOGETHER_API_KEY)
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-
-# --- Pydantic Model for Request Body Validation ---
 class ContentRequest(BaseModel):
     topic: str
     mode: str
 
-
 app = FastAPI()
-
-
-# --- CORS Configuration ---
 origins = ["http://localhost", "http://localhost:5173", "http://localhost:3000", "http://localhost:8080"]
 app.add_middleware(
     CORSMiddleware,
@@ -50,8 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# --- Database Connection Function ---
 def get_db_connection():
     try:
         conn = psycopg2.connect(
@@ -62,15 +51,11 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-
-# --- NEW: Helper function to parse flawed JSON from the AI ---
 def parse_quiz_json_from_string(text: str) -> dict | None:
     try:
-        # First, try the easy way: assume it's valid JSON
         return json.loads(text)
     except json.JSONDecodeError:
         print("DEBUG: AI did not return valid JSON. Attempting regex parsing...")
-        # If it fails, use regex to find the components
         try:
             question_match = re.search(r'"question":\s*"(.*?)"', text, re.DOTALL)
             options_match = re.search(r'"options":\s*\{(.*?)\}', text, re.DOTALL)
@@ -86,7 +71,6 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             correct_answer = answer_match.group(1).strip()
             explanation = explanation_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
 
-            # Parse the options string
             options = {}
             option_matches = re.findall(r'"([A-D])":\s*"(.*?)"', options_str)
             for key, value in option_matches:
@@ -106,12 +90,8 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             print(f"DEBUG: Regex parsing encountered an unexpected error: {e}")
             return None
 
-
-# === THEORETICAL TOPICS LIST ===
 THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
 
-
-# === ENDPOINT 1: Fetch the entire syllabus structure ===
 @app.get("/api/syllabus")
 async def get_syllabus():
     conn = None
@@ -122,28 +102,21 @@ async def get_syllabus():
         with conn.cursor() as cur:
             cur.execute("SELECT id, name FROM subjects ORDER BY name")
             subjects_raw = cur.fetchall()
-
             cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
             chapters_raw = cur.fetchall()
-
             cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
             topics_raw = cur.fetchall()
-
             chapters_map = {
                 c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []}
                 for c_id, c_name, c_num, s_id, c_level in chapters_raw
             }
-
             for t_id, t_name, t_num, c_id in topics_raw:
                 if c_id in chapters_map:
                     chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
-
             subjects_map = {s_id: {"id": s_id, "name": s_name, "chapters": []} for s_id, s_name in subjects_raw}
-
             for c_id, c_name, c_num, s_id, c_level in chapters_raw:
                 if s_id in subjects_map:
                     subjects_map[s_id]["chapters"].append(chapters_map[c_id])
-
             syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
     except psycopg2.Error as e:
@@ -153,8 +126,6 @@ async def get_syllabus():
         if conn:
             conn.close()
 
-
-# === ENDPOINT 2: The Multi-Purpose Content Generator (with Fault-Tolerant Parsing) ===
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
     topic_prompt = request.topic
@@ -170,31 +141,27 @@ async def generate_content(request: ContentRequest):
         relevant_text = ""
         context_level = ""
         context_name = ""
-        
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
             if not match_result:
                 raise HTTPException(status_code=404, detail=f"Could not find a relevant topic for '{topic_prompt}'.")
-            
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
-            # Check for theoretical topics to avoid hallucination
+            # Explicitly handle theoretical topics
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
                     "question": None,
-                    "error": f"'{matched_topic_name}' is a theoretical concept for students. Practice questions are not applicable.",
+                    "error": "This is a theoretical concept for students. Practice questions are not applicable.",
                     "source_name": matched_topic_name,
                     "source_level": "Topic"
                 })
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-
-            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
-                print("DEBUG: Using TOPIC level context.")
-                relevant_text = topic_text_result[0]
+            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
+                relevant_text = topic_text_result
                 context_level = "Topic"
                 context_name = matched_topic_name
             else:
@@ -208,14 +175,12 @@ async def generate_content(request: ContentRequest):
                 else:
                     raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
 
-        # Prevent hallucination by checking if relevant_text is just fallback text with no practice content
+        # Extra guard if you want to block known theoretical chapters as well:
         if mode == "practice" and context_level == "Chapter":
-            # Here you can implement more logic to decide if this chapter text should generate questions
-            # For example, if chapter is introductory, return theoretical message
             if context_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={
                     "question": None,
-                    "error": f"'{context_name}' is a theoretical concept for students. Practice questions are not applicable.",
+                    "error": "This is a theoretical concept for students. Practice questions are not applicable.",
                     "source_name": context_name,
                     "source_level": context_level
                 })
@@ -229,22 +194,22 @@ async def generate_content(request: ContentRequest):
         system_message = ""
 
         if mode == 'revise':
-            system_message = "..."  # (same revise prompt)
+            system_message = "..."  # your revise prompt
         elif mode == 'practice':
             system_message = """
             You are an expert AI quiz generator. Your task is to create one multiple-choice question (MCQ) based ONLY on the provided context.
             **CRITICAL INSTRUCTIONS:**
-            1.  Your entire response MUST be a single, valid JSON object.
-            2.  The JSON object must have EXACTLY these keys: "question", "options", "correct_answer", "explanation".
-            3.  The "options" value must be another JSON object with keys "A", "B", "C", and "D".
-            4.  The "correct_answer" value MUST be a single letter: "A", "B", "C", or "D".
+            1. Your entire response MUST be a single, valid JSON object.
+            2. The JSON object must have EXACTLY these keys: "question", "options", "correct_answer", "explanation".
+            3. The "options" value must be another JSON object with keys "A", "B", "C", and "D".
+            4. The "correct_answer" value MUST be a single letter: "A", "B", "C", or "D".
             **EXAMPLE OUTPUT FORMAT:**
             { "question": "What is the capital of France?", "options": { "A": "London", "B": "Berlin", "C": "Paris", "D": "Madrid" }, "correct_answer": "C", "explanation": "Paris is the capital and most populous city of France." }
             """
             response_params["response_format"] = {"type": "json_object"}
             response_params["temperature"] = 0.8
-        else:  # Default to 'explain' mode
-            system_message = "..."  # (same explain prompt)
+        else:
+            system_message = "..."
 
         try:
             messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
@@ -273,7 +238,6 @@ async def generate_content(request: ContentRequest):
                 return JSONResponse(content=parsed_quiz)
             else:
                 return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
-
         except HTTPException as e:
             raise e
         except Exception as e:
