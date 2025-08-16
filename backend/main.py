@@ -1,9 +1,7 @@
-# backend/main.py
-
 import os
 import psycopg2
 import json
-import re # Import the regular expression library
+import re  # Import the regular expression library
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,10 +10,12 @@ from pydantic import BaseModel
 from together import Together
 from sentence_transformers import SentenceTransformer
 
+
 # --- Explicitly load the .env file ---
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
+
 
 # --- Securely load API Keys & DB Credentials ---
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
@@ -25,16 +25,20 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
+
 # --- Initialize Models ---
 llm_client = Together(api_key=TOGETHER_API_KEY)
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+
 
 # --- Pydantic Model for Request Body Validation ---
 class ContentRequest(BaseModel):
     topic: str
     mode: str
 
+
 app = FastAPI()
+
 
 # --- CORS Configuration ---
 origins = ["http://localhost", "http://localhost:5173", "http://localhost:3000", "http://localhost:8080"]
@@ -46,6 +50,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # --- Database Connection Function ---
 def get_db_connection():
     try:
@@ -56,6 +61,7 @@ def get_db_connection():
     except psycopg2.OperationalError as e:
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
+
 
 # --- NEW: Helper function to parse flawed JSON from the AI ---
 def parse_quiz_json_from_string(text: str) -> dict | None:
@@ -85,7 +91,7 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             option_matches = re.findall(r'"([A-D])":\s*"(.*?)"', options_str)
             for key, value in option_matches:
                 options[key] = value.strip().replace('\\n', '\n').replace('\\"', '"')
-            
+
             if len(options) != 4:
                 print("DEBUG: Regex failed to parse all 4 options.")
                 return None
@@ -100,6 +106,11 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             print(f"DEBUG: Regex parsing encountered an unexpected error: {e}")
             return None
 
+
+# === THEORETICAL TOPICS LIST ===
+THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
+
+
 # === ENDPOINT 1: Fetch the entire syllabus structure ===
 @app.get("/api/syllabus")
 async def get_syllabus():
@@ -111,18 +122,18 @@ async def get_syllabus():
         with conn.cursor() as cur:
             cur.execute("SELECT id, name FROM subjects ORDER BY name")
             subjects_raw = cur.fetchall()
-            
+
             cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
             chapters_raw = cur.fetchall()
-            
+
             cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
             topics_raw = cur.fetchall()
 
             chapters_map = {
-                c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []} 
+                c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []}
                 for c_id, c_name, c_num, s_id, c_level in chapters_raw
             }
-            
+
             for t_id, t_name, t_num, c_id in topics_raw:
                 if c_id in chapters_map:
                     chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
@@ -132,7 +143,7 @@ async def get_syllabus():
             for c_id, c_name, c_num, s_id, c_level in chapters_raw:
                 if s_id in subjects_map:
                     subjects_map[s_id]["chapters"].append(chapters_map[c_id])
-            
+
             syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
     except psycopg2.Error as e:
@@ -141,6 +152,7 @@ async def get_syllabus():
     finally:
         if conn:
             conn.close()
+
 
 # === ENDPOINT 2: The Multi-Purpose Content Generator (with Fault-Tolerant Parsing) ===
 @app.post("/api/generate-content")
@@ -168,6 +180,15 @@ async def generate_content(request: ContentRequest):
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
+            # Check for theoretical topics to avoid hallucination
+            if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
+                return JSONResponse(content={
+                    "question": None,
+                    "error": f"'{matched_topic_name}' is a theoretical concept for students. Practice questions are not applicable.",
+                    "source_name": matched_topic_name,
+                    "source_level": "Topic"
+                })
+
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
 
@@ -187,71 +208,77 @@ async def generate_content(request: ContentRequest):
                 else:
                     raise HTTPException(status_code=404, detail=f"Sorry, content for '{matched_topic_name}' and its parent chapter is unavailable.")
 
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        print(f"Database or embedding error: {e}")
-        raise HTTPException(status_code=500, detail="An error occurred while retrieving data.")
+        # Prevent hallucination by checking if relevant_text is just fallback text with no practice content
+        if mode == "practice" and context_level == "Chapter":
+            # Here you can implement more logic to decide if this chapter text should generate questions
+            # For example, if chapter is introductory, return theoretical message
+            if context_name.strip().lower() in THEORETICAL_TOPICS:
+                return JSONResponse(content={
+                    "question": None,
+                    "error": f"'{context_name}' is a theoretical concept for students. Practice questions are not applicable.",
+                    "source_name": context_name,
+                    "source_level": context_level
+                })
+
+        max_chars = 15000
+        if len(relevant_text) > max_chars:
+            relevant_text = relevant_text[:max_chars]
+
+        user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+        response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
+        system_message = ""
+
+        if mode == 'revise':
+            system_message = "..."  # (same revise prompt)
+        elif mode == 'practice':
+            system_message = """
+            You are an expert AI quiz generator. Your task is to create one multiple-choice question (MCQ) based ONLY on the provided context.
+            **CRITICAL INSTRUCTIONS:**
+            1.  Your entire response MUST be a single, valid JSON object.
+            2.  The JSON object must have EXACTLY these keys: "question", "options", "correct_answer", "explanation".
+            3.  The "options" value must be another JSON object with keys "A", "B", "C", and "D".
+            4.  The "correct_answer" value MUST be a single letter: "A", "B", "C", or "D".
+            **EXAMPLE OUTPUT FORMAT:**
+            { "question": "What is the capital of France?", "options": { "A": "London", "B": "Berlin", "C": "Paris", "D": "Madrid" }, "correct_answer": "C", "explanation": "Paris is the capital and most populous city of France." }
+            """
+            response_params["response_format"] = {"type": "json_object"}
+            response_params["temperature"] = 0.8
+        else:  # Default to 'explain' mode
+            system_message = "..."  # (same explain prompt)
+
+        try:
+            messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
+            response_params["messages"] = messages
+
+            response = llm_client.chat.completions.create(**response_params)
+            content = response.choices[0].message.content.strip()
+
+            if not content or content.lower().startswith("i'm sorry") or content.lower().startswith("i cannot"):
+                raise HTTPException(
+                    status_code=503,
+                    detail="The AI was unable to generate a response for this topic, possibly due to limited source text. Please try another topic."
+                )
+
+            if mode == 'practice':
+                parsed_quiz = parse_quiz_json_from_string(content)
+
+                if parsed_quiz is None:
+                    raise HTTPException(
+                        status_code=502,
+                        detail="The AI returned an invalid format for the quiz question. Please try again."
+                    )
+
+                parsed_quiz['source_name'] = context_name
+                parsed_quiz['source_level'] = context_level
+                return JSONResponse(content=parsed_quiz)
+            else:
+                return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
+
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            print(f"An unexpected error occurred during AI call: {e}")
+            raise HTTPException(status_code=500, detail="An unexpected error occurred while generating content.")
     finally:
         if conn:
             conn.close()
-
-    max_chars = 15000
-    if len(relevant_text) > max_chars:
-        relevant_text = relevant_text[:max_chars]
-
-    user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
-    response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
-    system_message = ""
-
-    if mode == 'revise':
-        system_message = "..." # (same revise prompt)
-    elif mode == 'practice':
-        system_message = """
-        You are an expert AI quiz generator. Your task is to create one multiple-choice question (MCQ) based ONLY on the provided context.
-        **CRITICAL INSTRUCTIONS:**
-        1.  Your entire response MUST be a single, valid JSON object.
-        2.  The JSON object must have EXACTLY these keys: "question", "options", "correct_answer", "explanation".
-        3.  The "options" value must be another JSON object with keys "A", "B", "C", and "D".
-        4.  The "correct_answer" value MUST be a single letter: "A", "B", "C", or "D".
-        **EXAMPLE OUTPUT FORMAT:**
-        { "question": "What is the capital of France?", "options": { "A": "London", "B": "Berlin", "C": "Paris", "D": "Madrid" }, "correct_answer": "C", "explanation": "Paris is the capital and most populous city of France." }
-        """
-        response_params["response_format"] = {"type": "json_object"}
-        response_params["temperature"] = 0.8
-    else: # Default to 'explain' mode
-        system_message = "..." # (same explain prompt)
-
-    try:
-        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
-        response_params["messages"] = messages
-        
-        response = llm_client.chat.completions.create(**response_params)
-        content = response.choices[0].message.content.strip()
-
-        if not content or content.lower().startswith("i'm sorry") or content.lower().startswith("i cannot"):
-             raise HTTPException(
-                status_code=503, 
-                detail="The AI was unable to generate a response for this topic, possibly due to limited source text. Please try another topic."
-            )
-
-        if mode == 'practice':
-            parsed_quiz = parse_quiz_json_from_string(content)
-            
-            if parsed_quiz is None:
-                raise HTTPException(
-                    status_code=502, 
-                    detail="The AI returned an invalid format for the quiz question. Please try again."
-                )
-
-            parsed_quiz['source_name'] = context_name
-            parsed_quiz['source_level'] = context_level
-            return JSONResponse(content=parsed_quiz)
-        else:
-            return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
-    
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        print(f"An unexpected error occurred during AI call: {e}")
-        raise HTTPException(status_code=500, detail="An unexpected error occurred while generating content.")
