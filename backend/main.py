@@ -167,8 +167,8 @@ async def generate_content(request: ContentRequest):
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-            # ---- FIXED: Use topic_text_result[0].strip() not topic_text_result.strip()
-            if topic_text_result and topic_text_result and topic_text_result.strip():
+            # ---- FIXED: Call .strip() on the string, NOT the tuple
+            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
                 relevant_text = topic_text_result
                 context_level = "Topic"
                 context_name = matched_topic_name
@@ -176,6 +176,7 @@ async def generate_content(request: ContentRequest):
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
+                # ---- FIXED: Call .strip() on chapter_text_result[1], NOT chapter_text_result
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text = chapter_text_result[1]
                     context_level = "Chapter"
