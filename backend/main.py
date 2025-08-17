@@ -7,34 +7,26 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from together import Together
-# The local sentence_transformers library is no longer needed
-
+from sentence_transformers import SentenceTransformer
 
 # Load .env
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-
 # API & DB config
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
-
-llm_client = Together(api_key=TOGETHER_API_KEY)
-# The local embedding model is no longer loaded
-# embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-
+# Load embedding model locally
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 class ContentRequest(BaseModel):
     topic: str
     mode: str
-
 
 app = FastAPI()
 origins = [
@@ -49,7 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 def get_db_connection():
     try:
         conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
@@ -58,8 +49,9 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         return None
 
-
 def parse_quiz_json_from_string(text: str) -> dict | None:
+    text = text.strip()
+    text = re.sub(r"^``````$", "", text).strip()
     try:
         return json.loads(text)
     except json.JSONDecodeError:
@@ -69,31 +61,24 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             options_match = re.search(r'"options":\s*\{(.*?)\}', text, re.DOTALL)
             answer_match = re.search(r'"correct_answer":\s*"(.*?)"', text, re.DOTALL)
             explanation_match = re.search(r'"explanation":\s*"(.*?)"', text, re.DOTALL)
-
             if not all([question_match, options_match, answer_match, explanation_match]):
                 return None
-
             question = question_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
             options_str = options_match.group(1)
             correct_answer = answer_match.group(1).strip()
             explanation = explanation_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
-
             options = {}
             option_matches = re.findall(r'"([A-D])":\s*"(.*?)"', options_str)
             for key, value in option_matches:
                 options[key] = value.strip().replace('\\n', '\n').replace('\\"', '"')
-
             if len(options) != 4:
                 return None
-
             return {"question": question, "options": options, "correct_answer": correct_answer, "explanation": explanation}
         except Exception as e:
             print(f"DEBUG: Regex parsing encountered an unexpected error: {e}")
             return None
 
-
 THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
-
 
 @app.get("/api/syllabus")
 async def get_syllabus():
@@ -127,24 +112,14 @@ async def get_syllabus():
         if conn:
             conn.close()
 
-
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
     topic_prompt = request.topic
     mode = request.mode
     conn = None
     try:
-        # Get embedding from Together AI API instead of a local model
-        try:
-            embed_response = llm_client.embeddings.create(
-                input=[topic_prompt],
-                model="togethercomputer/m2-bert-80M-32k-retrieval"
-            )
-
-            topic_embedding = embed_response.data[0].embedding
-        except Exception as e:
-            print(f"ERROR: Could not get embedding from API. {e}")
-            raise HTTPException(status_code=503, detail="The embedding service is currently unavailable.")
+        # Generate embedding locally
+        topic_embedding = embedding_model.encode(topic_prompt).tolist()
 
         conn = get_db_connection()
         if conn is None:
@@ -156,27 +131,22 @@ async def generate_content(request: ContentRequest):
             match_result = cur.fetchone()
             if not match_result:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
-
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
-
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
-
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-
-            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
-                relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
+            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
+                relevant_text, context_level, context_name = topic_text_result, "Topic", matched_topic_name
             else:
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
-                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result[0]
+                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result
                 else:
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
-
             if mode == "practice" and context_level == "Chapter":
                 if context_name.strip().lower() in THEORETICAL_TOPICS:
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
@@ -186,29 +156,59 @@ async def generate_content(request: ContentRequest):
             relevant_text = relevant_text[:max_chars]
 
         user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
-        response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
-        system_message = ""
-
+        response_params = {
+            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "max_tokens": 2048,
+            "temperature": 0.4
+        }
+        # Strict prompt for reliable quiz JSON
         if mode == 'revise':
-            system_message = """You are an AI assistant creating a structured 'cheat sheet'..."""
+            system_message = """You are an AI assistant creating a structured 'cheat sheet' for JEE topics."""
         elif mode == 'practice':
-            system_message = """You are an expert AI quiz generator..."""
+            system_message = (
+                "You are an expert AI quiz generator for JEE students. "
+                "Given textbook context, respond ONLY with a valid JSON object matching this template: "
+                '{'
+                '"question": "...", '
+                '"options": { "A": "...", "B": "...", "C": "...", "D": "..." }, '
+                '"correct_answer": "...", '
+                '"explanation": "..." '
+                '}. '
+                "Do not include any explanations, comments, or Markdown. ONLY output strict JSON—no extra formatting."
+            )
         else:
-            system_message = """You are an expert JEE tutor..."""
+            system_message = """You are an expert JEE tutor."""
 
         try:
             messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
             response_params["messages"] = messages
             response = llm_client.chat.completions.create(**response_params)
             content = response.choices[0].message.content.strip()
-
             if not content or content.lower().startswith("i'm sorry") or content.lower().startswith("i cannot"):
                 raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
-
             if mode == 'practice':
                 parsed_quiz = parse_quiz_json_from_string(content)
                 if parsed_quiz is None:
-                    raise HTTPException(status_code=502, detail="The AI returned an invalid format.")
+                    # Fallback to chapter text for practice quiz generation if topic-level failed
+                    with conn.cursor() as cur:
+                        cur.execute("SELECT full_text, name FROM chapters WHERE id = %s", (matched_chapter_id,))
+                        chapter_result = cur.fetchone()
+                        if chapter_result and chapter_result[0] and chapter_result.strip():
+                            chapter_text, chapter_name = chapter_result
+                            fallback_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK (Chapter: {chapter_name}) ---\n{chapter_text}\n--- END OF CONTEXT ---"
+                            fallback_messages = [{"role": "system", "content": system_message}, {"role": "user", "content": fallback_message_content}]
+                            fallback_response = llm_client.chat.completions.create(
+                                model=response_params["model"],
+                                max_tokens=response_params["max_tokens"],
+                                temperature=response_params["temperature"],
+                                messages=fallback_messages
+                            )
+                            fallback_content = fallback_response.choices[0].message.content.strip()
+                            parsed_fallback = parse_quiz_json_from_string(fallback_content)
+                            if parsed_fallback:
+                                parsed_fallback['source_name'], parsed_fallback['source_level'] = chapter_name, "Chapter"
+                                return JSONResponse(content=parsed_fallback)
+                    raise HTTPException(status_code=502, detail="The AI returned an invalid format for both topic and chapter context.")
                 parsed_quiz['source_name'], parsed_quiz['source_level'] = context_name, context_level
                 return JSONResponse(content=parsed_quiz)
             else:
