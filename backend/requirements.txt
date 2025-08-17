@@ -1,24 +1,6 @@
-# For Database and Environment
 psycopg2-binary
 python-dotenv
-
-# For PDF and OCR Processing (Tesseract)
-PyMuPDF
-pytesseract
-Pillow
-beautifulsoup4
-lxml
-rapidfuzz
-
-# For AI and Semantic Search
-requests
-together                     # Keep this one
-sentence-transformers        # <-- Added for local semantic embeddings
-
-# For the Backend Server (API)
 fastapi
-uvicorn[standard]            # <-- Ensures uvicorn AND necessary extras
-
-# Optional Fallback OCR Engine
-paddlepaddle
-paddleocr
+uvicorn[standard]
+requests
+sentence-transformers
