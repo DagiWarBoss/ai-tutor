@@ -13,12 +13,12 @@ rapidfuzz
 # For AI and Semantic Search
 sentence-transformers
 requests
-together # <-- ADDED
+together
 
 # For the Backend Server (API)
 fastapi
 uvicorn[standard]
 
-# Optional Fallback OCR Engine
+# Optional Fall-back OCR Engine
 paddlepaddle
 paddleocr
