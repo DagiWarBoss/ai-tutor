@@ -12,7 +12,8 @@ rapidfuzz
 
 # For AI and Semantic Search
 requests
-together # Keep this one
+together   # Keep this one
+sentence-transformers   # <-- Added for local semantic embeddings
 
 # For the Backend Server (API)
 fastapi
