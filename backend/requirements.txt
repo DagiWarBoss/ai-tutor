@@ -11,14 +11,13 @@ lxml
 rapidfuzz
 
 # For AI and Semantic Search
-sentence-transformers
 requests
-together
+together # Keep this one
 
 # For the Backend Server (API)
 fastapi
 uvicorn[standard]
 
-# Optional Fall-back OCR Engine
+# Optional Fallback OCR Engine
 paddlepaddle
 paddleocr
