@@ -13,6 +13,7 @@ rapidfuzz
 # For AI and Semantic Search
 sentence-transformers
 requests
+together # <-- ADDED
 
 # For the Backend Server (API)
 fastapi
