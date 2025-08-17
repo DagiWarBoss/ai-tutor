@@ -12,12 +12,12 @@ rapidfuzz
 
 # For AI and Semantic Search
 requests
-together   # Keep this one
-sentence-transformers   # <-- Added for local semantic embeddings
+together                     # Keep this one
+sentence-transformers        # <-- Added for local semantic embeddings
 
 # For the Backend Server (API)
 fastapi
-uvicorn[standard]
+uvicorn[standard]            # <-- Ensures uvicorn AND necessary extras
 
 # Optional Fallback OCR Engine
 paddlepaddle
