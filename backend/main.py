@@ -1,4 +1,6 @@
 import os
+import sys
+import traceback
 import psycopg2
 import json
 import re
@@ -9,10 +11,18 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 
+# --- DEBUG: Print environment variables ---
+print("---- ENVIRONMENT VARIABLES ----")
+for key, value in os.environ.items():
+    if "DB" in key or "API" in key or "SUPABASE" in key:
+        print(f"{key}={value}")
+
 # Load .env
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
+print(f"Attempting to load .env from {dotenv_path}")
 load_dotenv(dotenv_path=dotenv_path)
+print(".env loaded")
 
 # API & DB config
 DB_HOST = os.getenv("DB_HOST")
@@ -21,8 +31,16 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
+print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
+
 # Load embedding model locally
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+try:
+    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+    print("Embedding model loaded successfully.")
+except Exception as e:
+    print(f"Error loading embedding model: {e}")
+    traceback.print_exc()
+    sys.exit(1)
 
 class ContentRequest(BaseModel):
     topic: str
@@ -43,10 +61,13 @@ app.add_middleware(
 
 def get_db_connection():
     try:
+        print("Trying DB connection...")
         conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
+        print("DB connect success.")
         return conn
     except psycopg2.OperationalError as e:
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
+        traceback.print_exc()
         return None
 
 def parse_quiz_json_from_string(text: str) -> dict | None:
@@ -76,18 +97,22 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             return {"question": question, "options": options, "correct_answer": correct_answer, "explanation": explanation}
         except Exception as e:
             print(f"DEBUG: Regex parsing encountered an unexpected error: {e}")
+            traceback.print_exc()
             return None
 
 THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
 
 @app.get("/api/syllabus")
 async def get_syllabus():
+    print("GET /api/syllabus called")
     conn = None
     try:
         conn = get_db_connection()
         if conn is None:
+            print("Database connection unavailable in /api/syllabus")
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
         with conn.cursor() as cur:
+            print("Running syllabus DB queries...")
             cur.execute("SELECT id, name FROM subjects ORDER BY name")
             subjects_raw = cur.fetchall()
             cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
@@ -104,9 +129,11 @@ async def get_syllabus():
                 if s_id in subjects_map:
                     subjects_map[s_id]["chapters"].append(chapters_map[c_id])
             syllabus = list(subjects_map.values())
+        print("Syllabus query success.")
         return JSONResponse(content=syllabus)
     except psycopg2.Error as e:
         print(f"Database query error while fetching syllabus: {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail="An error occurred while fetching the syllabus.")
     finally:
         if conn:
@@ -114,27 +141,35 @@ async def get_syllabus():
 
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
+    print("POST /api/generate-content called with:", request)
     topic_prompt = request.topic
     mode = request.mode
     conn = None
     try:
-        # Generate embedding locally
         topic_embedding = embedding_model.encode(topic_prompt).tolist()
+        print("Embedding generated successfully.")
 
         conn = get_db_connection()
         if conn is None:
+            print("Database connection unavailable in /api/generate-content")
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
 
         relevant_text, context_level, context_name = "", "", ""
         with conn.cursor() as cur:
+            print("Finding matching topic in DB...")
             cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
             match_result = cur.fetchone()
+            print("Match result:", match_result)
             if not match_result:
+                print("No topic match found.")
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
+
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
+                print("Theoretical topic—practice questions not applicable.")
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
+
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
             if topic_text_result and topic_text_result[0] and topic_text_result.strip():
@@ -146,9 +181,12 @@ async def generate_content(request: ContentRequest):
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
                     relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result
                 else:
+                    print("No relevant text found in topic or chapter.")
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
+
             if mode == "practice" and context_level == "Chapter":
                 if context_name.strip().lower() in THEORETICAL_TOPICS:
+                    print("Practice questions not applicable for theoretical chapter context.")
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
 
         max_chars = 15000
@@ -180,16 +218,19 @@ async def generate_content(request: ContentRequest):
             system_message = """You are an expert JEE tutor."""
 
         try:
+            print("Calling LLM API for response...")
             messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
             response_params["messages"] = messages
             response = llm_client.chat.completions.create(**response_params)
             content = response.choices[0].message.content.strip()
+            print("LLM response received.")
             if not content or content.lower().startswith("i'm sorry") or content.lower().startswith("i cannot"):
+                print("LLM refused to answer.")
                 raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
             if mode == 'practice':
                 parsed_quiz = parse_quiz_json_from_string(content)
                 if parsed_quiz is None:
-                    # Fallback to chapter text for practice quiz generation if topic-level failed
+                    print("LLM returned invalid format for quiz. Try fallback on chapter context.")
                     with conn.cursor() as cur:
                         cur.execute("SELECT full_text, name FROM chapters WHERE id = %s", (matched_chapter_id,))
                         chapter_result = cur.fetchone()
@@ -207,17 +248,25 @@ async def generate_content(request: ContentRequest):
                             parsed_fallback = parse_quiz_json_from_string(fallback_content)
                             if parsed_fallback:
                                 parsed_fallback['source_name'], parsed_fallback['source_level'] = chapter_name, "Chapter"
+                                print("Fallback quiz generated from chapter context.")
                                 return JSONResponse(content=parsed_fallback)
+                    print("AI returned invalid format for both topic and chapter context.")
                     raise HTTPException(status_code=502, detail="The AI returned an invalid format for both topic and chapter context.")
                 parsed_quiz['source_name'], parsed_quiz['source_level'] = context_name, context_level
+                print("Quiz generated and returned.")
                 return JSONResponse(content=parsed_quiz)
             else:
+                print("Learn/revise content returned.")
                 return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
         except HTTPException as e:
+            print("HTTP exception:", e)
+            traceback.print_exc()
             raise e
         except Exception as e:
-            print(f"An unexpected error occurred during AI call: {e}")
+            print("An unexpected error occurred during AI call:", e)
+            traceback.print_exc()
             raise HTTPException(status_code=500, detail="An unexpected error occurred.")
     finally:
         if conn:
             conn.close()
+        print("DB connection closed (if any).")
