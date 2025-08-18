@@ -2,13 +2,19 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy only needed files (not giant folders or hidden files)
-COPY . /app
+# Copy only requirements.txt first for better cache
+COPY requirements.txt .
 
-# Install the required packages (no CUDA, so lighter)
+# Install dependencies
 RUN pip install --upgrade pip && \
-    pip install sentence-transformers fastapi uvicorn[standard] psycopg2-binary python-dotenv requests && \
+    pip install -r requirements.txt && \
     rm -rf /root/.cache
 
-# Start your API (change main:app if needed)
+# Copy only the main application file(s)
+COPY main.py .
+
+# If you have other Python files or folders required, list them explicitly:
+# COPY utils.py .
+# COPY some_module/ /app/some_module/
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
