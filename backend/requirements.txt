@@ -1,6 +1,10 @@
+# For Database and Environment
 psycopg2-binary
 python-dotenv
+
+# For AI and Semantic Search
+together
+
+# For the Backend Server (API)
 fastapi
 uvicorn[standard]
-requests
-sentence-transformers
