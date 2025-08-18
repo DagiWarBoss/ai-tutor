@@ -1,17 +1,14 @@
-# Use a PyTorch base image for fast setup—comes with torch pre-installed
-FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Optional: If your code is in src or another folder, adjust accordingly
+# Copy only needed files (not giant folders or hidden files)
 COPY . /app
 
-# Install all dependencies in one go
+# Install the required packages (no CUDA, so lighter)
 RUN pip install --upgrade pip && \
-    pip install sentence-transformers fastapi uvicorn[standard] psycopg2-binary python-dotenv requests
+    pip install sentence-transformers fastapi uvicorn[standard] psycopg2-binary python-dotenv requests && \
+    rm -rf /root/.cache
 
-# Set environment variables if needed (optional)
-# ENV SOME_ENV_VAR=value
-
-# Command to run your backend (update main:app for your entrypoint)
+# Start your API (change main:app if needed)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
