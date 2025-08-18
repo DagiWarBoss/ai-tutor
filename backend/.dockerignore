@@ -1,0 +1,7 @@
+__pycache__/
+*.pt
+*.pdf
+*.csv
+.git
+.env
+node_modules/
