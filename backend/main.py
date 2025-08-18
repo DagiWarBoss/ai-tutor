@@ -10,6 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
+from together import Together
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 # --- DEBUG: Print environment variables ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -25,6 +28,7 @@ load_dotenv(dotenv_path=dotenv_path)
 print(".env loaded")
 
 # API & DB config
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -33,7 +37,8 @@ DB_PORT = os.getenv("DB_PORT")
 
 print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
 
-# Load embedding model locally
+# Initialize AI and Embedding clients
+llm_client = Together(api_key=TOGETHER_API_KEY)
 try:
     embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
     print("Embedding model loaded successfully.")
@@ -45,6 +50,9 @@ except Exception as e:
 class ContentRequest(BaseModel):
     topic: str
     mode: str
+
+class GoogleLoginRequest(BaseModel):
+    token: str
 
 app = FastAPI()
 origins = [
@@ -72,7 +80,7 @@ def get_db_connection():
 
 def parse_quiz_json_from_string(text: str) -> dict | None:
     text = text.strip()
-    text = re.sub(r"^``````$", "", text).strip()
+    text = re.sub(r"^\`\`\`json\`\`\`|\`\`\`$", "", text).strip()
     try:
         return json.loads(text)
     except json.JSONDecodeError:
@@ -109,7 +117,6 @@ async def get_syllabus():
     try:
         conn = get_db_connection()
         if conn is None:
-            print("Database connection unavailable in /api/syllabus")
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
         with conn.cursor() as cur:
             print("Running syllabus DB queries...")
@@ -119,8 +126,7 @@ async def get_syllabus():
             chapters_raw = cur.fetchall()
             cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
             topics_raw = cur.fetchall()
-            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []}
-                            for c_id, c_name, c_num, s_id, c_level in chapters_raw}
+            chapters_map = {c_id: {"id": c_id, "name": c_name, "number": c_num, "class_level": c_level, "topics": []} for c_id, c_name, c_num, s_id, c_level in chapters_raw}
             for t_id, t_name, t_num, c_id in topics_raw:
                 if c_id in chapters_map:
                     chapters_map[c_id]["topics"].append({"id": t_id, "name": t_name, "number": t_num})
@@ -151,7 +157,6 @@ async def generate_content(request: ContentRequest):
 
         conn = get_db_connection()
         if conn is None:
-            print("Database connection unavailable in /api/generate-content")
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
 
         relevant_text, context_level, context_name = "", "", ""
@@ -161,45 +166,39 @@ async def generate_content(request: ContentRequest):
             match_result = cur.fetchone()
             print("Match result:", match_result)
             if not match_result:
-                print("No topic match found.")
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
 
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
-                print("Theoretical topic—practice questions not applicable.")
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
-                relevant_text, context_level, context_name = topic_text_result, "Topic", matched_topic_name
+            
+            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
+                relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
             else:
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
                 if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
-                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result
+                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result[0]
                 else:
-                    print("No relevant text found in topic or chapter.")
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
 
-            if mode == "practice" and context_level == "Chapter":
-                if context_name.strip().lower() in THEORETICAL_TOPICS:
-                    print("Practice questions not applicable for theoretical chapter context.")
-                    return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
+        if mode == "practice" and context_level == "Chapter":
+            if context_name.strip().lower() in THEORETICAL_TOPICS:
+                return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
 
         max_chars = 15000
         if len(relevant_text) > max_chars:
             relevant_text = relevant_text[:max_chars]
 
         user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
-        response_params = {
-            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-            "max_tokens": 2048,
-            "temperature": 0.4
-        }
-        # Strict prompt for reliable quiz JSON
+        response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
+        system_message = ""
+
         if mode == 'revise':
             system_message = """You are an AI assistant creating a structured 'cheat sheet' for JEE topics."""
         elif mode == 'practice':
@@ -234,7 +233,7 @@ async def generate_content(request: ContentRequest):
                     with conn.cursor() as cur:
                         cur.execute("SELECT full_text, name FROM chapters WHERE id = %s", (matched_chapter_id,))
                         chapter_result = cur.fetchone()
-                        if chapter_result and chapter_result[0] and chapter_result.strip():
+                        if chapter_result and chapter_result[0] and chapter_result[0].strip():
                             chapter_text, chapter_name = chapter_result
                             fallback_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK (Chapter: {chapter_name}) ---\n{chapter_text}\n--- END OF CONTEXT ---"
                             fallback_messages = [{"role": "system", "content": system_message}, {"role": "user", "content": fallback_message_content}]
@@ -270,3 +269,41 @@ async def generate_content(request: ContentRequest):
         if conn:
             conn.close()
         print("DB connection closed (if any).")
+
+# --- Google Sign-In Endpoint with saving user emails ---
+@app.post("/api/google-login")
+async def google_login(data: GoogleLoginRequest):
+    try:
+        # Verify Google ID token
+        idinfo = id_token.verify_oauth2_token(
+            data.token,
+            google_requests.Request(),
+            "621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com"  # Your Google OAuth Client ID
+        )
+        email = idinfo.get("email")
+        name = idinfo.get("name")
+
+        conn = get_db_connection()
+        if not conn:
+            raise HTTPException(status_code=503, detail="Database connection unavailable.")
+
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO users (email, name)
+                VALUES (%s, %s)
+                ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+                """,
+                (email, name)
+            )
+            conn.commit()
+
+        print(f"Google login success for: {email}")
+
+        return {"email": email, "name": name}
+    except Exception as e:
+        print(f"Google token verification or DB save failed: {e}")
+        raise HTTPException(status_code=400, detail="Invalid Google token or DB error")
+    finally:
+        if 'conn' in locals() and conn:
+            conn.close()

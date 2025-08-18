@@ -1,0 +1,2 @@
+id = 621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com
+secret = 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
