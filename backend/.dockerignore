@@ -2,6 +2,10 @@ __pycache__/
 *.pt
 *.pdf
 *.csv
-.git
+.git/
 .env
 node_modules/
+*/__pycache__/
+.venv/
+Saved_Files/
+NCERT_PCM_ChapterWise/
