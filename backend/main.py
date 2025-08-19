@@ -71,8 +71,8 @@ app = FastAPI()
 origins = [
     "https://praxisai-rho.vercel.app",
     "https://praxis-ai.fly.dev",
-    "http://localhost",
     "http://localhost:8080",
+    "http://localhost",
     "http://localhost:5173",
     "http://localhost:3000",
     "http://127.0.0.1:8080",
