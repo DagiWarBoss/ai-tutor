@@ -54,9 +54,14 @@ class ContentRequest(BaseModel):
 class GoogleLoginRequest(BaseModel):
     token: str
 
+class FeatureRequest(BaseModel):
+    user_email: str
+    feature_text: str
+
 app = FastAPI()
 origins = [
-    "https://praxisai-rho.vercel.app", "http://localhost", "http://localhost:8080", "http://localhost:5173", "http://localhost:3000",
+    "https://praxisai-rho.vercel.app", "http://localhost", "http://localhost:8080",
+    "http://localhost:5173", "http://localhost:3000",
     "http://127.0.0.1:8080", "http://127.0.0.1:5173", "http://127.0.0.1:3000",
 ]
 app.add_middleware(
@@ -176,6 +181,7 @@ async def generate_content(request: ContentRequest):
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
             
+            # --- THIS IS THE CORRECTED LINE ---
             if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
                 relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
             else:
@@ -270,11 +276,9 @@ async def generate_content(request: ContentRequest):
             conn.close()
         print("DB connection closed (if any).")
 
-# --- Google Sign-In Endpoint with saving user emails ---
 @app.post("/api/google-login")
 async def google_login(data: GoogleLoginRequest):
     try:
-        # Verify Google ID token
         idinfo = id_token.verify_oauth2_token(
             data.token,
             google_requests.Request(),
@@ -282,11 +286,9 @@ async def google_login(data: GoogleLoginRequest):
         )
         email = idinfo.get("email")
         name = idinfo.get("name")
-
         conn = get_db_connection()
         if not conn:
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
-
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -297,13 +299,33 @@ async def google_login(data: GoogleLoginRequest):
                 (email, name)
             )
             conn.commit()
-
         print(f"Google login success for: {email}")
-
         return {"email": email, "name": name}
     except Exception as e:
         print(f"Google token verification or DB save failed: {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail="Invalid Google token or DB error")
     finally:
         if 'conn' in locals() and conn:
+            conn.close()
+
+@app.post("/api/feature-request")
+async def submit_feature_request(request: FeatureRequest):
+    conn = get_db_connection()
+    if conn is None:
+        raise HTTPException(status_code=503, detail="Database unavailable.")
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO feature_requests (user_email, feature_text) VALUES (%s, %s)",
+                (request.user_email, request.feature_text)
+            )
+            conn.commit()
+        return {"message": "Feature request submitted successfully."}
+    except Exception as e:
+        print(f"Feature request insert error: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Error saving feature request.")
+    finally:
+        if conn:
             conn.close()
