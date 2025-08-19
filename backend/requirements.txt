@@ -1,11 +1,10 @@
 psycopg2-binary
-
 python-dotenv
-
 fastapi
-
 uvicorn[standard]
-
 requests
-
 sentence-transformers
+together
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
