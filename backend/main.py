@@ -4,7 +4,7 @@ import traceback
 import psycopg2
 import json
 import re
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -80,7 +80,6 @@ origins = [
     "http://127.0.0.1:3000",
 ]
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -88,6 +87,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
+@app.options("/{rest_of_path:path}")
+async def options_handler(rest_of_path: str):
+    return Response(status_code=200)
 
 
 def get_db_connection():
@@ -362,3 +367,4 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
