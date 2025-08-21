@@ -86,6 +86,11 @@ app.add_middleware(
 async def root():
     return {"message": "Welcome to the Praxis AI backend API"}
 
+# Health check endpoint to support Fly.io health checks
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 def get_db_connection():
     try:
         conn = psycopg2.connect(
@@ -268,6 +273,7 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
 
 
 
