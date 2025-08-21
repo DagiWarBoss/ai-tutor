@@ -81,7 +81,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Note: Removed custom OPTIONS handler to avoid conflict with CORSMiddleware
+# Root route to handle "/" and avoid 404
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Praxis AI backend API"}
 
 def get_db_connection():
     try:
@@ -142,25 +145,25 @@ async def get_syllabus():
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c[0],
+                "id": c,
                 "name": c[1],
-                "number": c[2],
-                "class_level": c[4],
+                "number": c,
+                "class_level": c,
                 "topics": [],
             }
 
         for t in topics:
-            if t[3] in chapters_map:
-                chapters_map[t[3]]["topics"].append({
-                    "id": t[0],
+            if t in chapters_map:
+                chapters_map[t]["topics"].append({
+                    "id": t,
                     "name": t[1],
-                    "number": t[2]
+                    "number": t
                 })
 
-        subjects_map = {s[0]: {"id": s[0], "name": s[1], "chapters": []} for s in subjects}
+        subjects_map = {s: {"id": s, "name": s[1], "chapters": []} for s in subjects}
         for c in chapters:
-            if c[3] in subjects_map:
-                subjects_map[c[3]]["chapters"].append(chapters_map[c[0]])
+            if c in subjects_map:
+                subjects_map[c]["chapters"].append(chapters_map[c])
 
         syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
@@ -189,12 +192,11 @@ async def generate_content(request: ContentRequest):
             return JSONResponse({"error": "Practice not applicable", "question": None})
         cur.execute("SELECT full_text FROM topics WHERE id = %s", (topic_id,))
         data = cur.fetchone()
-        text = data[0] if data and data[0].strip() else None
+        text = data[0] if data and data.strip() else None
         if not text:
             cur.execute("SELECT full_text FROM chapters WHERE id = %s", (chapter_id,))
             data = cur.fetchone()
-            text = data[0] if data and data[0].strip() else ""
-        # Prepare prompt and params for llm call
+            text = data[0] if data and data.strip() else ""
         user_msg = f"User wants to learn about '{request.topic}'. Context:\n{text}"
         params = {
             "model": "mistralai/Mixtral-8b-Instruct",
@@ -266,6 +268,7 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
 
 
 
