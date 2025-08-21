@@ -37,15 +37,23 @@ DB_PORT = os.getenv("DB_PORT")
 
 print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
 
-# Initialize AI and Embedding clients
+# Initialize AI client (LLM client initialization does not block)
 llm_client = Together(api_key=TOGETHER_API_KEY)
-try:
-    embedding_model = SentenceTransformer('all-MiniLM-L6')
-    print("Embedding model loaded successfully.")
-except Exception as e:
-    print(f"Error loading model: {e}")
-    traceback.print_exc()
-    sys.exit(1)
+
+# Lazy loading for embedding model
+embedding_model = None
+
+def get_embedding_model():
+    global embedding_model
+    if embedding_model is None:
+        try:
+            embedding_model = SentenceTransformer('all-MiniLM-L6')
+            print("Embedding model loaded successfully on first use.")
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            traceback.print_exc()
+            raise e
+    return embedding_model
 
 class ContentRequest(BaseModel):
     topic: str
@@ -152,7 +160,7 @@ async def get_syllabus():
             chapters_map[c[0]] = {
                 "id": c,
                 "name": c[1],
-                "number": c,
+                "number": c[2],
                 "class_level": c,
                 "topics": [],
             }
@@ -162,7 +170,7 @@ async def get_syllabus():
                 chapters_map[t]["topics"].append({
                     "id": t,
                     "name": t[1],
-                    "number": t
+                    "number": t[2]
                 })
 
         subjects_map = {s: {"id": s, "name": s[1], "chapters": []} for s in subjects}
@@ -183,7 +191,8 @@ async def get_syllabus():
 async def generate_content(request: ContentRequest):
     conn = None
     try:
-        embedding = embedding_model.encode(request.topic).tolist()
+        model = get_embedding_model()
+        embedding = model.encode(request.topic).tolist()
         conn = get_db_connection()
         if conn is None:
             raise HTTPException(status_code=503, detail="Database unavailable")
@@ -273,6 +282,7 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
 
 
 
