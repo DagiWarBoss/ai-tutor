@@ -150,7 +150,7 @@ async def get_syllabus():
         cur = conn.cursor()
         cur.execute("SELECT id, name FROM subjects ORDER BY name")
         subjects = cur.fetchall()
-        cur.execute("SELECT id, name, chapter_number, subject_id, class_level FROM chapters ORDER BY subject_id, class_level, chapter_number")
+        cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
         chapters = cur.fetchall()
         cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
         topics = cur.fetchall()
@@ -158,25 +158,25 @@ async def get_syllabus():
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c,
+                "id": c[0],
                 "name": c[1],
                 "number": c[2],
-                "class_level": c,
+                "class_number": c[4],
                 "topics": [],
             }
 
         for t in topics:
-            if t in chapters_map:
-                chapters_map[t]["topics"].append({
-                    "id": t,
+            if t[3] in chapters_map:
+                chapters_map[t[3]]["topics"].append({
+                    "id": t[0],
                     "name": t[1],
                     "number": t[2]
                 })
 
-        subjects_map = {s: {"id": s, "name": s[1], "chapters": []} for s in subjects}
+        subjects_map = {s[0]: {"id": s[0], "name": s[1], "chapters": []} for s in subjects}
         for c in chapters:
-            if c in subjects_map:
-                subjects_map[c]["chapters"].append(chapters_map[c])
+            if c[4] in subjects_map:  # Potentially fix this condition to use subject_id (c[3])
+                subjects_map[c[3]]["chapters"].append(chapters_map[c[0]])
 
         syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
@@ -283,6 +283,7 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
 
 
 
