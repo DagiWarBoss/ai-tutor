@@ -148,51 +148,47 @@ async def get_syllabus():
         raise HTTPException(status_code=503, detail="Database unavailable")
     try:
         cur = conn.cursor()
-        # Get subjects
-        cur.execute("SELECT id, name FROM subjects ORDER BY name")
-        subjects = cur.fetchall()  # List of tuples (id, name)
-        # Get chapters
-        cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
-        chapters = cur.fetchall()  # List of tuples (id, name, chapter_number, subject_id, class_number)
-        # Get topics
-        cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
-        topics = cur.fetchall()  # List of tuples (id, name, topic_number, chapter_id)
 
-        # Build a map of chapters keyed by chapter id with chapter numbers
+        cur.execute("SELECT id, name FROM subjects ORDER BY name")
+        subjects = cur.fetchall()  # (id, name)
+
+        cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
+        chapters = cur.fetchall()  # (id, name, chapter_number, subject_id, class_number)
+
+        cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
+        topics = cur.fetchall()  # (id, name, topic_number, chapter_id)
+
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c,
-                "name": c,
-                "chapter_number": c,
-                "subject_id": c,
+                "name": c[1],
+                "chapter_number": c[2],      # Capture chapter_number from DB
+                "subject_id": c[3],
                 "class_number": c,
                 "topics": []
             }
 
-        # Attach topics to chapters by chapter_id, include topic numbers
         for t in topics:
-            topic_id, topic_name, topic_number, chapter_id = t
+            topic_name = t[1]
+            topic_number = t[2]
+            chapter_id = t[3]
             if chapter_id in chapters_map:
                 chapters_map[chapter_id]["topics"].append({
-                    "id": topic_id,
                     "name": topic_name,
                     "topic_number": topic_number
                 })
 
-        # Build subject map keyed by subject id
         subjects_map = {}
         for s in subjects:
             subject_id, subject_name = s
             subjects_map[subject_id] = {
-                "id": subject_id,
                 "name": subject_name,
                 "chapters": []
             }
 
-        # Attach chapters to subjects by subject_id
         for c in chapters:
-            chapter_id, chapter_name, chapter_number, subject_id, class_number = c
+            chapter_id = c[0]
+            subject_id = c[3]
             if subject_id in subjects_map and chapter_id in chapters_map:
                 subjects_map[subject_id]["chapters"].append(chapters_map[chapter_id])
 
@@ -205,7 +201,6 @@ async def get_syllabus():
         raise HTTPException(status_code=500, detail="Error loading syllabus")
     finally:
         conn.close()
-
 
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
@@ -230,7 +225,7 @@ async def generate_content(request: ContentRequest):
         if not text:
             cur.execute("SELECT full_text FROM chapters WHERE id = %s", (chapter_id,))
             data = cur.fetchone()
-            text = data[0] if data and data.strip() else ""
+            text = data if data and data.strip() else ""
         user_msg = f"User wants to learn about '{request.topic}'. Context:\n{text}"
         params = {
             "model": "mistralai/Mixtral-8b-Instruct",
@@ -302,4 +297,3 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
-
