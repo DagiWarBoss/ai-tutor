@@ -150,49 +150,63 @@ async def get_syllabus():
         cur = conn.cursor()
         # Get subjects
         cur.execute("SELECT id, name FROM subjects ORDER BY name")
-        subjects = cur.fetchall()
-        # Get chapters (make sure to select 'class_number' not 'class_level')
+        subjects = cur.fetchall()  # List of tuples (id, name)
+        # Get chapters
         cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
-        chapters = cur.fetchall()
+        chapters = cur.fetchall()  # List of tuples (id, name, chapter_number, subject_id, class_number)
         # Get topics
         cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
-        topics = cur.fetchall()
+        topics = cur.fetchall()  # List of tuples (id, name, topic_number, chapter_id)
 
-        # Build chapter map
+        # Build a map of chapters keyed by chapter id
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
                 "id": c,
-                "name": c[1],
-                "chapter_number": c[2],
+                "name": c,
+                "chapter_number": c,
                 "subject_id": c,
                 "class_number": c,
-                "topics": [],
+                "topics": []
             }
 
-        # Attach topics to chapters
+        # Attach topics to chapters by chapter_id
         for t in topics:
-            if t in chapters_map:
-                chapters_map[t]["topics"].append({
-                    "id": t,
-                    "name": t[1],
-                    "topic_number": t[2]
+            topic_id, topic_name, topic_number, chapter_id = t
+            if chapter_id in chapters_map:
+                chapters_map[chapter_id]["topics"].append({
+                    "id": topic_id,
+                    "name": topic_name,
+                    "topic_number": topic_number
                 })
 
-        # Build subject map and nest chapters per subject
-        subjects_map = {s: {"id": s, "name": s[1], "chapters": []} for s in subjects}
-        for c in chapters:
-            if c in subjects_map:        # c = subject_id
-                subjects_map[c]["chapters"].append(chapters_map[c])
+        # Build subject map keyed by subject id
+        subjects_map = {}
+        for s in subjects:
+            subject_id, subject_name = s
+            subjects_map[subject_id] = {
+                "id": subject_id,
+                "name": subject_name,
+                "chapters": []
+            }
 
+        # Attach chapters to subjects by subject_id
+        for c in chapters:
+            chapter_id, chapter_name, chapter_number, subject_id, class_number = c
+            if subject_id in subjects_map and chapter_id in chapters_map:
+                subjects_map[subject_id]["chapters"].append(chapters_map[chapter_id])
+
+        # Prepare syllabus list from subjects_map values
         syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
+
     except Exception as e:
         print(f"Error loading syllabus: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail="Error loading syllabus")
     finally:
         conn.close()
+
 
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
