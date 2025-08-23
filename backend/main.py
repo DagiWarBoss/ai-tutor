@@ -242,7 +242,7 @@ async def google_login(data: GoogleLoginRequest):
         idinfo = id_token.verify_oauth2_token(
             data.token,
             google_requests.Request(),
-            "6213064868-XXXXX.apps.googleusercontent.com",
+            "621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com",  # <-- USE THIS!
         )
         email = idinfo.get("email")
         name = idinfo.get("name")
@@ -264,6 +264,7 @@ async def google_login(data: GoogleLoginRequest):
     finally:
         if conn:
             conn.close()
+
 
 @app.post("/api/feature-request")
 async def submit_feature(request: FeatureRequest):
