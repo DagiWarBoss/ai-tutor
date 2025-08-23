@@ -162,11 +162,11 @@ async def get_syllabus():
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c,
-                "name": c,
-                "chapter_number": c,
-                "subject_id": c,
-                "class_number": c,
+                "id": c[0],
+                "name": c[1],
+                "chapter_number": c[2],
+                "subject_id": c[3],
+                "class_number": c[4],
                 "topics": []
             }
 
@@ -303,11 +303,3 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
-
-
-
-
-
-
-
-
