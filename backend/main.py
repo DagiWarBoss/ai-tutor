@@ -158,19 +158,19 @@ async def get_syllabus():
         cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
         topics = cur.fetchall()  # List of tuples (id, name, topic_number, chapter_id)
 
-        # Build a map of chapters keyed by chapter id
+        # Build a map of chapters keyed by chapter id with chapter numbers
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c[0],
-                "name": c[1],
-                "chapter_number": c[2],
-                "subject_id": c[3],
-                "class_number": c[4],
+                "id": c,
+                "name": c,
+                "chapter_number": c,
+                "subject_id": c,
+                "class_number": c,
                 "topics": []
             }
 
-        # Attach topics to chapters by chapter_id
+        # Attach topics to chapters by chapter_id, include topic numbers
         for t in topics:
             topic_id, topic_name, topic_number, chapter_id = t
             if chapter_id in chapters_map:
@@ -196,7 +196,6 @@ async def get_syllabus():
             if subject_id in subjects_map and chapter_id in chapters_map:
                 subjects_map[subject_id]["chapters"].append(chapters_map[chapter_id])
 
-        # Prepare syllabus list from subjects_map values
         syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
 
@@ -303,3 +302,4 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
