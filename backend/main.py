@@ -148,35 +148,42 @@ async def get_syllabus():
         raise HTTPException(status_code=503, detail="Database unavailable")
     try:
         cur = conn.cursor()
+        # Get subjects
         cur.execute("SELECT id, name FROM subjects ORDER BY name")
         subjects = cur.fetchall()
+        # Get chapters (make sure to select 'class_number' not 'class_level')
         cur.execute("SELECT id, name, chapter_number, subject_id, class_number FROM chapters ORDER BY subject_id, class_number, chapter_number")
         chapters = cur.fetchall()
+        # Get topics
         cur.execute("SELECT id, name, topic_number, chapter_id FROM topics ORDER BY chapter_id, topic_number")
         topics = cur.fetchall()
 
+        # Build chapter map
         chapters_map = {}
         for c in chapters:
             chapters_map[c[0]] = {
-                "id": c[0],
+                "id": c,
                 "name": c[1],
-                "number": c[2],
-                "class_number": c[4],
+                "chapter_number": c[2],
+                "subject_id": c,
+                "class_number": c,
                 "topics": [],
             }
 
+        # Attach topics to chapters
         for t in topics:
-            if t[3] in chapters_map:
-                chapters_map[t[3]]["topics"].append({
-                    "id": t[0],
+            if t in chapters_map:
+                chapters_map[t]["topics"].append({
+                    "id": t,
                     "name": t[1],
-                    "number": t[2]
+                    "topic_number": t[2]
                 })
 
-        subjects_map = {s[0]: {"id": s[0], "name": s[1], "chapters": []} for s in subjects}
+        # Build subject map and nest chapters per subject
+        subjects_map = {s: {"id": s, "name": s[1], "chapters": []} for s in subjects}
         for c in chapters:
-            if c[4] in subjects_map:  # Potentially fix this condition to use subject_id (c[3])
-                subjects_map[c[3]]["chapters"].append(chapters_map[c[0]])
+            if c in subjects_map:        # c = subject_id
+                subjects_map[c]["chapters"].append(chapters_map[c])
 
         syllabus = list(subjects_map.values())
         return JSONResponse(content=syllabus)
@@ -242,7 +249,7 @@ async def google_login(data: GoogleLoginRequest):
         idinfo = id_token.verify_oauth2_token(
             data.token,
             google_requests.Request(),
-            "621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com",  # <-- USE THIS!
+            "621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com"
         )
         email = idinfo.get("email")
         name = idinfo.get("name")
@@ -265,7 +272,6 @@ async def google_login(data: GoogleLoginRequest):
         if conn:
             conn.close()
 
-
 @app.post("/api/feature-request")
 async def submit_feature(request: FeatureRequest):
     conn = get_db_connection()
@@ -283,6 +289,7 @@ async def submit_feature(request: FeatureRequest):
         raise HTTPException(status_code=500, detail="Failed to save feature request")
     finally:
         conn.close()
+
 
 
 
