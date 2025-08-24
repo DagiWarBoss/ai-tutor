@@ -4,8 +4,6 @@ import traceback
 import psycopg2
 import json
 import re
-import random
-import time
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,11 +14,13 @@ from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+
 # --- DEBUG: Print environment variables ---
 print("---- ENVIRONMENT VARIABLES ----")
 for key, value in os.environ.items():
-    if "DB" in key or "API" in key or "SUPABASE" in value:
+    if "DB" in key or "API" in key or "SUPABASE" in key:
         print(f"{key}={value}")
+
 
 # Load .env
 script_dir = os.path.dirname(__file__)
@@ -28,6 +28,7 @@ dotenv_path = os.path.join(script_dir, '.env')
 print(f"Attempting to load .env from {dotenv_path}")
 load_dotenv(dotenv_path=dotenv_path)
 print(".env loaded")
+
 
 # API & DB config
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
@@ -37,7 +38,9 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
+
 print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
+
 
 # Initialize AI and Embedding clients
 llm_client = Together(api_key=TOGETHER_API_KEY)
@@ -49,18 +52,21 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 
+
 class ContentRequest(BaseModel):
     topic: str
     mode: str
 
+
 class GoogleLoginRequest(BaseModel):
     token: str
+
 
 class FeatureRequest(BaseModel):
     user_email: str
     feature_text: str
 
-# --- FastAPI and CORS ---
+
 app = FastAPI()
 origins = [
     "https://praxisai-rho.vercel.app",
@@ -82,15 +88,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Health check endpoint for Fly.io monitoring
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
 
-# Preflight OPTIONS responses for all routes (CORS support)
+# === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
     return Response(status_code=200)
+
 
 def get_db_connection():
     try:
@@ -102,6 +105,7 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         traceback.print_exc()
         return None
+
 
 def parse_quiz_json_from_string(text: str) -> dict | None:
     text = text.strip()
@@ -133,7 +137,9 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             traceback.print_exc()
             return None
 
+
 THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
+
 
 @app.get("/api/syllabus")
 async def get_syllabus():
@@ -170,6 +176,7 @@ async def get_syllabus():
         if conn:
             conn.close()
 
+
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
     print("POST /api/generate-content called with:", request)
@@ -180,9 +187,11 @@ async def generate_content(request: ContentRequest):
         topic_embedding = embedding_model.encode(topic_prompt).tolist()
         print("Embedding generated successfully.")
 
+
         conn = get_db_connection()
         if conn is None:
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
+
 
         relevant_text, context_level, context_name = "", "", ""
         with conn.cursor() as cur:
@@ -193,51 +202,46 @@ async def generate_content(request: ContentRequest):
             if not match_result:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
 
+
             matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
             print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
             if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
 
+
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-
-            if topic_text_result and topic_text_result[0] and topic_text_result.strip():
-                relevant_text, context_level, context_name = topic_text_result, "Topic", matched_topic_name
+            
+            # --- THIS IS THE CORRECTED LINE ---
+            if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
+                relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
             else:
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
-                if chapter_text_result and chapter_text_result[1] and chapter_text_result[9].strip():
-                    relevant_text, context_level, context_name = chapter_text_result[9], "Chapter", chapter_text_result
+                if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
+                    relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result[0]
                 else:
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
+
 
         if mode == "practice" and context_level == "Chapter":
             if context_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
 
+
         max_chars = 15000
         if len(relevant_text) > max_chars:
             relevant_text = relevant_text[:max_chars]
 
-        unique_id = f"UniqueRequestID_{int(time.time())}_{random.randint(1, 100000)}"
-        user_message_content = (
-            f"The user wants to learn about the topic: '{topic_prompt}'.\n\n"
-            f"--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n"
-            f"{relevant_text}\n"
-            f"--- END OF CONTEXT ---\n"
-            f"Please generate a new and unique practice question for this. Request ID: {unique_id}"
-        )
 
-        response_params = {
-            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-            "max_tokens": 2048,
-            "temperature": 0.4,
-        }
+        user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+        response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
         system_message = ""
 
+
         if mode == 'revise':
-            system_message = "You are an AI assistant creating a structured 'cheat sheet' for JEE topics."
+            system_message = """You are an AI assistant creating a structured 'cheat sheet' for JEE topics."""
         elif mode == 'practice':
             system_message = (
                 "You are an expert AI quiz generator for JEE students. "
@@ -251,7 +255,8 @@ async def generate_content(request: ContentRequest):
                 "Do not include any explanations, comments, or Markdown. ONLY output strict JSON—no extra formatting."
             )
         else:
-            system_message = "You are an expert JEE tutor."
+            system_message = """You are an expert JEE tutor."""
+
 
         try:
             print("Calling LLM API for response...")
@@ -270,7 +275,7 @@ async def generate_content(request: ContentRequest):
                     with conn.cursor() as cur:
                         cur.execute("SELECT full_text, name FROM chapters WHERE id = %s", (matched_chapter_id,))
                         chapter_result = cur.fetchone()
-                        if chapter_result and chapter_result[0] and chapter_result.strip():
+                        if chapter_result and chapter_result[0] and chapter_result[0].strip():
                             chapter_text, chapter_name = chapter_result
                             fallback_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK (Chapter: {chapter_name}) ---\n{chapter_text}\n--- END OF CONTEXT ---"
                             fallback_messages = [{"role": "system", "content": system_message}, {"role": "user", "content": fallback_message_content}]
@@ -307,6 +312,7 @@ async def generate_content(request: ContentRequest):
             conn.close()
         print("DB connection closed (if any).")
 
+
 @app.post("/api/google-login")
 async def google_login(data: GoogleLoginRequest):
     try:
@@ -339,6 +345,7 @@ async def google_login(data: GoogleLoginRequest):
     finally:
         if 'conn' in locals() and conn:
             conn.close()
+
 
 @app.post("/api/feature-request")
 async def submit_feature_request(request: FeatureRequest):
