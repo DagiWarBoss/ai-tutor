@@ -15,7 +15,6 @@ from sentence_transformers import SentenceTransformer
 from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-from fastapi.middleware.cors import CORSMiddleware
 
 # --- DEBUG: Print environment variables ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -77,25 +76,18 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://praxisai-rho.vercel.app",
-        "https://praxis-ai.fly.dev",
-        # (add localhost for local dev too)
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "http://localhost"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Health check endpoint for Fly.io monitoring
 @app.get("/health")
 async def health():
     return {"status": "ok"}
 
+# Preflight OPTIONS responses for all routes (CORS support)
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
     return Response(status_code=200)
@@ -245,7 +237,7 @@ async def generate_content(request: ContentRequest):
         system_message = ""
 
         if mode == 'revise':
-            system_message = """You are an AI assistant creating a structured 'cheat sheet' for JEE topics."""
+            system_message = "You are an AI assistant creating a structured 'cheat sheet' for JEE topics."
         elif mode == 'practice':
             system_message = (
                 "You are an expert AI quiz generator for JEE students. "
@@ -259,7 +251,7 @@ async def generate_content(request: ContentRequest):
                 "Do not include any explanations, comments, or Markdown. ONLY output strict JSON—no extra formatting."
             )
         else:
-            system_message = """You are an expert JEE tutor."""
+            system_message = "You are an expert JEE tutor."
 
         try:
             print("Calling LLM API for response...")
@@ -368,6 +360,7 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
 
 
 
