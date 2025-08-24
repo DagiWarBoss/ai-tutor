@@ -60,6 +60,7 @@ class FeatureRequest(BaseModel):
     user_email: str
     feature_text: str
 
+# --- FastAPI and CORS ---
 app = FastAPI()
 origins = [
     "https://praxisai-rho.vercel.app",
@@ -81,12 +82,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add GET /health endpoint for Fly.io
 @app.get("/health")
 async def health():
     return {"status": "ok"}
 
-# === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
     return Response(status_code=200)
@@ -359,6 +358,7 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
 
 
 
