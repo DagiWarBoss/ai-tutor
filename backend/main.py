@@ -1,6 +1,7 @@
 import os
 import sys
 import traceback
+import random
 import psycopg2
 import json
 import re
@@ -187,31 +188,25 @@ async def generate_content(request: ContentRequest):
         topic_embedding = embedding_model.encode(topic_prompt).tolist()
         print("Embedding generated successfully.")
 
-
         conn = get_db_connection()
         if conn is None:
             raise HTTPException(status_code=503, detail="Database connection unavailable.")
 
-
         relevant_text, context_level, context_name = "", "", ""
         with conn.cursor() as cur:
             print("Finding matching topic in DB...")
-            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 1)", (topic_embedding,))
-            match_result = cur.fetchone()
-            print("Match result:", match_result)
-            if not match_result:
+            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 10)", (topic_embedding,))
+            match_results = cur.fetchall()
+            print(f"Match results count: {len(match_results)}")
+            if not match_results:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
 
-
-            matched_topic_id, matched_topic_name, similarity, matched_chapter_id = match_result
-            print(f"DEBUG: Found topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
-            if matched_topic_name.strip().lower() in THEORETICAL_TOPICS:
-                return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
-
+            matched_topic_id, matched_topic_name, similarity, matched_chapter_id = random.choice(match_results)
+            print(f"DEBUG: Randomly selected topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
 
             cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
             topic_text_result = cur.fetchone()
-            
+
             # --- THIS IS THE CORRECTED LINE ---
             if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
                 relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
@@ -224,21 +219,17 @@ async def generate_content(request: ContentRequest):
                 else:
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
 
-
         if mode == "practice" and context_level == "Chapter":
             if context_name.strip().lower() in THEORETICAL_TOPICS:
                 return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
-
 
         max_chars = 15000
         if len(relevant_text) > max_chars:
             relevant_text = relevant_text[:max_chars]
 
-
         user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
         response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4}
         system_message = ""
-
 
         if mode == 'revise':
             system_message = """You are an AI assistant creating a structured 'cheat sheet' for JEE topics."""
@@ -256,7 +247,6 @@ async def generate_content(request: ContentRequest):
             )
         else:
             system_message = """You are an expert JEE tutor."""
-
 
         try:
             print("Calling LLM API for response...")
@@ -373,4 +363,5 @@ async def submit_feature_request(request: FeatureRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
 
