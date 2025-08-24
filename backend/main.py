@@ -81,6 +81,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add GET /health endpoint for Fly.io
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 # === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
@@ -201,8 +206,8 @@ async def generate_content(request: ContentRequest):
                 print(f"DEBUG: Topic text empty. Falling back to CHAPTER level context (ID: {matched_chapter_id}).")
                 cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
                 chapter_text_result = cur.fetchone()
-                if chapter_text_result and chapter_text_result[1] and chapter_text_result[10].strip():
-                    relevant_text, context_level, context_name = chapter_text_result[10], "Chapter", chapter_text_result
+                if chapter_text_result and chapter_text_result[1] and chapter_text_result[9].strip():
+                    relevant_text, context_level, context_name = chapter_text_result[9], "Chapter", chapter_text_result
                 else:
                     return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
 
@@ -301,7 +306,6 @@ async def generate_content(request: ContentRequest):
             conn.close()
         print("DB connection closed (if any).")
 
-
 @app.post("/api/google-login")
 async def google_login(data: GoogleLoginRequest):
     try:
@@ -335,7 +339,6 @@ async def google_login(data: GoogleLoginRequest):
         if 'conn' in locals() and conn:
             conn.close()
 
-
 @app.post("/api/feature-request")
 async def submit_feature_request(request: FeatureRequest):
     conn = get_db_connection()
@@ -356,5 +359,6 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
 
 
