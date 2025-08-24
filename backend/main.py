@@ -367,3 +367,10 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
+
+# --- Health Check Endpoint ---
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
