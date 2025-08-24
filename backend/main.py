@@ -63,7 +63,7 @@ app = FastAPI()
 
 # CORS configuration
 origins = [
-    "https://praxisai-rho.app",
+    "https://praxisai-rho.vercel.app",
     "https://praxis-ai.fly.dev",
     "http://localhost",
     "http://localhost:8080",
