@@ -15,6 +15,7 @@ from sentence_transformers import SentenceTransformer
 from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- DEBUG: Print environment variables ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -76,7 +77,16 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "https://praxisai-rho.vercel.app",
+        "https://praxis-ai.fly.dev",
+        # (add localhost for local dev too)
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://localhost"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
