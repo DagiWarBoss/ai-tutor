@@ -16,7 +16,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
 from agentic import router as agentic_router  # Added import for Agentic Study Room routes
-
+from aiquickhelp import router as aiquickhelp_router  # Import your new Quick AI Help router
 
 # --- DEBUG: Print environment variables containing sensitive info keys ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -24,14 +24,12 @@ for key, value in os.environ.items():
     if "DB" in key or "API" in key or "SUPABASE" in key:
         print(f"{key}={value}")
 
-
 # Load .env
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
 print(f"Attempting to load .env from {dotenv_path}")
 load_dotenv(dotenv_path=dotenv_path)
 print(".env loaded")
-
 
 # API & DB config
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
@@ -53,26 +51,25 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 
-
 # Request Models
 class ContentRequest(BaseModel):
     topic: str
     mode: str
 
-
 class GoogleLoginRequest(BaseModel):
     token: str
-
 
 class FeatureRequest(BaseModel):
     user_email: str
     feature_text: str
 
-
 app = FastAPI()
 
 # Register Agentic Study Room API routes
 app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
+
+# Register Quick AI Help API routes
+app.include_router(aiquickhelp_router, prefix="/agentic", tags=["Agentic Quick Help"])
 
 origins = [
     "https://praxisai-rho.vercel.app",
@@ -94,12 +91,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
 @app.options("/{rest_of_path:path}")
 async def options_handler(rest_of_path: str):
     return Response(status_code=200)
-
 
 def get_db_connection():
     try:
@@ -111,7 +106,6 @@ def get_db_connection():
         print(f"CRITICAL: Could not connect to the database. Error: {e}")
         traceback.print_exc()
         return None
-
 
 def parse_quiz_json_from_string(text: str) -> dict | None:
     text = text.strip()
@@ -143,9 +137,7 @@ def parse_quiz_json_from_string(text: str) -> dict | None:
             traceback.print_exc()
             return None
 
-
 THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
-
 
 @app.get("/api/syllabus")
 async def get_syllabus():
@@ -181,7 +173,6 @@ async def get_syllabus():
     finally:
         if conn:
             conn.close()
-
 
 @app.post("/api/generate-content")
 async def generate_content(request: ContentRequest):
@@ -307,7 +298,6 @@ async def generate_content(request: ContentRequest):
             conn.close()
         print("DB connection closed (if any).")
 
-
 @app.post("/api/google-login")
 async def google_login(data: GoogleLoginRequest):
     try:
@@ -341,7 +331,6 @@ async def google_login(data: GoogleLoginRequest):
         if 'conn' in locals() and conn:
             conn.close()
 
-
 @app.post("/api/feature-request")
 async def submit_feature_request(request: FeatureRequest):
     conn = get_db_connection()
@@ -363,9 +352,14 @@ async def submit_feature_request(request: FeatureRequest):
         if conn:
             conn.close()
 
-
 # --- Health Check Endpoint ---
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
 
+# Import and include Quick AI Help routes
+from aiquickhelp import router as aiquickhelp_router
+app.include_router(aiquickhelp_router, prefix="/agentic", tags=["Agentic Quick Help"])
+
+# Import and include Agentic Study Room routes
+app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
