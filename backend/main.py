@@ -16,7 +16,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
 
-# --- DEBUG: Print environment variables ---
+# --- DEBUG: Print environment variables containing sensitive info keys ---
 print("---- ENVIRONMENT VARIABLES ----")
 for key, value in os.environ.items():
     if "DB" in key or "API" in key or "SUPABASE" in key:
@@ -54,6 +54,7 @@ except Exception as e:
     sys.exit(1)
 
 
+# Request Models
 class ContentRequest(BaseModel):
     topic: str
     mode: str
@@ -363,5 +364,3 @@ async def submit_feature_request(request: FeatureRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
-
-
