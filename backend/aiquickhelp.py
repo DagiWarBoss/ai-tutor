@@ -3,14 +3,14 @@ import traceback
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-import httpx
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from together import Together
 
 router = APIRouter()
 
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-TOGETHER_API_URL = "https://api.together.ai/api/llm/mixtral-8x7b-instruct-v0.1"
+llm_client = Together(api_key=TOGETHER_API_KEY)
 
 class QuickHelpRequest(BaseModel):
     subject: str
@@ -40,27 +40,23 @@ def fetch_syllabus_content(subject: str, chapter: str, topic: str) -> Optional[s
         return None
     try:
         with conn.cursor() as cur:
-            # Fetch topic content first
+            # Try fetching topic content
             cur.execute("""
-                SELECT full_text FROM topics
-                WHERE name = %s
-                LIMIT 1
+                SELECT full_text FROM topics WHERE name = %s LIMIT 1
             """, (topic,))
-            topic_row = cur.fetchone()
-            if topic_row and topic_row.get("full_text"):
-                return topic_row["full_text"]
+            row = cur.fetchone()
+            if row and row.get("full_text"):
+                return row["full_text"]
             # Fallback to chapter content
             cur.execute("""
-                SELECT full_text FROM chapters
-                WHERE name = %s
-                LIMIT 1
+                SELECT full_text FROM chapters WHERE name = %s LIMIT 1
             """, (chapter,))
-            chapter_row = cur.fetchone()
-            if chapter_row and chapter_row.get("full_text"):
-                return chapter_row["full_text"]
+            row = cur.fetchone()
+            if row and row.get("full_text"):
+                return row["full_text"]
         return None
     except Exception as e:
-        print(f"Error fetching syllabus content: {e}")
+        print(f"Error retrieving syllabus content: {e}")
         traceback.print_exc()
         return None
     finally:
@@ -80,26 +76,6 @@ def construct_prompt(context: str, user_query: str) -> str:
         f"{user_query}"
     )
 
-async def call_together_ai(prompt: str) -> str:
-    headers = {
-        "Authorization": f"Bearer {TOGETHER_API_KEY}",
-        "Content-Type": "application/json",
-    }
-    payload = {
-        "inputs": prompt,
-        "parameters": {
-            "temperature": 0.4,
-            "max_new_tokens": 1024,  # Increased token limit for more detailed answers
-            "top_p": 0.9,
-            "stop": []
-        }
-    }
-    async with httpx.AsyncClient() as client:
-        response = await client.post(TOGETHER_API_URL, json=payload, headers=headers, timeout=60)
-        response.raise_for_status()
-        data = response.json()
-        return data.get("generated_text", "")
-
 @router.post("/quick-help")
 async def quick_help(req: QuickHelpRequest):
     try:
@@ -107,15 +83,22 @@ async def quick_help(req: QuickHelpRequest):
         if not context:
             raise HTTPException(status_code=404, detail="No syllabus content found for the specified topic or chapter.")
         prompt = construct_prompt(context, req.query)
-        answer = await call_together_ai(prompt)
-        if not answer.strip() or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
+        response_params = {
+            "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "temperature": 0.4,
+            "max_tokens": 1024,
+            "messages": [
+                {"role": "system", "content": "You are a helpful AI tutor."},
+                {"role": "user", "content": prompt},
+            ],
+        }
+        response = await llm_client.chat.completions.create(**response_params)
+        answer = response.choices[0].message.content.strip()
+        if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
             raise HTTPException(status_code=503, detail="AI was unable to generate a response.")
         return {"answer": answer}
-    except httpx.HTTPError as api_error:
-        print(f"LLM API error: {api_error}")
-        traceback.print_exc()
-        raise HTTPException(status_code=502, detail="Error communicating with AI API.")
     except Exception as e:
-        print(f"Unexpected error in quick-help: {e}")
+        print(f"Error in Quick Help endpoint: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail="Internal server error.")
+
