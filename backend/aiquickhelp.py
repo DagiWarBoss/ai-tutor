@@ -92,7 +92,7 @@ async def quick_help(req: QuickHelpRequest):
                 {"role": "user", "content": prompt},
             ],
         }
-        response = await llm_client.chat.completions.create(**response_params)
+        response = llm_client.chat.completions.create(**response_params)
         answer = response.choices[0].message.content.strip()
         if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
             raise HTTPException(status_code=503, detail="AI was unable to generate a response.")
