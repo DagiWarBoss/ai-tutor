@@ -15,6 +15,8 @@ from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
+from agentic import router as agentic_router  # Added import for Agentic Study Room routes
+
 
 # --- DEBUG: Print environment variables containing sensitive info keys ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -39,9 +41,7 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
 
-
 print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
-
 
 # Initialize AI and Embedding clients
 llm_client = Together(api_key=TOGETHER_API_KEY)
@@ -70,6 +70,10 @@ class FeatureRequest(BaseModel):
 
 
 app = FastAPI()
+
+# Register Agentic Study Room API routes
+app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
+
 origins = [
     "https://praxisai-rho.vercel.app",
     "https://praxis-ai.fly.dev",
@@ -364,3 +368,4 @@ async def submit_feature_request(request: FeatureRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
