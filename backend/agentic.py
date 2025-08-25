@@ -66,10 +66,8 @@ async def call_together_ai_api(prompt: str, max_new_tokens: int = 256) -> str:
         raise HTTPException(status_code=500, detail=f"LLM API call failed: {response.text}")
 
     data = response.json()
-    # Extract text response (adjust key if API response format differs)
     return data.get("generated_text") or data.get("output") or "<No response>"
 
-# Agentic Endpoints
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     reply_text = await call_together_ai_api(request.message)
@@ -88,8 +86,7 @@ async def study_plan(request: StudyPlanRequest):
 async def solve_problem(request: ProblemRequest):
     prompt = f"Explain step-by-step how to solve the following problem:\n{request.problem_text}"
     solution_text = await call_together_ai_api(prompt, max_new_tokens=500)
-    
-    # Simple parsing steps from response (if structured), else just place solution in full_solution
+
     steps = [
         "1. Understand the problem.",
         "2. Apply relevant concepts.",
@@ -97,4 +94,5 @@ async def solve_problem(request: ProblemRequest):
     ]
     timestamp = str(datetime.now())
     return ProblemResponse(steps=steps, full_solution=solution_text, timestamp=timestamp)
+
 
