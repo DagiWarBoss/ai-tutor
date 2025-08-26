@@ -14,9 +14,11 @@ from sentence_transformers import SentenceTransformer
 from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-
 from agentic import router as agentic_router  # Added import for Agentic Study Room routes
 from aiquickhelp import router as aiquickhelp_router  # Import your new Quick AI Help router
+from supabase import create_client, Client
+from datetime import datetime
+import httpx
 
 # --- DEBUG: Print environment variables containing sensitive info keys ---
 print("---- ENVIRONMENT VARIABLES ----")
@@ -38,7 +40,6 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
-
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
@@ -56,7 +57,6 @@ except Exception as e:
     sys.exit(1)
 
 # Initialize Supabase client
-from supabase import create_client, Client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 # Request Models
@@ -70,6 +70,16 @@ class GoogleLoginRequest(BaseModel):
 class FeatureRequest(BaseModel):
     user_email: str
     feature_text: str
+
+class ChatRequest(BaseModel):
+    user_id: str
+    message: str
+    context: list = []
+
+class ChatResponse(BaseModel):
+    reply: str
+    conversation_id: str
+    timestamp: str
 
 app = FastAPI()
 
@@ -124,7 +134,7 @@ def insert_message(user_id: str, conversation_id: str, role: str, message: str):
         "message": message
     }).execute()
 
-def get_recent_messages(conversation_id: str, limit: int = 10):   # Changed limit to 10 as requested
+def get_recent_messages(conversation_id: str, limit: int = 10):   # 10 messages as requested
     response = supabase.table("conversation_messages") \
                       .select("role, message") \
                       .eq("conversation_id", conversation_id) \
@@ -134,18 +144,14 @@ def get_recent_messages(conversation_id: str, limit: int = 10):   # Changed limi
     # Return messages in chronological order
     return response.data[::-1] if response.data else []
 
-# Your existing routes and code below...
-
 # Together.ai request method remains unchanged
 async def call_together_ai_api(prompt: str, max_new_tokens: int = 256) -> str:
     if not TOGETHER_API_KEY:
         raise HTTPException(status_code=500, detail="Together.ai API key not configured")
-
     headers = {
         "Authorization": f"Bearer {TOGETHER_API_KEY}",
         "Content-Type": "application/json"
     }
-
     payload = {
         "inputs": prompt,
         "parameters": {
@@ -154,13 +160,10 @@ async def call_together_ai_api(prompt: str, max_new_tokens: int = 256) -> str:
             "stop": ["\n"]
         }
     }
-
     async with httpx.AsyncClient() as client:
         response = await client.post("https://api.together.ai/api/llm/mixtral-8x7b-instruct-v0.1", headers=headers, json=payload)
-
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail=f"LLM API call failed: {response.text}")
-
     data = response.json()
     return data.get("generated_text") or data.get("output") or "<No response>"
 
@@ -168,20 +171,16 @@ async def call_together_ai_api(prompt: str, max_new_tokens: int = 256) -> str:
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     conversation_id = f"conv_{request.user_id}"
-
     # Retrieve last 10 messages for the prompt context
     history = get_recent_messages(conversation_id, limit=10)
     history_text = "\n".join([f"{m['role'].capitalize()}: {m['message']}" for m in history])
-
     prompt = f"Conversation history:\n{history_text}\nUser: {request.message}\nAI:"
-
     reply_text = await call_together_ai_api(prompt, max_new_tokens=256)
-
     # Store user and AI messages persistently
     insert_message(request.user_id, conversation_id, "user", request.message)
     insert_message(request.user_id, conversation_id, "ai", reply_text)
-
     return ChatResponse(reply=reply_text.strip(), conversation_id=conversation_id, timestamp=datetime.utcnow().isoformat())
+
 
 
 
