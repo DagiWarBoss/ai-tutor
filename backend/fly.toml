@@ -1,32 +1,23 @@
-# fly.toml app configuration file generated for praxis-ai on 2025-08-19T12:21:30Z
+# fly.toml app configuration file generated for praxis-ai on 2025-08-26T11:03:50Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "praxis-ai"
-primary_region = "bom"
+app = 'praxis-ai'
+primary_region = 'bom'
 
 [build]
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
-
-  [[http_service.checks]]
-    grace_period = "60s"   # Wait 60 seconds before health checks start to allow AI model loading time
-    interval = "15s"       # Check every 15 seconds
-    timeout = "15s"        # Allow up to 15 seconds for health check response due to potential AI latency
-    method = "GET"
-    path = "/health"       # Use the /health endpoint for health checks
+  processes = ['app']
 
 [[vm]]
-  memory = "2gb"       # Increased memory for AI/ML workloads
-  cpu_kind = "shared"
-  cpus = 2
-  memory_mb = 2048
-
-
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 1024
