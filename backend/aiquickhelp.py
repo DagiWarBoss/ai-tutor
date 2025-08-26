@@ -45,19 +45,16 @@ def fetch_syllabus_content(subject: str, chapter: str, topic: str) -> Optional[s
             row = cur.fetchone()
             if row and row.get("full_text"):
                 return row["full_text"]
-
             # Fallback to chapter content
             cur.execute("SELECT full_text FROM chapters WHERE name = %s LIMIT 1", (chapter,))
             row = cur.fetchone()
             if row and row.get("full_text"):
                 return row["full_text"]
-
-            # Optional: Fallback to subject description if you have such data (Uncomment if available)
+            # Optional: Fallback to subject description if you have such data
             # cur.execute("SELECT description FROM subjects WHERE name = %s LIMIT 1", (subject,))
             # row = cur.fetchone()
             # if row and row.get("description"):
             #     return row["description"]
-
         return None
     except Exception as e:
         print(f"Error retrieving syllabus content: {e}")
@@ -68,12 +65,12 @@ def fetch_syllabus_content(subject: str, chapter: str, topic: str) -> Optional[s
 
 def construct_prompt(context: str, user_query: str) -> str:
     return (
-        "You are a highly knowledgeable AI tutor specialized for JEE preparation.\n"
-        "For all quick help requests—including special exceptions in chemistry concepts, derivations of physics formulas, \n"
-        "and unique archetypes of math questions—this Quick Help endpoint is exclusively responsible.\n"
-        "Provide thorough, detailed, and well-explained answers without limiting the length to ensure full understanding.\n"
-        "Use ONLY the syllabus content provided below as your factual basis.\n"
-        "If relevant, format your response with markdown tables, diagrams, and examples suitable for educational use.\n\n"
+        "You are an expert AI tutor specialized in JEE preparation.\n"
+        "You provide clear, focused, and accurate explanations strictly based on the syllabus content given below.\n"
+        "If the user's question is unrelated to JEE syllabus topics or contains inappropriate language, respond politely "
+        "asking the user to please ask relevant study questions.\n"
+        "Provide detailed, well-structured answers with examples, formulas, and explanations when applicable.\n"
+        "Use markdown formatting like tables or formulas as needed.\n\n"
         "SYLLABUS CONTENT:\n"
         f"{context}\n\n"
         "STUDENT QUESTION:\n"
@@ -109,5 +106,6 @@ async def quick_help(req: QuickHelpRequest):
         print(f"Error in Quick Help endpoint: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail="Internal server error.")
+
 
 
