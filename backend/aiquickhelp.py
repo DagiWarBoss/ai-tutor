@@ -41,19 +41,23 @@ def fetch_syllabus_content(subject: str, chapter: str, topic: str) -> Optional[s
     try:
         with conn.cursor() as cur:
             # Try fetching topic content
-            cur.execute("""
-                SELECT full_text FROM topics WHERE name = %s LIMIT 1
-            """, (topic,))
+            cur.execute("SELECT full_text FROM topics WHERE name = %s LIMIT 1", (topic,))
             row = cur.fetchone()
             if row and row.get("full_text"):
                 return row["full_text"]
+
             # Fallback to chapter content
-            cur.execute("""
-                SELECT full_text FROM chapters WHERE name = %s LIMIT 1
-            """, (chapter,))
+            cur.execute("SELECT full_text FROM chapters WHERE name = %s LIMIT 1", (chapter,))
             row = cur.fetchone()
             if row and row.get("full_text"):
                 return row["full_text"]
+
+            # Optional: Fallback to subject description if you have such data (Uncomment if available)
+            # cur.execute("SELECT description FROM subjects WHERE name = %s LIMIT 1", (subject,))
+            # row = cur.fetchone()
+            # if row and row.get("description"):
+            #     return row["description"]
+
         return None
     except Exception as e:
         print(f"Error retrieving syllabus content: {e}")
@@ -81,7 +85,11 @@ async def quick_help(req: QuickHelpRequest):
     try:
         context = fetch_syllabus_content(req.subject, req.chapter, req.topic)
         if not context:
-            raise HTTPException(status_code=404, detail="No syllabus content found for the specified topic or chapter.")
+            # Fallback content message instead of 404
+            context = (
+                f"Sorry, detailed syllabus content for topic '{req.topic}', chapter '{req.chapter}', "
+                f"or subject '{req.subject}' was not found. I will answer based on my general knowledge."
+            )
         prompt = construct_prompt(context, req.query)
         response_params = {
             "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -95,10 +103,11 @@ async def quick_help(req: QuickHelpRequest):
         response = llm_client.chat.completions.create(**response_params)
         answer = response.choices[0].message.content.strip()
         if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
-            raise HTTPException(status_code=503, detail="AI was unable to generate a response.")
+            return {"answer": "Sorry, I couldn't generate a helpful answer for this topic."}
         return {"answer": answer}
     except Exception as e:
         print(f"Error in Quick Help endpoint: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail="Internal server error.")
+
 
