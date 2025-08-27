@@ -1,185 +1,190 @@
-import os
-import sys
+import psycopg2
 import traceback
 import random
-import psycopg2
 import json
 import re
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response
 from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-from agentic import router as agentic_router  # Added import for Agentic Study Room routes
-from aiquickhelp import router as aiquickhelp_router  # Import your new Quick AI Help router
-from supabase import create_client, Client
-from datetime import datetime
-import httpx
 
-# --- DEBUG: Print environment variables containing sensitive info keys ---
-print("---- ENVIRONMENT VARIABLES ----")
-for key, value in os.environ.items():
-    if "DB" in key or "API" in key or "SUPABASE" in key:
-        print(f"{key}={value}")
+from dotenv import load_dotenv
+import os
 
-# Load .env
+# Load environment variables inside this module
 script_dir = os.path.dirname(__file__)
 dotenv_path = os.path.join(script_dir, '.env')
-print(f"Attempting to load .env from {dotenv_path}")
 load_dotenv(dotenv_path=dotenv_path)
-print(".env loaded")
 
-# API & DB config
+# Config from env (ensure these are set in .env)
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 DB_HOST = os.getenv("DB_HOST")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 DB_PORT = os.getenv("DB_PORT")
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
-print("Supabase URL and Service Key loaded.")  # Avoid printing keys for security
-
-# Initialize AI and Embedding clients
+# Initialize clients
 llm_client = Together(api_key=TOGETHER_API_KEY)
-try:
-    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-    print("Embedding model loaded successfully.")
-except Exception as e:
-    print(f"Error loading embedding model: {e}")
-    traceback.print_exc()
-    sys.exit(1)
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# Initialize Supabase client
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
 
-# Request Models
-class ContentRequest(BaseModel):
-    topic: str
-    mode: str
-
-class GoogleLoginRequest(BaseModel):
-    token: str
-
-class FeatureRequest(BaseModel):
-    user_email: str
-    feature_text: str
-
-class ChatRequest(BaseModel):
-    user_id: str
-    message: str
-    context: list = []
-
-class ChatResponse(BaseModel):
-    reply: str
-    conversation_id: str
-    timestamp: str
-
-app = FastAPI()
-
-# Register Agentic Study Room API routes
-app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
-
-# Register Quick AI Help API routes
-app.include_router(aiquickhelp_router, prefix="/agentic", tags=["Agentic Quick Help"])
-
-origins = [
-    "https://praxisai-rho.vercel.app",
-    "https://praxis-ai.fly.dev",
-    "http://localhost:8080",
-    "http://localhost",
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:8080",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# === Explicit OPTIONS handler for all routes to assist CORS preflight requests ===
-@app.options("/{rest_of_path:path}")
-async def options_handler(rest_of_path: str):
-    return Response(status_code=200)
+router = APIRouter()
 
 def get_db_connection():
     try:
-        print("Trying DB connection...")
         conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
-        print("DB connect success.")
         return conn
     except psycopg2.OperationalError as e:
-        print(f"CRITICAL: Could not connect to the database. Error: {e}")
+        print(f"DB connection error: {e}")
         traceback.print_exc()
         return None
 
-# Helper functions for Supabase conversation messages storage
-def insert_message(user_id: str, conversation_id: str, role: str, message: str):
-    supabase.table("conversation_messages").insert({
-        "user_id": user_id,
-        "conversation_id": conversation_id,
-        "role": role,
-        "message": message
-    }).execute()
+def parse_quiz_json_from_string(text: str) -> dict | None:
+    text = text.strip()
+    text = re.sub(r"^``````|```
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        try:
+            question_match = re.search(r'"question":\s*"(.*?)"', text, re.DOTALL)
+            options_match = re.search(r'"options":\s*{(.*?)}', text, re.DOTALL)
+            answer_match = re.search(r'"correct_answer":\s*"(.*?)"', text, re.DOTALL)
+            explanation_match = re.search(r'"explanation":\s*"(.*?)"', text, re.DOTALL)
+            if not all([question_match, options_match, answer_match, explanation_match]):
+                return None
+            question = question_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
+            options_str = options_match.group(1)
+            correct_answer = answer_match.group(1).strip()
+            explanation = explanation_match.group(1).strip().replace('\\n', '\n').replace('\\"', '"')
+            options = {}
+            option_matches = re.findall(r'"([A-D])":\s*"(.*?)"', options_str)
+            for key, value in option_matches:
+                options[key] = value.strip().replace('\\n', '\n').replace('\\"', '"')
+            if len(options) != 4:
+                return None
+            return {"question": question, "options": options, "correct_answer": correct_answer, "explanation": explanation}
+        except Exception as e:
+            print(f"Regex parsing error: {e}")
+            traceback.print_exc()
+            return None
 
-def get_recent_messages(conversation_id: str, limit: int = 10):   # 10 messages as requested
-    response = supabase.table("conversation_messages") \
-                      .select("role, message") \
-                      .eq("conversation_id", conversation_id) \
-                      .order("created_at", desc=True) \
-                      .limit(limit) \
-                      .execute()
-    # Return messages in chronological order
-    return response.data[::-1] if response.data else []
+@router.get("/status")
+async def status():
+    return {"message": "Agentic Study Room API is running"}
 
-# Together.ai request method remains unchanged
-async def call_together_ai_api(prompt: str, max_new_tokens: int = 256) -> str:
-    if not TOGETHER_API_KEY:
-        raise HTTPException(status_code=500, detail="Together.ai API key not configured")
-    headers = {
-        "Authorization": f"Bearer {TOGETHER_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "inputs": prompt,
-        "parameters": {
-            "temperature": 0.7,
-            "max_new_tokens": max_new_tokens,
-            "stop": ["\n"]
-        }
-    }
-    async with httpx.AsyncClient() as client:
-        response = await client.post("https://api.together.ai/api/llm/mixtral-8x7b-instruct-v0.1", headers=headers, json=payload)
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail=f"LLM API call failed: {response.text}")
-    data = response.json()
-    return data.get("generated_text") or data.get("output") or "<No response>"
+@router.post("/api/generate-content")
+async def generate_content(request: BaseModel):
+    topic_prompt = request.topic
+    mode = request.mode
+    conn = None
+    try:
+        topic_embedding = embedding_model.encode(topic_prompt).tolist()
+        conn = get_db_connection()
+        if conn is None:
+            raise HTTPException(status_code=503, detail="Database connection unavailable.")
+        relevant_text, context_level, context_name = "", "", ""
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 10)", (topic_embedding,))
+            match_results = cur.fetchall()
+            if not match_results:
+                return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": topic_prompt, "source_level": "User Query"})
+            # Select random matched topic
+            matched_topic_id, matched_topic_name, similarity, matched_chapter_id = random.choice(match_results)
+            cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
+            topic_text_result = cur.fetchone()
+            if topic_text_result and topic_text_result and topic_text_result.strip():
+                relevant_text, context_level, context_name = topic_text_result, "Topic", matched_topic_name
+            else:
+                cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+                chapter_text_result = cur.fetchone()
+                if chapter_text_result and chapter_text_result and chapter_text_result.strip():[9]
+                    relevant_text, context_level, context_name = chapter_text_result, "Chapter", chapter_text_result[9]
+                else:
+                    return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": matched_topic_name, "source_level": "Topic"})
+        if mode == "practice" and context_level == "Chapter":
+            if context_name.strip().lower() in THEORETICAL_TOPICS:
+                return JSONResponse(content={"question": None, "error": "Practice questions are not applicable for this introductory topic.", "source_name": context_name, "source_level": context_level})
+        max_chars = 15000
+        if len(relevant_text) > max_chars:
+            relevant_text = relevant_text[:max_chars]
+        user_message_content = f"The user wants to learn about the topic: '{topic_prompt}'.\n\n--- CONTEXT FROM TEXTBOOK ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+        system_message = ""
+        if mode == 'revise':
+            system_message = "You are an AI assistant creating a structured 'cheat sheet' for JEE topics."
+        elif mode == 'practice':
+            system_message = ("You are an expert AI quiz generator for JEE students. "
+                "Given textbook context, respond ONLY with a valid JSON object matching this template: "
+                '{"question": "...", "options": { "A": "...", "B": "...", "C": "...", "D": "..." }, "correct_answer": "...", "explanation": "..."}.'
+                "Do not include any explanations or markdown. ONLY output strict JSON.")
+        else:
+            system_message = "You are an expert JEE tutor."
+        messages = [{"role": "system", "content": system_message}, {"role": "user", "content": user_message_content}]
+        response_params = {"model": "mistralai/Mixtral-8x7B-Instruct-v0.1", "max_tokens": 2048, "temperature": 0.4, "messages": messages}
+        response = llm_client.chat.completions.create(**response_params)
+        content = response.choices.message.content.strip()
+        if not content or content.lower().startswith(("i'm sorry", "i cannot")):
+            raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
+        if mode == 'practice':
+            parsed_quiz = parse_quiz_json_from_string(content)
+            if not parsed_quiz:
+                raise HTTPException(status_code=502, detail="The AI returned invalid format.")
+            parsed_quiz['source_name'] = context_name
+            parsed_quiz['source_level'] = context_level
+            return JSONResponse(content=parsed_quiz)
+        else:
+            return JSONResponse(content={"content": content, "source_name": context_name, "source_level": context_level})
+    finally:
+        if conn:
+            conn.close()
 
-# Updated chat endpoint using Supabase persistent storage with 10 messages history
-@app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    conversation_id = f"conv_{request.user_id}"
-    # Retrieve last 10 messages for the prompt context
-    history = get_recent_messages(conversation_id, limit=10)
-    history_text = "\n".join([f"{m['role'].capitalize()}: {m['message']}" for m in history])
-    prompt = f"Conversation history:\n{history_text}\nUser: {request.message}\nAI:"
-    reply_text = await call_together_ai_api(prompt, max_new_tokens=256)
-    # Store user and AI messages persistently
-    insert_message(request.user_id, conversation_id, "user", request.message)
-    insert_message(request.user_id, conversation_id, "ai", reply_text)
-    return ChatResponse(reply=reply_text.strip(), conversation_id=conversation_id, timestamp=datetime.utcnow().isoformat())
+@router.post("/api/google-login")
+async def google_login(data: BaseModel):
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            data.token,
+            google_requests.Request(),
+            "621306164868-21bamnrurup0nk6f836fss6q92s04aav.apps.googleusercontent.com"
+        )
+        email = idinfo.get("email")
+        name = idinfo.get("name")
+        conn = get_db_connection()
+        if not conn:
+            raise HTTPException(status_code=503, detail="Database connection unavailable.")
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO users (email, name)
+                VALUES (%s, %s)
+                ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
+                """,
+                (email, name)
+            )
+            conn.commit()
+        return {"email": email, "name": name}
+    finally:
+        if 'conn' in locals() and conn:
+            conn.close()
+
+@router.post("/api/feature-request")
+async def submit_feature_request(request: BaseModel):
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=503, detail="Database unavailable.")
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO feature_requests (user_email, feature_text) VALUES (%s, %s)",
+                (request.user_email, request.feature_text)
+            )
+            conn.commit()
+        return {"message": "Feature request submitted successfully."}
+    finally:
+        conn.close()
+
 
 
 
