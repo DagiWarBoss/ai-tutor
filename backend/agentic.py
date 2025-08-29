@@ -247,14 +247,19 @@ class SessionManager:
         session = self.active_sessions[session_id]
         messages = session.messages[-max_messages:] if len(session.messages) > max_messages else session.messages
         
-        return [
+        # Filter out SYSTEM messages and only include USER and ASSISTANT messages
+        # SYSTEM messages are handled separately in the API call
+        conversation_messages = [
             {
                 "role": msg.role.value,
                 "content": msg.content,
                 "timestamp": msg.timestamp.isoformat()
             }
             for msg in messages
+            if msg.role.value in ["user", "assistant"]  # Exclude SYSTEM messages
         ]
+        
+        return conversation_messages
     
     def summarize_context(self, session_id: str) -> str:
         """Create a summary of the conversation context"""
@@ -280,6 +285,51 @@ class SessionManager:
 
 # Initialize session manager
 session_manager = SessionManager()
+
+# Test function for message preparation (can be removed in production)
+def test_message_preparation():
+    """Test the message preparation logic for role alternation"""
+    print("=== Testing Message Preparation ===")
+    
+    # Test case 1: Normal conversation
+    test_messages = [
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hi there!"},
+        {"role": "user", "content": "How are you?"}
+    ]
+    
+    system_prompt = "You are a helpful assistant."
+    prepared = AIContentGenerator.prepare_conversation_messages(test_messages, system_prompt)
+    
+    print("Test 1 - Normal conversation:")
+    for i, msg in enumerate(prepared):
+        print(f"  {i}: {msg['role']} - {msg['content'][:50]}...")
+    
+    # Test case 2: Consecutive same roles
+    test_messages_2 = [
+        {"role": "user", "content": "First user message"},
+        {"role": "user", "content": "Second user message"},
+        {"role": "assistant", "content": "Assistant response"},
+        {"role": "assistant", "content": "Another assistant response"}
+    ]
+    
+    prepared_2 = AIContentGenerator.prepare_conversation_messages(test_messages_2, system_prompt)
+    
+    print("\nTest 2 - Consecutive same roles:")
+    for i, msg in enumerate(prepared_2):
+        print(f"  {i}: {msg['role']} - {msg['content'][:50]}...")
+    
+    # Test case 3: Empty messages
+    prepared_3 = AIContentGenerator.prepare_conversation_messages([], system_prompt)
+    
+    print("\nTest 3 - Empty messages:")
+    for i, msg in enumerate(prepared_3):
+        print(f"  {i}: {msg['role']} - {msg['content'][:50]}...")
+    
+    print("=== End Testing ===")
+
+# Uncomment the line below to run tests when the module is loaded
+# test_message_preparation()
 
 # AI Content Generation
 class AIContentGenerator:
@@ -311,6 +361,69 @@ class AIContentGenerator:
         return mode_prompts.get(mode, base_prompt)
     
     @staticmethod
+    def prepare_conversation_messages(messages: List[Dict], system_prompt: str) -> List[Dict]:
+        """
+        Prepare conversation messages for Together AI API with strict role alternation.
+        
+        Together AI requires: system -> user -> assistant -> user -> assistant -> ...
+        No consecutive messages with the same role are allowed.
+        """
+        # Start with system message
+        prepared_messages = [{"role": "system", "content": system_prompt}]
+        
+        if not messages:
+            return prepared_messages
+        
+        # Process conversation messages to ensure role alternation
+        current_role = None
+        merged_content = ""
+        
+        for msg in messages:
+            msg_role = msg.get("role")
+            msg_content = msg.get("content", "")
+            
+            # Skip messages without proper role/content
+            if not msg_role or not msg_content:
+                continue
+            
+            # If this is the first message after system, it must be user
+            if current_role is None:
+                if msg_role == "user":
+                    prepared_messages.append({"role": "user", "content": msg_content})
+                    current_role = "user"
+                elif msg_role == "assistant":
+                    # If first message is assistant, add a placeholder user message
+                    prepared_messages.append({"role": "user", "content": "Please continue from where we left off."})
+                    prepared_messages.append({"role": "assistant", "content": msg_content})
+                    current_role = "assistant"
+                continue
+            
+            # Check if role alternates properly
+            if msg_role == current_role:
+                # Same role - merge content
+                merged_content += "\n\n" + msg_content
+            else:
+                # Different role - add the merged content from previous role
+                if merged_content:
+                    prepared_messages.append({"role": current_role, "content": merged_content})
+                    merged_content = ""
+                
+                # Add current message
+                prepared_messages.append({"role": msg_role, "content": msg_content})
+                current_role = msg_role
+        
+        # Add any remaining merged content
+        if merged_content:
+            prepared_messages.append({"role": current_role, "content": merged_content})
+        
+        # Ensure we end with user role (Together AI requirement)
+        if prepared_messages and prepared_messages[-1]["role"] == "assistant":
+            # Add a placeholder user message to continue
+            prepared_messages.append({"role": "user", "content": "Please continue."})
+        
+        return prepared_messages
+
+    @staticmethod
     async def generate_response(
         messages: List[Dict],
         system_prompt: str,
@@ -319,8 +432,18 @@ class AIContentGenerator:
     ) -> str:
         """Generate AI response using the LLM"""
         try:
-            # Prepare messages for the API
-            api_messages = [{"role": "system", "content": system_prompt}] + messages
+            # Prepare messages for the API with proper role alternation
+            api_messages = AIContentGenerator.prepare_conversation_messages(messages, system_prompt)
+            
+            # Log the final message array for debugging
+            print(f"=== Together AI API Messages ===")
+            for i, msg in enumerate(api_messages):
+                print(f"Message {i}: role={msg['role']}, content_length={len(msg['content'])}")
+                if len(msg['content']) > 100:
+                    print(f"  Content preview: {msg['content'][:100]}...")
+                else:
+                    print(f"  Content: {msg['content']}")
+            print(f"================================")
             
             response = llm_client.chat.completions.create(
                 model=DEFAULT_MODEL,
@@ -578,15 +701,16 @@ async def chat_message(request: ChatMessageRequest):
         # Update activity
         session_manager.update_session_activity(request.session_id)
         
-        # Add user message
-        session_manager.add_message(
-            request.session_id,
-            MessageRole.USER,
-            request.message
-        )
-        
-        # Get conversation context
+        # Get conversation context BEFORE adding new user message
         conversation_context = session_manager.get_conversation_context(request.session_id)
+        
+        # Log the conversation context for debugging
+        print(f"=== Chat Conversation Context ===")
+        print(f"Session ID: {request.session_id}")
+        print(f"Context messages count: {len(conversation_context)}")
+        for i, msg in enumerate(conversation_context):
+            print(f"  Context {i}: role={msg['role']}, content_length={len(msg['content'])}")
+        print(f"================================")
         
         # Create system prompt
         system_prompt = AIContentGenerator.create_system_prompt(
@@ -597,7 +721,7 @@ async def chat_message(request: ChatMessageRequest):
         if request.context_hint:
             system_prompt += f"\n\nContext Hint: {request.context_hint}"
         
-        # Generate response
+        # Generate response using existing conversation context
         response = await AIContentGenerator.generate_response(
             messages=conversation_context,
             system_prompt=system_prompt,
@@ -605,7 +729,14 @@ async def chat_message(request: ChatMessageRequest):
             temperature=0.7
         )
         
-        # Add assistant response
+        # Add user message to session AFTER generating response
+        session_manager.add_message(
+            request.session_id,
+            MessageRole.USER,
+            request.message
+        )
+        
+        # Add assistant response to session
         session_manager.add_message(
             request.session_id,
             MessageRole.ASSISTANT,
