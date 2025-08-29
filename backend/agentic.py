@@ -183,6 +183,8 @@ class SessionManager:
         else:
             print(f"Session NOT found for ID: {session_id}")
             print(f"Available sessions: {list(self.active_sessions.keys())}")
+            print(f"⚠️ WARNING: Session lost - this indicates multi-instance deployment issue")
+            print(f"💡 Consider using Redis or database for session storage")
         
         print(f"=== SESSION LOOKUP COMPLETE ===")
         return session
