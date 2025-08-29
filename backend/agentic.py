@@ -195,6 +195,14 @@ class SessionManager:
         session_id = str(uuid.uuid4())
         now = datetime.utcnow()
         
+        print(f"=== CREATING SESSION ===")
+        print(f"Session ID: {session_id}")
+        print(f"User ID: {user_id}")
+        print(f"Subject: {subject}")
+        print(f"Topic: {topic}")
+        print(f"Mode: {mode.value}")
+        print(f"Active sessions before: {len(self.active_sessions)}")
+        
         session = StudySession(
             session_id=session_id,
             user_id=user_id,
@@ -217,11 +225,29 @@ class SessionManager:
         self.active_sessions[session_id] = session
         self.session_locks[session_id] = asyncio.Lock()
         
+        print(f"Active sessions after: {len(self.active_sessions)}")
+        print(f"Session keys: {list(self.active_sessions.keys())}")
+        print(f"=== SESSION CREATED ===")
+        
         return session
     
     def get_session(self, session_id: str) -> Optional[StudySession]:
         """Get an active session by ID"""
-        return self.active_sessions.get(session_id)
+        print(f"=== GETTING SESSION ===")
+        print(f"Requested Session ID: {session_id}")
+        print(f"Active sessions count: {len(self.active_sessions)}")
+        print(f"Active session keys: {list(self.active_sessions.keys())}")
+        
+        session = self.active_sessions.get(session_id)
+        if session:
+            print(f"Session found: {session.session_id}")
+            print(f"Session details: user_id={session.user_id}, subject={session.subject}, topic={session.topic}")
+        else:
+            print(f"Session NOT found for ID: {session_id}")
+            print(f"Available sessions: {list(self.active_sessions.keys())}")
+        
+        print(f"=== SESSION LOOKUP COMPLETE ===")
+        return session
     
     def update_session_activity(self, session_id: str):
         """Update session last activity timestamp"""
@@ -693,10 +719,18 @@ What would you like to explore first?"""
 async def chat_message(request: ChatMessageRequest):
     """Send a message in an active study session"""
     try:
+        print(f"=== CHAT MESSAGE RECEIVED ===")
+        print(f"Request Session ID: {request.session_id}")
+        print(f"Request Message: {request.message[:100]}...")
+        print(f"Context Hint: {request.context_hint}")
+        
         # Get session
         session = session_manager.get_session(request.session_id)
         if not session:
+            print(f"❌ SESSION NOT FOUND - Raising 404 error")
             raise HTTPException(status_code=404, detail="Session not found")
+        
+        print(f"✅ Session found successfully")
         
         # Update activity
         session_manager.update_session_activity(request.session_id)
