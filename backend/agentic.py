@@ -124,128 +124,354 @@ class QuizRequest(BaseModel):
     difficulty: str = Field("medium", description="Quiz difficulty level")
     question_count: int = Field(5, ge=1, le=10, description="Number of questions")
 
-# Database utilities removed - no longer needed for multi-topic support
+# Database utilities for Supabase session storage
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import json
+
+# Database connection
+def get_db_connection():
+    """Get database connection to Supabase"""
+    try:
+        connection = psycopg2.connect(
+            host=os.getenv("DB_HOST"),
+            database=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            port=os.getenv("DB_PORT")
+        )
+        return connection
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        return None
+
+def init_sessions_table():
+    """Initialize sessions table if it doesn't exist"""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return False
+        
+        cursor = conn.cursor()
+        
+        # Create sessions table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS study_sessions (
+                session_id VARCHAR(255) PRIMARY KEY,
+                user_id VARCHAR(255) NOT NULL,
+                messages JSONB DEFAULT '[]',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                progress_data JSONB DEFAULT '{}',
+                context_summary TEXT
+            )
+        """)
+        
+        # Create index for faster lookups
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON study_sessions(user_id)
+        """)
+        
+        cursor.execute("""
+            CREATE INDEX IF NOT EXISTS idx_sessions_last_activity ON study_sessions(last_activity)
+        """)
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("✅ Sessions table initialized successfully")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error initializing sessions table: {e}")
+        return False
 
 # Session Management
 class SessionManager:
-    """Manages active study sessions and conversation context"""
+    """Manages active study sessions and conversation context using Supabase"""
     
     def __init__(self):
-        self.active_sessions: Dict[str, StudySession] = {}
         self.session_locks: Dict[str, asyncio.Lock] = {}
+        # Initialize database table
+        init_sessions_table()
     
     def create_session(self, user_id: str) -> StudySession:
-        """Create a new multi-topic study session"""
+        """Create a new multi-topic study session in Supabase"""
         session_id = str(uuid.uuid4())
         now = datetime.utcnow()
         
-        print(f"=== CREATING MULTI-TOPIC SESSION ===")
+        print(f"=== CREATING MULTI-TOPIC SESSION IN SUPABASE ===")
         print(f"Session ID: {session_id}")
         print(f"User ID: {user_id}")
-        print(f"Active sessions before: {len(self.active_sessions)}")
         
-        session = StudySession(
-            session_id=session_id,
-            user_id=user_id,
-            messages=[],
-            created_at=now,
-            last_activity=now,
-            progress_data={
-                "concepts_covered": [],
-                "problems_solved": 0,
-                "quiz_scores": [],
-                "time_spent": 0,
-                "difficulty_progression": []
-            },
-            context_summary=None
-        )
-        
-        self.active_sessions[session_id] = session
-        self.session_locks[session_id] = asyncio.Lock()
-        
-        print(f"Active sessions after: {len(self.active_sessions)}")
-        print(f"Session keys: {list(self.active_sessions.keys())}")
-        print(f"=== MULTI-TOPIC SESSION CREATED ===")
-        
-        return session
+        try:
+            conn = get_db_connection()
+            if not conn:
+                raise Exception("Failed to connect to database")
+            
+            cursor = conn.cursor()
+            
+            # Create session in database
+            cursor.execute("""
+                INSERT INTO study_sessions (session_id, user_id, messages, created_at, last_activity, progress_data)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                session_id,
+                user_id,
+                json.dumps([]),  # Empty messages array
+                now,
+                now,
+                json.dumps({
+                    "concepts_covered": [],
+                    "problems_solved": 0,
+                    "quiz_scores": [],
+                    "time_spent": 0,
+                    "difficulty_progression": []
+                })
+            ))
+            
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            # Create local session object for immediate use
+            session = StudySession(
+                session_id=session_id,
+                user_id=user_id,
+                messages=[],
+                created_at=now,
+                last_activity=now,
+                progress_data={
+                    "concepts_covered": [],
+                    "problems_solved": 0,
+                    "quiz_scores": [],
+                    "time_spent": 0,
+                    "difficulty_progression": []
+                },
+                context_summary=None
+            )
+            
+            self.session_locks[session_id] = asyncio.Lock()
+            
+            print(f"✅ Session created in Supabase: {session_id}")
+            print(f"=== SUPABASE SESSION CREATED ===")
+            
+            return session
+            
+        except Exception as e:
+            print(f"❌ Error creating session in Supabase: {e}")
+            raise Exception(f"Failed to create session: {e}")
     
     def get_session(self, session_id: str) -> Optional[StudySession]:
-        """Get an active session by ID"""
-        print(f"=== GETTING SESSION ===")
+        """Get an active session by ID from Supabase"""
+        print(f"=== GETTING SESSION FROM SUPABASE ===")
         print(f"Requested Session ID: {session_id}")
-        print(f"Active sessions count: {len(self.active_sessions)}")
-        print(f"Active session keys: {list(self.active_sessions.keys())}")
         
-        session = self.active_sessions.get(session_id)
-        if session:
-            print(f"Session found: {session.session_id}")
-            print(f"Session details: user_id={session.user_id}")
-        else:
-            print(f"Session NOT found for ID: {session_id}")
-            print(f"Available sessions: {list(self.active_sessions.keys())}")
-            print(f"⚠️ WARNING: Session lost - this indicates multi-instance deployment issue")
-            print(f"💡 Consider using Redis or database for session storage")
+        try:
+            conn = get_db_connection()
+            if not conn:
+                print(f"❌ Database connection failed")
+                return None
+            
+            cursor = conn.cursor(cursor_factory=RealDictCursor)
+            
+            # Fetch session from database
+            cursor.execute("""
+                SELECT * FROM study_sessions 
+                WHERE session_id = %s
+            """, (session_id,))
+            
+            result = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            
+            if result:
+                # Convert database row to StudySession object
+                session = StudySession(
+                    session_id=result['session_id'],
+                    user_id=result['user_id'],
+                    messages=self._deserialize_messages(result['messages']),
+                    created_at=result['created_at'],
+                    last_activity=result['last_activity'],
+                    progress_data=result['progress_data'] or {},
+                    context_summary=result['context_summary']
+                )
+                
+                print(f"✅ Session found in Supabase: {session.session_id}")
+                print(f"Session details: user_id={session.user_id}")
+                print(f"Messages count: {len(session.messages)}")
+                
+                return session
+            else:
+                print(f"❌ Session NOT found in Supabase: {session_id}")
+                return None
+                
+        except Exception as e:
+            print(f"❌ Error fetching session from Supabase: {e}")
+            return None
         
-        print(f"=== SESSION LOOKUP COMPLETE ===")
-        return session
+        finally:
+            print(f"=== SUPABASE SESSION LOOKUP COMPLETE ===")
+    
+    def _deserialize_messages(self, messages_json) -> List[ConversationMessage]:
+        """Convert JSON messages back to ConversationMessage objects"""
+        try:
+            if not messages_json:
+                return []
+            
+            messages = []
+            for msg_data in messages_json:
+                message = ConversationMessage(
+                    role=MessageRole(msg_data['role']),
+                    content=msg_data['content'],
+                    timestamp=datetime.fromisoformat(msg_data['timestamp']),
+                    metadata=msg_data.get('metadata')
+                )
+                messages.append(message)
+            
+            return messages
+        except Exception as e:
+            print(f"Error deserializing messages: {e}")
+            return []
     
     def update_session_activity(self, session_id: str):
-        """Update session last activity timestamp"""
-        if session_id in self.active_sessions:
-            self.active_sessions[session_id].last_activity = datetime.utcnow()
+        """Update session last activity timestamp in Supabase"""
+        try:
+            conn = get_db_connection()
+            if not conn:
+                print(f"❌ Database connection failed for activity update")
+                return
+            
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                UPDATE study_sessions 
+                SET last_activity = %s
+                WHERE session_id = %s
+            """, (datetime.utcnow(), session_id))
+            
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            print(f"✅ Session activity updated in Supabase: {session_id}")
+            
+        except Exception as e:
+            print(f"❌ Error updating session activity: {e}")
     
     def add_message(self, session_id: str, role: MessageRole, content: str, metadata: Optional[Dict] = None):
-        """Add a message to the session conversation"""
-        if session_id in self.active_sessions:
+        """Add a message to the session conversation in Supabase"""
+        try:
+            # Create message object
             message = ConversationMessage(
                 role=role,
                 content=content,
                 timestamp=datetime.utcnow(),
                 metadata=metadata
             )
-            self.active_sessions[session_id].messages.append(message)
+            
+            # Get current session to add message locally
+            session = self.get_session(session_id)
+            if not session:
+                print(f"❌ Cannot add message - session not found: {session_id}")
+                return
+            
+            # Add message to local session object
+            session.messages.append(message)
+            
+            # Update messages in Supabase
+            conn = get_db_connection()
+            if not conn:
+                print(f"❌ Database connection failed for message update")
+                return
+            
+            cursor = conn.cursor()
+            
+            # Serialize messages for database storage
+            messages_data = []
+            for msg in session.messages:
+                messages_data.append({
+                    'role': msg.role.value,
+                    'content': msg.content,
+                    'timestamp': msg.timestamp.isoformat(),
+                    'metadata': msg.metadata
+                })
+            
+            # Update messages in database
+            cursor.execute("""
+                UPDATE study_sessions 
+                SET messages = %s, last_activity = %s
+                WHERE session_id = %s
+            """, (
+                json.dumps(messages_data),
+                datetime.utcnow(),
+                session_id
+            ))
+            
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            print(f"✅ Message added to Supabase session: {session_id}")
+            
+        except Exception as e:
+            print(f"❌ Error adding message to Supabase: {e}")
+            print(f"Message content: {content[:100]}...")
     
     def get_conversation_context(self, session_id: str, max_messages: int = 10) -> List[Dict]:
-        """Get conversation context for AI processing"""
-        if session_id not in self.active_sessions:
+        """Get conversation context for AI processing from Supabase"""
+        try:
+            session = self.get_session(session_id)
+            if not session:
+                print(f"❌ Cannot get context - session not found: {session_id}")
+                return []
+            
+            # Get recent messages (limit to max_messages)
+            messages = session.messages[-max_messages:] if len(session.messages) > max_messages else session.messages
+            
+            # Filter out SYSTEM messages and only include USER and ASSISTANT messages
+            # SYSTEM messages are handled separately in the API call
+            conversation_messages = [
+                {
+                    "role": msg.role.value,
+                    "content": msg.content,
+                    "timestamp": msg.timestamp.isoformat()
+                }
+                for msg in messages
+                if msg.role.value in ["user", "assistant"]  # Exclude SYSTEM messages
+            ]
+            
+            print(f"✅ Retrieved {len(conversation_messages)} conversation messages from Supabase")
+            return conversation_messages
+            
+        except Exception as e:
+            print(f"❌ Error getting conversation context: {e}")
             return []
-        
-        session = self.active_sessions[session_id]
-        messages = session.messages[-max_messages:] if len(session.messages) > max_messages else session.messages
-        
-        # Filter out SYSTEM messages and only include USER and ASSISTANT messages
-        # SYSTEM messages are handled separately in the API call
-        conversation_messages = [
-            {
-                "role": msg.role.value,
-                "content": msg.content,
-                "timestamp": msg.timestamp.isoformat()
-            }
-            for msg in messages
-            if msg.role.value in ["user", "assistant"]  # Exclude SYSTEM messages
-        ]
-        
-        return conversation_messages
     
     def summarize_context(self, session_id: str) -> str:
-        """Create a summary of the conversation context"""
-        if session_id not in self.active_sessions:
+        """Create a summary of the conversation context from Supabase"""
+        try:
+            session = self.get_session(session_id)
+            if not session:
+                return ""
+            
+            if len(session.messages) < 5:
+                return ""
+            
+            # Create a summary of key points discussed
+            summary_prompt = f"""
+            Summarize the key learning points from this multi-topic tutoring session:
+            - Focus on main concepts, formulas, and problem-solving approaches discussed
+            - Keep summary concise but comprehensive
+            """
+            
+            # This would typically call the LLM to generate a summary
+            # For now, return a basic summary
+            return f"Multi-topic session: {len(session.messages)} messages exchanged, covering various concepts and problem-solving approaches."
+            
+        except Exception as e:
+            print(f"❌ Error summarizing context: {e}")
             return ""
-        
-        session = self.active_sessions[session_id]
-        if len(session.messages) < 5:
-            return ""
-        
-        # Create a summary of key points discussed
-        summary_prompt = f"""
-        Summarize the key learning points from this multi-topic tutoring session:
-        - Focus on main concepts, formulas, and problem-solving approaches discussed
-        - Keep summary concise but comprehensive
-        """
-        
-        # This would typically call the LLM to generate a summary
-        # For now, return a basic summary
-        return f"Multi-topic session: {len(session.messages)} messages exchanged, covering various concepts and problem-solving approaches."
 
 # Initialize session manager
 session_manager = SessionManager()
@@ -524,22 +750,66 @@ class StudyPlanGenerator:
 @router.get("/health")
 async def health_check():
     """Health check endpoint for Fly.io deployment"""
-    return {
-        "status": "healthy",
-        "module": "Multi-Topic JEE Deep Study Mode",
-        "active_sessions": len(session_manager.active_sessions),
-        "timestamp": datetime.utcnow().isoformat()
-    }
+    try:
+        # Get session count from Supabase
+        conn = get_db_connection()
+        if conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM study_sessions")
+            session_count = cursor.fetchone()[0]
+            cursor.close()
+            conn.close()
+        else:
+            session_count = 0
+        
+        return {
+            "status": "healthy",
+            "module": "Multi-Topic JEE Deep Study Mode",
+            "active_sessions": session_count,
+            "database": "connected" if conn else "disconnected",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "healthy",
+            "module": "Multi-Topic JEE Deep Study Mode",
+            "active_sessions": 0,
+            "database": "error",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }
 
 @router.get("/status")
 async def get_status():
     """Status endpoint for the agentic module"""
-    return {
-        "status": "active",
-        "module": "Multi-Topic JEE Deep Study Mode",
-        "active_sessions": len(session_manager.active_sessions),
-        "timestamp": datetime.utcnow().isoformat()
-    }
+    try:
+        # Get session count from Supabase
+        conn = get_db_connection()
+        if conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM study_sessions")
+            session_count = cursor.fetchone()[0]
+            cursor.close()
+            conn.close()
+        else:
+            session_count = 0
+        
+        return {
+            "status": "active",
+            "module": "Multi-Topic JEE Deep Study Mode",
+            "active_sessions": session_count,
+            "database": "connected" if conn else "disconnected",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "active",
+            "module": "Multi-Topic JEE Deep Study Mode",
+            "active_sessions": 0,
+            "database": "error",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }
 
 @router.post("/session/start")
 async def start_study_session(request: StartSessionRequest):
@@ -920,10 +1190,20 @@ async def end_session(session_id: str):
         # Create session summary
         summary = session_manager.summarize_context(session_id)
         
-        # Remove from active sessions
-        if session_id in session_manager.active_sessions:
-            del session_manager.active_sessions[session_id]
+        # Remove from Supabase
+        try:
+            conn = get_db_connection()
+            if conn:
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM study_sessions WHERE session_id = %s", (session_id,))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                print(f"✅ Session deleted from Supabase: {session_id}")
+        except Exception as e:
+            print(f"❌ Error deleting session from Supabase: {e}")
         
+        # Remove from local locks
         if session_id in session_manager.session_locks:
             del session_manager.session_locks[session_id]
         
@@ -941,28 +1221,39 @@ async def end_session(session_id: str):
 
 # Background task for session cleanup
 async def cleanup_expired_sessions():
-    """Clean up expired sessions periodically"""
+    """Clean up expired sessions periodically from Supabase"""
     while True:
         try:
             now = datetime.utcnow()
-            expired_sessions = []
+            cutoff_time = now - timedelta(hours=MAX_SESSION_DURATION)
             
-            for session_id, session in session_manager.active_sessions.items():
-                if (now - session.last_activity).total_seconds() > (MAX_SESSION_DURATION * 3600):
-                    expired_sessions.append(session_id)
+            conn = get_db_connection()
+            if conn:
+                cursor = conn.cursor()
+                
+                # Find expired sessions
+                cursor.execute("""
+                    SELECT session_id FROM study_sessions 
+                    WHERE last_activity < %s
+                """, (cutoff_time,))
+                
+                expired_sessions = [row[0] for row in cursor.fetchall()]
+                
+                if expired_sessions:
+                    # Delete expired sessions
+                    cursor.execute("""
+                        DELETE FROM study_sessions 
+                        WHERE session_id = ANY(%s)
+                    """, (expired_sessions,))
+                    
+                    conn.commit()
+                    print(f"🧹 Cleaned up {len(expired_sessions)} expired sessions from Supabase")
+                
+                cursor.close()
+                conn.close()
             
-            for session_id in expired_sessions:
-                print(f"Cleaning up expired session: {session_id}")
-                if session_id in session_manager.active_sessions:
-                    del session_manager.active_sessions[session_id]
-                if session_id in session_manager.session_locks:
-                    del session_manager.session_locks[session_id]
-            
-            if expired_sessions:
-                print(f"Cleaned up {len(expired_sessions)} expired sessions")
-        
         except Exception as e:
-            print(f"Error in session cleanup: {e}")
+            print(f"❌ Error in session cleanup: {e}")
         
         # Run cleanup every hour
         await asyncio.sleep(3600)
