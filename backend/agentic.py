@@ -1,18 +1,18 @@
 """
-Deep Study Mode AI Tutoring Module for PraxisAI
+Multi-Topic Deep Study Mode AI Tutoring Module for PraxisAI
 
 This module implements advanced AI tutoring features including:
 - Multi-turn conversational AI with context memory
-- Step-by-step topic explanations with formulas and examples
-- Incremental problem solving with hints and solutions
-- Personalized study plan generation
+- Support for any academic subject or topic
+- Step-by-step explanations with formulas and examples
+- Problem solving assistance
+- Study planning and organization
 - Session tracking and progress adaptation
 - Rich markdown content with math formulas
-- Interactive quizzes with instant feedback
 - Long conversation context management
 
 Author: PraxisAI Team
-Version: 1.0.0
+Version: 2.0.0 - Multi-Topic Support
 """
 
 import os
@@ -24,14 +24,10 @@ from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Union
 from enum import Enum
 from dataclasses import dataclass, asdict
-from contextlib import asynccontextmanager
 
-import psycopg2
-import psycopg2.extras
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, validator
-from sentence_transformers import SentenceTransformer
+from pydantic import BaseModel, Field
 from together import Together
 
 from dotenv import load_dotenv
@@ -43,15 +39,9 @@ load_dotenv(dotenv_path=dotenv_path)
 
 # Configuration
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-DB_HOST = os.getenv("DB_HOST")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_NAME = os.getenv("DB_NAME")
-DB_PORT = os.getenv("DB_PORT")
 
 # Initialize AI clients
 llm_client = Together(api_key=TOGETHER_API_KEY)
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Router instance
 router = APIRouter()
@@ -60,16 +50,8 @@ router = APIRouter()
 MAX_CONTEXT_LENGTH = 8000  # Maximum tokens for conversation context
 MAX_SESSION_DURATION = 24  # Hours
 DEFAULT_MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-THEORETICAL_TOPICS = ["introduction", "overview", "basics", "fundamentals"]
 
-class TutoringMode(str, Enum):
-    """Available tutoring modes for Deep Study Mode"""
-    EXPLAIN = "explain"
-    SOLVE = "solve"
-    PRACTICE = "practice"
-    REVISE = "revise"
-    PLAN = "plan"
-    QUIZ = "quiz"
+# TutoringMode enum removed - no longer needed for multi-topic support
 
 class MessageRole(str, Enum):
     """Message roles in conversation"""
@@ -90,9 +72,7 @@ class StudySession:
     """Represents an active study session"""
     session_id: str
     user_id: str
-    subject: str
-    topic: str
-    mode: TutoringMode
+    # Removed subject, topic, and mode for multi-topic support
     messages: List[ConversationMessage]
     created_at: datetime
     last_activity: datetime
@@ -153,34 +133,7 @@ class QuizRequest(BaseModel):
     difficulty: str = Field("medium", description="Quiz difficulty level")
     question_count: int = Field(5, ge=1, le=10, description="Number of questions")
 
-# Database utilities
-def get_db_connection():
-    """Get database connection with proper error handling"""
-    try:
-        conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT,
-            cursor_factory=psycopg2.extras.RealDictCursor
-        )
-        return conn
-    except psycopg2.OperationalError as e:
-        print(f"Database connection error: {e}")
-        traceback.print_exc()
-        return None
-
-@asynccontextmanager
-async def get_db_context():
-    """Async context manager for database operations"""
-    conn = get_db_connection()
-    if not conn:
-        raise HTTPException(status_code=503, detail="Database connection unavailable")
-    try:
-        yield conn
-    finally:
-        conn.close()
+# Database utilities removed - no longer needed for multi-topic support
 
 # Session Management
 class SessionManager:
@@ -190,25 +143,19 @@ class SessionManager:
         self.active_sessions: Dict[str, StudySession] = {}
         self.session_locks: Dict[str, asyncio.Lock] = {}
     
-    def create_session(self, user_id: str, subject: str, topic: str, mode: TutoringMode) -> StudySession:
-        """Create a new study session"""
+    def create_session(self, user_id: str) -> StudySession:
+        """Create a new multi-topic study session"""
         session_id = str(uuid.uuid4())
         now = datetime.utcnow()
         
-        print(f"=== CREATING SESSION ===")
+        print(f"=== CREATING MULTI-TOPIC SESSION ===")
         print(f"Session ID: {session_id}")
         print(f"User ID: {user_id}")
-        print(f"Subject: {subject}")
-        print(f"Topic: {topic}")
-        print(f"Mode: {mode.value}")
         print(f"Active sessions before: {len(self.active_sessions)}")
         
         session = StudySession(
             session_id=session_id,
             user_id=user_id,
-            subject=subject,
-            topic=topic,
-            mode=mode,
             messages=[],
             created_at=now,
             last_activity=now,
@@ -227,7 +174,7 @@ class SessionManager:
         
         print(f"Active sessions after: {len(self.active_sessions)}")
         print(f"Session keys: {list(self.active_sessions.keys())}")
-        print(f"=== SESSION CREATED ===")
+        print(f"=== MULTI-TOPIC SESSION CREATED ===")
         
         return session
     
@@ -241,7 +188,7 @@ class SessionManager:
         session = self.active_sessions.get(session_id)
         if session:
             print(f"Session found: {session.session_id}")
-            print(f"Session details: user_id={session.user_id}, subject={session.subject}, topic={session.topic}")
+            print(f"Session details: user_id={session.user_id}")
         else:
             print(f"Session NOT found for ID: {session_id}")
             print(f"Available sessions: {list(self.active_sessions.keys())}")
@@ -298,16 +245,14 @@ class SessionManager:
         
         # Create a summary of key points discussed
         summary_prompt = f"""
-        Summarize the key learning points from this tutoring session on {session.topic}:
-        - Subject: {session.subject}
-        - Mode: {session.mode.value}
+        Summarize the key learning points from this multi-topic tutoring session:
         - Focus on main concepts, formulas, and problem-solving approaches discussed
         - Keep summary concise but comprehensive
         """
         
         # This would typically call the LLM to generate a summary
         # For now, return a basic summary
-        return f"Session on {session.topic}: {len(session.messages)} messages exchanged, covering key concepts and problem-solving approaches."
+        return f"Multi-topic session: {len(session.messages)} messages exchanged, covering various concepts and problem-solving approaches."
 
 # Initialize session manager
 session_manager = SessionManager()
@@ -361,30 +306,7 @@ def test_message_preparation():
 class AIContentGenerator:
     """Handles AI-powered content generation for tutoring"""
     
-    @staticmethod
-    def create_system_prompt(mode: TutoringMode, subject: str, topic: str) -> str:
-        """Create appropriate system prompt based on tutoring mode"""
-        base_prompt = f"""You are an expert AI tutor specializing in {subject} for JEE preparation. 
-        You are currently teaching the topic: {topic}.
-        
-        Your responses should be:
-        - Clear and structured with proper markdown formatting
-        - Include mathematical formulas using LaTeX notation ($$ for display, $ for inline)
-        - Provide step-by-step explanations
-        - Use examples and analogies when helpful
-        - Encourage active learning and critical thinking
-        """
-        
-        mode_prompts = {
-            TutoringMode.EXPLAIN: f"{base_prompt}\n\nMode: EXPLANATION - Provide comprehensive topic explanations with formulas, proofs, and examples.",
-            TutoringMode.SOLVE: f"{base_prompt}\n\nMode: PROBLEM SOLVING - Guide through problem-solving step by step with hints and complete solutions.",
-            TutoringMode.PRACTICE: f"{base_prompt}\n\nMode: PRACTICE - Generate practice problems and provide detailed solutions.",
-            TutoringMode.REVISE: f"{base_prompt}\n\nMode: REVISION - Create structured summaries and cheat sheets for quick revision.",
-            TutoringMode.PLAN: f"{base_prompt}\n\nMode: STUDY PLANNING - Create personalized study plans with daily tasks and goals.",
-            TutoringMode.QUIZ: f"{base_prompt}\n\nMode: QUIZ - Generate interactive quizzes with explanations and instant feedback."
-        }
-        
-        return mode_prompts.get(mode, base_prompt)
+    # create_system_prompt method removed - no longer needed for multi-topic support
     
     @staticmethod
     def prepare_conversation_messages(messages: List[Dict], system_prompt: str) -> List[Dict]:
@@ -485,38 +407,7 @@ class AIContentGenerator:
             traceback.print_exc()
             raise HTTPException(status_code=500, detail="Failed to generate AI response")
     
-    @staticmethod
-    async def get_syllabus_context(topic: str, subject: str) -> str:
-        """Retrieve relevant syllabus content for context"""
-        try:
-            # Generate embedding for the topic
-            topic_embedding = embedding_model.encode(topic).tolist()
-            
-            async with get_db_context() as conn:
-                with conn.cursor() as cur:
-                    # Find matching topics using semantic search
-                    cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 5)", (topic_embedding,))
-                    match_results = cur.fetchall()
-                    
-                    if not match_results:
-                        return f"Topic: {topic} - General knowledge context"
-                    
-                    # Get the best match
-                    best_match = match_results[0]
-                    topic_id = best_match['id']
-                    
-                    # Fetch topic content
-                    cur.execute("SELECT full_text FROM topics WHERE id = %s", (topic_id,))
-                    topic_result = cur.fetchone()
-                    
-                    if topic_result and topic_result['full_text']:
-                        return topic_result['full_text'][:5000]  # Limit context length
-                    
-                    return f"Topic: {topic} - Syllabus content available"
-        
-        except Exception as e:
-            print(f"Error retrieving syllabus context: {e}")
-            return f"Topic: {topic} - Context retrieval error"
+    # get_syllabus_context method removed - no longer needed for multi-topic support
 
 # Quiz Generation
 class QuizGenerator:
@@ -642,50 +533,52 @@ async def get_status():
     """Health check endpoint for the agentic module"""
     return {
         "status": "active",
-        "module": "Deep Study Mode",
+        "module": "Multi-Topic Deep Study Mode",
         "active_sessions": len(session_manager.active_sessions),
         "timestamp": datetime.utcnow().isoformat()
     }
 
 @router.post("/session/start")
 async def start_study_session(request: StartSessionRequest):
-    """Start a new Deep Study Mode session"""
+    """Start a new multi-topic Deep Study Mode session"""
     try:
         # Create new session
         session = session_manager.create_session(
-            user_id=request.user_id,
-            subject=request.subject,
-            topic=request.topic,
-            mode=request.mode
+            user_id=request.user_id
         )
         
-        # Get syllabus context
-        syllabus_context = await AIContentGenerator.get_syllabus_context(
-            request.topic, request.subject
-        )
+        # Create general system message for multi-topic support
+        system_prompt = """You are an expert AI tutor specializing in multiple subjects and topics. 
+        You can help with any academic subject, concept, or problem.
         
-        # Create initial system message
-        system_prompt = AIContentGenerator.create_system_prompt(
-            request.mode, request.subject, request.topic
-        )
+        Your responses should be:
+        - Clear and structured with proper markdown formatting
+        - Include mathematical formulas using LaTeX notation ($$ for display, $ for inline) when relevant
+        - Provide step-by-step explanations
+        - Use examples and analogies when helpful
+        - Encourage active learning and critical thinking
+        - Adapt to whatever topic the user wants to discuss
+        """
         
         # Generate welcome message
-        welcome_message = f"""Welcome to Deep Study Mode! 
+        welcome_message = f"""Welcome to Multi-Topic Deep Study Mode! 
 
-**Subject:** {request.subject}
-**Topic:** {request.topic}
-**Mode:** {request.mode.value.title()}
+I'm here to help you with any subject, topic, or concept you want to explore. I can assist with:
 
-I'm here to help you master this topic through interactive learning. Let's begin!
+**Academic Subjects:**
+- Physics, Chemistry, Mathematics
+- Biology, Computer Science, Engineering
+- Literature, History, Economics
+- And many more!
 
-**Available Commands:**
-- Ask questions about concepts
-- Request step-by-step explanations
-- Get help with problem solving
-- Take practice quizzes
-- Generate study materials
+**Learning Activities:**
+- Concept explanations and clarifications
+- Problem-solving assistance
+- Study planning and organization
+- Practice questions and quizzes
+- Research and analysis help
 
-What would you like to explore first?"""
+**What would you like to learn about today?** Just tell me the topic or ask any question, and I'll help you master it!"""
         
         # Add initial messages to session
         session_manager.add_message(
@@ -698,15 +591,12 @@ What would you like to explore first?"""
             session.session_id,
             MessageRole.ASSISTANT,
             welcome_message,
-            {"type": "welcome", "context": syllabus_context[:500]}
+            {"type": "welcome", "multi_topic": True}
         )
         
         return {
             "session_id": session.session_id,
             "welcome_message": welcome_message,
-            "subject": session.subject,
-            "topic": session.topic,
-            "mode": session.mode.value,
             "created_at": session.created_at.isoformat()
         }
     
@@ -746,10 +636,18 @@ async def chat_message(request: ChatMessageRequest):
             print(f"  Context {i}: role={msg['role']}, content_length={len(msg['content'])}")
         print(f"================================")
         
-        # Create system prompt
-        system_prompt = AIContentGenerator.create_system_prompt(
-            session.mode, session.subject, session.topic
-        )
+        # Create general system prompt for multi-topic support
+        system_prompt = """You are an expert AI tutor specializing in multiple subjects and topics. 
+        You can help with any academic subject, concept, or problem.
+        
+        Your responses should be:
+        - Clear and structured with proper markdown formatting
+        - Include mathematical formulas using LaTeX notation ($$ for display, $ for inline) when relevant
+        - Provide step-by-step explanations
+        - Use examples and analogies when helpful
+        - Encourage active learning and critical thinking
+        - Adapt to whatever topic the user wants to discuss
+        """
         
         # Add context hint if provided
         if request.context_hint:
@@ -960,9 +858,6 @@ async def get_session_info(session_id: str):
         return {
             "session_id": session.session_id,
             "user_id": session.user_id,
-            "subject": session.subject,
-            "topic": session.topic,
-            "mode": session.mode.value,
             "created_at": session.created_at.isoformat(),
             "last_activity": session.last_activity.isoformat(),
             "message_count": len(session.messages),
@@ -1065,7 +960,7 @@ async def cleanup_expired_sessions():
 async def startup_event():
     """Initialize background tasks on startup"""
     asyncio.create_task(cleanup_expired_sessions())
-    print("Deep Study Mode agentic module initialized")
+    print("Multi-Topic Deep Study Mode agentic module initialized")
 
 # Export the router
 __all__ = ["router"]
