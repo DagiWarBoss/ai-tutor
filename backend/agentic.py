@@ -1,18 +1,19 @@
 """
-Multi-Topic Deep Study Mode AI Tutoring Module for PraxisAI
+Multi-Topic JEE Deep Study Mode AI Tutoring Module for PraxisAI
 
 This module implements advanced AI tutoring features including:
 - Multi-turn conversational AI with context memory
-- Support for any academic subject or topic
-- Step-by-step explanations with formulas and examples
-- Problem solving assistance
-- Study planning and organization
+- Support for any JEE subject or topic (Physics, Chemistry, Mathematics)
+- Step-by-step explanations with JEE-level depth
+- Problem solving assistance for JEE preparation
+- Study planning and organization for JEE
 - Session tracking and progress adaptation
 - Rich markdown content with math formulas
 - Long conversation context management
+- JEE-specific tips and exam strategies
 
 Author: PraxisAI Team
-Version: 2.0.0 - Multi-Topic Support
+Version: 2.0.0 - Multi-Topic JEE Support
 """
 
 import os
@@ -533,7 +534,7 @@ async def get_status():
     """Health check endpoint for the agentic module"""
     return {
         "status": "active",
-        "module": "Multi-Topic Deep Study Mode",
+        "module": "Multi-Topic JEE Deep Study Mode",
         "active_sessions": len(session_manager.active_sessions),
         "timestamp": datetime.utcnow().isoformat()
     }
@@ -547,38 +548,40 @@ async def start_study_session(request: StartSessionRequest):
             user_id=request.user_id
         )
         
-        # Create general system message for multi-topic support
-        system_prompt = """You are an expert AI tutor specializing in multiple subjects and topics. 
-        You can help with any academic subject, concept, or problem.
+        # Create JEE-focused system message for multi-topic support
+        system_prompt = """You are an expert JEE (Joint Entrance Examination) tutor specializing in Physics, Chemistry, and Mathematics. 
+        You can help with any JEE subject or topic that students want to explore.
         
         Your responses should be:
+        - JEE-focused with appropriate difficulty level and depth
         - Clear and structured with proper markdown formatting
         - Include mathematical formulas using LaTeX notation ($$ for display, $ for inline) when relevant
-        - Provide step-by-step explanations
-        - Use examples and analogies when helpful
+        - Provide step-by-step explanations suitable for JEE preparation
+        - Use examples and analogies that help with JEE concepts
         - Encourage active learning and critical thinking
-        - Adapt to whatever topic the user wants to discuss
+        - Adapt to whatever JEE subject or topic the student wants to discuss
+        - Include JEE-specific tips, common mistakes to avoid, and exam strategies when relevant
         """
         
         # Generate welcome message
-        welcome_message = f"""Welcome to Multi-Topic Deep Study Mode! 
+        welcome_message = f"""Welcome to Multi-Topic JEE Deep Study Mode! 
 
-I'm here to help you with any subject, topic, or concept you want to explore. I can assist with:
+I'm your dedicated JEE tutor, here to help you master any subject or topic for your JEE preparation. I can assist with:
 
-**Academic Subjects:**
-- Physics, Chemistry, Mathematics
-- Biology, Computer Science, Engineering
-- Literature, History, Economics
-- And many more!
+**JEE Subjects:**
+- **Physics:** Mechanics, Thermodynamics, Electromagnetism, Optics, Modern Physics
+- **Chemistry:** Physical Chemistry, Organic Chemistry, Inorganic Chemistry
+- **Mathematics:** Algebra, Calculus, Trigonometry, Geometry, Vectors
 
-**Learning Activities:**
-- Concept explanations and clarifications
-- Problem-solving assistance
-- Study planning and organization
-- Practice questions and quizzes
-- Research and analysis help
+**JEE Learning Activities:**
+- Concept explanations with JEE-level depth
+- Problem-solving strategies and techniques
+- Step-by-step solutions to JEE questions
+- Common mistakes to avoid
+- Exam strategies and time management tips
+- Practice problems and mock questions
 
-**What would you like to learn about today?** Just tell me the topic or ask any question, and I'll help you master it!"""
+**What would you like to study today?** Just tell me the subject or topic (like "quantum mechanics", "organic reactions", or "calculus"), and I'll adapt my teaching to help you excel in JEE!"""
         
         # Add initial messages to session
         session_manager.add_message(
@@ -636,17 +639,19 @@ async def chat_message(request: ChatMessageRequest):
             print(f"  Context {i}: role={msg['role']}, content_length={len(msg['content'])}")
         print(f"================================")
         
-        # Create general system prompt for multi-topic support
-        system_prompt = """You are an expert AI tutor specializing in multiple subjects and topics. 
-        You can help with any academic subject, concept, or problem.
+        # Create JEE-focused system prompt for multi-topic support
+        system_prompt = """You are an expert JEE (Joint Entrance Examination) tutor specializing in Physics, Chemistry, and Mathematics. 
+        You can help with any JEE subject or topic that students want to explore.
         
         Your responses should be:
+        - JEE-focused with appropriate difficulty level and depth
         - Clear and structured with proper markdown formatting
         - Include mathematical formulas using LaTeX notation ($$ for display, $ for inline) when relevant
-        - Provide step-by-step explanations
-        - Use examples and analogies when helpful
+        - Provide step-by-step explanations suitable for JEE preparation
+        - Use examples and analogies that help with JEE concepts
         - Encourage active learning and critical thinking
-        - Adapt to whatever topic the user wants to discuss
+        - Adapt to whatever JEE subject or topic the student wants to discuss
+        - Include JEE-specific tips, common mistakes to avoid, and exam strategies when relevant
         """
         
         # Add context hint if provided
@@ -960,7 +965,7 @@ async def cleanup_expired_sessions():
 async def startup_event():
     """Initialize background tasks on startup"""
     asyncio.create_task(cleanup_expired_sessions())
-    print("Multi-Topic Deep Study Mode agentic module initialized")
+    print("Multi-Topic JEE Deep Study Mode agentic module initialized")
 
 # Export the router
 __all__ = ["router"]
