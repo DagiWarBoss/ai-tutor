@@ -95,17 +95,7 @@ class StudyPlan:
 # Pydantic Models for API
 class StartSessionRequest(BaseModel):
     """Request model for starting a new study session"""
-    subject: str = Field(..., description="Subject to study (Physics, Chemistry, Mathematics)")
-    topic: str = Field(..., description="Specific topic to focus on")
-    mode: TutoringMode = Field(..., description="Tutoring mode to use")
     user_id: str = Field(..., description="User identifier")
-    
-    @validator('subject')
-    def validate_subject(cls, v):
-        valid_subjects = ['Physics', 'Chemistry', 'Mathematics']
-        if v not in valid_subjects:
-            raise ValueError(f'Subject must be one of: {valid_subjects}')
-        return v
 
 class ChatMessageRequest(BaseModel):
     """Request model for sending a message in study session"""
@@ -720,7 +710,7 @@ async def problem_solve(request: ProblemSolveRequest):
             3: "Provide a complete step-by-step solution"
         }
         
-        system_prompt = f"""You are an expert problem-solving tutor for {session.subject}.
+        system_prompt = f"""You are an expert JEE problem-solving tutor specializing in Physics, Chemistry, and Mathematics.
         
         Problem: {request.problem}
         Current Step: {request.step}
@@ -732,6 +722,7 @@ async def problem_solve(request: ProblemSolveRequest):
         - Uses clear mathematical notation with LaTeX
         - Encourages critical thinking
         - Builds problem-solving skills
+        - Is appropriate for JEE preparation level
         """
         
         # Generate response
@@ -776,9 +767,9 @@ async def generate_quiz(request: QuizRequest):
         session_manager.update_session_activity(request.session_id)
         
         # Create quiz generation prompt
-        system_prompt = f"""You are an expert quiz generator for {session.subject}.
+        system_prompt = f"""You are an expert JEE quiz generator specializing in Physics, Chemistry, and Mathematics.
         
-        Generate a {request.difficulty} difficulty quiz with {request.question_count} questions about {session.topic}.
+        Generate a {request.difficulty} difficulty quiz with {request.question_count} questions about JEE topics.
         
         Format each question as JSON:
         {{
@@ -793,7 +784,7 @@ async def generate_quiz(request: QuizRequest):
         
         # Generate quiz
         response = await AIContentGenerator.generate_response(
-            messages=[{"role": "user", "content": f"Generate a {request.difficulty} quiz about {session.topic}"}],
+            messages=[{"role": "user", "content": f"Generate a {request.difficulty} quiz about JEE topics"}],
             system_prompt=system_prompt,
             max_tokens=3072,
             temperature=0.5
