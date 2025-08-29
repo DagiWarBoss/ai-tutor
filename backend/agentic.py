@@ -529,9 +529,19 @@ class StudyPlanGenerator:
             raise HTTPException(status_code=500, detail="Failed to generate study plan")
 
 # API Routes
+@router.get("/health")
+async def health_check():
+    """Health check endpoint for Fly.io deployment"""
+    return {
+        "status": "healthy",
+        "module": "Multi-Topic JEE Deep Study Mode",
+        "active_sessions": len(session_manager.active_sessions),
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
 @router.get("/status")
 async def get_status():
-    """Health check endpoint for the agentic module"""
+    """Status endpoint for the agentic module"""
     return {
         "status": "active",
         "module": "Multi-Topic JEE Deep Study Mode",
