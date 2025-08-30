@@ -460,7 +460,22 @@ async def ask_question(request: AskQuestionRequest):
             
             Format your response clearly with proper markdown formatting."""
             
-            user_message_content = f"Student Question: {full_question}\n\n--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+            # Enhanced prompt for image questions
+            if request.image_data:
+                user_message_content = f"""Student Question with Image: {full_question}
+
+IMPORTANT: The student has provided an image along with their question. Please:
+1. Analyze the image description provided
+2. Consider both the visual content and the text question
+3. Provide a comprehensive answer that addresses both aspects
+
+--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---
+{relevant_text}
+--- END OF CONTEXT ---
+
+Please provide a detailed solution that incorporates both the image analysis and the textbook knowledge."""
+            else:
+                user_message_content = f"Student Question: {full_question}\n\n--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
             
             # Call AI model
             print("Calling LLM API for response...")
@@ -536,14 +551,23 @@ async def image_solve(
             
             # Enhanced image description for AI
             image_description = f"""
-Image Analysis:
+IMAGE ANALYSIS:
 - Dimensions: {width}x{height} pixels
 - Format: {image_format}
 - Color mode: {image_mode}
 - File size: {len(image_content)} bytes
 
-This image appears to contain a {'mathematical problem or diagram' if width > height else 'text or formula content'}.
-Please analyze both the visual content and the accompanying question to provide a comprehensive solution.
+IMAGE CONTENT TYPE: {'Mathematical problem, diagram, or graph' if width > height else 'Text, formula, or mathematical content'}
+
+INSTRUCTIONS FOR AI:
+1. This image contains visual information that must be considered
+2. Analyze both the question text and the image content
+3. Provide a solution that incorporates what you can infer from the image
+4. If the image shows a mathematical problem, solve it step by step
+5. If the image shows a diagram, explain the concepts it represents
+6. If the image shows text/formulas, use them in your explanation
+
+Please provide a comprehensive solution that addresses both the question and the image content.
 """
             
         except Exception as e:
