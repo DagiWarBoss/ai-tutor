@@ -636,9 +636,5 @@ Please analyze both the question and the image content to provide a comprehensiv
 async def health_check():
     return {"status": "ok"}
 
-# Import and include Quick AI Help routes
-from aiquickhelp import router as aiquickhelp_router
-app.include_router(aiquickhelp_router, prefix="/agentic", tags=["Agentic Quick Help"])
-
 # Import and include Agentic Study Room routes
 app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
