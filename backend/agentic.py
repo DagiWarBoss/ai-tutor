@@ -747,37 +747,6 @@ class StudyPlanGenerator:
             raise HTTPException(status_code=500, detail="Failed to generate study plan")
 
 # API Routes
-@router.get("/health")
-async def health_check():
-    """Health check endpoint for Fly.io deployment"""
-    try:
-        # Get session count from Supabase
-        conn = get_db_connection()
-        if conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM study_sessions")
-            session_count = cursor.fetchone()[0]
-            cursor.close()
-            conn.close()
-        else:
-            session_count = 0
-        
-        return {
-            "status": "healthy",
-            "module": "Multi-Topic JEE Deep Study Mode",
-            "active_sessions": session_count,
-            "database": "connected" if conn else "disconnected",
-            "timestamp": datetime.utcnow().isoformat()
-        }
-    except Exception as e:
-        return {
-            "status": "healthy",
-            "module": "Multi-Topic JEE Deep Study Mode",
-            "active_sessions": 0,
-            "database": "error",
-            "error": str(e),
-            "timestamp": datetime.utcnow().isoformat()
-        }
 
 @router.get("/status")
 async def get_status():
