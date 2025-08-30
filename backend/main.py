@@ -552,7 +552,6 @@ Please analyze both the visual content and the accompanying question to provide 
             image_description = f"Image uploaded: {image.filename}, size: {len(image_content)} bytes"
         
         # Now call the ask-question endpoint with both text and image data
-        # We'll simulate the internal call to avoid HTTP overhead
         try:
             # Create the request object for internal processing
             internal_request = AskQuestionRequest(
@@ -561,7 +560,21 @@ Please analyze both the visual content and the accompanying question to provide 
             )
             
             # Process internally (this avoids making an HTTP call to ourselves)
-            return await ask_question(internal_request)
+            result = await ask_question(internal_request)
+            
+            # Add image metadata to the response
+            if hasattr(result, 'body'):
+                import json
+                response_data = json.loads(result.body.decode())
+                response_data['image_metadata'] = {
+                    'filename': image.filename,
+                    'size': len(image_content),
+                    'format': getattr(pil_image, 'format', 'unknown'),
+                    'dimensions': f"{getattr(pil_image, 'size', [0, 0])[0]}x{getattr(pil_image, 'size', [0, 0])[1]}"
+                }
+                return JSONResponse(content=response_data)
+            else:
+                return result
             
         except Exception as e:
             print(f"Error in internal ask_question call: {e}")

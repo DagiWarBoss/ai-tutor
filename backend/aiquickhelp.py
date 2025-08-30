@@ -13,9 +13,6 @@ TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 llm_client = Together(api_key=TOGETHER_API_KEY)
 
 class QuickHelpRequest(BaseModel):
-    subject: str
-    chapter: str
-    topic: str
     query: str
 
 def get_db_connection():
@@ -80,21 +77,27 @@ def construct_prompt(context: str, user_query: str) -> str:
 @router.post("/quick-help")
 async def quick_help(req: QuickHelpRequest):
     try:
-        context = fetch_syllabus_content(req.subject, req.chapter, req.topic)
-        if not context:
-            # Fallback content message instead of 404
-            context = (
-                f"Sorry, detailed syllabus content for topic '{req.topic}', chapter '{req.chapter}', "
-                f"or subject '{req.subject}' was not found. I will answer based on my general knowledge."
-            )
-        prompt = construct_prompt(context, req.query)
+        # Simple direct question answering without complex context
+        system_message = """You are an expert JEE tutor specializing in Physics, Chemistry, and Mathematics. 
+        
+        CRITICAL: You are NOT ChatGPT or a general AI. You are a JEE PCM tutor ONLY.
+        
+        Guidelines:
+        - Answer questions about JEE PCM subjects (Physics, Chemistry, Mathematics)
+        - Include mathematical formulas using LaTeX notation when relevant
+        - Provide step-by-step explanations suitable for JEE preparation
+        - If asked about non-PCM topics, politely redirect to JEE subjects
+        - Format your response clearly with proper markdown formatting
+        
+        Focus on being helpful and accurate for JEE students."""
+        
         response_params = {
             "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
             "temperature": 0.4,
             "max_tokens": 1024,
             "messages": [
-                {"role": "system", "content": "You are a helpful AI tutor."},
-                {"role": "user", "content": prompt},
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": req.query},
             ],
         }
         response = llm_client.chat.completions.create(**response_params)
