@@ -16,8 +16,6 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 import base64
 import io
-import cv2
-import numpy as np
 from PIL import Image
 
 from agentic import router as agentic_router  # Added import for Agentic Study Room routes
@@ -70,7 +68,7 @@ class FeatureRequest(BaseModel):
 
 class AskQuestionRequest(BaseModel):
     question: str
-    image_data: str | None = None
+    image_data: Optional[str] = None
 
 app = FastAPI()
 
@@ -375,10 +373,7 @@ async def ask_question(request: AskQuestionRequest):
                 image_bytes = base64.b64decode(request.image_data)
                 image = Image.open(io.BytesIO(image_bytes))
                 
-                # Convert PIL image to OpenCV format for better processing
-                opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                
-                # Extract text from image using OCR (if available)
+                # Extract text from image using PIL for basic analysis
                 # For now, we'll create a description of the image
                 image_description = f"Image detected: {image.size[0]}x{image.size[1]} pixels, format: {image.format}, mode: {image.mode}"
                 
@@ -526,16 +521,13 @@ async def image_solve(
         # Convert to base64 for storage and transmission
         image_base64 = base64.b64encode(image_content).decode('utf-8')
         
-        # Process image with OpenCV for better analysis
+        # Process image with PIL for basic analysis
         try:
             # Convert bytes to PIL Image
             pil_image = Image.open(io.BytesIO(image_content))
             
-            # Convert to OpenCV format
-            opencv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
-            
-            # Basic image analysis
-            height, width = opencv_image.shape[:2]
+            # Basic image analysis using PIL only
+            width, height = pil_image.size
             image_format = pil_image.format
             image_mode = pil_image.mode
             
@@ -554,7 +546,7 @@ Please analyze both the visual content and the accompanying question to provide 
 """
             
         except Exception as e:
-            print(f"Error in advanced image processing: {e}")
+            print(f"Error in image processing: {e}")
             # Fallback to basic description
             image_description = f"Image uploaded: {image.filename}, size: {len(image_content)} bytes"
         
@@ -608,9 +600,8 @@ async def image_solve_base64(request: AskQuestionRequest):
         
         # Process image
         pil_image = Image.open(io.BytesIO(image_bytes))
-        opencv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
         
-        height, width = opencv_image.shape[:2]
+        width, height = pil_image.size
         print(f"Base64 image processed: {width}x{height} pixels")
         
         # Enhanced question with image context
