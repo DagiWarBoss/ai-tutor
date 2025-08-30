@@ -13,20 +13,21 @@ primary_region = "bom"
   force_https = true
   auto_stop_machines = "stop"
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ["app"]
 
   [[http_service.checks]]
-    grace_period = "60s"   # Wait 60 seconds before health checks start to allow AI model loading time
-    interval = "15s"       # Check every 15 seconds
-    timeout = "15s"        # Allow up to 15 seconds for health check response due to potential AI latency
+    grace_period = "120s"   # Increased to 2 minutes for AI model loading
+    interval = "30s"        # Check every 30 seconds instead of 15
+    timeout = "30s"         # Increased timeout for health check response
     method = "GET"
-    path = "/health"       # Use the /health endpoint for health checks
+    path = "/health"        # Use the /health endpoint for health checks
+    port = 8080             # Specify the port for health checks
 
 [[vm]]
-  memory = "2gb"       # Increased memory for AI/ML workloads
+  memory = "4gb"           # Increased memory for AI/ML workloads
   cpu_kind = "shared"
   cpus = 2
-  memory_mb = 2048
+  memory_mb = 4096
 
 

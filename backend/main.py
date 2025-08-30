@@ -5,6 +5,7 @@ import random
 import psycopg2
 import json
 import re
+import datetime
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Response, Form, UploadFile, File
 from fastapi.responses import JSONResponse
@@ -46,14 +47,27 @@ DB_PORT = os.getenv("DB_PORT")
 print("DB config loaded:", DB_HOST, DB_USER, DB_NAME, DB_PORT)
 
 # Initialize AI and Embedding clients
-llm_client = Together(api_key=TOGETHER_API_KEY)
+llm_client = None
+embedding_model = None
+
 try:
+    if TOGETHER_API_KEY:
+        llm_client = Together(api_key=TOGETHER_API_KEY)
+        print("Together AI client initialized successfully.")
+    else:
+        print("WARNING: TOGETHER_API_KEY not found. AI features will be limited.")
+except Exception as e:
+    print(f"Error initializing Together AI client: {e}")
+    traceback.print_exc()
+
+try:
+    print("Loading sentence transformer model...")
     embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
     print("Embedding model loaded successfully.")
 except Exception as e:
     print(f"Error loading embedding model: {e}")
     traceback.print_exc()
-    sys.exit(1)
+    print("WARNING: Embedding model failed to load. Some features may not work.")
 
 # Request Models
 class ContentRequest(BaseModel):
@@ -70,6 +84,8 @@ class FeatureRequest(BaseModel):
 class AskQuestionRequest(BaseModel):
     question: str
     image_data: Optional[str] = None
+    session_id: Optional[str] = None  # Add session management
+    topic_context: Optional[str] = None  # Add topic context
 
 app = FastAPI()
 
@@ -364,6 +380,7 @@ async def submit_feature_request(request: FeatureRequest):
 async def ask_question(request: AskQuestionRequest):
     """AI endpoint to answer questions with optional image support"""
     print("POST /ask-question called with:", request.question[:100] + "..." if len(request.question) > 100 else request.question)
+    print(f"Session ID: {request.session_id}, Topic Context: {request.topic_context}")
     
     try:
         # Process image if provided
@@ -394,6 +411,17 @@ async def ask_question(request: AskQuestionRequest):
         full_question = request.question
         if image_description:
             full_question = f"Question: {request.question}\n\nImage Context: {image_description}\n\nPlease analyze both the question and the image to provide a comprehensive answer."
+        
+        # Check if this is casual conversation (small talk)
+        question_lower = request.question.lower().strip()
+        casual_phrases = [
+            "hi", "hello", "hey", "good morning", "good afternoon", "good evening",
+            "how are you", "how's it going", "what's up", "how do you do",
+            "nice to meet you", "pleasure to meet you", "good to see you",
+            "thanks", "thank you", "bye", "goodbye", "see you", "take care"
+        ]
+        
+        is_casual = any(phrase in question_lower for phrase in casual_phrases)
         
         # Generate embedding for the question
         question_embedding = embedding_model.encode(full_question).tolist()
@@ -443,28 +471,58 @@ async def ask_question(request: AskQuestionRequest):
             if len(relevant_text) > max_chars:
                 relevant_text = relevant_text[:max_chars]
             
-            # Create prompt for AI
-            system_message = """You are an expert JEE tutor specializing in Physics, Chemistry, and Mathematics. 
+            # Create prompt for AI with proper session management
+            if is_casual:
+                system_message = """You are a warm and encouraging JEE tutor who loves helping students with their preparation.
+                
+                The student is engaging in casual conversation. Respond warmly and personally:
+                - Be enthusiastic and encouraging
+                - Show genuine interest in their JEE journey
+                - Keep it friendly but professional
+                - Express excitement about helping them learn
+                - If they say hi/hello, greet them warmly and ask how you can help with their studies
+                - If they ask how you are, respond positively and redirect to how you can assist them
+                - Always bring the conversation back to their JEE preparation goals
+                
+                Remember: You're their personal JEE tutor, not just an AI assistant."""
+            else:
+                # Build context-aware system message
+                context_info = ""
+                if request.topic_context:
+                    context_info = f"\n\nCURRENT TOPIC CONTEXT: {request.topic_context}\nIMPORTANT: Focus ONLY on this topic unless the student explicitly asks about something else."
+                
+                system_message = f"""You are an expert JEE tutor specializing in Physics, Chemistry, and Mathematics. 
+                
+                CRITICAL: You are NOT ChatGPT or a general AI. You are a JEE PCM tutor ONLY.
+                
+                SESSION MANAGEMENT: This is a NEW question. Do NOT reference previous conversations or topics unless explicitly mentioned by the student.
+                
+                Your task is to answer the student's question using the provided textbook context and any image context.
+                
+                Guidelines:
+                - Answer ONLY the current question asked by the student
+                - Do NOT assume continuation of previous topics
+                - If an image is provided, carefully analyze both the question and image content
+                - Use the textbook context to provide accurate, JEE-level explanations
+                - Include mathematical formulas using LaTeX notation when relevant
+                - Provide step-by-step explanations suitable for JEE preparation
+                - Focus only on JEE PCM subjects (Physics, Chemistry, Mathematics)
+                - If asked about non-PCM topics, politely redirect to JEE subjects
+                - Keep responses friendly but professional
+                - Stay focused on the specific question asked
+                
+                {context_info}
+                
+                Format your response clearly with proper markdown formatting."""
             
-            CRITICAL: You are NOT ChatGPT or a general AI. You are a JEE PCM tutor ONLY.
-            
-            Your task is to answer the student's question using the provided textbook context and any image context.
-            
-            Guidelines:
-            - If an image is provided, carefully analyze both the question and image content
-            - Use the textbook context to provide accurate, JEE-level explanations
-            - Include mathematical formulas using LaTeX notation when relevant
-            - Provide step-by-step explanations suitable for JEE preparation
-            - Focus only on JEE PCM subjects (Physics, Chemistry, Mathematics)
-            - If asked about non-PCM topics, politely redirect to JEE subjects
-            
-            Format your response clearly with proper markdown formatting."""
-            
-            # Enhanced prompt for image questions
-            if request.image_data:
-                user_message_content = f"""Student Question with Image: {full_question}
+            # Enhanced prompt for image questions with session management
+            if is_casual:
+                user_message_content = f"Student: {request.question}"
+            elif request.image_data:
+                user_message_content = f"""CURRENT STUDENT QUESTION (NEW SESSION): {full_question}
 
-IMPORTANT: The student has provided an image along with their question. Please:
+IMPORTANT: This is a NEW question. Do NOT reference previous conversations.
+The student has provided an image along with their question. Please:
 1. Analyze the image description provided
 2. Consider both the visual content and the text question
 3. Provide a comprehensive answer that addresses both aspects
@@ -475,7 +533,15 @@ IMPORTANT: The student has provided an image along with their question. Please:
 
 Please provide a detailed solution that incorporates both the image analysis and the textbook knowledge."""
             else:
-                user_message_content = f"Student Question: {full_question}\n\n--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+                user_message_content = f"""CURRENT STUDENT QUESTION (NEW SESSION): {full_question}
+
+IMPORTANT: This is a NEW question. Do NOT reference previous conversations or topics.
+
+--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---
+{relevant_text}
+--- END OF CONTEXT ---
+
+Please provide a detailed solution that addresses the current question only."""
             
             # Call AI model
             print("Calling LLM API for response...")
@@ -496,6 +562,14 @@ Please provide a detailed solution that incorporates both the image analysis and
             
             if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
                 raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
+            
+            # For casual conversation, ensure the response feels personal
+            if is_casual:
+                # Add a personal touch if the response is too short
+                if len(answer) < 50:
+                    answer += "\n\nI'm excited to help you with your JEE preparation! What would you like to study today?"
+                # Ensure it doesn't sound too formal
+                answer = answer.replace("I am", "I'm").replace("I will", "I'll").replace("I have", "I've")
             
             print("AI response generated successfully.")
             
@@ -671,7 +745,255 @@ Please analyze both the question and the image content to provide a comprehensiv
 # --- Health Check Endpoint ---
 @app.get("/health")
 async def health_check():
-    return {"status": "ok"}
+    """Enhanced health check endpoint for Fly.io monitoring"""
+    try:
+        # Check if AI model is loaded
+        model_status = "loaded" if embedding_model else "not_loaded"
+        
+        # Check database connection
+        db_status = "connected"
+        try:
+            conn = get_db_connection()
+            if conn:
+                conn.close()
+            else:
+                db_status = "failed"
+        except Exception:
+            db_status = "failed"
+        
+        # Check API key
+        api_status = "configured" if TOGETHER_API_KEY else "missing"
+        
+        return {
+            "status": "ok",
+            "timestamp": str(datetime.datetime.now()),
+            "ai_model": model_status,
+            "database": db_status,
+            "api_key": api_status,
+            "version": "1.0.0"
+        }
+    except Exception as e:
+        print(f"Health check error: {e}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "timestamp": str(datetime.datetime.now())
+        }
+
+# Add a simple root endpoint for basic connectivity testing
+@app.get("/")
+async def root():
+    return {"message": "Praxis AI Backend is running", "status": "ok"}
+
+@app.get("/test-chat")
+async def test_chat():
+    """Test endpoint to verify chat routing is working"""
+    return {"message": "Chat endpoint routing is working", "status": "ok"}
+
+@app.post("/test-chat-post")
+async def test_chat_post(request: AskQuestionRequest):
+    """Test POST endpoint for chat"""
+    return {
+        "message": "Chat POST endpoint is working", 
+        "status": "ok",
+        "received_question": request.question,
+        "timestamp": str(datetime.datetime.now())
+    }
+
+@app.post("/reset-session")
+async def reset_session():
+    """Reset session context - useful when switching topics"""
+    return {
+        "message": "Session context reset successfully",
+        "status": "ok",
+        "timestamp": str(datetime.datetime.now()),
+        "note": "Next question will be treated as a new topic"
+    }
+
+@app.post("/problem-solver")
+async def problem_solver(request: AskQuestionRequest):
+    """Problem solver endpoint that provides direct AI solutions without requiring specific topics"""
+    print(f"POST /problem-solver called with: {request.question[:100]}...")
+    
+    try:
+        # For problem solving, use direct AI without RAG requirements
+        system_message = """You are an expert JEE tutor specializing in Physics, Chemistry, and Mathematics.
+        
+        The student has a problem to solve. Your role is to:
+        - Analyze the problem carefully
+        - Provide a step-by-step solution
+        - Use appropriate mathematical notation and formulas
+        - Explain the concepts involved
+        - Give the final answer clearly
+        - If it's a mathematical problem, show all steps
+        - If it's a conceptual question, provide detailed explanations
+        
+        Focus on being clear, accurate, and educational. Don't require specific topic context."""
+        
+        user_message = f"Problem to solve: {request.question}"
+        
+        try:
+            print("Calling LLM API for problem solver response...")
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message}
+            ]
+            
+            response_params = {
+                "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                "max_tokens": 2048,
+                "temperature": 0.3,  # Lower temperature for more precise solutions
+                "messages": messages
+            }
+            
+            response = llm_client.chat.completions.create(**response_params)
+            answer = response.choices[0].message.content.strip()
+            
+            if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
+                raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
+            
+            print("Problem solver response generated successfully.")
+            
+            return JSONResponse(content={
+                "answer": answer,
+                "type": "problem_solution",
+                "message": "Problem solved with step-by-step explanation"
+            })
+            
+        except Exception as e:
+            print(f"Error in problem solver: {e}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail="An error occurred during problem solving.")
+            
+    except Exception as e:
+        print(f"Unexpected error in problem_solver: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="An unexpected error occurred.")
+
+@app.post("/chat")
+async def casual_chat(request: AskQuestionRequest):
+    """Casual chat endpoint for friendly conversation with the JEE tutor"""
+    print(f"POST /chat called with: {request.question[:100]}...")
+    print(f"Request body: {request}")
+    print(f"Request question: {request.question}")
+    
+    try:
+        # Check if this is casual conversation
+        question_lower = request.question.lower().strip()
+        casual_phrases = [
+            "hi", "hello", "hey", "good morning", "good afternoon", "good evening",
+            "how are you", "how's it going", "what's up", "how do you do",
+            "nice to meet you", "pleasure to meet you", "good to see you",
+            "thanks", "thank you", "bye", "goodbye", "see you", "take care",
+            "how are you doing", "what's new", "how's your day", "good night"
+        ]
+        
+        is_casual = any(phrase in question_lower for phrase in casual_phrases)
+        
+        # For any question, provide a helpful response
+        if not is_casual:
+            # If it's not casual, still provide a helpful response but redirect to problem solving
+            system_message = """You are a helpful JEE tutor. The student has asked a question that might be academic.
+            
+            Provide a brief, helpful response and suggest they use the Problem Solver for detailed solutions.
+            Be encouraging and guide them to the right tool."""
+            
+            user_message = f"Student question: {request.question}"
+            
+            try:
+                print("Calling LLM API for helpful response...")
+                messages = [
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_message}
+                ]
+                
+                response_params = {
+                    "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                    "max_tokens": 512,
+                    "temperature": 0.5,
+                    "messages": messages
+                }
+                
+                response = llm_client.chat.completions.create(**response_params)
+                answer = response.choices[0].message.content.strip()
+                
+                if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
+                    answer = "I'd be happy to help you with that! For detailed problem solving, try using the Problem Solver tool. What would you like to work on?"
+                
+                return JSONResponse(content={
+                    "answer": answer,
+                    "type": "helpful_response",
+                    "message": "Helpful guidance provided"
+                })
+                
+            except Exception as e:
+                print(f"Error in helpful response: {e}")
+                # Fallback response
+                return JSONResponse(content={
+                    "answer": "I'd be happy to help you with that! For detailed problem solving, try using the Problem Solver tool. What would you like to work on?",
+                    "type": "fallback_response",
+                    "message": "Fallback response due to error"
+                })
+        
+        # For casual conversation, use a more personal approach
+        system_message = """You are a warm, enthusiastic, and encouraging JEE tutor who loves helping students.
+        
+        The student is engaging in casual conversation. Your role is to:
+        - Be genuinely warm and friendly
+        - Show excitement about helping with their studies
+        - Ask about their JEE preparation progress
+        - Offer encouragement and motivation
+        - Keep the conversation light but educational
+        - Always bring it back to how you can help with their studies
+        
+        Be personal, use contractions (I'm, you're, etc.), and sound like a real tutor who cares about their student."""
+        
+        user_message = f"Student: {request.question}"
+        
+        try:
+            print("Calling LLM API for casual chat response...")
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message}
+            ]
+            
+            response_params = {
+                "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                "max_tokens": 1024,
+                "temperature": 0.7,  # Slightly higher for more creative responses
+                "messages": messages
+            }
+            
+            response = llm_client.chat.completions.create(**response_params)
+            answer = response.choices[0].message.content.strip()
+            
+            if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
+                raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
+            
+            # Ensure the response feels personal
+            if len(answer) < 50:
+                answer += "\n\nI'm excited to help you with your JEE preparation! What would you like to study today?"
+            
+            # Make it sound more conversational
+            answer = answer.replace("I am", "I'm").replace("I will", "I'll").replace("I have", "I've")
+            
+            print("Casual chat response generated successfully.")
+            
+            return JSONResponse(content={
+                "answer": answer,
+                "type": "casual_chat",
+                "message": "Friendly conversation with your JEE tutor"
+            })
+            
+        except Exception as e:
+            print(f"Error in casual chat: {e}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail="An error occurred during casual chat.")
+            
+    except Exception as e:
+        print(f"Unexpected error in casual_chat: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="An unexpected error occurred.")
 
 # Import and include Agentic Study Room routes
 app.include_router(agentic_router, prefix="/agentic", tags=["Agentic Study Room"])
