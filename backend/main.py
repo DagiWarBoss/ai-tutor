@@ -5,6 +5,7 @@ import random
 import psycopg2
 import json
 import re
+from typing import Optional
 from fastapi import FastAPI, HTTPException, Response, Form, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
