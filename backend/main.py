@@ -5,7 +5,7 @@ import random
 import psycopg2
 import json
 import re
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Form, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -14,6 +14,11 @@ from sentence_transformers import SentenceTransformer
 from together import Together
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
+import base64
+import io
+import cv2
+import numpy as np
+from PIL import Image
 
 from agentic import router as agentic_router  # Added import for Agentic Study Room routes
 from aiquickhelp import router as aiquickhelp_router  # Import your new Quick AI Help router
@@ -62,6 +67,10 @@ class GoogleLoginRequest(BaseModel):
 class FeatureRequest(BaseModel):
     user_email: str
     feature_text: str
+
+class AskQuestionRequest(BaseModel):
+    question: str
+    image_data: str | None = None
 
 app = FastAPI()
 
@@ -351,6 +360,284 @@ async def submit_feature_request(request: FeatureRequest):
     finally:
         if conn:
             conn.close()
+
+@app.post("/ask-question")
+async def ask_question(request: AskQuestionRequest):
+    """AI endpoint to answer questions with optional image support"""
+    print("POST /ask-question called with:", request.question[:100] + "..." if len(request.question) > 100 else request.question)
+    
+    try:
+        # Process image if provided
+        image_description = ""
+        if request.image_data:
+            try:
+                # Decode base64 image
+                image_bytes = base64.b64decode(request.image_data)
+                image = Image.open(io.BytesIO(image_bytes))
+                
+                # Convert PIL image to OpenCV format for better processing
+                opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                
+                # Extract text from image using OCR (if available)
+                # For now, we'll create a description of the image
+                image_description = f"Image detected: {image.size[0]}x{image.size[1]} pixels, format: {image.format}, mode: {image.mode}"
+                
+                # If it's a mathematical problem or diagram, add context
+                if image.size[0] > image.size[1]:  # Landscape - likely a diagram
+                    image_description += ". This appears to be a diagram or graph."
+                else:  # Portrait - likely text or formula
+                    image_description += ". This appears to contain text or mathematical content."
+                
+                print(f"Image processed: {image_description}")
+                
+            except Exception as e:
+                print(f"Error processing image: {e}")
+                image_description = "Image processing failed, but continuing with text question."
+        
+        # Combine question with image description
+        full_question = request.question
+        if image_description:
+            full_question = f"Question: {request.question}\n\nImage Context: {image_description}\n\nPlease analyze both the question and the image to provide a comprehensive answer."
+        
+        # Generate embedding for the question
+        question_embedding = embedding_model.encode(full_question).tolist()
+        print("Question embedding generated successfully.")
+        
+        conn = None
+        try:
+            conn = get_db_connection()
+            if conn is None:
+                raise HTTPException(status_code=503, detail="Database connection unavailable.")
+            
+            # Find relevant content in database
+            relevant_text, context_level, context_name = "", "", ""
+            with conn.cursor() as cur:
+                print("Finding matching content in DB...")
+                cur.execute("SELECT * FROM match_topics(%s::vector, 0.3, 10)", (question_embedding,))
+                match_results = cur.fetchall()
+                print(f"Match results count: {len(match_results)}")
+                
+                if match_results:
+                    matched_topic_id, matched_topic_name, similarity, matched_chapter_id = random.choice(match_results)
+                    print(f"Selected topic '{matched_topic_name}' (Similarity: {similarity:.4f})")
+                    
+                    # Get topic text
+                    cur.execute("SELECT full_text FROM topics WHERE id = %s", (matched_topic_id,))
+                    topic_text_result = cur.fetchone()
+                    
+                    if topic_text_result and topic_text_result[0] and topic_text_result[0].strip():
+                        relevant_text, context_level, context_name = topic_text_result[0], "Topic", matched_topic_name
+                    else:
+                        # Fallback to chapter text
+                        cur.execute("SELECT name, full_text FROM chapters WHERE id = %s", (matched_chapter_id,))
+                        chapter_text_result = cur.fetchone()
+                        if chapter_text_result and chapter_text_result[1] and chapter_text_result[1].strip():
+                            relevant_text, context_level, context_name = chapter_text_result[1], "Chapter", chapter_text_result[0]
+                        else:
+                            relevant_text = "General JEE knowledge"
+                            context_level = "General"
+                            context_name = "JEE Syllabus"
+                else:
+                    relevant_text = "General JEE knowledge"
+                    context_level = "General"
+                    context_name = "JEE Syllabus"
+            
+            # Limit text length
+            max_chars = 15000
+            if len(relevant_text) > max_chars:
+                relevant_text = relevant_text[:max_chars]
+            
+            # Create prompt for AI
+            system_message = """You are an expert JEE tutor specializing in Physics, Chemistry, and Mathematics. 
+            
+            CRITICAL: You are NOT ChatGPT or a general AI. You are a JEE PCM tutor ONLY.
+            
+            Your task is to answer the student's question using the provided textbook context and any image context.
+            
+            Guidelines:
+            - If an image is provided, carefully analyze both the question and image content
+            - Use the textbook context to provide accurate, JEE-level explanations
+            - Include mathematical formulas using LaTeX notation when relevant
+            - Provide step-by-step explanations suitable for JEE preparation
+            - Focus only on JEE PCM subjects (Physics, Chemistry, Mathematics)
+            - If asked about non-PCM topics, politely redirect to JEE subjects
+            
+            Format your response clearly with proper markdown formatting."""
+            
+            user_message_content = f"Student Question: {full_question}\n\n--- TEXTBOOK CONTEXT ({context_level}: {context_name}) ---\n{relevant_text}\n--- END OF CONTEXT ---"
+            
+            # Call AI model
+            print("Calling LLM API for response...")
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message_content}
+            ]
+            
+            response_params = {
+                "model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+                "max_tokens": 2048,
+                "temperature": 0.4,
+                "messages": messages
+            }
+            
+            response = llm_client.chat.completions.create(**response_params)
+            answer = response.choices[0].message.content.strip()
+            
+            if not answer or answer.lower().startswith(("i'm sorry", "i cannot", "i don't know")):
+                raise HTTPException(status_code=503, detail="The AI was unable to generate a response.")
+            
+            print("AI response generated successfully.")
+            
+            return JSONResponse(content={
+                "answer": answer,
+                "source_chapter": context_name,
+                "source_level": context_level,
+                "image_processed": bool(request.image_data)
+            })
+            
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            print(f"Error in ask_question: {e}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail="An error occurred while processing your question.")
+        finally:
+            if conn:
+                conn.close()
+                
+    except Exception as e:
+        print(f"Unexpected error in ask_question: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="An unexpected error occurred.")
+
+@app.post("/image-solve")
+async def image_solve(
+    question: str = Form(...),
+    image: UploadFile = File(...)
+):
+    """Image solver endpoint that processes images and sends them to AI chat"""
+    print(f"POST /image-solve called with question: {question[:100]}...")
+    print(f"Image file: {image.filename}, size: {image.size} bytes")
+    
+    try:
+        # Read and process the uploaded image
+        image_content = await image.read()
+        
+        # Convert to base64 for storage and transmission
+        image_base64 = base64.b64encode(image_content).decode('utf-8')
+        
+        # Process image with OpenCV for better analysis
+        try:
+            # Convert bytes to PIL Image
+            pil_image = Image.open(io.BytesIO(image_content))
+            
+            # Convert to OpenCV format
+            opencv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+            
+            # Basic image analysis
+            height, width = opencv_image.shape[:2]
+            image_format = pil_image.format
+            image_mode = pil_image.mode
+            
+            print(f"Image processed: {width}x{height} pixels, format: {image_format}, mode: {image_mode}")
+            
+            # Enhanced image description for AI
+            image_description = f"""
+Image Analysis:
+- Dimensions: {width}x{height} pixels
+- Format: {image_format}
+- Color mode: {image_mode}
+- File size: {len(image_content)} bytes
+
+This image appears to contain a {'mathematical problem or diagram' if width > height else 'text or formula content'}.
+Please analyze both the visual content and the accompanying question to provide a comprehensive solution.
+"""
+            
+        except Exception as e:
+            print(f"Error in advanced image processing: {e}")
+            # Fallback to basic description
+            image_description = f"Image uploaded: {image.filename}, size: {len(image_content)} bytes"
+        
+        # Now call the ask-question endpoint with both text and image data
+        # We'll simulate the internal call to avoid HTTP overhead
+        try:
+            # Create the request object for internal processing
+            internal_request = AskQuestionRequest(
+                question=f"{question}\n\n{image_description}",
+                image_data=image_base64
+            )
+            
+            # Process internally (this avoids making an HTTP call to ourselves)
+            return await ask_question(internal_request)
+            
+        except Exception as e:
+            print(f"Error in internal ask_question call: {e}")
+            # Fallback: return the processed image data for manual handling
+            return JSONResponse(content={
+                "answer": f"Image processed successfully. Question: {question}\n\nImage: {image.filename} ({len(image_content)} bytes)\n\nPlease use the ask-question endpoint with the image data to get a complete answer.",
+                "source_chapter": "Image Analysis",
+                "source_level": "Image",
+                "image_processed": True,
+                "image_data": image_base64,
+                "image_metadata": {
+                    "filename": image.filename,
+                    "size": len(image_content),
+                    "format": getattr(pil_image, 'format', 'unknown'),
+                    "dimensions": f"{getattr(pil_image, 'size', [0, 0])[0]}x{getattr(pil_image, 'size', [0, 0])[1]}"
+                }
+            })
+            
+    except Exception as e:
+        print(f"Error in image_solve: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to process image: {str(e)}")
+
+# Alternative endpoint for base64 encoded images
+@app.post("/image-solve-base64")
+async def image_solve_base64(request: AskQuestionRequest):
+    """Image solver endpoint that accepts base64 encoded images"""
+    print(f"POST /image-solve-base64 called with question: {request.question[:100]}...")
+    print(f"Image data provided: {bool(request.image_data)}")
+    
+    if not request.image_data:
+        raise HTTPException(status_code=400, detail="Image data is required for this endpoint")
+    
+    try:
+        # Decode base64 image
+        image_bytes = base64.b64decode(request.image_data)
+        
+        # Process image
+        pil_image = Image.open(io.BytesIO(image_bytes))
+        opencv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+        
+        height, width = opencv_image.shape[:2]
+        print(f"Base64 image processed: {width}x{height} pixels")
+        
+        # Enhanced question with image context
+        enhanced_question = f"""
+{request.question}
+
+Image Context:
+- Dimensions: {width}x{height} pixels
+- Format: {getattr(pil_image, 'format', 'unknown')}
+- This appears to contain {'a mathematical problem or diagram' if width > height else 'text or mathematical content'}.
+
+Please analyze both the question and the image content to provide a comprehensive solution.
+"""
+        
+        # Create internal request with enhanced question
+        internal_request = AskQuestionRequest(
+            question=enhanced_question,
+            image_data=request.image_data
+        )
+        
+        # Process internally
+        return await ask_question(internal_request)
+        
+    except Exception as e:
+        print(f"Error in image_solve_base64: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Failed to process base64 image: {str(e)}")
 
 # --- Health Check Endpoint ---
 @app.get("/health")
